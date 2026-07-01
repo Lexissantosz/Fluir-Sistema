@@ -1933,3 +1933,18 @@ body.dark .preview {
 .preview {
   transform: translateY(0);
 }
+
+.backend-note {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #777;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.demo-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

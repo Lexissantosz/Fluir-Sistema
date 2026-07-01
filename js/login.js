@@ -118,10 +118,23 @@ passwordButtons.forEach((button) => {
 // =============================
 
 if (loginForm) {
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    alert("Login enviado. Depois conectaremos com o backend.");
+    const email = loginForm.querySelector('input[type="email"]');
+    const senha = loginForm.querySelector('input[type="password"]');
+
+    if (!email.value.trim() || !senha.value.trim()) {
+      alert("Preencha seu e-mail e sua senha para entrar.");
+      return;
+    }
+
+    if (senha.value.length < 6) {
+      alert("A senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    alert("Login pronto para integração com o banco de dados.");
   });
 }
 
@@ -132,10 +145,24 @@ if (loginForm) {
 // =============================
 
 if (registerForm) {
-  registerForm.addEventListener("submit", (event) => {
+  registerForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    alert("Cadastro enviado. Depois conectaremos com o backend.");
+    const nome = registerForm.querySelector('input[type="text"]');
+    const email = registerForm.querySelector('input[type="email"]');
+    const senha = registerForm.querySelector('input[type="password"]');
+
+    if (!nome.value.trim() || !email.value.trim() || !senha.value.trim()) {
+      alert("Preencha nome, e-mail e senha para criar sua conta.");
+      return;
+    }
+
+    if (senha.value.length < 6) {
+      alert("A senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    alert("Cadastro pronto para integração com o banco de dados.");
   });
 }
 
