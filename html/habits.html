@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Hábitos</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de hábitos -->
+  <link rel="stylesheet" href="../css/habits.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="habits-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- ===================================================== -->
+      <!-- LOGO -->
+      <!-- ===================================================== -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- MENU -->
+      <!-- ===================================================== -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item active module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+  <span>✦</span>
+  Saúde física
+</a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- ===================================================== -->
+      <!-- ILUSTRAÇÃO LATERAL -->
+      <!-- ===================================================== -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Constância não precisa ser perfeita. Só precisa continuar.”
+        </p>
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- CARD DE PROGRESSO -->
+      <!-- ===================================================== -->
+      <div class="focus-card">
+        <p>Hábitos de hoje</p>
+        <strong id="sidebarHabitPercent">0%</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarHabitBar"></span>
+        </div>
+
+        <small id="sidebarHabitText">Nenhum hábito concluído ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="habits-main">
+
+      <!-- ===================================================== -->
+      <!-- TOPO -->
+      <!-- ===================================================== -->
+      <header class="habits-header">
+
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Pequenos passos repetidos também transformam.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+
+      </header>
+
+      <!-- ===================================================== -->
+      <!-- CABEÇALHO DA PÁGINA -->
+      <!-- ===================================================== -->
+      <section class="habits-title-area">
+
+        <div class="title-left">
+          <span class="page-icon">◌</span>
+
+          <div>
+            <h3>Hábitos</h3>
+            <p>Acompanhe sua constância, sequência e evolução semanal.</p>
+          </div>
+        </div>
+
+        <div class="habits-actions">
+          <button class="date-btn" type="button">
+            ▣ Esta semana
+          </button>
+
+          <button class="primary-btn" type="button" id="newHabitBtn">
+            + Novo hábito
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- CARDS RESUMO -->
+      <!-- ===================================================== -->
+      <section class="habits-summary">
+
+        <article class="summary-card">
+          <span>◌</span>
+          <p>Total</p>
+          <strong id="totalHabits">0</strong>
+          <small>Hábitos ativos</small>
+        </article>
+
+        <article class="summary-card">
+          <span>✓</span>
+          <p>Hoje</p>
+          <strong id="completedTodayHabits">0</strong>
+          <small>Concluídos hoje</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Sequência</p>
+          <strong id="bestStreak">0</strong>
+          <small>Melhor sequência</small>
+        </article>
+
+        <article class="summary-card">
+          <span>%</span>
+          <p>Semana</p>
+          <strong id="weeklyProgress">0%</strong>
+          <small>Progresso semanal</small>
+        </article>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- FILTROS -->
+      <!-- ===================================================== -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="pending">Pendentes hoje</button>
+        <button class="filter-btn" type="button" data-filter="completed">Concluídos hoje</button>
+        <button class="filter-btn" type="button" data-filter="highStreak">Maior sequência</button>
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- LAYOUT PRINCIPAL -->
+      <!-- ===================================================== -->
+      <section class="habits-layout">
+
+        <!-- ===================================================== -->
+        <!-- PAINEL DE HÁBITOS -->
+        <!-- ===================================================== -->
+        <article class="habits-panel">
+
+          <div class="panel-header">
+            <div>
+              <h4>Hábitos ativos</h4>
+              <p id="habitListSubtitle">Seus hábitos aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="resetTodayBtn">
+              Reiniciar hoje
+            </button>
+          </div>
+
+          <div class="habit-list" id="habitList">
+            <!-- Os hábitos são gerados pelo JavaScript -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>◌</span>
+            <strong>Nenhum hábito encontrado</strong>
+            <p>Crie um novo hábito ou mude o filtro selecionado.</p>
+          </div>
+
+        </article>
+
+        <!-- ===================================================== -->
+        <!-- COLUNA LATERAL -->
+        <!-- ===================================================== -->
+        <aside class="habits-sidebar">
+
+          <!-- Card de foco -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Foco de constância</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="focus-text" id="focusRecommendation">
+              Escolha um hábito simples para manter hoje.
+            </p>
+
+            <div class="focus-mini-list" id="focusMiniList">
+              <!-- Gerado pelo JS -->
+            </div>
+          </article>
+
+          <!-- Semana -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Resumo semanal</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="week-grid" id="weekGrid">
+              <div>
+                <strong>S</strong>
+                <span id="day0">○</span>
+              </div>
+
+              <div>
+                <strong>T</strong>
+                <span id="day1">○</span>
+              </div>
+
+              <div>
+                <strong>Q</strong>
+                <span id="day2">○</span>
+              </div>
+
+              <div>
+                <strong>Q</strong>
+                <span id="day3">○</span>
+              </div>
+
+              <div>
+                <strong>S</strong>
+                <span id="day4">○</span>
+              </div>
+
+              <div>
+                <strong>S</strong>
+                <span id="day5">○</span>
+              </div>
+
+              <div>
+                <strong>D</strong>
+                <span id="day6">○</span>
+              </div>
+            </div>
+
+            <p class="week-text" id="weekText">
+              A semana começa quando você decide continuar.
+            </p>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimas ações</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="habitMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE NOVO HÁBITO -->
+  <!-- ===================================================== -->
+  <div class="habit-modal-overlay" id="habitModal">
+    <div class="habit-modal">
+
+      <h3>Novo hábito</h3>
+
+      <p>
+        Crie um hábito simples para acompanhar sua constância ao longo da semana.
+      </p>
+
+      <div class="habit-form-message" id="habitFormMessage"></div>
+
+      <label>
+        <span>Nome do hábito</span>
+        <input 
+          type="text" 
+          id="habitTitleInput"
+          placeholder="Ex: beber água, meditar, ler, treinar..." 
+        />
+      </label>
+
+      <label>
+        <span>Categoria</span>
+
+        <select id="habitCategorySelect">
+          <option value="Saúde">Saúde</option>
+          <option value="Estudos">Estudos</option>
+          <option value="Casa">Casa</option>
+          <option value="Pessoal">Pessoal</option>
+          <option value="Produtividade">Produtividade</option>
+          <option value="Autocuidado">Autocuidado</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Meta semanal</span>
+
+        <select id="habitWeeklyGoalSelect">
+          <option value="3">3 vezes por semana</option>
+          <option value="5">5 vezes por semana</option>
+          <option value="7">Todos os dias</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Observação opcional</span>
+        <input 
+          type="text" 
+          id="habitDescriptionInput"
+          placeholder="Ex: fazer de manhã, antes de dormir..." 
+        />
+      </label>
+
+      <div class="habit-modal-actions">
+        <button class="secondary-btn" type="button" id="closeHabitModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveHabitBtn">
+          Salvar hábito
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JS da tela de hábitos -->
+  <script src="../js/habits.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

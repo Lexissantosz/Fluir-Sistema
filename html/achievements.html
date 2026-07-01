@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- FLUIR — CONQUISTAS -->
+  <!-- Tela de conquistas gerais do sistema -->
+  <!-- ===================================================== -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Conquistas | Fluir</title>
+
+  <!-- Fonte principal usada no projeto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS específico da tela -->
+  <link rel="stylesheet" href="../css/achievements.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <main class="achievements-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item active">
+          <span>✧</span>
+          Conquistas
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <span>⚙</span>
+          Configurações
+        </a>
+
+        <a href="profile.html" class="nav-item">
+          <span>♙</span>
+          Perfil
+        </a>
+
+        <a href="plans.html" class="nav-item">
+          <span>♕</span>
+          Planos e preços
+        </a>
+      </nav>
+
+      <!-- Ilustração lateral -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>“Pequenas vitórias também merecem ser vistas.”</p>
+      </div>
+
+      <div class="focus-card">
+        <p>Conquistas liberadas</p>
+        <strong id="sidebarUnlocked">0%</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarProgressBar"></span>
+        </div>
+
+        <small id="sidebarAchievementText">Comece registrando sua rotina.</small>
+      </div>
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="achievements-main">
+
+      <!-- Topo -->
+      <header class="achievements-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Usuário</h2>
+          <p>Suas pequenas constâncias viram conquistas aqui.</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <a href="profile.html" class="avatar-btn" id="avatarBtn">
+            U
+          </a>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="page-title">
+        <div class="title-icon">✧</div>
+
+        <div>
+          <h1>Conquistas</h1>
+          <p>Acompanhe marcos importantes da sua rotina, saúde, hábitos e organização.</p>
+        </div>
+      </section>
+
+      <!-- Resumo geral -->
+      <section class="achievement-summary">
+        <article>
+          <span>✧</span>
+          <small>Conquistas liberadas</small>
+          <strong id="unlockedCount">0</strong>
+        </article>
+
+        <article>
+          <span>◇</span>
+          <small>Total disponível</small>
+          <strong id="totalCount">0</strong>
+        </article>
+
+        <article>
+          <span>◌</span>
+          <small>Progresso geral</small>
+          <strong id="generalProgress">0%</strong>
+        </article>
+
+        <article>
+          <span>♡</span>
+          <small>Próxima conquista</small>
+          <strong id="nextAchievement">--</strong>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="achievement-filters">
+        <button class="filter-btn active" data-filter="all" type="button">Todas</button>
+        <button class="filter-btn" data-filter="unlocked" type="button">Liberadas</button>
+        <button class="filter-btn" data-filter="locked" type="button">Bloqueadas</button>
+        <button class="filter-btn" data-filter="tasks" type="button">Tarefas</button>
+        <button class="filter-btn" data-filter="habits" type="button">Hábitos</button>
+        <button class="filter-btn" data-filter="sleep" type="button">Sono</button>
+        <button class="filter-btn" data-filter="water" type="button">Água</button>
+        <button class="filter-btn" data-filter="diary" type="button">Diário</button>
+        <button class="filter-btn" data-filter="finances" type="button">Finanças</button>
+      </section>
+
+      <!-- Destaque -->
+      <section class="featured-achievement" id="featuredAchievement">
+        <div>
+          <span class="featured-icon">✧</span>
+        </div>
+
+        <div>
+          <p class="small-label">Conquista em destaque</p>
+          <h2 id="featuredTitle">O início</h2>
+          <p id="featuredText">Faça seu primeiro registro em qualquer módulo para começar sua jornada.</p>
+        </div>
+      </section>
+
+      <!-- Grid de conquistas -->
+      <section class="achievements-grid" id="achievementsGrid">
+        <!-- Renderizado pelo JS -->
+      </section>
+
+      <footer class="achievements-footer">
+        ♡ Constância não precisa ser perfeita. Só precisa continuar.
+      </footer>
+    </section>
+  </main>
+
+  <!-- Modal de conquista -->
+  <div class="achievement-modal" id="achievementModal">
+    <div class="achievement-modal-content">
+      <button class="modal-close" id="closeAchievementModal" type="button">×</button>
+
+      <div class="modal-symbol" id="modalSymbol">✧</div>
+
+      <p class="small-label">Conquista</p>
+      <h2 id="modalTitle">Título da conquista</h2>
+      <p id="modalDescription">Descrição da conquista.</p>
+
+      <div class="modal-progress-box">
+        <span id="modalProgressText">0 de 1 concluído</span>
+
+        <div class="modal-progress-bar">
+          <span id="modalProgressFill"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/achievements.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

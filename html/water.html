@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Água</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de água -->
+  <link rel="stylesheet" href="../css/water.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="water-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item active module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+       <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Cuidar do básico também é cuidar de você.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Meta de água</p>
+        <strong id="sidebarWaterPercent">0%</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarWaterBar"></span>
+        </div>
+
+        <small id="sidebarWaterText">Nenhum copo registrado ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="water-main">
+
+      <!-- Topo -->
+      <header class="water-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Hidratação simples, constante e fácil de acompanhar.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="water-title-area">
+        <div class="title-left">
+          <span class="page-icon">♢</span>
+
+          <div>
+            <h3>Água</h3>
+            <p>Registre sua água em ml e acompanhe sua meta diária.</p>
+          </div>
+        </div>
+
+        <div class="water-actions">
+  <button class="date-btn" type="button">
+    ▣ Hoje
+  </button>
+
+  <!-- Botões rápidos de hidratação -->
+  <button class="water-quick-btn" type="button" data-water-amount="200">
+    +200ml
+  </button>
+
+  <button class="water-quick-btn" type="button" data-water-amount="300">
+    +300ml
+  </button>
+
+  <button class="water-quick-btn" type="button" data-water-amount="500">
+    +500ml
+  </button>
+
+  <!-- Mantém o ID antigo por compatibilidade com o JS atual -->
+  <button class="primary-btn" type="button" id="addCupBtn" data-water-amount="250">
+    +250ml
+  </button>
+</div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="water-summary">
+        <article class="summary-card">
+          <span>♢</span>
+          <p>Hoje</p>
+          <strong id="todayCups">0</strong>
+          <small>Água registrada</small>
+        </article>
+
+        <article class="summary-card">
+          <span>%</span>
+          <p>Meta</p>
+          <strong id="waterProgress">0%</strong>
+          <small>Da meta diária</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Restante</p>
+          <strong id="remainingCups">0</strong>
+          <small>ml para bater a meta</small>
+        </article>
+
+        <article class="summary-card">
+          <span>▦</span>
+          <p>Semana</p>
+          <strong id="weeklyAverage">0</strong>
+          <small>Média em ml</small>
+        </article>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="water-layout">
+
+        <!-- Painel principal -->
+        <article class="water-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Controle de hoje</h4>
+              <p id="waterSubtitle">Adicione a quantidade de água em ml conforme for bebendo.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="resetWaterBtn">
+              Reiniciar hoje
+            </button>
+          </div>
+
+          <!-- Área principal de progresso -->
+          <section class="water-hero">
+            <div class="water-circle">
+              <div>
+                <strong id="waterCircleText">0%</strong>
+                <span id="waterCircleSubtext">0 de 2000ml</span>
+              </div>
+            </div>
+
+            <div class="water-controls">
+              <button class="primary-btn" type="button" id="addCupMainBtn">
+                + 250ml
+              </button>
+
+              <button class="secondary-btn" type="button" id="removeCupBtn">
+                - 250ml
+              </button>
+
+              <button class="secondary-btn" type="button" id="openGoalModalBtn">
+                Alterar meta
+              </button>
+            </div>
+          </section>
+
+          <!-- blocos visuais -->
+          <section class="cups-area" id="cupsArea">
+            <!-- blocos gerados pelo JS -->
+          </section>
+
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="water-sidebar">
+
+          <!-- Meta -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Meta diária</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text" id="goalText">
+              Sua meta atual é de 2000ml por dia.
+            </p>
+
+            <button class="wide-btn" type="button" id="openGoalModalSideBtn">
+              Editar meta
+            </button>
+          </article>
+
+          <!-- Semana -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Resumo semanal</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="week-grid">
+              <div><strong>S</strong><span id="day0">○</span></div>
+              <div><strong>T</strong><span id="day1">○</span></div>
+              <div><strong>Q</strong><span id="day2">○</span></div>
+              <div><strong>Q</strong><span id="day3">○</span></div>
+              <div><strong>S</strong><span id="day4">○</span></div>
+              <div><strong>S</strong><span id="day5">○</span></div>
+              <div><strong>D</strong><span id="day6">○</span></div>
+            </div>
+
+            <p class="week-text" id="weekText">
+              A semana aparece conforme você registra sua água.
+            </p>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimos registros</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="waterMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE META -->
+  <!-- ===================================================== -->
+  <div class="water-modal-overlay" id="waterGoalModal">
+    <div class="water-modal">
+
+      <h3>Alterar meta</h3>
+
+      <p>
+        Defina sua meta diária de água em ml.
+      </p>
+
+      <div class="water-form-message" id="waterFormMessage"></div>
+
+      <label>
+        <span>Meta diária em ml</span>
+        <input 
+          type="number" 
+          id="waterGoalInput"
+          min="1"
+          max="30"
+          placeholder="Ex: 8"
+        />
+      </label>
+
+      <div class="water-modal-actions">
+        <button class="secondary-btn" type="button" id="closeWaterModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveWaterGoalBtn">
+          Salvar meta
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/water.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

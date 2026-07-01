@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Alimentação</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de alimentação -->
+  <link rel="stylesheet" href="../css/nutrition.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="nutrition-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item active module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+       <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Comer bem também pode ser simples e possível.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Refeições de hoje</p>
+        <strong id="sidebarMealCount">0</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarNutritionBar"></span>
+        </div>
+
+        <small id="sidebarNutritionText">Nenhuma refeição registrada ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="nutrition-main">
+
+      <!-- Topo -->
+      <header class="nutrition-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Registre suas refeições sem cobrança, só com clareza.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="nutrition-title-area">
+        <div class="title-left">
+          <span class="page-icon">◒</span>
+
+          <div>
+            <h3>Alimentação</h3>
+            <p>Registre refeições, acompanhe padrões e organize sua rotina alimentar.</p>
+          </div>
+        </div>
+
+        <div class="nutrition-actions">
+          <button class="date-btn" type="button">
+            ▣ Hoje
+          </button>
+
+          <button class="primary-btn" type="button" id="newMealBtn">
+            + Nova refeição
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="nutrition-summary">
+        <article class="summary-card">
+          <span>◒</span>
+          <p>Refeições</p>
+          <strong id="totalMeals">0</strong>
+          <small>Registradas hoje</small>
+        </article>
+
+        <article class="summary-card">
+          <span>◎</span>
+          <p>Qualidade</p>
+          <strong id="averageQuality">--</strong>
+          <small>Média do dia</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Semana</p>
+          <strong id="weeklyMeals">0</strong>
+          <small>Registros na semana</small>
+        </article>
+
+        <article class="summary-card">
+          <span>#</span>
+          <p>Tipo comum</p>
+          <strong id="topMealType">--</strong>
+          <small>Mais registrado</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todas</button>
+        <button class="filter-btn" type="button" data-filter="breakfast">Café</button>
+        <button class="filter-btn" type="button" data-filter="lunch">Almoço</button>
+        <button class="filter-btn" type="button" data-filter="dinner">Jantar</button>
+        <button class="filter-btn" type="button" data-filter="snack">Lanche</button>
+        <button class="filter-btn" type="button" data-filter="today">Hoje</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="nutrition-layout">
+
+        <!-- Painel principal -->
+        <article class="nutrition-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Refeições registradas</h4>
+              <p id="mealSubtitle">Suas refeições aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearMealsBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="meal-list" id="mealList">
+            <!-- Refeições geradas pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>◒</span>
+            <strong>Nenhuma refeição encontrada</strong>
+            <p>Registre sua primeira refeição para acompanhar sua alimentação.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="nutrition-sidebar">
+
+          <!-- Registro rápido -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Registro rápido</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Registre uma refeição simples. Não precisa contar calorias agora.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickMealBtn">
+              Registrar refeição
+            </button>
+          </article>
+
+          <!-- Semana -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Resumo semanal</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="week-grid">
+              <div><strong>S</strong><span id="day0">○</span></div>
+              <div><strong>T</strong><span id="day1">○</span></div>
+              <div><strong>Q</strong><span id="day2">○</span></div>
+              <div><strong>Q</strong><span id="day3">○</span></div>
+              <div><strong>S</strong><span id="day4">○</span></div>
+              <div><strong>S</strong><span id="day5">○</span></div>
+              <div><strong>D</strong><span id="day6">○</span></div>
+            </div>
+
+            <p class="week-text" id="weekText">
+              A semana aparece conforme você registra refeições.
+            </p>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimos registros</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="nutritionMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE REFEIÇÃO -->
+  <!-- ===================================================== -->
+  <div class="nutrition-modal-overlay" id="nutritionModal">
+    <div class="nutrition-modal">
+
+      <h3>Nova refeição</h3>
+
+      <p>
+        Registre o que comeu de forma simples e sem pressão.
+      </p>
+
+      <div class="nutrition-form-message" id="nutritionFormMessage"></div>
+
+      <label>
+        <span>Nome da refeição</span>
+        <input 
+          type="text" 
+          id="mealTitleInput"
+          placeholder="Ex: arroz, feijão e frango..." 
+        />
+      </label>
+
+      <label>
+        <span>Tipo</span>
+        <select id="mealTypeSelect">
+          <option value="breakfast">Café da manhã</option>
+          <option value="lunch">Almoço</option>
+          <option value="dinner">Jantar</option>
+          <option value="snack">Lanche</option>
+          <option value="other">Outro</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Qualidade percebida</span>
+        <select id="mealQualitySelect">
+          <option value="boa">Boa</option>
+          <option value="media">Média</option>
+          <option value="ruim">Ruim</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Observação opcional</span>
+        <textarea 
+          id="mealNoteInput"
+          placeholder="Ex: comi pouco, estava com fome, me senti bem depois..."
+        ></textarea>
+      </label>
+
+      <div class="nutrition-modal-actions">
+        <button class="secondary-btn" type="button" id="closeNutritionModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveMealBtn">
+          Salvar refeição
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/nutrition.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

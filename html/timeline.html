@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Timeline</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da Timeline -->
+  <link rel="stylesheet" href="../css/timeline.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="timeline-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- ===================================================== -->
+      <!-- LOGO -->
+      <!-- ===================================================== -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- NAVEGAÇÃO LATERAL -->
+      <!-- ===================================================== -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item active">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+  <span>☑</span>
+  Tarefas
+</a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+  <span>◍</span>
+  Ciclo menstrual
+</a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- ===================================================== -->
+      <!-- ILUSTRAÇÃO LATERAL -->
+      <!-- ===================================================== -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Pequenas ações constroem constância; constância gera mudança.”
+        </p>
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- FOCO DO DIA -->
+      <!-- ===================================================== -->
+      <div class="focus-card">
+        <p>Foco de hoje</p>
+        <strong>60%</strong>
+
+        <div class="focus-bar">
+          <span></span>
+        </div>
+
+        <small>Continue assim.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="timeline-main">
+
+      <!-- ===================================================== -->
+      <!-- TOPO -->
+      <!-- ===================================================== -->
+      <header class="timeline-header">
+
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Respire fundo. Um dia de cada vez, no seu ritmo.</p>
+        </div>
+
+        <div class="header-actions">
+  <button class="icon-btn" type="button" aria-label="Notificações">
+    ♡
+  </button>
+
+  <button class="avatar-btn" type="button" id="avatarBtn">
+    D
+  </button>
+</div>
+
+      </header>
+
+      <!-- ===================================================== -->
+      <!-- CABEÇALHO DA TIMELINE -->
+      <!-- ===================================================== -->
+      <section class="timeline-title-area">
+
+        <div class="title-left">
+          <span class="page-icon">◷</span>
+
+          <div>
+            <h3>Timeline</h3>
+            <p>Acompanhe tudo o que aconteceu na sua rotina.</p>
+          </div>
+        </div>
+
+        <div class="timeline-actions">
+          <button class="date-btn" type="button">
+            ▣ 20 — 26 de maio
+          </button>
+
+          <button class="primary-btn" type="button" id="newEventBtn">
+            + Novo evento
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- FILTROS -->
+      <!-- IMPORTANTE:
+           data-filter precisa bater com data-type dos eventos.
+      <!-- ===================================================== -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Tudo</button>
+        <button class="filter-btn" type="button" data-filter="tasks">Tarefas</button>
+        <button class="filter-btn" type="button" data-filter="habits">Hábitos</button>
+        <button class="filter-btn" type="button" data-filter="health">Saúde</button>
+        <button class="filter-btn" type="button" data-filter="finances">Finanças</button>
+        <button class="filter-btn" type="button" data-filter="diary">Diário</button>
+        <button class="filter-btn" type="button" data-filter="attachments">Anexos</button>
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- GRID DA TIMELINE -->
+      <!-- Esquerda: lista principal -->
+      <!-- Direita: resumo, lembretes e humor -->
+      <!-- ===================================================== -->
+      <section class="timeline-layout">
+
+        <!-- ===================================================== -->
+        <!-- COLUNA PRINCIPAL DA TIMELINE -->
+        <!-- ===================================================== -->
+        <article class="timeline-panel">
+
+          <!-- ===================================================== -->
+          <!-- DIA: HOJE -->
+          <!-- ===================================================== -->
+          <div class="timeline-day">
+            <h4>Hoje, 24 de maio</h4>
+
+            <div class="event-list">
+
+              <div class="event-item" data-type="sleep">
+                <time>06:00</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">☼</div>
+
+                <div class="event-content">
+                  <strong>Acordei</strong>
+                  <p>Início de um novo dia. Respirei fundo e agradeci.</p>
+                </div>
+
+                <span class="event-tag">Sono</span>
+              </div>
+
+              <div class="event-item" data-type="health">
+                <time>06:15</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">☕</div>
+
+                <div class="event-content">
+                  <strong>Café da manhã</strong>
+                  <p>Aveia com frutas e café.</p>
+                </div>
+
+                <span class="event-tag">Saúde</span>
+              </div>
+
+              <div class="event-item" data-type="tasks">
+                <time>08:30</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">✓</div>
+
+                <div class="event-content">
+                  <strong>Tarefa concluída</strong>
+                  <p>Revisar proposta do projeto.</p>
+                </div>
+
+                <span class="event-tag">Tarefas</span>
+              </div>
+
+              <div class="event-item" data-type="health">
+                <time>12:30</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">✦</div>
+
+                <div class="event-content">
+                  <strong>Treino de força</strong>
+                  <p>Treino finalizado.</p>
+                </div>
+
+                <span class="event-tag">Saúde</span>
+              </div>
+
+              <div class="event-item" data-type="health">
+                <time>15:45</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">♢</div>
+
+                <div class="event-content">
+                  <strong>1250ml de água</strong>
+                  <p>Meta diária alcançada.</p>
+                </div>
+
+                <span class="event-tag">Saúde</span>
+              </div>
+
+              <div class="event-item" data-type="diary">
+                <time>21:30</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">▤</div>
+
+                <div class="event-content">
+                  <strong>Entrada no diário</strong>
+                  <p>Reflexão sobre o dia.</p>
+                </div>
+
+                <span class="event-tag">Diário</span>
+              </div>
+
+              <div class="event-item" data-type="attachments">
+                <time>22:10</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">⌁</div>
+
+                <div class="event-content">
+                  <strong>Anexo salvo</strong>
+                  <p>Contrato do cliente.pdf</p>
+                </div>
+
+                <span class="event-tag">Anexos</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ===================================================== -->
+          <!-- DIA: ONTEM -->
+          <!-- ===================================================== -->
+          <div class="timeline-day">
+            <h4>Ontem, 23 de maio</h4>
+
+            <div class="event-list">
+
+              <div class="event-item" data-type="tasks">
+                <time>09:00</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">✓</div>
+
+                <div class="event-content">
+                  <strong>Tarefa concluída</strong>
+                  <p>Estudar capítulo 4 — Marketing.</p>
+                </div>
+
+                <span class="event-tag">Tarefas</span>
+              </div>
+
+              <div class="event-item" data-type="health">
+                <time>14:00</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">♢</div>
+
+                <div class="event-content">
+                  <strong>1000ml de água</strong>
+                  <p>Continuei me hidratando.</p>
+                </div>
+
+                <span class="event-tag">Saúde</span>
+              </div>
+
+              <div class="event-item" data-type="finances">
+                <time>19:20</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">$</div>
+
+                <div class="event-content">
+                  <strong>Pagamento recebido</strong>
+                  <p>Cliente Projeto Alfa.</p>
+                </div>
+
+                <span class="event-value">R$ 1.250</span>
+                <span class="event-tag">Finanças</span>
+              </div>
+
+              <div class="event-item" data-type="diary">
+                <time>21:45</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">▤</div>
+
+                <div class="event-content">
+                  <strong>Entrada no diário</strong>
+                  <p>Gratidão pelas pequenas vitórias.</p>
+                </div>
+
+                <span class="event-tag">Diário</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ===================================================== -->
+          <!-- DIA: ESTA SEMANA -->
+          <!-- ===================================================== -->
+          <div class="timeline-day">
+            <h4>Esta semana</h4>
+
+            <div class="event-list">
+
+              <div class="event-item" data-type="tasks">
+                <time>22/05</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">✓</div>
+
+                <div class="event-content">
+                  <strong>Tarefa concluída</strong>
+                  <p>Enviar relatório semanal.</p>
+                </div>
+
+                <span class="event-tag">Tarefas</span>
+              </div>
+
+              <div class="event-item" data-type="attachments">
+                <time>21/05</time>
+                <span class="event-dot"></span>
+                <div class="event-icon">⌁</div>
+
+                <div class="event-content">
+                  <strong>Anexo salvo</strong>
+                  <p>Relatório financeiro Q1.xlsx</p>
+                </div>
+
+                <span class="event-tag">Anexos</span>
+              </div>
+
+            </div>
+          </div>
+
+          <button class="load-more-btn" type="button">
+            Carregar mais eventos ↓
+          </button>
+
+        </article>
+
+        <!-- ===================================================== -->
+        <!-- COLUNA LATERAL DA TIMELINE -->
+        <!-- ===================================================== -->
+        <aside class="timeline-sidebar">
+
+          <!-- Resumo -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Resumo do dia</h4>
+              <span>⌁</span>
+            </div>
+
+            <div class="stats-grid">
+              <div>
+                <strong>7</strong>
+                <span>eventos</span>
+              </div>
+
+              <div>
+                <strong>5</strong>
+                <span>tarefas</span>
+              </div>
+
+              <div>
+                <strong>5/5</strong>
+                <span>água</span>
+              </div>
+
+              <div>
+                <strong>1</strong>
+                <span>treino</span>
+              </div>
+
+              <div>
+                <strong>1</strong>
+                <span>entrada</span>
+              </div>
+
+              <div>
+                <strong>1</strong>
+                <span>anexo</span>
+              </div>
+            </div>
+
+            <div class="quote-box">
+              <span>“</span>
+              <p>Um passo de cada vez me leva mais longe.</p>
+            </div>
+          </article>
+
+          <!-- Lembretes -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Próximos lembretes</h4>
+              <span>♡</span>
+            </div>
+
+            <div class="reminder-list">
+              <div>
+                <time>10:00</time>
+                <p>
+                  <strong>Reunião com a equipe</strong>
+                  Amanhã
+                </p>
+              </div>
+
+              <div>
+                <time>14:00</time>
+                <p>
+                  <strong>Enviar proposta</strong>
+                  26 de maio
+                </p>
+              </div>
+
+              <div>
+                <time>20:30</time>
+                <p>
+                  <strong>Alongamento</strong>
+                  Hoje
+                </p>
+              </div>
+            </div>
+
+            <a href="#" class="side-link">Ver todos →</a>
+          </article>
+
+          <!-- Humor -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Humor recente</h4>
+              <span>☻</span>
+            </div>
+
+            <div class="mood-row">
+              <div>
+                <span>☹</span>
+                <small>20/05</small>
+              </div>
+
+              <div>
+                <span>☹</span>
+                <small>21/05</small>
+              </div>
+
+              <div>
+                <span>☻</span>
+                <small>22/05</small>
+              </div>
+
+              <div>
+                <span>☻</span>
+                <small>23/05</small>
+              </div>
+
+              <div class="active">
+                <span>☺</span>
+                <small>24/05</small>
+              </div>
+            </div>
+
+            <p class="mood-question">Como você está hoje?</p>
+
+            <div class="mood-options">
+              <button type="button">☹</button>
+              <button type="button">☹</button>
+              <button type="button">☻</button>
+              <button type="button">☺</button>
+              <button type="button">☻</button>
+            </div>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE NOVO EVENTO -->
+  <!-- Salva localmente no navegador por enquanto -->
+  <!-- ===================================================== -->
+  <div class="event-modal-overlay" id="eventModal">
+    <div class="event-modal">
+      <h3>Novo evento</h3>
+
+      <p>
+        Registre um acontecimento importante da sua rotina.
+        Por enquanto, ele será salvo localmente no navegador.
+      </p>
+
+      <!-- Mensagem de validação do modal -->
+      <div class="event-form-message" id="eventFormMessage"></div>
+
+      <label>
+        <span>Título do evento</span>
+        <input 
+          type="text" 
+          id="eventTitleInput"
+          placeholder="Ex: Caminhada, estudo, pagamento..." 
+        />
+      </label>
+
+      <label>
+        <span>Categoria</span>
+
+        <select id="eventCategorySelect">
+          <option value="tasks">Tarefas</option>
+          <option value="habits">Hábitos</option>
+          <option value="health">Saúde</option>
+          <option value="finances">Finanças</option>
+          <option value="diary">Diário</option>
+          <option value="attachments">Anexos</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Descrição opcional</span>
+        <input 
+          type="text" 
+          id="eventDescriptionInput"
+          placeholder="Ex: detalhe rápido sobre o evento..." 
+        />
+      </label>
+
+      <div class="event-modal-actions">
+        <button class="secondary-btn" type="button" id="closeEventModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveEventBtn">
+          Salvar evento
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS da Timeline -->
+  <script src="../js/timeline.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

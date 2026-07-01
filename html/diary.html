@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Diário emocional</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de diário -->
+  <link rel="stylesheet" href="../css/diary.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="diary-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item active module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Nomear o que sente também é uma forma de cuidado.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Registros</p>
+        <strong id="sidebarDiaryCount">0</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarDiaryBar"></span>
+        </div>
+
+        <small id="sidebarDiaryText">Nenhuma entrada ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="diary-main">
+
+      <!-- Topo -->
+      <header class="diary-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Registre pensamentos, emoções e pequenos acontecimentos do dia.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="diary-title-area">
+        <div class="title-left">
+          <span class="page-icon">▤</span>
+
+          <div>
+            <h3>Diário emocional</h3>
+            <p>Escreva com calma, registre humor e acompanhe seus padrões emocionais.</p>
+          </div>
+        </div>
+
+        <div class="diary-actions">
+          <button class="date-btn" type="button">
+            ▣ Hoje
+          </button>
+
+          <button class="primary-btn" type="button" id="newEntryBtn">
+            + Nova entrada
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="diary-summary">
+        <article class="summary-card">
+          <span>▤</span>
+          <p>Total</p>
+          <strong id="totalEntries">0</strong>
+          <small>Entradas registradas</small>
+        </article>
+
+        <article class="summary-card">
+          <span>☻</span>
+          <p>Humor recente</p>
+          <strong id="lastMood">--</strong>
+          <small>Última entrada</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Semana</p>
+          <strong id="weeklyEntries">0</strong>
+          <small>Registros nesta semana</small>
+        </article>
+
+        <article class="summary-card">
+          <span>#</span>
+          <p>Tag mais usada</p>
+          <strong id="topTag">--</strong>
+          <small>Assunto recorrente</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todas</button>
+        <button class="filter-btn" type="button" data-filter="positive">Leves</button>
+        <button class="filter-btn" type="button" data-filter="neutral">Neutras</button>
+        <button class="filter-btn" type="button" data-filter="heavy">Pesadas</button>
+        <button class="filter-btn" type="button" data-filter="today">Hoje</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="diary-layout">
+
+        <!-- Painel principal -->
+        <article class="diary-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Entradas do diário</h4>
+              <p id="entrySubtitle">Suas entradas aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearEntriesBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="entry-list" id="entryList">
+            <!-- Entradas geradas pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>▤</span>
+            <strong>Nenhuma entrada encontrada</strong>
+            <p>Crie uma nova entrada para começar seu diário emocional.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="diary-sidebar">
+
+          <!-- Escrita rápida -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Escrita rápida</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Não precisa ficar perfeito. Escreva como estiver vindo agora.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickEntryBtn">
+              Escrever agora
+            </button>
+          </article>
+
+          <!-- Humor -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Humor recente</h4>
+              <span>☻</span>
+            </div>
+
+            <div class="mood-row" id="moodRow">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <p class="week-text" id="moodText">
+              Seus registros de humor aparecerão aqui.
+            </p>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimas ações</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="diaryMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE ENTRADA DO DIÁRIO -->
+  <!-- ===================================================== -->
+  <div class="diary-modal-overlay" id="diaryModal">
+    <div class="diary-modal">
+
+      <h3>Nova entrada</h3>
+
+      <p>
+        Registre o que você sente, pensa ou quer lembrar sobre hoje.
+      </p>
+
+      <div class="diary-form-message" id="diaryFormMessage"></div>
+
+      <label>
+        <span>Título</span>
+        <input 
+          type="text" 
+          id="entryTitleInput"
+          placeholder="Ex: Como foi meu dia..." 
+        />
+      </label>
+
+      <label>
+        <span>Humor</span>
+        <select id="entryMoodSelect">
+          <option value="positive">Leve</option>
+          <option value="neutral">Neutro</option>
+          <option value="heavy">Pesado</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Tag</span>
+        <select id="entryTagSelect">
+          <option value="Rotina">Rotina</option>
+          <option value="Família">Família</option>
+          <option value="Trabalho">Trabalho</option>
+          <option value="Estudos">Estudos</option>
+          <option value="Relacionamentos">Relacionamentos</option>
+          <option value="Saúde mental">Saúde mental</option>
+          <option value="Gratidão">Gratidão</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Texto</span>
+        <textarea 
+          id="entryTextInput"
+          placeholder="Escreva livremente..."
+        ></textarea>
+      </label>
+
+      <div class="diary-modal-actions">
+        <button class="secondary-btn" type="button" id="closeDiaryModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveEntryBtn">
+          Salvar entrada
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/diary.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

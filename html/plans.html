@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- FLUIR — PLANOS E PREÇOS -->
+  <!-- Tela visual para planos, mensalidades e recursos futuros -->
+  <!-- ===================================================== -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Planos e Preços | Fluir</title>
+
+  <!-- Fonte principal usada no projeto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS específico da tela -->
+  <link rel="stylesheet" href="../css/plans.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <main class="plans-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+          <span>⚙</span>
+          Configurações
+        </a>
+
+        <a href="profile.html" class="nav-item">
+          <span>♙</span>
+          Perfil
+        </a>
+
+        <a href="plans.html" class="nav-item active">
+          <span>♕</span>
+          Planos e preços
+        </a>
+      </nav>
+
+      <!-- Ilustração lateral -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>“Organizar a vida também pode crescer com você.”</p>
+      </div>
+
+      <!-- Foco do dia -->
+      <div class="focus-card">
+        <p>Plano atual</p>
+        <strong id="currentPlanName">Gratuito</strong>
+
+        <div class="focus-bar">
+          <span></span>
+        </div>
+
+        <small>Recursos essenciais ativos.</small>
+      </div>
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="plans-main">
+
+      <!-- Topo -->
+      <header class="plans-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Usuário</h2>
+          <p>Escolha um plano que acompanhe sua rotina.</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <a href="profile.html" class="avatar-btn" id="avatarBtn">
+            U
+          </a>
+        </div>
+      </header>
+
+      <!-- Título da página -->
+      <section class="page-title">
+        <div class="title-icon">♕</div>
+
+        <div>
+          <h1>Planos e preços</h1>
+          <p>Uma estrutura futura para versões gratuita, premium e profissional do Fluir.</p>
+        </div>
+      </section>
+
+      <!-- Aviso -->
+      <section class="notice-card">
+        <div>
+          <strong>Área em preparação</strong>
+          <p>
+            Esta tela já está pronta visualmente, mas os pagamentos ainda serão conectados futuramente ao backend.
+          </p>
+        </div>
+
+        <span>Futuro</span>
+      </section>
+
+      <!-- Alternador mensal/anual -->
+      <section class="billing-toggle">
+        <button class="billing-btn active" data-billing="monthly" type="button">
+          Mensal
+        </button>
+
+        <button class="billing-btn" data-billing="yearly" type="button">
+          Anual
+          <span>economize</span>
+        </button>
+      </section>
+
+      <!-- Cards dos planos -->
+<section class="plans-grid">
+
+  <!-- Plano gratuito -->
+  <article class="plan-card" data-plan-card="Gratuito">
+    <div class="plan-level">Essencial</div>
+
+    <div class="plan-top">
+      <span class="plan-icon">◌</span>
+
+      <div>
+        <h3>Gratuito</h3>
+        <p>Para começar a organizar a rotina com recursos básicos.</p>
+      </div>
+    </div>
+
+    <div class="price-area">
+      <strong data-monthly="R$ 0" data-yearly="R$ 0">R$ 0</strong>
+      <span>/mês</span>
+    </div>
+
+    <button class="plan-button current-plan" data-plan="Gratuito" type="button">
+      Plano atual
+    </button>
+
+    <div class="access-summary">
+      <strong>Acesso básico</strong>
+      <p>Ideal para testar o Fluir e organizar o essencial.</p>
+    </div>
+
+    <ul class="feature-list">
+      <li>Dashboard básico</li>
+      <li>Timeline local</li>
+      <li>Tarefas</li>
+      <li>Hábitos</li>
+      <li>Sono</li>
+      <li>Água</li>
+      <li class="locked">Finanças avançadas</li>
+      <li class="locked">Relatórios e gráficos</li>
+      <li class="locked">Conquistas</li>
+      <li class="locked">Insights futuros com IA</li>
+    </ul>
+  </article>
+
+  <!-- Plano pessoal -->
+  <article class="plan-card featured" data-plan-card="Pessoal">
+    <div class="popular-badge">Mais escolhido</div>
+    <div class="plan-level">Intermediário</div>
+
+    <div class="plan-top">
+      <span class="plan-icon">♡</span>
+
+      <div>
+        <h3>Pessoal</h3>
+        <p>Para acompanhar mais áreas da vida com metas e evolução.</p>
+      </div>
+    </div>
+
+    <div class="price-area">
+      <strong data-monthly="R$ 19,90" data-yearly="R$ 199,00">R$ 19,90</strong>
+      <span class="price-period">/mês</span>
+    </div>
+
+    <button class="plan-button" data-plan="Pessoal" type="button">
+      Escolher plano
+    </button>
+
+    <div class="access-summary">
+      <strong>Acesso ampliado</strong>
+      <p>Mais módulos, conquistas, metas e personalização.</p>
+    </div>
+
+    <ul class="feature-list">
+      <li>Tudo do plano Gratuito</li>
+      <li>Finanças básicas</li>
+      <li>Diário emocional completo</li>
+      <li>Alimentação básica</li>
+      <li>Saúde física</li>
+      <li>Ciclo menstrual</li>
+      <li>Conquistas e metas</li>
+      <li>Configurações avançadas</li>
+      <li>Relatórios simples</li>
+      <li class="locked">Finanças completas</li>
+      <li class="locked">IA e análises profundas</li>
+    </ul>
+  </article>
+
+  <!-- Plano completo -->
+  <article class="plan-card premium" data-plan-card="Completo">
+    <div class="plan-level">Avançado</div>
+
+    <div class="plan-top">
+      <span class="plan-icon">♕</span>
+
+      <div>
+        <h3>Completo</h3>
+        <p>Para usar o Fluir como centro completo da vida.</p>
+      </div>
+    </div>
+
+    <div class="price-area">
+      <strong data-monthly="R$ 39,90" data-yearly="R$ 399,00">R$ 39,90</strong>
+      <span class="price-period">/mês</span>
+    </div>
+
+    <button class="plan-button" data-plan="Completo" type="button">
+      Escolher plano
+    </button>
+
+    <div class="access-summary">
+      <strong>Acesso total</strong>
+      <p>Todos os módulos, relatórios, organização avançada e recursos futuros.</p>
+    </div>
+
+    <ul class="feature-list">
+      <li>Tudo do plano Pessoal</li>
+      <li>Finanças completas</li>
+      <li>Contas, cartões e dívidas</li>
+      <li>Orçamentos e objetivos</li>
+      <li>Relatórios avançados</li>
+      <li>Diário estilo Daylio</li>
+      <li>Alimentação com calorias</li>
+      <li>Saúde mental e física avançada</li>
+      <li>Backup futuro na nuvem</li>
+      <li>Insights futuros com IA</li>
+      <li>Prioridade em novos recursos</li>
+    </ul>
+  </article>
+</section>
+
+      <!-- Comparação -->
+      <section class="comparison-card">
+        <div class="section-heading">
+          <h2>Comparação de recursos</h2>
+          <p>Uma visão simples do que cada plano poderá oferecer futuramente.</p>
+        </div>
+
+        <div class="comparison-table">
+          <div class="comparison-row table-head">
+            <span>Recurso</span>
+            <strong>Gratuito</strong>
+            <strong>Pessoal</strong>
+            <strong>Completo</strong>
+          </div>
+
+          <div class="comparison-row">
+            <span>Módulos básicos</span>
+            <strong>✓</strong>
+            <strong>✓</strong>
+            <strong>✓</strong>
+          </div>
+
+          <div class="comparison-row">
+            <span>Conquistas</span>
+            <strong>—</strong>
+            <strong>✓</strong>
+            <strong>✓</strong>
+          </div>
+
+          <div class="comparison-row">
+            <span>Relatórios e gráficos</span>
+            <strong>—</strong>
+            <strong>Simples</strong>
+            <strong>Avançados</strong>
+          </div>
+
+          <div class="comparison-row">
+            <span>Finanças completas</span>
+            <strong>—</strong>
+            <strong>Limitado</strong>
+            <strong>✓</strong>
+          </div>
+
+          <div class="comparison-row">
+            <span>Insights com IA</span>
+            <strong>—</strong>
+            <strong>—</strong>
+            <strong>Futuro</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Perguntas -->
+      <section class="faq-grid">
+        <article>
+          <h3>Posso continuar usando grátis?</h3>
+          <p>Sim. A ideia é manter uma versão gratuita funcional para organização básica.</p>
+        </article>
+
+        <article>
+          <h3>Os pagamentos já funcionam?</h3>
+          <p>Ainda não. Esta é a estrutura visual para integração futura com backend e pagamentos.</p>
+        </article>
+
+        <article>
+          <h3>O que entra no plano completo?</h3>
+          <p>Recursos mais avançados de finanças, saúde, alimentação, relatórios e insights futuros.</p>
+        </article>
+      </section>
+
+      <footer class="plans-footer">
+        ♡ O Fluir cresce junto com a sua rotina.
+      </footer>
+    </section>
+  </main>
+
+  <!-- Modal bonito para seleção de plano -->
+<div class="plan-modal" id="planModal">
+  <div class="plan-modal-content">
+    <button class="modal-close" id="closePlanModal" type="button">×</button>
+
+    <div class="modal-symbol" id="modalSymbol">♡</div>
+
+    <h2 id="modalTitle">Plano selecionado</h2>
+
+    <p id="modalText">
+      Seu plano foi atualizado localmente. Futuramente essa ação será conectada ao backend.
+    </p>
+
+    <div class="modal-access-box">
+      <strong id="modalAccessTitle">Acesso liberado</strong>
+      <ul id="modalAccessList"></ul>
+    </div>
+
+    <div class="modal-actions">
+      <button class="secondary-modal-btn" id="cancelPlanModal" type="button">
+        Cancelar
+      </button>
+
+      <button class="primary-modal-btn" id="confirmPlanModal" type="button">
+        Confirmar plano
+      </button>
+    </div>
+  </div>
+</div>
+
+  <script src="../js/plans.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

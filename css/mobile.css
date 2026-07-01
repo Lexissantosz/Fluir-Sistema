@@ -1,0 +1,785 @@
+/* =====================================================
+   FLUIR — RESPONSIVIDADE MOBILE COMPARTILHADA
+   Aplicada nas páginas internas do sistema.
+   ===================================================== */
+
+.mobile-topbar,
+.mobile-bottom-nav,
+.mobile-drawer-overlay {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  html {
+    min-width: 0;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    width: 100%;
+    min-width: 0;
+    min-height: 100dvh;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    background-size: 42px 42px, 42px 42px, auto, auto;
+  }
+
+  body.mobile-ui-ready {
+    padding-top: 64px;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  body.mobile-drawer-open {
+    overflow: hidden !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .dashboard-page,
+    .timeline-page,
+    .tasks-page,
+    .habits-page,
+    .sleep-page,
+    .water-page,
+    .finances-page,
+    .diary-page,
+    .nutrition-page,
+    .health-page,
+    .cycle-page,
+    .attachments-page,
+    .achievements-page,
+    .settings-page,
+    .profile-page,
+    .plans-page
+  ) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: calc(100dvh - 64px) !important;
+    height: auto !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    overflow: visible !important;
+    display: block !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  body.mobile-ui-ready .sidebar {
+    display: none !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .dashboard-main,
+    .timeline-main,
+    .tasks-main,
+    .habits-main,
+    .sleep-main,
+    .water-main,
+    .finances-main,
+    .diary-main,
+    .nutrition-main,
+    .health-main,
+    .cycle-main,
+    .attachments-main,
+    .achievements-main,
+    .settings-content,
+    .settings-main,
+    .profile-main,
+    .plans-main
+  ) {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    padding: 18px 14px 24px !important;
+  }
+
+  .mobile-topbar {
+    position: fixed;
+    z-index: 3000;
+    inset: 0 0 auto 0;
+    height: 64px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--page-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .mobile-brand-icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+  }
+
+  .mobile-brand-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .mobile-brand strong {
+    display: block;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.06em;
+  }
+
+  .mobile-brand-meta {
+    display: block;
+    min-width: 0;
+  }
+
+  .mobile-brand-subtitle {
+    display: block;
+    margin-top: 2px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .mobile-menu-btn,
+  .mobile-drawer-close,
+  .mobile-more-btn,
+  .mobile-nav-link {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-menu-btn {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    background: var(--card-bg);
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    z-index: 2900;
+    left: 12px;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    min-height: 72px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--page-bg);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .mobile-nav-link,
+  .mobile-more-btn {
+    min-width: 0;
+    min-height: 54px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    color: var(--muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .mobile-nav-link i,
+  .mobile-more-btn i {
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .mobile-nav-link.active,
+  .mobile-more-btn.active {
+    color: var(--button-text);
+    background: var(--button-bg);
+  }
+
+  .mobile-drawer-overlay {
+    position: fixed;
+    z-index: 3100;
+    inset: 0;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.42);
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+  }
+
+  body.mobile-drawer-open .mobile-drawer-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(88vw, 360px);
+    height: 100dvh;
+    padding: 18px;
+    border-left: 1px solid var(--border);
+    background: var(--bg);
+    box-shadow: var(--shadow);
+    transform: translateX(104%);
+    transition: transform 0.24s ease;
+    overflow-y: auto;
+  }
+
+  body.mobile-drawer-open .mobile-drawer {
+    transform: translateX(0);
+  }
+
+  .mobile-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-drawer-head strong {
+    display: block;
+    font-size: 20px;
+    letter-spacing: -0.04em;
+  }
+
+  .mobile-drawer-head span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .mobile-drawer-close {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    color: var(--text);
+    background: var(--card-bg);
+    font-size: 18px;
+  }
+
+  .mobile-drawer-nav {
+    display: grid;
+    gap: 8px;
+  }
+
+  .mobile-drawer-link {
+    min-height: 48px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .mobile-drawer-link i {
+    width: 22px;
+    font-style: normal;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .mobile-drawer-link.active {
+    border-color: var(--border-strong);
+    background: var(--button-bg);
+    color: var(--button-text);
+  }
+
+  .mobile-drawer-link.active i {
+    color: var(--button-text);
+  }
+
+  body.mobile-ui-ready :where(
+    .dashboard-header,
+    .timeline-header,
+    .tasks-header,
+    .habits-header,
+    .sleep-header,
+    .water-header,
+    .finances-header,
+    .diary-header,
+    .nutrition-header,
+    .health-header,
+    .cycle-header,
+    .attachments-header,
+    .achievements-header,
+    .profile-header,
+    .plans-header
+  ) {
+    display: block !important;
+    padding: 6px 0 18px !important;
+    margin: 0 0 18px !important;
+    border-bottom: 1px solid var(--border);
+  }
+
+  body.mobile-ui-ready :where(
+    .dashboard-header,
+    .timeline-header,
+    .tasks-header,
+    .habits-header,
+    .sleep-header,
+    .water-header,
+    .finances-header,
+    .diary-header,
+    .nutrition-header,
+    .health-header,
+    .cycle-header,
+    .attachments-header,
+    .achievements-header,
+    .profile-header,
+    .plans-header
+  ) h2 {
+    max-width: 10ch;
+    font-size: clamp(28px, 8vw, 36px) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.075em !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .dashboard-header,
+    .timeline-header,
+    .tasks-header,
+    .habits-header,
+    .sleep-header,
+    .water-header,
+    .finances-header,
+    .diary-header,
+    .nutrition-header,
+    .health-header,
+    .cycle-header,
+    .attachments-header,
+    .achievements-header,
+    .profile-header,
+    .plans-header
+  ) p {
+    margin-top: 8px !important;
+    max-width: 35ch;
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  body.mobile-ui-ready .header-actions {
+    display: none !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .tasks-title-area,
+    .timeline-title-area,
+    .habits-title-area,
+    .sleep-title-area,
+    .water-title-area,
+    .finances-title-area,
+    .diary-title-area,
+    .nutrition-title-area,
+    .health-title-area,
+    .cycle-title-area,
+    .attachments-title-area,
+    .page-title
+  ) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    margin: 0 0 16px !important;
+    padding: 0 !important;
+  }
+
+  body.mobile-ui-ready .title-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  body.mobile-ui-ready .page-icon {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 16px !important;
+    flex: 0 0 auto;
+  }
+
+  body.mobile-ui-ready :where(.title-left h3, .page-title h3, .page-title h2) {
+    font-size: 30px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.07em !important;
+  }
+
+  body.mobile-ui-ready :where(.title-left p, .page-title p) {
+    margin-top: 6px !important;
+    font-size: 12.5px !important;
+    line-height: 1.45 !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .tasks-actions,
+    .timeline-actions,
+    .habits-actions,
+    .sleep-actions,
+    .water-actions,
+    .finances-actions,
+    .diary-actions,
+    .nutrition-actions,
+    .health-actions,
+    .cycle-actions,
+    .attachments-actions
+  ) {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  body.mobile-ui-ready :where(
+    .tasks-actions,
+    .timeline-actions,
+    .habits-actions,
+    .sleep-actions,
+    .water-actions,
+    .finances-actions,
+    .diary-actions,
+    .nutrition-actions,
+    .health-actions,
+    .cycle-actions,
+    .attachments-actions
+  )::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.mobile-ui-ready :where(
+    .primary-btn,
+    .secondary-btn,
+    .date-btn,
+    .small-btn,
+    .filter-btn,
+    .load-more-btn,
+    .add-water-btn,
+    .water-shortcut,
+    .quick-btn,
+    .new-task-btn
+  ) {
+    min-height: 42px !important;
+    border-radius: 14px !important;
+    font-size: 12px !important;
+    flex: 0 0 auto;
+  }
+
+  body.mobile-ui-ready :where(
+    .summary-grid,
+    .stats-grid,
+    .achievements-grid,
+    .plans-grid,
+    .settings-grid,
+    .reset-grid
+  ) {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .content-grid,
+    .bottom-grid,
+    .side-panels,
+    .timeline-layout,
+    .tasks-layout,
+    .habits-layout,
+    .sleep-layout,
+    .water-layout,
+    .finances-layout,
+    .diary-layout,
+    .nutrition-layout,
+    .health-layout,
+    .cycle-layout,
+    .attachments-layout,
+    .profile-grid,
+    .faq-grid,
+    .form-grid,
+    .main-grid,
+    .dashboard-grid
+  ) {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  body.mobile-ui-ready :where(
+    .summary-card,
+    .panel,
+    .side-card,
+    .timeline-panel,
+    .timeline-sidebar,
+    .task-card,
+    .habit-card,
+    .sleep-card,
+    .water-card,
+    .finance-card,
+    .diary-card,
+    .attachment-card,
+    .achievement-card,
+    .plan-card,
+    .setting-card,
+    .profile-card,
+    .focus-card-mobile
+  ) {
+    border-radius: 20px !important;
+    border-color: var(--border) !important;
+    box-shadow: none !important;
+  }
+
+  body.mobile-ui-ready .summary-card {
+    min-height: 128px !important;
+    padding: 16px !important;
+  }
+
+  body.mobile-ui-ready .summary-card strong {
+    font-size: clamp(24px, 7vw, 34px) !important;
+    line-height: 1 !important;
+  }
+
+  body.mobile-ui-ready .summary-card small,
+  body.mobile-ui-ready .summary-card p {
+    font-size: 11.5px !important;
+  }
+
+  body.mobile-ui-ready .panel {
+    padding: 18px !important;
+  }
+
+  body.mobile-ui-ready .panel-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    margin-bottom: 16px !important;
+  }
+
+  body.mobile-ui-ready .panel-header h3 {
+    font-size: 17px !important;
+    letter-spacing: -0.035em !important;
+  }
+
+  body.mobile-ui-ready .filters-area {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    margin: 0 0 16px !important;
+    padding-bottom: 4px !important;
+    scrollbar-width: none;
+  }
+
+  body.mobile-ui-ready .filters-area::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.mobile-ui-ready .task-list {
+    display: grid !important;
+    gap: 10px !important;
+  }
+
+  body.mobile-ui-ready .task-item,
+  body.mobile-ui-ready .task-row,
+  body.mobile-ui-ready .habit-row {
+    width: 100% !important;
+    border-radius: 16px !important;
+    min-height: 54px !important;
+  }
+
+  body.mobile-ui-ready .task-item {
+    grid-template-columns: 26px minmax(0, 1fr) !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+
+  body.mobile-ui-ready .task-item small,
+  body.mobile-ui-ready .task-item time {
+    grid-column: 2 !important;
+    justify-self: start !important;
+  }
+
+  body.mobile-ui-ready .timeline-list {
+    display: grid !important;
+    gap: 14px !important;
+  }
+
+  body.mobile-ui-ready .timeline-item,
+  body.mobile-ui-ready .event-item {
+    grid-template-columns: auto 1fr !important;
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+
+  body.mobile-ui-ready .event-item {
+    padding: 12px 0 !important;
+  }
+
+  body.mobile-ui-ready .event-item time {
+    min-width: 48px !important;
+    font-size: 11px !important;
+  }
+
+  body.mobile-ui-ready .event-dot {
+    display: none !important;
+  }
+
+  body.mobile-ui-ready .event-icon {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 12px !important;
+  }
+
+  body.mobile-ui-ready .event-content {
+    min-width: 0 !important;
+  }
+
+  body.mobile-ui-ready .event-tag,
+  body.mobile-ui-ready .event-value {
+    grid-column: 2 !important;
+    justify-self: start !important;
+    margin-left: 44px !important;
+  }
+
+  body.mobile-ui-ready :where(.week-grid, .water-shortcuts, .mood-options, .mood-row) {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none;
+  }
+
+  body.mobile-ui-ready :where(.week-grid, .water-shortcuts, .mood-options, .mood-row)::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.mobile-ui-ready :where(.sleep-history, .water-history, .finance-history, .diary-history) {
+    overflow-x: auto !important;
+  }
+
+  body.mobile-ui-ready :where(input, select, textarea) {
+    min-height: 46px !important;
+    font-size: 16px !important;
+    border-radius: 14px !important;
+  }
+
+  body.mobile-ui-ready :where(.event-modal, .task-modal, .habit-modal, .sleep-modal, .water-modal, .finance-modal, .diary-modal, .modal-content, .plan-modal-content, .achievement-modal-content) {
+    width: calc(100vw - 24px) !important;
+    max-width: 420px !important;
+    max-height: calc(100dvh - 28px) !important;
+    overflow-y: auto !important;
+    border-radius: 22px !important;
+  }
+
+  body.mobile-ui-ready .recent-events {
+    padding-bottom: 12px !important;
+  }
+
+  body.mobile-ui-ready .event-list,
+  body.mobile-ui-ready .habit-table {
+    min-width: 0 !important;
+  }
+
+  body.mobile-ui-ready .water-circle,
+  body.mobile-ui-ready .sleep-empty-icon {
+    max-width: 260px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  body.mobile-ui-ready .control-card,
+  body.mobile-ui-ready .water-control-card {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 430px) {
+  body.mobile-ui-ready :where(
+    .summary-grid,
+    .stats-grid,
+    .achievements-grid,
+    .plans-grid,
+    .settings-grid,
+    .reset-grid
+  ) {
+    gap: 8px !important;
+  }
+
+  body.mobile-ui-ready .summary-card {
+    min-height: 116px !important;
+    padding: 14px !important;
+  }
+
+  .mobile-bottom-nav {
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    min-height: 68px;
+    padding: 7px;
+    border-radius: 22px;
+  }
+
+  .mobile-nav-link,
+  .mobile-more-btn {
+    min-height: 52px;
+    font-size: 9.5px;
+  }
+
+  .mobile-nav-link i,
+  .mobile-more-btn i {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 360px) {
+  body.mobile-ui-ready :where(
+    .summary-grid,
+    .stats-grid,
+    .achievements-grid,
+    .plans-grid,
+    .settings-grid,
+    .reset-grid
+  ) {
+    grid-template-columns: 1fr !important;
+  }
+}

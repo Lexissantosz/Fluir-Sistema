@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Finanças</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de finanças -->
+  <link rel="stylesheet" href="../css/finances.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="finances-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item active module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Clareza financeira também traz calma.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Saldo atual</p>
+        <strong id="sidebarBalance">R$ 0</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarFinanceBar"></span>
+        </div>
+
+        <small id="sidebarFinanceText">Nenhum lançamento ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="finances-main">
+
+      <!-- Topo -->
+      <header class="finances-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Acompanhe entradas, saídas e seu saldo com clareza.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="finances-title-area">
+        <div class="title-left">
+          <span class="page-icon">$</span>
+
+          <div>
+            <h3>Finanças</h3>
+            <p>Registre receitas, despesas e acompanhe sua organização financeira.</p>
+          </div>
+        </div>
+
+        <div class="finances-actions">
+          <button class="date-btn" type="button">
+            ▣ Este mês
+          </button>
+
+          <button class="primary-btn" type="button" id="newTransactionBtn">
+            + Novo lançamento
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="finances-summary">
+        <article class="summary-card">
+          <span>$</span>
+          <p>Saldo</p>
+          <strong id="currentBalance">R$ 0</strong>
+          <small>Entradas menos saídas</small>
+        </article>
+
+        <article class="summary-card">
+          <span>+</span>
+          <p>Entradas</p>
+          <strong id="totalIncome">R$ 0</strong>
+          <small>Receitas registradas</small>
+        </article>
+
+        <article class="summary-card">
+          <span>-</span>
+          <p>Saídas</p>
+          <strong id="totalExpense">R$ 0</strong>
+          <small>Despesas registradas</small>
+        </article>
+
+        <article class="summary-card">
+          <span>%</span>
+          <p>Uso da renda</p>
+          <strong id="expenseRatio">0%</strong>
+          <small>Saídas sobre entradas</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="income">Entradas</button>
+        <button class="filter-btn" type="button" data-filter="expense">Saídas</button>
+        <button class="filter-btn" type="button" data-filter="fixed">Fixos</button>
+        <button class="filter-btn" type="button" data-filter="variable">Variáveis</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="finances-layout">
+
+        <!-- Painel principal -->
+        <article class="finances-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Lançamentos</h4>
+              <p id="transactionSubtitle">Seus lançamentos aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearTransactionsBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="transaction-list" id="transactionList">
+            <!-- Lançamentos gerados pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>$</span>
+            <strong>Nenhum lançamento encontrado</strong>
+            <p>Registre uma entrada ou saída para começar seu controle financeiro.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="finances-sidebar">
+
+          <!-- Registro rápido -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Registro rápido</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Registre uma entrada ou despesa simples para acompanhar seu saldo.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickTransactionBtn">
+              Novo lançamento
+            </button>
+          </article>
+
+          <!-- Categorias -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Categorias</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="category-list" id="categoryList">
+              <!-- Categorias geradas pelo JS -->
+            </div>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimas ações</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="financeMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE LANÇAMENTO -->
+  <!-- ===================================================== -->
+    <!-- ===================================================== -->
+  <!-- MODAL DE LANÇAMENTO -->
+  <!-- ===================================================== -->
+  <div class="finance-modal-overlay" id="financeModal">
+    <div class="finance-modal">
+
+      <h3>Novo lançamento</h3>
+
+      <p>
+        Registre uma entrada, saída ou dívida para acompanhar seu saldo.
+      </p>
+
+      <div class="finance-form-message" id="financeFormMessage"></div>
+
+      <!-- ===================================================== -->
+      <!-- FORMULÁRIO DO LANÇAMENTO FINANCEIRO -->
+      <!-- Campos principais para entrada, saída, dívida e parcelas -->
+      <!-- ===================================================== -->
+      <div class="finance-form">
+
+        <label>
+          <span>Descrição</span>
+          <input 
+            type="text" 
+            id="transactionTitleInput"
+            placeholder="Ex: salário, mercado, cliente, aluguel..." 
+          />
+        </label>
+
+        <label>
+          <span>Valor</span>
+          <input 
+            type="number" 
+            id="transactionValueInput"
+            min="0.01"
+            step="0.01"
+            placeholder="Ex: 120.00" 
+          />
+        </label>
+
+        <label>
+          <span>Tipo</span>
+          <select id="transactionTypeSelect">
+            <option value="income">Entrada</option>
+            <option value="expense">Saída</option>
+            <option value="debt">Dívida</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Categoria</span>
+          <select id="transactionCategorySelect">
+            <option value="Salário">Salário</option>
+            <option value="Cliente">Cliente</option>
+            <option value="Mercado">Mercado</option>
+            <option value="Casa">Casa</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Estudos">Estudos</option>
+            <option value="Dívidas">Dívidas</option>
+            <option value="Materiais">Materiais</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Natureza</span>
+          <select id="transactionNatureSelect">
+            <option value="variable">Variável</option>
+            <option value="fixed">Fixo</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Data da primeira parcela</span>
+          <input 
+            type="date" 
+            id="transactionDateInput"
+          />
+        </label>
+
+        <label>
+          <span>Total de parcelas</span>
+          <input 
+            type="number" 
+            id="transactionInstallmentsInput"
+            min="1"
+            max="120"
+            value="1"
+            placeholder="Ex: 10" 
+          />
+        </label>
+
+        <label>
+          <span>Parcela atual</span>
+          <input 
+            type="number" 
+            id="transactionCurrentInstallmentInput"
+            min="1"
+            max="120"
+            value="1"
+            placeholder="Ex: 1" 
+          />
+        </label>
+        
+
+        <label class="full">
+          <span>Observação</span>
+          <textarea
+            id="transactionNoteInput"
+            rows="3"
+            placeholder="Ex: compra parcelada, dívida com alguém, vencimento..."
+          ></textarea>
+        </label>
+
+      </div>
+
+      <div class="finance-modal-actions">
+        <button class="secondary-btn" type="button" id="closeFinanceModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveTransactionBtn">
+          Salvar lançamento
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/finances.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Saúde física</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de saúde física -->
+  <link rel="stylesheet" href="../css/physical-health.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="health-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item active module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Seu corpo também registra sua rotina.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Registros de hoje</p>
+        <strong id="sidebarHealthCount">0</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarHealthBar"></span>
+        </div>
+
+        <small id="sidebarHealthText">Nenhum registro físico ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="health-main">
+
+      <!-- Topo -->
+      <header class="health-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Acompanhe movimento, medidas e sinais físicos com clareza.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="health-title-area">
+        <div class="title-left">
+          <span class="page-icon">✦</span>
+
+          <div>
+            <h3>Saúde física</h3>
+            <p>Registre treinos, sintomas, medidas e percepções do corpo.</p>
+          </div>
+        </div>
+
+        <div class="health-actions">
+          <button class="date-btn" type="button">
+            ▣ Hoje
+          </button>
+
+          <button class="primary-btn" type="button" id="newHealthBtn">
+            + Novo registro
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="health-summary">
+        <article class="summary-card">
+          <span>✦</span>
+          <p>Hoje</p>
+          <strong id="todayRecords">0</strong>
+          <small>Registros físicos</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Treinos</p>
+          <strong id="trainingCount">0</strong>
+          <small>Treinos registrados</small>
+        </article>
+
+        <article class="summary-card">
+          <span>◎</span>
+          <p>Energia</p>
+          <strong id="lastEnergy">--</strong>
+          <small>Última percepção</small>
+        </article>
+
+        <article class="summary-card">
+          <span>▦</span>
+          <p>Semana</p>
+          <strong id="weeklyRecords">0</strong>
+          <small>Registros na semana</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="training">Treino</button>
+        <button class="filter-btn" type="button" data-filter="body">Corpo</button>
+        <button class="filter-btn" type="button" data-filter="symptom">Sintoma</button>
+        <button class="filter-btn" type="button" data-filter="today">Hoje</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="health-layout">
+
+        <!-- Painel principal -->
+        <article class="health-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Registros físicos</h4>
+              <p id="healthSubtitle">Seus registros aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearHealthBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="health-list" id="healthList">
+            <!-- Registros gerados pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>✦</span>
+            <strong>Nenhum registro encontrado</strong>
+            <p>Registre um treino, sintoma ou percepção física para começar.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="health-sidebar">
+
+          <!-- Registro rápido -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Registro rápido</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Registre algo simples sobre seu corpo, treino ou energia de hoje.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickHealthBtn">
+              Registrar agora
+            </button>
+          </article>
+
+          <!-- Semana -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Resumo semanal</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="week-grid">
+              <div><strong>S</strong><span id="day0">○</span></div>
+              <div><strong>T</strong><span id="day1">○</span></div>
+              <div><strong>Q</strong><span id="day2">○</span></div>
+              <div><strong>Q</strong><span id="day3">○</span></div>
+              <div><strong>S</strong><span id="day4">○</span></div>
+              <div><strong>S</strong><span id="day5">○</span></div>
+              <div><strong>D</strong><span id="day6">○</span></div>
+            </div>
+
+            <p class="week-text" id="weekText">
+              A semana aparece conforme você registra sua saúde física.
+            </p>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimos registros</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="healthMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE SAÚDE FÍSICA -->
+  <!-- ===================================================== -->
+  <div class="health-modal-overlay" id="healthModal">
+    <div class="health-modal">
+
+      <h3>Novo registro físico</h3>
+
+      <p>
+        Registre um treino, sintoma, medida ou percepção rápida sobre seu corpo.
+      </p>
+
+      <div class="health-form-message" id="healthFormMessage"></div>
+
+      <label>
+        <span>Título</span>
+        <input 
+          type="text" 
+          id="healthTitleInput"
+          placeholder="Ex: treino de pernas, dor de cabeça, peso..." 
+        />
+      </label>
+
+      <label>
+        <span>Tipo</span>
+        <select id="healthTypeSelect">
+          <option value="training">Treino</option>
+          <option value="body">Corpo / medida</option>
+          <option value="symptom">Sintoma</option>
+          <option value="other">Outro</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Energia percebida</span>
+        <select id="healthEnergySelect">
+          <option value="alta">Alta</option>
+          <option value="media">Média</option>
+          <option value="baixa">Baixa</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Observação opcional</span>
+        <textarea 
+          id="healthNoteInput"
+          placeholder="Ex: senti disposição, dor leve, treino pesado, caminhada curta..."
+        ></textarea>
+      </label>
+
+      <div class="health-modal-actions">
+        <button class="secondary-btn" type="button" id="closeHealthModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveHealthBtn">
+          Salvar registro
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/physical-health.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

@@ -1,0 +1,1479 @@
+/* ===================================================== */
+/* FLUIR — CONFIGURAÇÃO INICIAL */
+/* Tela de onboarding / setup do usuário */
+/* HTML + CSS + JS puro */
+/* ===================================================== */
+
+
+/* ===================================================== */
+/* 1. RESET GERAL */
+/* ===================================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+
+/* ===================================================== */
+/* 2. VARIÁVEIS DO TEMA CLARO */
+/* ===================================================== */
+
+:root {
+  --bg: #f8f8f6;
+  --page-bg: rgba(255, 255, 255, 0.76);
+  --card-bg: rgba(255, 255, 255, 0.78);
+  --input-bg: rgba(255, 255, 255, 0.86);
+
+  --text: #161616;
+  --muted: #6f6f6f;
+  --soft-muted: #999999;
+
+  --border: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.24);
+
+  --button-bg: #161616;
+  --button-text: #ffffff;
+
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0 12px 40px rgba(0, 0, 0, 0.05);
+
+  --grid-color: rgba(0, 0, 0, 0.026);
+}
+
+
+/* ===================================================== */
+/* 3. VARIÁVEIS DO TEMA ESCURO */
+/* ===================================================== */
+
+body.dark {
+  --bg: #151515;
+  --page-bg: rgba(20, 20, 20, 0.78);
+  --card-bg: rgba(22, 22, 22, 0.8);
+  --input-bg: rgba(18, 18, 18, 0.84);
+
+  --text: #f5f5f5;
+  --muted: #b8b8b8;
+  --soft-muted: #7f7f7f;
+
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.3);
+
+  --button-bg: #f5f5f5;
+  --button-text: #151515;
+
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.44);
+  --shadow-soft: 0 12px 44px rgba(0, 0, 0, 0.35);
+
+  --grid-color: rgba(255, 255, 255, 0.026);
+}
+
+
+/* ===================================================== */
+/* 4. BASE DA PÁGINA */
+/* ===================================================== */
+
+body {
+  min-height: 100vh;
+  overflow: hidden;
+
+  font-family: "Manrope", "Inter", Arial, Helvetica, sans-serif;
+  color: var(--text);
+
+  background:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    radial-gradient(circle at 20% 18%, rgba(0, 0, 0, 0.035), transparent 30%),
+    var(--bg);
+
+  background-size:
+    56px 56px,
+    56px 56px,
+    auto,
+    auto;
+
+  transition:
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+
+/* ===================================================== */
+/* 5. CONTAINER PRINCIPAL */
+/* ===================================================== */
+
+.setup-page {
+  width: calc(100vw - 32px);
+  height: calc(100vh - 32px);
+
+  margin: 16px auto;
+  padding: 28px 44px 34px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--page-bg);
+  box-shadow: var(--shadow);
+
+  overflow: hidden;
+  position: relative;
+
+  display: grid;
+  grid-template-rows: 58px minmax(0, 1fr);
+  gap: 22px;
+}
+
+
+/* ===================================================== */
+/* 6. TOPO */
+/* ===================================================== */
+
+.setup-top {
+  width: 100%;
+  height: 58px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 5;
+}
+
+
+/* ===================================================== */
+/* 7. LOGO / MARCA */
+/* ===================================================== */
+
+.brand {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.brand-icon {
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.brand-icon svg {
+  width: 27px;
+  height: 27px;
+  display: block;
+}
+
+.brand h1 {
+  font-size: 31px;
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -0.055em;
+}
+
+.brand p {
+  margin-top: 8px;
+
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+
+/* ===================================================== */
+/* 8. BOTÃO DE TEMA */
+/* ===================================================== */
+
+.theme-btn {
+  min-width: 82px;
+  height: 34px;
+  padding: 0 15px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--input-bg);
+  color: var(--text);
+
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+
+  box-shadow: var(--shadow-soft);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.theme-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+}
+
+.theme-btn span {
+  font-size: 12px;
+  line-height: 1;
+}
+
+
+/* ===================================================== */
+/* 9. CONTEÚDO PRINCIPAL */
+/* ===================================================== */
+
+.setup-content {
+  min-height: 0;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: minmax(520px, 1fr) minmax(620px, 1fr);
+  align-items: center;
+  gap: 42px;
+
+  position: relative;
+  z-index: 3;
+}
+
+
+/* ===================================================== */
+/* 10. LADO ESQUERDO — INFORMAÇÕES */
+/* ===================================================== */
+
+.setup-info {
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding-left: 28px;
+  padding-right: 8px;
+  position: relative;
+}
+
+
+/* ===================================================== */
+/* 11. ETIQUETA PEQUENA */
+/* ===================================================== */
+
+.small-label {
+  width: fit-content;
+
+  margin-bottom: 18px;
+  padding: 8px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--input-bg);
+
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+
+/* ===================================================== */
+/* 12. TÍTULO DO LADO ESQUERDO */
+/* ===================================================== */
+
+.setup-info h2 {
+  max-width: 660px;
+
+  margin-bottom: 18px;
+
+  color: var(--text);
+  font-size: clamp(38px, 5vw, 68px);
+  line-height: 0.95;
+  font-weight: 850;
+  letter-spacing: -0.07em;
+}
+
+
+/* ===================================================== */
+/* 13. DESCRIÇÃO DO LADO ESQUERDO */
+/* ===================================================== */
+
+.info-description {
+  max-width: 610px;
+
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+
+/* ===================================================== */
+/* 14. MINI CARDS INFORMATIVOS */
+/* ===================================================== */
+
+.info-cards {
+  width: 100%;
+  max-width: 680px;
+
+  margin-top: 34px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+
+/* ===================================================== */
+/* 15. MINI CARD INDIVIDUAL */
+/* ===================================================== */
+
+.mini-card {
+  min-height: 150px;
+
+  padding: 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.mini-card.active {
+  border-color: var(--border-strong);
+  opacity: 1;
+}
+
+.mini-card:not(.active) {
+  opacity: 0.72;
+}
+
+.mini-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  opacity: 1;
+}
+
+.mini-card span {
+  width: 34px;
+  height: 34px;
+
+  margin-bottom: 16px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.mini-card strong {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.mini-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+
+/* ===================================================== */
+/* 16. FRASE EMOCIONAL */
+/* ===================================================== */
+
+.quiet-box {
+  width: fit-content;
+
+  margin-top: 34px;
+  padding: 14px 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--input-bg);
+
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+}
+
+.quiet-box p {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+
+/* ===================================================== */
+/* 17. CARD DIREITO */
+/* ===================================================== */
+
+.setup-card {
+  width: 100%;
+  max-width: 760px;
+  max-height: 100%;
+  min-height: 700px;
+
+  padding: 36px 40px;
+
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(24px);
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-self: end;
+}
+
+/* ===================================================== */
+/* 18. ÁREA DE PROGRESSO */
+/* ===================================================== */
+
+.progress-area {
+  margin-bottom: 28px;
+}
+
+.progress-text {
+  margin-bottom: 16px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.progress-text span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.progress-text strong {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: -0.035em;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+
+  overflow: hidden;
+}
+
+body.dark .progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar span {
+  display: block;
+
+  width: 25%;
+  height: 100%;
+
+  border-radius: inherit;
+  background: var(--text);
+
+  transition: width 0.28s ease;
+}
+
+
+/* ===================================================== */
+/* 19. FORMULÁRIO */
+/* ===================================================== */
+
+#setupForm {
+  min-height: 0;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* ===================================================== */
+/* 20. ETAPAS */
+/* ===================================================== */
+
+.setup-step {
+  display: none;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.setup-step.active {
+  display: block;
+  animation: stepFade 0.25s ease;
+}
+
+@keyframes stepFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ===================================================== */
+/* 21. SCROLL INTERNO DISCRETO */
+/* ===================================================== */
+
+.setup-step::-webkit-scrollbar {
+  width: 6px;
+}
+
+.setup-step::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.setup-step::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+
+/* ===================================================== */
+/* 22. CABEÇALHO DE CADA ETAPA */
+/* ===================================================== */
+
+.step-header {
+  margin-bottom: 24px;
+}
+
+.step-header h3 {
+  max-width: 520px;
+
+  margin-bottom: 10px;
+
+  color: var(--text);
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 850;
+  letter-spacing: -0.05em;
+}
+
+.step-header p {
+  max-width: 520px;
+
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+
+/* ===================================================== */
+/* 23. CAMPOS BÁSICOS */
+/* ===================================================== */
+
+.field {
+  display: block;
+  margin-bottom: 18px;
+}
+
+.field span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 50px;
+
+  padding: 0 15px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+
+  outline: none;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field textarea {
+  min-height: 96px;
+  padding: 14px 15px;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--muted);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--border-strong);
+  box-shadow: 0 0 0 4px rgba(120, 120, 120, 0.08);
+}
+
+
+/* ===================================================== */
+/* 24. CAMPO ESCONDIDO */
+/* ===================================================== */
+
+.hidden-field {
+  display: none;
+}
+
+.hidden-field.active {
+  display: block;
+}
+
+/* ===================================================== */
+/* CAMPO INVÁLIDO */
+/* Usado quando faltar preencher algo obrigatório */
+/* ===================================================== */
+
+.field input.invalid,
+.field select.invalid,
+.field textarea.invalid {
+  border-color: #d45252;
+  box-shadow: 0 0 0 4px rgba(212, 82, 82, 0.10);
+}
+
+
+/* ===================================================== */
+/* 25. GRID DE MÓDULOS */
+/* ===================================================== */
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+
+/* ===================================================== */
+/* 26. CARD DE MÓDULO */
+/* ===================================================== */
+
+.module-option {
+  min-height: 104px;
+
+  padding: 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--input-bg);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  position: relative;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.module-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+}
+
+.module-option input {
+  width: 18px;
+  height: 18px;
+
+  margin-bottom: 14px;
+
+  accent-color: var(--text);
+}
+
+.module-option span {
+  margin-bottom: 6px;
+
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.module-option small {
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.module-option.locked {
+  opacity: 0.75;
+}
+
+.module-option.selected {
+  border-color: var(--border-strong);
+  background: var(--card-bg);
+}
+
+
+/* ===================================================== */
+/* 27. PERGUNTAS DINÂMICAS DOS MÓDULOS */
+/* ===================================================== */
+
+.module-questions {
+  display: grid;
+  gap: 16px;
+}
+
+.question-block {
+  padding: 22px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--input-bg);
+}
+
+.question-block h4 {
+  margin-bottom: 14px;
+
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: -0.03em;
+}
+
+.question-block-description {
+  margin-top: -8px;
+  margin-bottom: 16px;
+
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.question-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.question-full {
+  grid-column: 1 / -1;
+}
+
+
+/* ===================================================== */
+/* 28. CHECKBOXES INTERNOS */
+/* ===================================================== */
+
+.checkbox-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.choice-pill {
+  min-height: 52px;
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.choice-pill:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
+}
+
+.choice-pill input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--text);
+}
+
+/* ===================================================== */
+/* 29. AVISOS / NOTAS */
+/* ===================================================== */
+
+.soft-note {
+  padding: 14px 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card-bg);
+
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+
+/* ===================================================== */
+/* 30. REVISÃO FINAL */
+/* ===================================================== */
+
+.review-box {
+  display: grid;
+  gap: 14px;
+}
+
+.review-section {
+  padding: 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--input-bg);
+}
+
+.review-section h4 {
+  margin-bottom: 10px;
+
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 850;
+}
+
+.review-section p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.review-list {
+  margin-top: 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-list span {
+  padding: 8px 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-bg);
+
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+
+/* ===================================================== */
+/* 31. AÇÕES */
+/* ===================================================== */
+
+.setup-actions {
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid var(--border);
+
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.primary-btn,
+.secondary-btn {
+  height: 50px;
+
+  padding: 0 24px;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 850;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primary-btn {
+  min-width: 170px;
+
+  border: none;
+  background: var(--button-bg);
+  color: var(--button-text);
+
+  box-shadow: var(--shadow-soft);
+}
+
+.secondary-btn {
+  min-width: 130px;
+
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  transform: translateY(-1px);
+}
+
+.secondary-btn:hover {
+  border-color: var(--border-strong);
+}
+
+.secondary-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+
+/* ===================================================== */
+/* 32. TELAS BAIXAS */
+/* ===================================================== */
+
+@media (max-height: 760px) {
+  .setup-page {
+    grid-template-rows: 52px minmax(0, 1fr);
+    gap: 14px;
+    padding: 22px 42px 26px;
+  }
+
+  .setup-top {
+    height: 52px;
+  }
+
+  .brand h1 {
+    font-size: 28px;
+  }
+
+  .brand p {
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
+  .setup-content {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 36px;
+}
+
+  .setup-info h2 {
+    font-size: clamp(34px, 4.5vw, 54px);
+  }
+
+  .info-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .info-cards {
+    margin-top: 22px;
+  }
+
+  .mini-card {
+    min-height: 128px;
+    padding: 14px;
+  }
+
+  .quiet-box {
+    margin-top: 22px;
+  }
+
+  .setup-card {
+  width: 100%;
+  max-width: none;
+  min-height: 600px;
+  padding: 28px 34px;
+}
+
+  .progress-area {
+    margin-bottom: 20px;
+  }
+
+  .step-header {
+    margin-bottom: 18px;
+  }
+
+  .step-header h3 {
+    font-size: 23px;
+  }
+
+  .field {
+    margin-bottom: 13px;
+  }
+
+  .field input,
+  .field select {
+    min-height: 44px;
+  }
+
+  .module-option {
+    min-height: 90px;
+    padding: 13px;
+  }
+
+  .setup-actions {
+    margin-top: 16px;
+    padding-top: 14px;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    height: 44px;
+  }
+}
+
+
+/* ===================================================== */
+/* 33. RESPONSIVO — TABLET */
+/* ===================================================== */
+
+@media (max-width: 1100px) {
+  body {
+    overflow: auto;
+  }
+
+  .setup-page {
+    width: calc(100% - 24px);
+    height: auto;
+    min-height: calc(100vh - 24px);
+
+    margin: 12px auto;
+    padding: 28px 24px;
+
+    grid-template-rows: auto auto;
+  }
+
+  .setup-top {
+    height: auto;
+  }
+
+  .setup-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .setup-info {
+    padding-left: 0;
+  }
+
+  .setup-info h2 {
+    max-width: 760px;
+  }
+
+  .info-description {
+    max-width: 760px;
+  }
+
+  .setup-card {
+    max-width: 760px;
+    min-height: auto;
+    margin: 0 auto;
+  }
+}
+
+
+/* ===================================================== */
+/* 34. RESPONSIVO — CELULAR GRANDE */
+/* ===================================================== */
+
+@media (max-width: 720px) {
+  .setup-page {
+    width: calc(100% - 18px);
+    margin: 9px auto;
+    padding: 22px 16px;
+    border-radius: 14px;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .brand-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .brand h1 {
+    font-size: 27px;
+  }
+
+  .brand p {
+    font-size: 12px;
+  }
+
+  .theme-btn {
+    min-width: 78px;
+    height: 30px;
+    padding: 0 12px;
+    font-size: 11.5px;
+  }
+
+  .setup-info h2 {
+    font-size: 38px;
+    line-height: 0.98;
+  }
+
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .setup-card {
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+
+  .progress-text {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .step-header h3 {
+    font-size: 24px;
+  }
+
+  .module-grid,
+  .question-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .setup-actions {
+    flex-direction: column-reverse;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+}
+
+
+/* ===================================================== */
+/* 35. RESPONSIVO — CELULAR PEQUENO */
+/* ===================================================== */
+
+@media (max-width: 480px) {
+  .setup-info h2 {
+    font-size: 32px;
+  }
+
+  .info-description {
+    font-size: 14px;
+  }
+
+  .mini-card {
+    min-height: auto;
+  }
+
+  .setup-card {
+    padding: 24px 16px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    font-size: 14px;
+  }
+}
+
+/* ===================================================== */
+/* MENSAGEM DE FORMULÁRIO */
+/* Feedback elegante de validação */
+/* ===================================================== */
+
+.form-message {
+  display: none;
+
+  margin-top: 12px;
+  margin-bottom: 4px;
+  padding: 14px 16px;
+
+  border-radius: 12px;
+  border: 1px solid transparent;
+
+  font-size: 13.5px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.form-message.show {
+  display: block;
+}
+
+.form-message.error {
+  background: rgba(212, 82, 82, 0.08);
+  border-color: rgba(212, 82, 82, 0.22);
+  color: #9a2f2f;
+}
+
+.form-message.success {
+  background: rgba(33, 150, 83, 0.08);
+  border-color: rgba(33, 150, 83, 0.20);
+  color: #22673d;
+}
+
+body.dark .form-message.error {
+  background: rgba(212, 82, 82, 0.10);
+  color: #ffb2b2;
+}
+
+body.dark .form-message.success {
+  background: rgba(33, 150, 83, 0.10);
+  color: #abefc6;
+}
+
+/* ===================================================== */
+/* MODAL DE SUCESSO */
+/* Confirmação bonita ao finalizar o setup */
+/* ===================================================== */
+
+.success-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(6px);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.success-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.success-modal {
+  width: min(100%, 460px);
+  padding: 30px 28px 24px;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow);
+
+  text-align: center;
+}
+
+.success-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 18px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+  background: var(--text);
+  color: var(--button-text);
+
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.success-modal h3 {
+  margin-bottom: 10px;
+
+  font-size: 28px;
+  line-height: 1.1;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+
+.success-modal p {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+.success-modal-actions {
+  margin-top: 24px;
+
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.success-modal-actions .primary-btn,
+.success-modal-actions .secondary-btn {
+  min-width: 150px;
+}
+
+@media (max-width: 640px) {
+  .success-modal-actions {
+    flex-direction: column;
+  }
+
+  .success-modal-actions .primary-btn,
+  .success-modal-actions .secondary-btn {
+    width: 100%;
+  }
+}
+
+/* ===================================================== */
+/* AJUSTE FINAL — LAYOUT MEIO A MEIO */
+/* Faz a parte esquerda e o card de perguntas ocuparem */
+/* praticamente metade da tela cada um. */
+/* ===================================================== */
+
+/* Container principal da tela de setup */
+/* Divide a tela em 2 colunas iguais: texto | perguntas */
+.setup-content {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+/* Parte esquerda da tela */
+/* Mantém o texto bem posicionado dentro da metade esquerda */
+.setup-info {
+  width: 100%;
+  max-width: none;
+  padding-left: 44px;
+  padding-right: 20px;
+}
+
+/* Título grande da esquerda */
+/* Limita o texto para não invadir a outra metade */
+.setup-info h2 {
+  max-width: 680px;
+}
+
+/* Descrição da esquerda */
+.info-description {
+  max-width: 640px;
+}
+
+/* Cards 01, 02, 03 da esquerda */
+.info-cards {
+  max-width: 700px;
+}
+
+/* Card principal das perguntas */
+/* Agora ocupa toda a metade direita disponível */
+.setup-card {
+  width: 100%;
+  max-width: none;
+  min-height: 700px;
+  justify-self: stretch;
+}
+
+/* Conteúdo interno do card de perguntas */
+/* Garante que as etapas usem bem o espaço */
+.setup-step {
+  width: 100%;
+}
+
+/* Blocos das perguntas dentro da etapa 3 */
+/* Ficam mais largos e mais confortáveis */
+.question-block {
+  width: 100%;
+}
+
+/* Grid interno das perguntas */
+/* Mantém campos lado a lado quando houver espaço */
+.question-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Revisão final também usa bem a largura do card */
+.review-box {
+  width: 100%;
+}

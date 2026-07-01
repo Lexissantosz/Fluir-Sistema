@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- FLUIR — PERFIL -->
+  <!-- Tela de perfil pessoal do usuário -->
+  <!-- ===================================================== -->
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Perfil | Fluir</title>
+
+  <!-- Fonte principal usada no projeto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS específico do perfil -->
+  <link rel="stylesheet" href="../css/profile.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <main class="profile-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+          <span>⚙</span>
+          Configurações
+        </a>
+
+        <a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração lateral -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>“Seu espaço pessoal dentro do Fluir.”</p>
+      </div>
+
+      <!-- Foco do dia -->
+      <div class="focus-card">
+        <p>Foco de hoje</p>
+        <strong>60%</strong>
+
+        <div class="focus-bar">
+          <span></span>
+        </div>
+
+        <small>Continue assim.</small>
+      </div>
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="profile-main">
+
+      <!-- Topo -->
+      <header class="profile-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Usuário</h2>
+          <p>Um dia de cada vez, no seu ritmo.</p>
+        </div>
+
+        <div class="header-actions">
+          <button class="theme-btn" id="themeBtn" type="button">
+            <span>☾</span>
+            Escuro
+          </button>
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+        </div>
+      </header>
+
+      <!-- Título da página -->
+      <section class="page-title">
+        <div class="title-icon">♙</div>
+
+        <div>
+          <h1>Perfil</h1>
+          <p>Seu espaço pessoal dentro do Fluir.</p>
+        </div>
+      </section>
+
+      <!-- Card principal do perfil -->
+      <section class="profile-hero">
+        <div class="profile-photo-area">
+          <div class="profile-photo" id="profilePhoto">
+            <span id="profileInitial">U</span>
+            <img id="profileImage" alt="Foto de perfil" />
+          </div>
+
+          <label class="photo-input-label">
+            Trocar foto
+            <input type="file" id="photoInput" accept="image/*" />
+          </label>
+        </div>
+
+        <div class="profile-hero-info">
+          <h2 id="profileName">Usuário</h2>
+          <p id="profileEmail">usuario@email.com</p>
+          <span id="profilePhrase">Um dia de cada vez, com calma e clareza.</span>
+        </div>
+
+        <button class="edit-profile-btn" id="openEditProfileBtn" type="button">
+          ✎ Editar perfil
+        </button>
+
+        <div class="profile-metrics">
+          <div class="metric-card">
+            <span>▣</span>
+            <div>
+              <small>Membro desde</small>
+              <strong>2024</strong>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span>◌</span>
+            <div>
+              <small>Hábitos ativos</small>
+              <strong id="habitCount">0</strong>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span>▤</span>
+            <div>
+              <small>Registros no diário</small>
+              <strong id="diaryCount">0</strong>
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <span>♡</span>
+            <div>
+              <small>Nível de foco</small>
+              <strong>78%</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grid de informações -->
+      <section class="profile-grid">
+
+        <article class="profile-card">
+          <h3><span>♙</span> Informações pessoais</h3>
+
+          <div class="info-list">
+            <p><strong>Nome</strong> <span id="infoName">Usuário</span></p>
+            <p><strong>E-mail</strong> <span id="infoEmail">usuario@email.com</span></p>
+            <p><strong>Apelido</strong> <span id="infoNickname">Usuário</span></p>
+            <p><strong>Pronomes</strong> <span id="infoPronouns">Não informado</span></p>
+            <p><strong>Idade</strong> <span id="infoAge">Não informado</span></p>
+            <p><strong>Tom</strong> <span id="infoTone">Calmo</span></p>
+          </div>
+        </article>
+
+        <article class="profile-card">
+          <h3><span>♡</span> Sobre mim</h3>
+
+          <p class="about-text" id="aboutText">
+            Acredito no poder da rotina e do autoconhecimento para construir uma vida com mais propósito e leveza.
+          </p>
+        </article>
+
+        <article class="profile-card">
+          <h3><span>⚙</span> Preferências</h3>
+
+          <div class="info-list">
+            <p><strong>Tema preferido</strong> <span id="themePreference">Claro</span></p>
+            <p><strong>Idioma</strong> <span>Português (Brasil)</span></p>
+            <p><strong>Lembretes</strong> <span>Ativados</span></p>
+            <p><strong>Visualização inicial</strong> <span>Dashboard</span></p>
+          </div>
+        </article>
+
+        <article class="profile-card">
+          <h3><span>▣</span> Segurança da conta</h3>
+
+          <button class="profile-row-btn" type="button">
+            <span>Alterar senha</span>
+            <strong>›</strong>
+          </button>
+
+          <button class="profile-row-btn" type="button">
+            <span>Verificação em duas etapas</span>
+            <strong>Ativada ›</strong>
+          </button>
+
+          <button class="profile-row-btn" type="button">
+            <span>Sessões ativas</span>
+            <strong>2 dispositivos ›</strong>
+          </button>
+        </article>
+
+        <article class="profile-card wide">
+          <h3><span>▥</span> Resumo pessoal</h3>
+
+          <div class="summary-grid">
+            <div class="summary-box">
+              <small>Hábitos concluídos na semana</small>
+              <strong id="completedHabitsWeek">0</strong>
+              <span>registros</span>
+            </div>
+
+            <div class="summary-box">
+              <small>Horas médias de sono</small>
+              <strong id="averageSleep">--</strong>
+              <span>por noite</span>
+            </div>
+
+            <div class="summary-box">
+              <small>Água registrada hoje</small>
+              <strong id="waterToday">0</strong>
+              <span>ml</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="profile-card wide">
+          <h3><span>☷</span> Atividade recente</h3>
+
+          <div class="activity-list" id="activityList">
+            <p>Nenhuma atividade recente encontrada.</p>
+          </div>
+        </article>
+
+      </section>
+
+      <footer class="profile-footer">
+        ♡ Você está construindo algo bonito. Continue.
+      </footer>
+    </section>
+  </main>
+
+  <!-- Modal de edição -->
+  <div class="modal" id="editProfileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h2>Editar perfil</h2>
+          <p>Atualize suas informações pessoais.</p>
+        </div>
+
+        <button id="closeEditProfileBtn" type="button">×</button>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          Nome
+          <input type="text" id="editNameInput" />
+        </label>
+
+        <label>
+          Apelido
+          <input type="text" id="editNicknameInput" />
+        </label>
+
+        <label>
+          E-mail
+          <input type="email" id="editEmailInput" />
+        </label>
+
+        <label>
+          Pronomes
+          <input type="text" id="editPronounsInput" />
+        </label>
+
+        <label>
+          Idade
+          <input type="number" id="editAgeInput" min="13" max="120" />
+        </label>
+
+        <label>
+          Tom de comunicação
+          <select id="editToneInput">
+            <option value="calmo">Calmo</option>
+            <option value="direto">Direto</option>
+            <option value="motivador">Motivador</option>
+            <option value="delicado">Delicado</option>
+            <option value="neutro">Neutro</option>
+          </select>
+        </label>
+
+        <label class="full">
+          Sobre mim
+          <textarea id="editAboutInput" rows="5"></textarea>
+        </label>
+      </div>
+
+      <p class="form-message" id="profileFormMessage"></p>
+
+      <div class="modal-actions">
+        <button class="secondary-btn" id="cancelEditProfileBtn" type="button">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" id="saveProfileBtn" type="button">
+          Salvar alterações
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/profile.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

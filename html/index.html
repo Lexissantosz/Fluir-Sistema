@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Login e Cadastro</title>
+
+  <!-- Fonte profissional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS separado -->
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+  <main class="page">
+
+    <!-- TOPO -->
+    <header class="top">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- ===================================================== -->
+<!-- BOTÃO DE TEMA CLARO / ESCURO -->
+<!-- Fica no canto superior direito da tela -->
+<!-- O texto e o ícone são alterados pelo script.js -->
+<!-- ===================================================== -->
+
+
+    </header>
+
+    <!-- ÁREA CENTRAL -->
+    <section class="main">
+
+      <!-- ILUSTRAÇÃO / PRÉVIAS DO SISTEMA -->
+<section class="art">
+
+  <!-- Chuva decorativa -->
+  <span class="rain r1"></span>
+  <span class="rain r2"></span>
+  <span class="rain r3"></span>
+  <span class="rain r4"></span>
+  <span class="rain r5"></span>
+  <span class="rain r6"></span>
+  <span class="rain r7"></span>
+
+  <!-- Mini cards mostrando o restante do sistema -->
+  <div class="system-previews">
+
+    <!-- Preview Timeline -->
+    <div class="system-card timeline-card">
+      <div class="system-card-header">
+        <span class="mini-icon">◷</span>
+        <strong>Timeline</strong>
+      </div>
+
+      <div class="timeline-lines">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+    <!-- Preview Tarefas -->
+    <div class="system-card tasks-card">
+      <div class="system-card-header">
+        <span class="mini-icon">☑</span>
+        <strong>Tarefas</strong>
+      </div>
+
+      <div class="task-mini checked"></div>
+      <div class="task-mini"></div>
+      <div class="task-mini"></div>
+    </div>
+
+    <!-- Preview Hábitos -->
+    <div class="system-card habits-card">
+      <div class="system-card-header">
+        <span class="mini-icon">◌</span>
+        <strong>Hábitos</strong>
+      </div>
+
+      <div class="habit-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
+      <div class="mini-progress">
+        <span></span>
+      </div>
+    </div>
+
+    <!-- Preview Sono -->
+    <div class="system-card sleep-card">
+      <div class="system-card-header">
+        <span class="mini-icon">☾</span>
+        <strong>Sono</strong>
+      </div>
+
+      <p>7h 20m</p>
+
+      <div class="sleep-chart">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Boneco principal -->
+  <div class="scene">
+    <div class="city">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="person">
+      <div class="umbrella"></div>
+      <div class="stick"></div>
+
+      <div class="head">
+        <span class="eye one"></span>
+        <span class="eye two"></span>
+      </div>
+
+      <div class="body-person"></div>
+      <div class="arm"></div>
+      <div class="leg left-leg"></div>
+      <div class="leg right-leg"></div>
+    </div>
+
+    <p class="quiet">Um passo de cada vez.</p>
+  </div>
+</section>
+
+      <!-- CARD LOGIN / CADASTRO -->
+      <section class="card">
+
+        <!-- LOGIN -->
+        <form class="form active" id="loginForm">
+          <h2>Bem-vindo de volta</h2>
+
+          <p class="form-description">
+            Entre para continuar organizando sua vida com calma e clareza.
+          </p>
+
+          <label class="field">
+            <span>E-mail</span>
+
+            <div class="input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="4" y="6" width="16" height="12" rx="1.5"/>
+                <path d="m4 7 8 6 8-6"/>
+              </svg>
+
+              <input type="email" placeholder="seu@email.com" required>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Senha</span>
+
+            <div class="input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 10V8a5 5 0 0 1 10 0v2"/>
+                <rect x="5" y="10" width="14" height="10" rx="2"/>
+              </svg>
+
+              <input class="password" type="password" placeholder="••••••••" required>
+
+              <button class="password-toggle" type="button" aria-label="Mostrar senha">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </label>
+
+          <div class="options">
+            <label class="remember">
+              <input type="checkbox">
+              <span>Lembrar de mim</span>
+            </label>
+
+            <a href="#">Esqueci minha senha</a>
+          </div>
+
+          <button class="primary" type="submit">Entrar</button>
+
+          <button class="secondary" type="button">
+            𑁍&nbsp;&nbsp;Explorar demonstração
+          </button>
+
+          <p class="switch">
+            Ainda não tem conta?
+            <button type="button" id="showRegister">Criar conta</button>
+          </p>
+        </form>
+
+        <!-- CADASTRO -->
+        <form class="form" id="registerForm">
+          <h2>Criar conta</h2>
+
+          <p class="form-description">
+            Comece a organizar sua rotina em um espaço simples, calmo e inteligente.
+          </p>
+
+          <label class="field">
+            <span>Nome</span>
+
+            <div class="input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>
+              </svg>
+
+              <input type="text" placeholder="Seu nome" required>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>E-mail</span>
+
+            <div class="input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="4" y="6" width="16" height="12" rx="1.5"/>
+                <path d="m4 7 8 6 8-6"/>
+              </svg>
+
+              <input type="email" placeholder="seu@email.com" required>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Senha</span>
+
+            <div class="input-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 10V8a5 5 0 0 1 10 0v2"/>
+                <rect x="5" y="10" width="14" height="10" rx="2"/>
+              </svg>
+
+              <input class="password" type="password" placeholder="Crie uma senha" required>
+
+              <button class="password-toggle" type="button" aria-label="Mostrar senha">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </label>
+
+          <button class="primary" type="submit">Cadastrar</button>
+
+          <p class="switch">
+            Já tem uma conta?
+            <button type="button" id="showLogin">Entrar</button>
+          </p>
+        </form>
+      </section>
+    </section>
+
+    <!-- CARD INFERIOR -->
+    <section class="preview">
+      <div class="mockup">
+        <aside class="mock-sidebar">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </aside>
+
+        <div class="mock-main">
+          <div class="mock-title"></div>
+
+          <div class="mock-grid">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+
+          <div class="mock-line one"></div>
+          <div class="mock-line two"></div>
+        </div>
+      </div>
+
+      <div class="preview-text">
+       <h3>Sua rotina organizada com leveza.</h3>
+
+<p>
+  Acompanhe tarefas, hábitos, sono, água, finanças e registros pessoais
+  em um espaço calmo, visual e integrado.
+</p>
+
+        <div class="modules">
+          <span>Tarefas</span>
+          <span>Hábitos</span>
+          <span>Sono</span>
+          <span>Água</span>
+          <span>Finanças</span>
+          <span>Diário</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- JS separado -->
+  <script src="../js/script.js"></script>
+</body>
+</html>

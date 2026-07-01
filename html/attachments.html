@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Anexos</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de anexos -->
+  <link rel="stylesheet" href="../css/attachments.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="attachments-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item active module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+
+  <a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Guardar também é organizar memórias, documentos e detalhes.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Total de anexos</p>
+        <strong id="sidebarAttachmentCount">0</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarAttachmentBar"></span>
+        </div>
+
+        <small id="sidebarAttachmentText">Nenhum anexo registrado ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="attachments-main">
+
+      <!-- Topo -->
+      <header class="attachments-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Organize arquivos, links, imagens e referências importantes.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="attachments-title-area">
+        <div class="title-left">
+          <span class="page-icon">⌁</span>
+
+          <div>
+            <h3>Anexos</h3>
+            <p>Guarde links, documentos, imagens e referências associadas à sua rotina.</p>
+          </div>
+        </div>
+
+        <div class="attachments-actions">
+          <button class="date-btn" type="button">
+            ▣ Biblioteca
+          </button>
+
+          <button class="primary-btn" type="button" id="newAttachmentBtn">
+            + Novo anexo
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="attachments-summary">
+        <article class="summary-card">
+          <span>⌁</span>
+          <p>Total</p>
+          <strong id="totalAttachments">0</strong>
+          <small>Anexos salvos</small>
+        </article>
+
+        <article class="summary-card">
+          <span>▣</span>
+          <p>Arquivos</p>
+          <strong id="fileAttachments">0</strong>
+          <small>Documentos e imagens</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Links</p>
+          <strong id="linkAttachments">0</strong>
+          <small>Referências externas</small>
+        </article>
+
+        <article class="summary-card">
+          <span>#</span>
+          <p>Categoria</p>
+          <strong id="topCategory">--</strong>
+          <small>Mais usada</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="file">Arquivos</button>
+        <button class="filter-btn" type="button" data-filter="link">Links</button>
+        <button class="filter-btn" type="button" data-filter="image">Imagens</button>
+        <button class="filter-btn" type="button" data-filter="note">Notas</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="attachments-layout">
+
+        <!-- Painel principal -->
+        <article class="attachments-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Biblioteca de anexos</h4>
+              <p id="attachmentSubtitle">Seus anexos aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearAttachmentsBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="attachment-list" id="attachmentList">
+            <!-- Anexos gerados pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>⌁</span>
+            <strong>Nenhum anexo encontrado</strong>
+            <p>Salve um link, referência, nome de arquivo ou observação importante.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="attachments-sidebar">
+
+          <!-- Registro rápido -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Registro rápido</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Salve links, nomes de arquivos ou referências para encontrar depois.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickAttachmentBtn">
+              Salvar anexo
+            </button>
+          </article>
+
+          <!-- Categorias -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Categorias</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="category-list" id="categoryList">
+              <!-- Categorias geradas pelo JS -->
+            </div>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimos anexos</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="attachmentMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE ANEXO -->
+  <!-- ===================================================== -->
+  <div class="attachment-modal-overlay" id="attachmentModal">
+    <div class="attachment-modal">
+
+      <h3>Novo anexo</h3>
+
+      <p>
+        Salve uma referência importante. Nesta versão, os dados ficam no navegador.
+      </p>
+
+      <div class="attachment-form-message" id="attachmentFormMessage"></div>
+
+      <label>
+        <span>Título</span>
+        <input 
+          type="text" 
+          id="attachmentTitleInput"
+          placeholder="Ex: exame, link importante, comprovante..."
+        />
+      </label>
+
+      <label>
+        <span>Tipo</span>
+        <select id="attachmentTypeSelect">
+          <option value="file">Arquivo</option>
+          <option value="link">Link</option>
+          <option value="image">Imagem</option>
+          <option value="note">Nota</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Categoria</span>
+        <select id="attachmentCategorySelect">
+          <option value="Saúde">Saúde</option>
+          <option value="Finanças">Finanças</option>
+          <option value="Estudos">Estudos</option>
+          <option value="Trabalho">Trabalho</option>
+          <option value="Pessoal">Pessoal</option>
+          <option value="Documentos">Documentos</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Link, nome do arquivo ou referência</span>
+        <input 
+          type="text" 
+          id="attachmentReferenceInput"
+          placeholder="Ex: https://..., exame.pdf, pasta tal..."
+        />
+      </label>
+
+      <label>
+        <span>Observação opcional</span>
+        <textarea 
+          id="attachmentNoteInput"
+          placeholder="Ex: onde está salvo, por que é importante, data relacionada..."
+        ></textarea>
+      </label>
+
+      <div class="attachment-modal-actions">
+        <button class="secondary-btn" type="button" id="closeAttachmentModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveAttachmentBtn">
+          Salvar anexo
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/attachments.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

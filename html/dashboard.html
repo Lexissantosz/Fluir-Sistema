@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Dashboard</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS do dashboard -->
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL DO DASHBOARD -->
+  <!-- ===================================================== -->
+  <main class="dashboard-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- Menu principal do sistema -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Navegação -->
+      <nav class="sidebar-nav" id="sidebarNav">
+
+        <a href="#" class="nav-item active" data-module="dashboard">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item" data-module="timeline">
+  <span>☷</span>
+  Timeline
+</a>
+
+        <!-- Os módulos abaixo serão exibidos conforme o setup salvo -->
+       <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+       <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item" data-module="settings">
+  <span>⚙</span>
+  Configurações
+</a>
+
+<a href="profile.html" class="nav-item" data-module="profile">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item" data-module="plans">
+  <span>♕</span>
+  Planos e preços
+</a>
+
+      </nav>
+
+      <!-- Ilustração lateral -->
+      <div class="sidebar-illustration">
+        <div class="rain rain-1"></div>
+        <div class="rain rain-2"></div>
+        <div class="rain rain-3"></div>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Pequenas ações constantes constroem mudanças profundas.”
+        </p>
+      </div>
+
+      <!-- Foco do dia -->
+      <div class="focus-card">
+        <p>Foco de hoje</p>
+        <strong id="focusPercent">60%</strong>
+
+        <div class="focus-bar">
+          <span></span>
+        </div>
+
+        <small>Continue assim.</small>
+      </div>
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- ÁREA PRINCIPAL -->
+    <!-- Conteúdo do dashboard -->
+    <!-- ===================================================== -->
+    <section class="dashboard-main">
+
+      <!-- ===================================================== -->
+      <!-- TOPO DO DASHBOARD -->
+      <!-- Saudação + ações -->
+      <!-- ===================================================== -->
+      <header class="dashboard-header">
+
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Respire fundo. Um dia de cada vez, no seu ritmo.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" aria-label="Perfil" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- ===================================================== -->
+      <!-- CARDS RESUMO -->
+      <!-- Cards superiores do dashboard -->
+      <!-- ===================================================== -->
+      <section class="summary-grid" id="summaryGrid">
+
+        <article class="summary-card module-card" data-module-card="tasks">
+          <div class="card-title">
+            <span>☑</span>
+            <p>Tarefas</p>
+          </div>
+
+          <strong>5</strong>
+          <small>de 9 concluídas</small>
+
+          <div class="mini-progress">
+            <span style="width: 55%;"></span>
+          </div>
+        </article>
+
+        <article class="summary-card module-card" data-module-card="habits">
+          <div class="card-title">
+            <span>◌</span>
+            <p>Hábitos</p>
+          </div>
+
+          <strong>4</strong>
+          <small>de 7 concluídos</small>
+
+          <div class="mini-progress">
+            <span style="width: 57%;"></span>
+          </div>
+        </article>
+
+        <article class="summary-card module-card" data-module-card="sleep">
+          <div class="card-title">
+            <span>☾</span>
+            <p>Sono</p>
+          </div>
+
+          <strong>7h 20m</strong>
+          <small>última noite</small>
+
+          <div class="mini-wave"></div>
+        </article>
+
+        <article class="summary-card module-card" data-module-card="water">
+          <div class="card-title">
+            <span>♢</span>
+            <p>Água</p>
+          </div>
+
+          <strong>0ml</strong>
+<small>de 2000ml</small>
+
+          <div class="water-dots">
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span class="filled"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </article>
+
+        <article class="summary-card module-card" data-module-card="finances">
+          <div class="card-title">
+            <span>$</span>
+            <p>Finanças</p>
+          </div>
+
+          <strong>R$ 1.250</strong>
+          <small>saldo atual</small>
+
+          <div class="mini-wave"></div>
+        </article>
+
+        <article class="summary-card module-card" data-module-card="diary">
+          <div class="card-title">
+            <span>▤</span>
+            <p>Diário</p>
+          </div>
+
+          <strong>1</strong>
+          <small>entrada hoje</small>
+
+          <div class="mini-line"></div>
+        </article>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- GRID PRINCIPAL -->
+      <!-- Tarefas + Timeline -->
+      <!-- ===================================================== -->
+      <section class="content-grid">
+
+        <!-- Tarefas de hoje -->
+        <article class="panel panel-large module-panel" data-module-panel="tasks">
+          <div class="panel-header">
+            <div>
+              <h3>☑ Tarefas de hoje</h3>
+            </div>
+
+            <button class="small-btn" type="button">
+              + Nova tarefa
+            </button>
+          </div>
+
+          <div class="task-list">
+            <label class="task-item">
+              <input type="checkbox">
+              <span>Revisar proposta do projeto</span>
+              <small>Trabalho</small>
+              <time>09:00</time>
+            </label>
+
+            <label class="task-item">
+              <input type="checkbox">
+              <span>Responder e-mails importantes</span>
+              <small>Trabalho</small>
+              <time>11:00</time>
+            </label>
+
+            <label class="task-item">
+              <input type="checkbox">
+              <span>Estudar capítulo 4 — Marketing</span>
+              <small>Estudos</small>
+              <time>14:00</time>
+            </label>
+
+            <label class="task-item">
+              <input type="checkbox" checked>
+              <span>Treino de força</span>
+              <small>Saúde</small>
+              <time>18:00</time>
+            </label>
+
+            <label class="task-item">
+              <input type="checkbox" checked>
+              <span>Ler 20 páginas</span>
+              <small>Pessoal</small>
+              <time>20:30</time>
+            </label>
+          </div>
+
+          <a class="panel-link" href="#">
+            Ver todas as tarefas →
+          </a>
+        </article>
+
+        <!-- Timeline -->
+        <article class="panel panel-large">
+          <div class="panel-header">
+            <h3>☷ Timeline</h3>
+          </div>
+
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <time>08:00</time>
+              <div>
+                <strong>Acordei</strong>
+                <p>Dormi bem e me sinto disposto.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <time>09:15</time>
+              <div>
+                <strong>Café da manhã</strong>
+                <p>Aveia com frutas e café.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <time>11:30</time>
+              <div>
+                <strong>Reunião de alinhamento</strong>
+                <p>Projeto Fluir — sprint semanal.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <time>15:45</time>
+              <div>
+                <strong>Caminhada</strong>
+                <p>20 minutos ao ar livre.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <time>21:30</time>
+              <div>
+                <strong>Diário emocional</strong>
+                <p>Reflexão sobre o dia.</p>
+              </div>
+            </div>
+          </div>
+
+          <a class="panel-link" href="#">
+            Ver linha do tempo completa →
+          </a>
+        </article>
+
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- GRID SECUNDÁRIO -->
+      <!-- Hábitos + cards menores -->
+      <!-- ===================================================== -->
+      <section class="bottom-grid">
+
+        <!-- Hábitos -->
+        <article class="panel habits-panel module-panel" data-module-panel="habits">
+          <div class="panel-header">
+            <h3>◌ Hábitos ativos</h3>
+            <button class="small-btn" type="button">Ver todos</button>
+          </div>
+
+          <div class="habit-table">
+            <div class="habit-row">
+              <span>Meditar 10 min</span>
+              <p>● ● ● ● ○ ○ ●</p>
+              <strong>5/7</strong>
+            </div>
+
+            <div class="habit-row">
+              <span>Ler diariamente</span>
+              <p>● ● ● ● ● ○ ●</p>
+              <strong>6/7</strong>
+            </div>
+
+            <div class="habit-row">
+              <span>Treinar</span>
+              <p>● ● ● ○ ○ ○ ●</p>
+              <strong>3/7</strong>
+            </div>
+
+            <div class="habit-row">
+              <span>Beber 2L de água</span>
+              <p>● ● ● ● ○ ● ●</p>
+              <strong>5/7</strong>
+            </div>
+          </div>
+        </article>
+
+        <!-- Cards laterais -->
+        <div class="side-panels">
+
+          <article class="panel small-panel module-panel" data-module-panel="sleep">
+            <h3>☾ Sono</h3>
+            <strong>7h 20m</strong>
+            <p>Última noite</p>
+            <div class="mini-wave"></div>
+          </article>
+
+          <article class="panel small-panel module-panel" data-module-panel="water">
+            <h3>♢ Água</h3>
+            <strong>250</strong>
+            <p>de 2000 ml</p>
+            <div class="water-dots">
+              <span class="filled"></span>
+              <span class="filled"></span>
+              <span class="filled"></span>
+              <span class="filled"></span>
+              <span class="filled"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </article>
+
+          <article class="panel small-panel module-panel" data-module-panel="finances">
+            <h3>$ Finanças</h3>
+            <strong>R$ 1.250</strong>
+            <p>Saldo atual</p>
+            <small>Entrada R$ 2.800</small>
+            <small>Saída - R$ 1.550</small>
+          </article>
+
+          <article class="panel small-panel module-panel" data-module-panel="diary">
+            <h3>▤ Diário emocional</h3>
+            <p>
+              Hoje foi um dia de altos e baixos, mas terminei com gratidão.
+            </p>
+            <a href="#">Ver entradas →</a>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- ===================================================== -->
+      <!-- EVENTOS RECENTES -->
+      <!-- ===================================================== -->
+      <section class="recent-events">
+        <div class="panel-header">
+          <div>
+            <h3>▣ Eventos recentes</h3>
+            <p>O que aconteceu nos últimos dias.</p>
+          </div>
+
+          <button class="small-btn" type="button">
+            Ver todos
+          </button>
+        </div>
+
+        <div class="event-list">
+          <article>
+            <span>23 MAI</span>
+            <strong>Pagamento recebido</strong>
+            <p>R$ 2.800,00</p>
+          </article>
+
+          <article>
+            <span>22 MAI</span>
+            <strong>Meta de hábitos alcançada</strong>
+            <p>6 de 7 hábitos</p>
+          </article>
+
+          <article>
+            <span>21 MAI</span>
+            <strong>Nova entrada no diário</strong>
+            <p>Reflexão da noite</p>
+          </article>
+
+          <article>
+            <span>20 MAI</span>
+            <strong>Treino concluído</strong>
+            <p>Força · 45 min</p>
+          </article>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <!-- JS do dashboard -->
+  <script src="../js/dashboard.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>

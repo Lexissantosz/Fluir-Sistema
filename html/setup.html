@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS DA PÁGINA -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Configuração Inicial</title>
+
+  <!-- Fonte profissional usada no projeto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de configuração -->
+  <link rel="stylesheet" href="../css/setup.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL DA TELA -->
+  <!-- ===================================================== -->
+  <main class="setup-page">
+
+    <!-- ===================================================== -->
+    <!-- TOPO DA TELA -->
+    <!-- Logo + botão de tema -->
+    <!-- ===================================================== -->
+    <header class="setup-top">
+
+      <!-- Marca Fluir -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- Lado esquerdo: apresentação -->
+    <!-- Lado direito: formulário em etapas -->
+    <!-- ===================================================== -->
+    <section class="setup-content">
+
+      <!-- ===================================================== -->
+      <!-- LADO ESQUERDO — EXPLICAÇÃO DA CONFIGURAÇÃO -->
+      <!-- ===================================================== -->
+      <aside class="setup-info">
+
+        <p class="small-label">Configuração inicial</p>
+
+        <h2>
+          Vamos montar o Fluir do seu jeito.
+        </h2>
+
+        <p class="info-description">
+          Responda algumas perguntas simples para personalizar sua rotina,
+          escolher suas funcionalidades e preparar um dashboard realmente útil.
+        </p>
+
+        <!-- ===================================================== -->
+        <!-- MINI CARDS DAS ETAPAS -->
+        <!-- Mostram para o usuário o caminho da configuração inicial -->
+        <!-- ===================================================== -->
+        <div class="info-cards">
+
+          <!-- Etapa 1 -->
+          <div class="mini-card active" data-mini-step="1">
+            <span>01</span>
+            <strong>Sobre você</strong>
+            <p>Nome, pronomes, idade e preferências de tratamento.</p>
+          </div>
+
+          <!-- Etapa 2 -->
+          <div class="mini-card" data-mini-step="2">
+            <span>02</span>
+            <strong>Funcionalidades</strong>
+            <p>Escolha quais áreas do Fluir quer ativar.</p>
+          </div>
+
+          <!-- Etapa 3 -->
+          <div class="mini-card" data-mini-step="3">
+            <span>03</span>
+            <strong>Preferências</strong>
+            <p>Configure metas e detalhes das áreas escolhidas.</p>
+          </div>
+
+        </div>
+
+        <!-- Frase emocional -->
+        <div class="quiet-box">
+          <p>“Um passo de cada vez.”</p>
+        </div>
+      </aside>
+
+      <!-- ===================================================== -->
+      <!-- LADO DIREITO — CARD DO FORMULÁRIO -->
+      <!-- ===================================================== -->
+      <section class="setup-card">
+
+        <!-- ===================================================== -->
+        <!-- BARRA DE PROGRESSO -->
+        <!-- ===================================================== -->
+        <div class="progress-area">
+          <div class="progress-text">
+            <span id="stepLabel">Etapa 1 de 4</span>
+            <strong id="stepTitle">Sobre você</strong>
+          </div>
+
+          <div class="progress-bar">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- FORMULÁRIO PRINCIPAL -->
+        <!-- ===================================================== -->
+        <form id="setupForm">
+
+          <!-- ===================================================== -->
+          <!-- ETAPA 1 — SOBRE VOCÊ -->
+          <!-- Coleta informações básicas, respeitosas e confortáveis -->
+          <!-- ===================================================== -->
+          <section class="setup-step active" data-step="1">
+
+            <div class="step-header">
+              <h3>Para começar, me conte um pouco sobre você.</h3>
+              <p>
+                Essas informações ajudam o Fluir a criar uma experiência mais pessoal,
+                respeitosa e confortável para o seu dia a dia.
+              </p>
+            </div>
+
+            <!-- Nome principal -->
+            <label class="field">
+              <span>Seu nome</span>
+              <input 
+                type="text" 
+                id="userName" 
+                placeholder="Ex: Deibson" 
+              />
+            </label>
+
+            <!-- Nome de preferência -->
+            <label class="field">
+              <span>Como você quer ser chamado(a)?</span>
+              <input 
+                type="text" 
+                id="userNickname" 
+                placeholder="Ex: Lexis" 
+              />
+            </label>
+
+            <!-- Sexo atribuído ao nascer -->
+            <label class="field">
+              <span>Sexo atribuído ao nascer</span>
+
+              <select id="sexAtBirth">
+                <option value="">Selecione uma opção</option>
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+                <option value="intersexo">Intersexo</option>
+                <option value="prefiro-nao-informar">Prefiro não informar</option>
+              </select>
+            </label>
+
+            <!-- Pronomes -->
+            <label class="field">
+              <span>Quais pronomes você prefere?</span>
+
+              <select id="userPronouns">
+                <option value="">Selecione uma opção</option>
+                <option value="ele/dele">Ele/dele</option>
+                <option value="ela/dela">Ela/dela</option>
+                <option value="elu/delu">Elu/delu</option>
+                <option value="todos">Todos</option>
+                <option value="prefiro-nao-informar">Prefiro não informar</option>
+                <option value="personalizado">Personalizado</option>
+              </select>
+            </label>
+
+            <!-- Campo de pronome personalizado -->
+            <label class="field hidden-field" id="customPronounsField">
+              <span>Digite seus pronomes</span>
+
+              <input 
+                type="text" 
+                id="customPronouns" 
+                placeholder="Ex: ele/elu, ela/elu..." 
+              />
+            </label>
+
+            <!-- Idade -->
+            <label class="field">
+              <span>Idade</span>
+
+              <<!-- ===================================================== -->
+<!-- IDADE -->
+<!-- Limite definido para evitar valores impossíveis -->
+<!-- Depois podemos adaptar regras específicas para menores -->
+<!-- ===================================================== -->
+<input 
+  type="number" 
+  id="userAge" 
+  placeholder="Ex: 22" 
+  min="13" 
+  max="120" 
+/>
+            </label>
+
+            <!-- Forma de comunicação -->
+            <label class="field">
+              <span>Como você prefere que o Fluir fale com você?</span>
+
+              <select id="communicationTone">
+                <option value="">Selecione uma opção</option>
+                <option value="calmo">De forma calma e acolhedora</option>
+                <option value="direto">De forma direta e objetiva</option>
+                <option value="motivador">De forma motivadora</option>
+                <option value="delicado">De forma delicada e leve</option>
+                <option value="neutro">De forma neutra</option>
+              </select>
+            </label>
+
+          </section>
+
+          <!-- ===================================================== -->
+          <!-- ETAPA 2 — FUNCIONALIDADES -->
+          <!-- Aqui a pessoa escolhe quais áreas do Fluir quer usar -->
+          <!-- ===================================================== -->
+          <section class="setup-step" data-step="2">
+
+            <div class="step-header">
+              <h3>Quais funcionalidades você quer ativar?</h3>
+              <p>
+                Escolha as áreas que fazem sentido para sua rotina agora.
+                O Fluir vai montar seu dashboard com base nessas escolhas.
+              </p>
+            </div>
+
+            <!-- Grid de funcionalidades -->
+            <div class="module-grid">
+
+              <!-- Timeline sempre ativa -->
+              <label class="module-option locked">
+                <input type="checkbox" value="timeline" checked disabled>
+                <span>Timeline</span>
+                <small>Registra tudo que acontece no sistema.</small>
+              </label>
+
+              <!-- Tarefas -->
+              <label class="module-option">
+                <input type="checkbox" value="tasks">
+                <span>Tarefas</span>
+                <small>Organize pendências, prioridades e lembretes.</small>
+              </label>
+
+              <!-- Hábitos -->
+              <label class="module-option">
+                <input type="checkbox" value="habits">
+                <span>Hábitos</span>
+                <small>Acompanhe constância, sequência e progresso.</small>
+              </label>
+
+              <!-- Sono -->
+              <label class="module-option">
+                <input type="checkbox" value="sleep">
+                <span>Sono</span>
+                <small>Defina meta, horários e qualidade do sono.</small>
+              </label>
+
+              <!-- Água -->
+              <label class="module-option">
+                <input type="checkbox" value="water">
+                <span>Água</span>
+                <small>Controle sua hidratação diária.</small>
+              </label>
+
+              <!-- Finanças -->
+              <label class="module-option">
+                <input type="checkbox" value="finances">
+                <span>Finanças</span>
+                <small>Registre renda, gastos, dívidas e metas.</small>
+              </label>
+
+              <!-- Diário emocional -->
+              <label class="module-option">
+                <input type="checkbox" value="diary">
+                <span>Diário emocional</span>
+                <small>Registre sentimentos, pensamentos e humor.</small>
+              </label>
+
+              <!-- Alimentação -->
+              <label class="module-option">
+                <input type="checkbox" value="nutrition">
+                <span>Alimentação</span>
+                <small>Organize dieta, refeições, altura, peso e objetivos.</small>
+              </label>
+
+              <!-- Saúde física -->
+              <label class="module-option">
+                <input type="checkbox" value="physicalHealth">
+                <span>Saúde física</span>
+                <small>Acompanhe treinos, dores, energia e evolução.</small>
+              </label>
+
+              <!-- Ciclo menstrual -->
+              <label class="module-option">
+                <input type="checkbox" value="menstrualCycle">
+                <span>Ciclo menstrual</span>
+                <small>Acompanhe menstruação, sintomas e saúde reprodutiva.</small>
+              </label>
+
+              <!-- Anexos -->
+              <label class="module-option">
+                <input type="checkbox" value="attachments">
+                <span>Anexos</span>
+                <small>Guarde arquivos, comprovantes e documentos.</small>
+              </label>
+
+            </div>
+          </section>
+
+          <!-- ===================================================== -->
+          <!-- ETAPA 3 — PREFERÊNCIAS DAS FUNCIONALIDADES -->
+          <!-- O JavaScript gera perguntas de acordo com as escolhas -->
+          <!-- ===================================================== -->
+          <section class="setup-step" data-step="3">
+
+            <div class="step-header">
+              <h3>Agora vamos ajustar suas funcionalidades.</h3>
+              <p>
+                As perguntas abaixo aparecem conforme as áreas que você escolheu.
+                Você pode deixar campos em branco e ajustar depois.
+              </p>
+            </div>
+
+            <div id="moduleQuestions" class="module-questions"></div>
+
+          </section>
+
+          <!-- ===================================================== -->
+          <!-- ETAPA 4 — REVISÃO FINAL -->
+          <!-- Resumo do setup antes de finalizar -->
+          <!-- ===================================================== -->
+          <section class="setup-step" data-step="4">
+
+            <div class="step-header">
+              <h3>Revise sua configuração.</h3>
+              <p>
+                Depois disso, seu dashboard será preparado com base nas suas escolhas.
+              </p>
+            </div>
+
+            <div id="reviewBox" class="review-box"></div>
+
+          </section>
+
+          <div class="form-message" id="formMessage" aria-live="polite"></div>
+
+<div class="setup-actions">
+  <button class="secondary-btn" id="backBtn" type="button">
+    Voltar
+  </button>
+
+  <button class="primary-btn" id="nextBtn" type="button">
+    Continuar
+  </button>
+</div>
+
+  <!-- ===================================================== -->
+<!-- MODAL DE CONCLUSÃO -->
+<!-- Aparece quando a configuração inicial for salva -->
+<!-- ===================================================== -->
+<div class="success-modal-overlay" id="successModal">
+  <div class="success-modal">
+    <div class="success-icon">✓</div>
+
+    <h3>Configuração inicial salva</h3>
+
+    <p>
+      Suas informações foram salvas com sucesso.
+      No próximo passo, vamos usar essas escolhas para montar o dashboard do Fluir.
+    </p>
+
+    <div class="success-modal-actions">
+      <button type="button" class="secondary-btn" id="reviewSetupBtn">
+        Revisar respostas
+      </button>
+
+      <button type="button" class="primary-btn" id="closeSuccessModalBtn">
+        Concluir
+      </button>
+    </div>
+  </div>
+</div>
+
+  <!-- JS da tela de configuração -->
+  <script src="../js/setup.js"></script>
+</body>
+</html>

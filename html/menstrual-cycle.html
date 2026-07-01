@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <!-- ===================================================== -->
+  <!-- CONFIGURAÇÕES BÁSICAS -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Ciclo menstrual</title>
+
+  <!-- Fonte principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS da tela de ciclo menstrual -->
+  <link rel="stylesheet" href="../css/menstrual-cycle.css" />
+  <!-- CSS responsivo mobile compartilhado -->
+  <link rel="stylesheet" href="../css/mobile.css" />
+</head>
+
+<body>
+  <!-- ===================================================== -->
+  <!-- CONTAINER PRINCIPAL -->
+  <!-- ===================================================== -->
+  <main class="cycle-page">
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR LATERAL -->
+    <!-- ===================================================== -->
+    <aside class="sidebar">
+
+      <!-- Logo -->
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
+            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
+            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
+          </svg>
+        </div>
+
+        <div>
+          <h1>Fluir</h1>
+          <p>Sistema de Organização da Vida</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span>⌘</span>
+          Dashboard
+        </a>
+
+        <a href="timeline.html" class="nav-item">
+          <span>☷</span>
+          Timeline
+        </a>
+
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+          <span>☑</span>
+          Tarefas
+        </a>
+
+        <a href="habits.html" class="nav-item module-link" data-module="habits">
+          <span>◌</span>
+          Hábitos
+        </a>
+
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+          <span>☾</span>
+          Sono
+        </a>
+
+        <a href="water.html" class="nav-item module-link" data-module="water">
+          <span>♢</span>
+          Água
+        </a>
+
+        <a href="finances.html" class="nav-item module-link" data-module="finances">
+          <span>$</span>
+          Finanças
+        </a>
+
+        <a href="diary.html" class="nav-item module-link" data-module="diary">
+          <span>▤</span>
+          Diário emocional
+        </a>
+
+        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
+          <span>◒</span>
+          Alimentação
+        </a>
+
+        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
+          <span>✦</span>
+          Saúde física
+        </a>
+
+        <a href="menstrual-cycle.html" class="nav-item active module-link" data-module="menstrualCycle">
+          <span>◍</span>
+          Ciclo menstrual
+        </a>
+
+        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
+          <span>⌁</span>
+          Anexos
+        </a>
+
+        <a href="achievements.html" class="nav-item">
+  <span>✧</span>
+  Conquistas
+</a>
+
+        <a href="settings.html" class="nav-item">
+  <span>⚙</span>
+  Configurações
+</a>
+<a href="profile.html" class="nav-item">
+  <span>♙</span>
+  Perfil
+</a>
+
+<a href="plans.html" class="nav-item">
+  <span>♕</span>
+  Planos e preços
+</a>
+      </nav>
+
+      <!-- Ilustração -->
+      <div class="sidebar-illustration">
+        <span class="rain rain-1"></span>
+        <span class="rain rain-2"></span>
+        <span class="rain rain-3"></span>
+
+        <div class="small-character">
+          <div class="small-umbrella"></div>
+          <div class="small-head">
+            <span></span>
+            <span></span>
+          </div>
+          <div class="small-body"></div>
+        </div>
+
+        <p>
+          “Acompanhar o corpo é uma forma de se entender melhor.”
+        </p>
+      </div>
+
+      <!-- Card lateral -->
+      <div class="focus-card">
+        <p>Fase estimada</p>
+        <strong id="sidebarCyclePhase">--</strong>
+
+        <div class="focus-bar">
+          <span id="sidebarCycleBar"></span>
+        </div>
+
+        <small id="sidebarCycleText">Nenhum ciclo registrado ainda.</small>
+      </div>
+
+    </aside>
+
+    <!-- ===================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ===================================================== -->
+    <section class="cycle-main">
+
+      <!-- Topo -->
+      <header class="cycle-header">
+        <div>
+          <h2 id="welcomeTitle">Olá, Deibson</h2>
+          <p id="welcomeSubtitle">Acompanhe seu ciclo, sintomas e sinais do corpo com cuidado.</p>
+        </div>
+
+        <div class="header-actions">
+          
+
+          <button class="icon-btn" type="button" aria-label="Notificações">
+            ♡
+          </button>
+
+          <button class="avatar-btn" type="button" id="avatarBtn">
+            D
+          </button>
+        </div>
+      </header>
+
+      <!-- Título -->
+      <section class="cycle-title-area">
+        <div class="title-left">
+          <span class="page-icon">◍</span>
+
+          <div>
+            <h3>Ciclo menstrual</h3>
+            <p>Registre menstruação, sintomas, fluxo e observações importantes.</p>
+          </div>
+        </div>
+
+        <div class="cycle-actions">
+          <button class="date-btn" type="button">
+            ▣ Hoje
+          </button>
+
+          <button class="primary-btn" type="button" id="newCycleBtn">
+            + Novo registro
+          </button>
+        </div>
+      </section>
+
+      <!-- Cards resumo -->
+      <section class="cycle-summary">
+        <article class="summary-card">
+          <span>◍</span>
+          <p>Fase atual</p>
+          <strong id="currentPhase">--</strong>
+          <small>Estimativa simples</small>
+        </article>
+
+        <article class="summary-card">
+          <span>▦</span>
+          <p>Último início</p>
+          <strong id="lastPeriodStart">--</strong>
+          <small>Menstruação</small>
+        </article>
+
+        <article class="summary-card">
+          <span>↗</span>
+          <p>Dias do ciclo</p>
+          <strong id="cycleDay">--</strong>
+          <small>Estimado</small>
+        </article>
+
+        <article class="summary-card">
+          <span>!</span>
+          <p>Sintomas</p>
+          <strong id="symptomCount">0</strong>
+          <small>Registros recentes</small>
+        </article>
+      </section>
+
+      <!-- Filtros -->
+      <section class="filters-area">
+        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="period">Menstruação</button>
+        <button class="filter-btn" type="button" data-filter="symptom">Sintoma</button>
+        <button class="filter-btn" type="button" data-filter="mood">Humor</button>
+        <button class="filter-btn" type="button" data-filter="today">Hoje</button>
+      </section>
+
+      <!-- Layout principal -->
+      <section class="cycle-layout">
+
+        <!-- Painel principal -->
+        <article class="cycle-panel">
+          <div class="panel-header">
+            <div>
+              <h4>Registros do ciclo</h4>
+              <p id="cycleSubtitle">Seus registros aparecem aqui.</p>
+            </div>
+
+            <button class="small-btn" type="button" id="clearCycleBtn">
+              Limpar tudo
+            </button>
+          </div>
+
+          <div class="cycle-list" id="cycleList">
+            <!-- Registros gerados pelo JS -->
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <span>◍</span>
+            <strong>Nenhum registro encontrado</strong>
+            <p>Registre o início da menstruação, sintomas ou observações do ciclo.</p>
+          </div>
+        </article>
+
+        <!-- Lateral interna -->
+        <aside class="cycle-sidebar">
+
+          <!-- Registro rápido -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Registro rápido</h4>
+              <span>⌁</span>
+            </div>
+
+            <p class="side-text">
+              Registre um sinal do corpo sem pressão. Pode ser fluxo, cólica, humor ou observação.
+            </p>
+
+            <button class="wide-btn" type="button" id="quickCycleBtn">
+              Registrar agora
+            </button>
+          </article>
+
+          <!-- Estimativa -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Estimativa do ciclo</h4>
+              <span>▦</span>
+            </div>
+
+            <div class="cycle-estimate">
+              <strong id="estimateTitle">Sem dados suficientes</strong>
+              <p id="estimateText">
+                Registre o início da menstruação para estimar a fase atual.
+              </p>
+            </div>
+          </article>
+
+          <!-- Mini timeline -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Últimos registros</h4>
+              <span>☷</span>
+            </div>
+
+            <div class="mini-timeline" id="cycleMiniTimeline">
+              <!-- Gerado pelo JS -->
+            </div>
+
+            <a href="timeline.html" class="side-link">
+              Ver timeline completa →
+            </a>
+          </article>
+
+        </aside>
+
+      </section>
+
+    </section>
+  </main>
+
+  <!-- ===================================================== -->
+  <!-- MODAL DE CICLO -->
+  <!-- ===================================================== -->
+  <div class="cycle-modal-overlay" id="cycleModal">
+    <div class="cycle-modal">
+
+      <h3>Novo registro do ciclo</h3>
+
+      <p>
+        Registre informações do ciclo menstrual de forma simples e privada no navegador.
+      </p>
+
+      <div class="cycle-form-message" id="cycleFormMessage"></div>
+
+      <label>
+        <span>Tipo de registro</span>
+        <select id="cycleTypeSelect">
+          <option value="period">Menstruação</option>
+          <option value="symptom">Sintoma</option>
+          <option value="mood">Humor</option>
+          <option value="other">Outro</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Fluxo / intensidade</span>
+        <select id="cycleIntensitySelect">
+          <option value="leve">Leve</option>
+          <option value="medio">Médio</option>
+          <option value="intenso">Intenso</option>
+          <option value="nenhum">Nenhum / não se aplica</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Sintoma ou observação principal</span>
+        <input 
+          type="text" 
+          id="cycleTitleInput"
+          placeholder="Ex: início da menstruação, cólica, dor de cabeça..." 
+        />
+      </label>
+
+      <label>
+        <span>Observação opcional</span>
+        <textarea 
+          id="cycleNoteInput"
+          placeholder="Ex: cólica leve, fluxo intenso, alteração de humor, uso de medicamento..."
+        ></textarea>
+      </label>
+
+      <div class="cycle-modal-actions">
+        <button class="secondary-btn" type="button" id="closeCycleModalBtn">
+          Cancelar
+        </button>
+
+        <button class="primary-btn" type="button" id="saveCycleBtn">
+          Salvar registro
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/menstrual-cycle.js"></script>
+  <!-- UI mobile compartilhada -->
+  <script src="../js/mobile.js"></script>
+</body>
+</html>
