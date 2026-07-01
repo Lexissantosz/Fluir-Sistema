@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fluir | Organização da Vida</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./css/landing.css" />
+</head>
+
+<body>
+  <header class="landing-header">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">✦</div>
+
+      <div>
+        <strong>Fluir</strong>
+        <span>Organização da Vida</span>
+      </div>
+    </a>
+
+    <nav class="nav">
+      <a href="#sobre">Sobre</a>
+      <a href="#funcionalidades">Funcionalidades</a>
+      <a href="#versoes">Versões</a>
+      <a href="html/login.html" class="nav-button">Entrar</a>
+    </nav>
+
+    <button class="menu-button" id="menuButton" aria-label="Abrir menu">
+      ☰
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <span class="tag">Sistema web responsivo</span>
+
+        <h1>Organize sua rotina, seus hábitos e seu bem-estar em um só lugar.</h1>
+
+        <p>
+          O Fluir é um sistema criado para ajudar na organização pessoal,
+          reunindo tarefas, hábitos, finanças, saúde, sono, hidratação e outras áreas
+          importantes da vida em uma experiência simples e visual.
+        </p>
+
+        <div class="hero-actions">
+          <a href="html/login.html" class="primary-button">Acessar sistema</a>
+          <a href="#funcionalidades" class="secondary-button">Ver funcionalidades</a>
+        </div>
+      </div>
+
+      <div class="hero-preview">
+        <div class="mockup">
+          <div class="mockup-top">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="mockup-grid">
+            <article>
+              <small>Tarefas</small>
+              <strong>8 pendentes</strong>
+            </article>
+
+            <article>
+              <small>Água</small>
+              <strong>1.500 ml</strong>
+            </article>
+
+            <article>
+              <small>Sono</small>
+              <strong>7h 20m</strong>
+            </article>
+
+            <article>
+              <small>Finanças</small>
+              <strong>R$ 420,00</strong>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sobre">
+      <div class="section-title">
+        <span>Sobre o projeto</span>
+        <h2>Um sistema para acompanhar a vida com mais clareza.</h2>
+      </div>
+
+      <p class="section-text">
+        O Fluir foi desenvolvido como um sistema de organização pessoal.
+        A proposta é centralizar recursos do dia a dia em uma interface limpa,
+        com versão web e adaptação para dispositivos móveis.
+      </p>
+    </section>
+
+    <section class="section" id="funcionalidades">
+      <div class="section-title">
+        <span>Funcionalidades</span>
+        <h2>O que o sistema oferece</h2>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <h3>Tarefas</h3>
+          <p>Criação e acompanhamento de atividades importantes da rotina.</p>
+        </article>
+
+        <article class="card">
+          <h3>Hábitos</h3>
+          <p>Controle de hábitos pessoais com foco em constância e progresso.</p>
+        </article>
+
+        <article class="card">
+          <h3>Hidratação</h3>
+          <p>Registro de consumo de água e acompanhamento diário.</p>
+        </article>
+
+        <article class="card">
+          <h3>Finanças</h3>
+          <p>Organização de entradas, saídas e metas financeiras.</p>
+        </article>
+
+        <article class="card">
+          <h3>Sono</h3>
+          <p>Acompanhamento da rotina de descanso e qualidade do sono.</p>
+        </article>
+
+        <article class="card">
+          <h3>Perfil</h3>
+          <p>Área de usuário com informações pessoais e preferências.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section versions" id="versoes">
+      <div class="section-title">
+        <span>Versões</span>
+        <h2>Preparado para desktop e celular</h2>
+      </div>
+
+      <div class="version-grid">
+        <article>
+          <h3>Versão web</h3>
+          <p>
+            Interface ampla para uso em computadores e notebooks,
+            com navegação completa pelas áreas do sistema.
+          </p>
+        </article>
+
+        <article>
+          <h3>Versão mobile</h3>
+          <p>
+            Estrutura adaptada para telas menores, com navegação responsiva
+            e melhor visualização em celulares.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta">
+      <h2>Comece a explorar o Fluir</h2>
+      <p>Acesse a tela de login e veja as áreas principais do sistema.</p>
+      <a href="html/login.html" class="primary-button">Entrar no sistema</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>Fluir — Sistema de Organização da Vida</p>
+  </footer>
+
+  <script src="js/landing.js"></script>
+</body>
+</html>
