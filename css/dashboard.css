@@ -655,6 +655,8 @@ body.dark .focus-bar {
   box-shadow: var(--shadow-soft);
 
   overflow: hidden;
+  cursor: pointer;
+  position: relative;
 
   transition:
     transform 0.2s ease,
@@ -666,6 +668,76 @@ body.dark .focus-bar {
   transform: translateY(-3px);
   border-color: var(--border-strong);
   box-shadow: var(--shadow);
+}
+
+.summary-card::after {
+  content: "→";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--input-bg);
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 800;
+
+  opacity: 0;
+  transform: translateX(-4px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.summary-card:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+  border-color: var(--border-strong);
+}
+
+.summary-card::after {
+  content: "→";
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--input-bg);
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 800;
+
+  opacity: 0;
+  transform: translateX(-4px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.summary-card:hover::after {
+  opacity: 1;
+  transform: translateX(0);
+  border-color: var(--border-strong);
 }
 
 .card-title {

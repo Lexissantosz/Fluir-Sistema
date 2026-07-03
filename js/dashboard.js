@@ -1075,6 +1075,48 @@ function escapeHTML(value) {
 }
 
 // =====================================================
+// CARDS DO DASHBOARD CLICÁVEIS
+// Leva cada card de resumo para sua tela completa
+// =====================================================
+
+function setupDashboardCardLinks() {
+  const cardRoutes = {
+    tasks: "tasks.html",
+    habits: "habits.html",
+    sleep: "sleep.html",
+    water: "water.html",
+    finances: "finances.html",
+    diary: "diary.html"
+  };
+
+  const dashboardCards = document.querySelectorAll("[data-module-card]");
+
+  dashboardCards.forEach((card) => {
+    const moduleName = card.getAttribute("data-module-card");
+    const route = cardRoutes[moduleName];
+
+    if (!route) {
+      return;
+    }
+
+    card.style.cursor = "pointer";
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("title", "Abrir módulo");
+
+    card.addEventListener("click", function () {
+      window.location.href = route;
+    });
+
+    card.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        window.location.href = route;
+      }
+    });
+  });
+}
+// =====================================================
 // 18. INICIALIZAÇÃO DO DASHBOARD
 // =====================================================
 
@@ -1089,6 +1131,8 @@ function initDashboard() {
   updateDashboardRealData();
 
   setupTasksInteraction();
+  setupDashboardCardLinks();
+
   applyFinancePreferences();
   applySleepPreferences();
   applyWaterPreferences();
