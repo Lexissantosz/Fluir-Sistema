@@ -1948,3 +1948,31 @@ body.dark .preview {
   align-items: center;
   justify-content: center;
 }
+
+.form-message {
+  min-height: 20px;
+  margin: 10px 0 14px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.form-message.error {
+  color: #b42318;
+}
+
+.form-message.success {
+  color: #16703c;
+}
+
+.form-message.info {
+  color: #666;
+}
+
+.demo-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

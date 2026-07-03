@@ -15,6 +15,9 @@ const themeBtn = document.getElementById("themeBtn");
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
 
+const loginMessage = document.getElementById("loginMessage");
+const registerMessage = document.getElementById("registerMessage");
+
 const showRegister = document.getElementById("showRegister");
 const showLogin = document.getElementById("showLogin");
 
@@ -26,6 +29,20 @@ const passwordButtons = document.querySelectorAll(".password-toggle");
 // Agora o login/cadastro apenas aplica o tema salvo.
 // A troca principal de tema fica em settings.html.
 // =============================
+
+function showMessage(element, message, type) {
+  if (!element) {
+    return;
+  }
+
+  element.textContent = message;
+  element.className = `form-message ${type}`;
+}
+
+function clearMessages() {
+  showMessage(loginMessage, "", "info");
+  showMessage(registerMessage, "", "info");
+}
 
 function applySavedTheme() {
   const savedTheme = localStorage.getItem("fluir-theme");
@@ -52,6 +69,8 @@ function applySavedTheme() {
 
 if (showRegister && loginForm && registerForm) {
   showRegister.addEventListener("click", () => {
+    clearMessages();
+
     loginForm.classList.remove("active");
     registerForm.classList.add("active");
   });
@@ -64,6 +83,8 @@ if (showRegister && loginForm && registerForm) {
 
 if (showLogin && loginForm && registerForm) {
   showLogin.addEventListener("click", () => {
+    clearMessages();
+
     registerForm.classList.remove("active");
     loginForm.classList.add("active");
   });
@@ -124,20 +145,25 @@ if (loginForm) {
     const email = loginForm.querySelector('input[type="email"]');
     const senha = loginForm.querySelector('input[type="password"]');
 
+    showMessage(loginMessage, "", "info");
+
     if (!email.value.trim() || !senha.value.trim()) {
-      alert("Preencha seu e-mail e sua senha para entrar.");
+      showMessage(loginMessage, "Preencha seu e-mail e sua senha para entrar.", "error");
       return;
     }
 
     if (senha.value.length < 6) {
-      alert("A senha precisa ter pelo menos 6 caracteres.");
+      showMessage(loginMessage, "A senha precisa ter pelo menos 6 caracteres.", "error");
       return;
     }
 
-    alert("Login pronto para integração com o banco de dados.");
+    showMessage(
+      loginMessage,
+      "Login pronto para integração com o banco de dados.",
+      "info"
+    );
   });
 }
-
 
 // =============================
 // 8. ENVIO DO CADASTRO
@@ -152,17 +178,31 @@ if (registerForm) {
     const email = registerForm.querySelector('input[type="email"]');
     const senha = registerForm.querySelector('input[type="password"]');
 
+    showMessage(registerMessage, "", "info");
+
     if (!nome.value.trim() || !email.value.trim() || !senha.value.trim()) {
-      alert("Preencha nome, e-mail e senha para criar sua conta.");
+      showMessage(
+        registerMessage,
+        "Preencha nome, e-mail e senha para criar sua conta.",
+        "error"
+      );
       return;
     }
 
     if (senha.value.length < 6) {
-      alert("A senha precisa ter pelo menos 6 caracteres.");
+      showMessage(
+        registerMessage,
+        "A senha precisa ter pelo menos 6 caracteres.",
+        "error"
+      );
       return;
     }
 
-    alert("Cadastro pronto para integração com o banco de dados.");
+    showMessage(
+      registerMessage,
+      "Cadastro pronto para integração com o banco de dados.",
+      "info"
+    );
   });
 }
 
