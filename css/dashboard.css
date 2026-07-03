@@ -544,6 +544,67 @@ body.dark .focus-bar {
   border-bottom: 1px solid var(--border);
 }
 
+.dashboard-welcome {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard-eyebrow {
+  width: fit-content;
+  padding: 6px 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  background: var(--input-bg);
+  color: var(--muted);
+
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dashboard-welcome h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.dashboard-welcome p {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.dashboard-status {
+  min-height: 42px;
+  padding: 0 14px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+
+  background: var(--card-bg);
+  color: var(--muted);
+
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dashboard-status span {
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+  background: #22c55e;
+}
+
 .dashboard-header h2 {
   margin-bottom: 7px;
 
@@ -622,6 +683,8 @@ body.dark .focus-bar {
   transition:
     transform 0.2s ease,
     border-color 0.2s ease;
+
+  text-decoration: none;
 }
 
 .icon-btn:hover,
@@ -637,31 +700,36 @@ body.dark .focus-bar {
 /* ===================================================== */
 
 .summary-grid {
-  margin-top: 24px;
-
   display: grid;
-  grid-template-columns: repeat(6, minmax(130px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .summary-card {
-  min-height: 150px;
+  min-height: 165px;
+  padding: 20px;
 
-  padding: 18px;
-
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-soft);
-
+  position: relative;
   overflow: hidden;
   cursor: pointer;
-  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(0, 0, 0, 0.055), transparent 34%),
+    var(--card-bg);
+  box-shadow: var(--shadow-soft);
 
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
 .summary-card:hover {
@@ -705,84 +773,40 @@ body.dark .focus-bar {
   border-color: var(--border-strong);
 }
 
-.summary-card::after {
-  content: "→";
-  position: absolute;
-  top: 18px;
-  right: 18px;
-
-  width: 26px;
-  height: 26px;
-
-  display: grid;
-  place-items: center;
-
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--input-bg);
-  color: var(--text);
-
-  font-size: 14px;
-  font-weight: 800;
-
-  opacity: 0;
-  transform: translateX(-4px);
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease,
-    border-color 0.2s ease;
-}
-
-.summary-card:hover::after {
-  opacity: 1;
-  transform: translateX(0);
-  border-color: var(--border-strong);
-}
-
 .card-title {
-  margin-bottom: 20px;
-
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
+
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 800;
 }
 
 .card-title span {
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
 
   display: grid;
   place-items: center;
 
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text);
 
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 .card-title p {
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 850;
+  margin: 0;
 }
 
 .summary-card strong {
   display: block;
-
-  margin-bottom: 6px;
-
   color: var(--text);
-  font-size: 25px;
+  font-size: clamp(1.7rem, 3vw, 2.25rem);
   line-height: 1;
-  font-weight: 850;
-  letter-spacing: -0.045em;
-}
-
-.summary-card small {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
+  letter-spacing: -0.06em;
 }
 
 
@@ -1423,8 +1447,13 @@ body.dark .mini-progress {
   }
 
   .summary-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: 1fr;
+}
+
+.summary-card::after {
+  opacity: 1;
+  transform: translateX(0);
+}
 }
 
 
@@ -1757,94 +1786,4 @@ body.dark .mini-progress {
   color: var(--muted);
   font-size: 14px;
   line-height: 1.65;
-}
-
-/* ===================================================== */
-/* AJUSTE VISUAL — DASHBOARD COM CARDS MAIS COMPACTOS */
-/* Mantém os dados reais, mas volta o visual mais organizado */
-/* ===================================================== */
-
-/* Grid dos cards principais */
-.modules-grid,
-.dashboard-cards,
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(145px, 1fr));
-  gap: 14px;
-  align-items: stretch;
-}
-
-/* Cards principais mais compactos */
-.module-card,
-.summary-card {
-  min-height: 150px;
-  padding: 18px;
-}
-
-/* Título dentro dos cards */
-.module-card h3,
-.summary-card h3 {
-  font-size: 15px;
-  font-weight: 800;
-}
-
-/* Número principal */
-.module-card strong,
-.summary-card strong {
-  font-size: 26px;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-}
-
-/* Texto pequeno */
-.module-card small,
-.summary-card small {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-/* Progresso dentro dos cards */
-.mini-progress,
-.progress-line {
-  margin-top: 16px;
-}
-
-/* Área de baixo do dashboard */
-.dashboard-grid,
-.main-grid,
-.content-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.9fr);
-  gap: 18px;
-  align-items: start;
-}
-
-/* Painéis grandes */
-.dashboard-panel,
-.module-panel {
-  min-height: 260px;
-}
-
-/* Responsividade */
-@media (max-width: 1280px) {
-  .modules-grid,
-  .dashboard-cards,
-  .summary-grid {
-    grid-template-columns: repeat(3, minmax(180px, 1fr));
-  }
-}
-
-@media (max-width: 760px) {
-  .modules-grid,
-  .dashboard-cards,
-  .summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-grid,
-  .main-grid,
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
 }
