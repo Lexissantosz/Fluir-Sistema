@@ -1,14 +1,14 @@
 console.log("dashboard.js carregou");
 
-// =====================================================
-// FLUIR — DASHBOARD PRINCIPAL
-// JavaScript puro para personalizar o dashboard
-// =====================================================
+/* =====================================================
+   FLUIR — DASHBOARD PRINCIPAL
+   Controle da tela inicial interna do sistema
+===================================================== */
 
 
-// =====================================================
-// 1. SELEÇÃO DOS ELEMENTOS PRINCIPAIS
-// =====================================================
+/* =====================================================
+   1. ELEMENTOS PRINCIPAIS
+===================================================== */
 
 const body = document.body;
 
@@ -16,7 +16,6 @@ const themeBtn = document.getElementById("themeBtn");
 
 const welcomeTitle = document.getElementById("welcomeTitle");
 const welcomeSubtitle = document.getElementById("welcomeSubtitle");
-
 const avatarBtn = document.getElementById("avatarBtn");
 
 const navItems = document.querySelectorAll(".nav-item");
@@ -27,10 +26,10 @@ const modulePanels = document.querySelectorAll(".module-panel");
 const focusPercent = document.getElementById("focusPercent");
 
 
-// =====================================================
-// 2. CONFIGURAÇÕES PADRÃO
-// Usadas caso ainda não exista setup salvo no localStorage.
-// =====================================================
+/* =====================================================
+   2. CONFIGURAÇÕES PADRÃO
+   Usadas quando ainda não existe setup salvo.
+===================================================== */
 
 const defaultSetup = {
   user: {
@@ -61,11 +60,72 @@ const defaultSetup = {
 };
 
 
-// =====================================================
-// 3. LER SETUP SALVO
-// Lê os dados vindos da tela setup.html.
-// Se não existir, usa o padrão acima.
-// =====================================================
+/* =====================================================
+   3. FUNÇÕES DE APOIO
+   Coisinhas pequenas para evitar repetição e dor de cabeça.
+===================================================== */
+
+function getStorageJSON(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+
+    if (!value) {
+      return fallback;
+    }
+
+    return JSON.parse(value);
+  } catch (error) {
+    console.warn(`Erro ao ler ${key}:`, error);
+    return fallback;
+  }
+}
+
+function setStorageJSON(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+function escapeHTML(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function formatCurrency(value) {
+  const numberValue = Number(value);
+
+  if (!numberValue || Number.isNaN(numberValue)) {
+    return "R$ 0";
+  }
+
+  return numberValue.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+    maximumFractionDigits: 0
+  });
+}
+
+function getTodayKey() {
+  const today = new Date();
+
+  return today.toISOString().split("T")[0];
+}
+
+
+/* =====================================================
+   4. SETUP SALVO
+   Aqui lemos o que veio da tela de configuração inicial.
+===================================================== */
 
 function getSavedSetup() {
   const savedSetup = localStorage.getItem("fluir-setup");
@@ -85,10 +145,9 @@ function getSavedSetup() {
 const setupData = getSavedSetup();
 
 
-// =====================================================
-// 4. TEMA CLARO / ESCURO
-// Mantém o mesmo tema usado nas outras telas.
-// =====================================================
+/* =====================================================
+   5. TEMA CLARO / ESCURO
+===================================================== */
 
 function applySavedTheme() {
   const savedTheme = localStorage.getItem("fluir-theme");
@@ -123,10 +182,9 @@ if (themeBtn) {
 }
 
 
-// =====================================================
-// 5. SAUDAÇÃO PERSONALIZADA
-// Usa o nome preferido salvo no setup.
-// =====================================================
+/* =====================================================
+   6. SAUDAÇÃO DO USUÁRIO
+===================================================== */
 
 function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
@@ -135,7 +193,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Deibson";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = `Olá, ${displayName} 👋`;
   }
 
   if (avatarBtn) {
@@ -147,12 +205,6 @@ function updateWelcomeArea() {
   }
 }
 
-
-// =====================================================
-// 6. PEGAR INICIAL DO NOME
-// Usado no botão redondo de perfil.
-// =====================================================
-
 function getInitial(name) {
   if (!name) {
     return "F";
@@ -160,12 +212,6 @@ function getInitial(name) {
 
   return name.trim().charAt(0).toUpperCase();
 }
-
-
-// =====================================================
-// 7. FRASE DO TOPO POR TOM DE COMUNICAÇÃO
-// Muda levemente conforme o que a pessoa escolheu no setup.
-// =====================================================
 
 function getSubtitleByTone(tone) {
   const subtitles = {
@@ -180,11 +226,10 @@ function getSubtitleByTone(tone) {
 }
 
 
-// =====================================================
-// 8. APLICAR MÓDULOS ESCOLHIDOS
-// Mostra no dashboard apenas os módulos ativados no setup.
-// Timeline e Dashboard ficam sempre ativos.
-// =====================================================
+/* =====================================================
+   7. MÓDULOS ESCOLHIDOS
+   Esconde áreas que o usuário não ativou no setup.
+===================================================== */
 
 function applySelectedModules() {
   const modules = setupData.modules || defaultSetup.modules;
@@ -234,12 +279,6 @@ function applySelectedModules() {
   updateDashboardLayoutAfterHiddenModules();
 }
 
-
-// =====================================================
-// 9. AJUSTAR LAYOUT QUANDO ALGUNS MÓDULOS SUMIREM
-// Mantém o dashboard bonito mesmo com poucos módulos ativos.
-// =====================================================
-
 function updateDashboardLayoutAfterHiddenModules() {
   const summaryGrid = document.getElementById("summaryGrid");
   const contentGrid = document.querySelector(".content-grid");
@@ -263,19 +302,10 @@ function updateDashboardLayoutAfterHiddenModules() {
     ".side-panels .small-panel:not(.module-hidden)"
   );
 
-  // Conta quantos módulos estão ativos no setup.
   const modules = setupData.modules || defaultSetup.modules;
+  const activeModulesCount = Object.values(modules).filter((value) => value === true).length;
 
-  const activeModulesCount = Object.values(modules).filter((value) => {
-    return value === true;
-  }).length;
-
-  // Verifica se a nota de dashboard vazio já existe.
   const existingNote = document.querySelector(".empty-dashboard-note");
-
-  // =====================================================
-  // CARDS DO TOPO
-  // =====================================================
 
   if (summaryGrid) {
     summaryGrid.classList.remove(
@@ -297,11 +327,6 @@ function updateDashboardLayoutAfterHiddenModules() {
     }
   }
 
-  // =====================================================
-  // GRID PRINCIPAL
-  // Se só tiver um painel, ele ocupa melhor o espaço.
-  // =====================================================
-
   if (contentGrid) {
     contentGrid.classList.remove("single-content-panel");
 
@@ -309,11 +334,6 @@ function updateDashboardLayoutAfterHiddenModules() {
       contentGrid.classList.add("single-content-panel");
     }
   }
-
-  // =====================================================
-  // GRID INFERIOR
-  // Se poucos painéis aparecem, evita espaços vazios.
-  // =====================================================
 
   if (bottomGrid) {
     bottomGrid.classList.remove("compact-bottom");
@@ -331,11 +351,6 @@ function updateDashboardLayoutAfterHiddenModules() {
     }
   }
 
-  // =====================================================
-  // PAINEL DE HÁBITOS
-  // Se ele for o único painel inferior, limita largura.
-  // =====================================================
-
   const habitsPanel = document.querySelector('[data-module-panel="habits"]');
 
   if (habitsPanel) {
@@ -348,11 +363,6 @@ function updateDashboardLayoutAfterHiddenModules() {
       habitsPanel.classList.add("only-panel");
     }
   }
-
-  // =====================================================
-  // ESTADO COM POUCAS FUNCIONALIDADES
-  // Mostra uma nota elegante se o dashboard estiver vazio.
-  // =====================================================
 
   if (activeModulesCount <= 1 && dashboardMain && !existingNote) {
     const note = document.createElement("section");
@@ -383,18 +393,15 @@ function updateDashboardLayoutAfterHiddenModules() {
 }
 
 
-// =====================================================
-// 10. MENU ATIVO
-// Mantém visual ativo sem bloquear links reais.
-// =====================================================
+/* =====================================================
+   8. MENU ATIVO
+===================================================== */
 
 function setupNavigation() {
   navItems.forEach((item) => {
     item.addEventListener("click", (event) => {
       const href = item.getAttribute("href");
 
-      // Só bloqueia links vazios ou "#".
-      // Assim links como tasks.html, water.html, finances.html etc. funcionam.
       if (!href || href === "#") {
         event.preventDefault();
       }
@@ -409,49 +416,321 @@ function setupNavigation() {
 }
 
 
-// =====================================================
-// 11. CHECKBOXES DE TAREFAS
-// Atualiza visual simples quando marcar/desmarcar.
-// =====================================================
+/* =====================================================
+   9. CARDS DO DASHBOARD CLICÁVEIS
+===================================================== */
 
-function setupTasksInteraction() {
-  const taskCheckboxes = document.querySelectorAll(".task-item input");
+function setupDashboardCardLinks() {
+  const cardRoutes = {
+    tasks: "tasks.html",
+    habits: "habits.html",
+    sleep: "sleep.html",
+    water: "water.html",
+    finances: "finances.html",
+    diary: "diary.html"
+  };
 
-  taskCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener("change", () => {
-      const taskItem = checkbox.closest(".task-item");
+  const dashboardCards = document.querySelectorAll("[data-module-card]");
 
-      if (!taskItem) {
-        return;
-      }
+  dashboardCards.forEach((card) => {
+    const moduleName = card.getAttribute("data-module-card");
+    const route = cardRoutes[moduleName];
 
-      if (checkbox.checked) {
-        taskItem.classList.add("task-done");
-      } else {
-        taskItem.classList.remove("task-done");
-      }
+    if (!route) {
+      return;
+    }
 
-      updateFocusProgress();
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+
+    card.addEventListener("click", () => {
+      window.location.href = route;
     });
 
-    if (checkbox.checked) {
-      const taskItem = checkbox.closest(".task-item");
-
-      if (taskItem) {
-        taskItem.classList.add("task-done");
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        window.location.href = route;
       }
-    }
+    });
   });
 }
 
 
-// =====================================================
-// 12. ATUALIZAR FOCO DO DIA
-// Calcula uma porcentagem simples baseada em tarefas concluídas.
-// =====================================================
+/* =====================================================
+   10. DADOS GERAIS DO DASHBOARD
+===================================================== */
+
+function updateDashboardRealData() {
+  updateTasksDashboardData();
+  updateHabitsDashboardData();
+  updateSleepDashboardData();
+  updateWaterDashboardData();
+  updateFinancesDashboardData();
+  updateDiaryDashboardData();
+  updateAchievementsDashboardData();
+  updatePlanDashboardData();
+  updateRecentEventsDashboardData();
+}
+
+
+/* =====================================================
+   11. TAREFAS DO DASHBOARD
+   Aqui fica a parte do quadradinho que finalmente funciona.
+===================================================== */
+
+function getDefaultDashboardTasks() {
+  return [
+    {
+      id: "demo-task-1",
+      title: "Revisar proposta do projeto",
+      category: "Trabalho",
+      time: "09:00",
+      completed: false
+    },
+    {
+      id: "demo-task-2",
+      title: "Responder e-mails importantes",
+      category: "Trabalho",
+      time: "11:00",
+      completed: false
+    },
+    {
+      id: "demo-task-3",
+      title: "Estudar capítulo 4",
+      category: "Estudos",
+      time: "14:00",
+      completed: false
+    },
+    {
+      id: "demo-task-4",
+      title: "Treino de força",
+      category: "Saúde",
+      time: "18:00",
+      completed: true
+    },
+    {
+      id: "demo-task-5",
+      title: "Ler 20 páginas",
+      category: "Pessoal",
+      time: "20:30",
+      completed: true
+    }
+  ];
+}
+
+function getDashboardTasks() {
+  const realTasks = getStorageJSON("fluir-tasks", []);
+
+  if (Array.isArray(realTasks) && realTasks.length) {
+    return {
+      source: "real",
+      tasks: realTasks.slice(0, 5).map((task, index) => {
+        return {
+          id: task.id || `real-task-${index}`,
+          title: task.title || "Tarefa sem título",
+          category: task.category || task.type || "Tarefa",
+          time: task.time || task.hour || "",
+          completed: Boolean(task.completed)
+        };
+      })
+    };
+  }
+
+  const savedDemoTasks = getStorageJSON("fluir-dashboard-demo-tasks", null);
+
+  return {
+    source: "demo",
+    tasks: Array.isArray(savedDemoTasks) && savedDemoTasks.length
+      ? savedDemoTasks
+      : getDefaultDashboardTasks()
+  };
+}
+
+function updateTasksDashboardData() {
+  const tasksPanel = document.getElementById("dashboardTaskList");
+
+  if (!tasksPanel) {
+    return;
+  }
+
+  const dashboardTasks = getDashboardTasks();
+
+  if (!dashboardTasks.tasks.length) {
+    tasksPanel.innerHTML = `
+      <div class="empty-dashboard-mini">
+        <strong>Nenhuma tarefa ainda</strong>
+        <p>Crie uma tarefa para começar a organizar o dia.</p>
+      </div>
+    `;
+
+    updateTasksSummary();
+    updateFocusProgress();
+    return;
+  }
+
+  tasksPanel.innerHTML = dashboardTasks.tasks.map((task) => {
+    const checked = task.completed ? "checked" : "";
+    const doneClass = task.completed ? "task-done" : "";
+
+    return `
+      <div
+        class="task-item ${doneClass}"
+        data-task-id="${escapeAttribute(task.id)}"
+        data-task-source="${escapeAttribute(dashboardTasks.source)}"
+      >
+        <input type="checkbox" ${checked}>
+        <span>${escapeHTML(task.title)}</span>
+        <small>${escapeHTML(task.category || "Tarefa")}</small>
+        <time>${escapeHTML(task.time || "")}</time>
+      </div>
+    `;
+  }).join("");
+
+  setupTasksInteraction();
+  updateTasksSummary();
+  updateFocusProgress();
+}
+
+function setupTasksInteraction() {
+  const taskList = document.getElementById("dashboardTaskList");
+
+  if (!taskList) {
+    return;
+  }
+
+  taskList.addEventListener("click", (event) => {
+    const taskItem = event.target.closest(".task-item");
+
+    if (!taskItem || !taskList.contains(taskItem)) {
+      return;
+    }
+
+    const checkbox = taskItem.querySelector('input[type="checkbox"]');
+
+    if (!checkbox) {
+      return;
+    }
+
+    const clickedCheckbox = event.target.matches('input[type="checkbox"]');
+
+    /*
+      Se o clique foi no quadradinho, o navegador já alternou o estado.
+      Se foi no resto da tarefa, a gente alterna manualmente.
+    */
+    if (!clickedCheckbox) {
+      checkbox.checked = !checkbox.checked;
+    }
+
+    applyTaskVisual(taskItem);
+    saveTaskChange(taskItem);
+    updateTasksSummary();
+    updateFocusProgress();
+  });
+}
+
+function applyTaskVisual(taskItem) {
+  const checkbox = taskItem.querySelector('input[type="checkbox"]');
+
+  if (!checkbox) {
+    return;
+  }
+
+  taskItem.classList.toggle("task-done", checkbox.checked);
+}
+
+function saveTaskChange(taskItem) {
+  const checkbox = taskItem.querySelector('input[type="checkbox"]');
+  const text = taskItem.querySelector("span");
+
+  if (!checkbox || !text) {
+    return;
+  }
+
+  const taskId = taskItem.dataset.taskId;
+  const taskSource = taskItem.dataset.taskSource;
+
+  if (taskSource === "real") {
+    const tasks = getStorageJSON("fluir-tasks", []);
+
+    const updatedTasks = tasks.map((task, index) => {
+      const currentId = task.id || `real-task-${index}`;
+
+      if (String(currentId) === String(taskId) || task.title === text.textContent.trim()) {
+        return {
+          ...task,
+          completed: checkbox.checked
+        };
+      }
+
+      return task;
+    });
+
+    setStorageJSON("fluir-tasks", updatedTasks);
+    return;
+  }
+
+  const demoTasks = [];
+
+  document.querySelectorAll("#dashboardTaskList .task-item").forEach((item) => {
+    const itemCheckbox = item.querySelector('input[type="checkbox"]');
+    const itemTitle = item.querySelector("span");
+    const itemCategory = item.querySelector("small");
+    const itemTime = item.querySelector("time");
+
+    if (!itemCheckbox || !itemTitle) {
+      return;
+    }
+
+    demoTasks.push({
+      id: item.dataset.taskId,
+      title: itemTitle.textContent.trim(),
+      category: itemCategory ? itemCategory.textContent.trim() : "Tarefa",
+      time: itemTime ? itemTime.textContent.trim() : "",
+      completed: itemCheckbox.checked
+    });
+  });
+
+  setStorageJSON("fluir-dashboard-demo-tasks", demoTasks);
+}
+
+function updateTasksSummary() {
+  const checkboxes = document.querySelectorAll("#dashboardTaskList .task-item input[type='checkbox']");
+  const tasksCard = document.querySelector("[data-module-card='tasks']");
+
+  if (!tasksCard) {
+    return;
+  }
+
+  const total = checkboxes.length;
+  const completed = Array.from(checkboxes).filter((checkbox) => checkbox.checked).length;
+  const pending = total - completed;
+
+  const numberElement = tasksCard.querySelector("strong");
+  const textElement = tasksCard.querySelector("small");
+  const progressElement = tasksCard.querySelector(".mini-progress span");
+
+  if (numberElement) {
+    numberElement.textContent = String(pending);
+  }
+
+  if (textElement) {
+    textElement.textContent = `${completed} de ${total} concluídas`;
+  }
+
+  if (progressElement) {
+    const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+    progressElement.style.width = `${percentage}%`;
+  }
+}
+
+
+/* =====================================================
+   12. FOCO DO DIA
+===================================================== */
 
 function updateFocusProgress() {
-  const taskCheckboxes = document.querySelectorAll(".task-item input");
+  const taskCheckboxes = document.querySelectorAll("#dashboardTaskList .task-item input[type='checkbox']");
 
   if (!taskCheckboxes.length) {
     if (focusPercent) {
@@ -487,60 +766,70 @@ function updateFocusProgress() {
 }
 
 
-// =====================================================
-// 13. PREENCHER DADOS FINANCEIROS DO SETUP
-// Se a pessoa informou renda no setup, podemos mostrar um começo.
-// =====================================================
+/* =====================================================
+   13. HÁBITOS
+===================================================== */
 
-function applyFinancePreferences() {
-  const income = setupData.preferences?.finances?.monthlyIncome;
+function updateHabitsDashboardData() {
+  const habits = getStorageJSON("fluir-habits", []);
+  const todayKey = getTodayKey();
 
-  if (!income) {
-    return;
-  }
+  const total = Array.isArray(habits) ? habits.length : 0;
 
-  const financeCards = document.querySelectorAll('[data-module-card="finances"] strong');
+  const completedToday = Array.isArray(habits)
+    ? habits.filter((habit) => {
+        return Array.isArray(habit.completedDates) && habit.completedDates.includes(todayKey);
+      }).length
+    : 0;
 
-  financeCards.forEach((item) => {
-    item.textContent = formatCurrency(Number(income));
-  });
-}
+  const percent = total ? Math.round((completedToday / total) * 100) : 0;
 
-// =====================================================
-// LER JSON DO LOCALSTORAGE COM SEGURANÇA
-// Evita erro se algum dado estiver vazio ou corrompido.
-// =====================================================
+  const card = document.querySelector('[data-module-card="habits"]');
 
-function getStorageJSON(key, fallback) {
-  try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
-  } catch (error) {
-    console.warn(`Erro ao ler ${key}:`, error);
-    return fallback;
+  if (card) {
+    const strong = card.querySelector("strong");
+    const small = card.querySelector("small");
+    const progress = card.querySelector(".mini-progress span");
+
+    if (strong) strong.textContent = String(completedToday);
+    if (small) small.textContent = `${completedToday} de ${total} concluídos`;
+    if (progress) progress.style.width = `${percent}%`;
   }
 }
 
-// =====================================================
-// 14. FORMATAR MOEDA
-// =====================================================
 
-function formatCurrency(value) {
-  if (!value || Number.isNaN(value)) {
-    return "R$ 0";
+/* =====================================================
+   14. SONO
+===================================================== */
+
+function updateSleepDashboardData() {
+  const sleepEntries = getStorageJSON("fluir-sleep", []);
+  const card = document.querySelector('[data-module-card="sleep"]');
+  const panel = document.querySelector('[data-module-panel="sleep"]');
+
+  const lastEntry = Array.isArray(sleepEntries) && sleepEntries.length
+    ? sleepEntries[sleepEntries.length - 1]
+    : null;
+
+  const sleepText = lastEntry?.duration || lastEntry?.hours || "0h";
+  const sleepSmall = lastEntry ? "último registro" : "sem registro";
+
+  if (card) {
+    const strong = card.querySelector("strong");
+    const small = card.querySelector("small");
+
+    if (strong) strong.textContent = sleepText;
+    if (small) small.textContent = sleepSmall;
   }
 
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    maximumFractionDigits: 0
-  });
+  if (panel) {
+    const strong = panel.querySelector("strong");
+    const p = panel.querySelector("p");
+
+    if (strong) strong.textContent = sleepText;
+    if (p) p.textContent = sleepSmall;
+  }
 }
-
-
-// =====================================================
-// 15. DADOS DE SONO DO SETUP
-// Se a pessoa colocou meta de sono, aparece no card.
-// =====================================================
 
 function applySleepPreferences() {
   const sleepGoal = setupData.preferences?.sleep?.sleepGoal;
@@ -557,10 +846,62 @@ function applySleepPreferences() {
 }
 
 
-// =====================================================
-// 16. DADOS DE ÁGUA DO SETUP
-// Se a pessoa colocou meta, aparece no card.
-// =====================================================
+/* =====================================================
+   15. ÁGUA
+===================================================== */
+
+function updateWaterDashboardData() {
+  const waterEntries = getStorageJSON("fluir-water", []);
+  const waterGoal = setupData.preferences?.water?.dailyGoal || 2000;
+
+  const total = Array.isArray(waterEntries)
+    ? waterEntries.reduce((sum, entry) => {
+        return sum + Number(entry.amount || entry.ml || 0);
+      }, 0)
+    : 0;
+
+  const card = document.querySelector('[data-module-card="water"]');
+  const panel = document.querySelector('[data-module-panel="water"]');
+
+  if (card) {
+    const strong = card.querySelector("strong");
+    const small = card.querySelector("small");
+    const dots = card.querySelectorAll(".water-dots span");
+
+    if (strong) strong.textContent = `${total}ml`;
+    if (small) small.textContent = `de ${waterGoal}ml`;
+
+    updateWaterDots(dots, total, waterGoal);
+  }
+
+  if (panel) {
+    const strong = panel.querySelector("strong");
+    const p = panel.querySelector("p");
+    const dots = panel.querySelectorAll(".water-dots span");
+
+    if (strong) strong.textContent = `${total}ml`;
+    if (p) p.textContent = `de ${waterGoal}ml`;
+
+    updateWaterDots(dots, total, waterGoal);
+  }
+}
+
+function updateWaterDots(dots, total, goal) {
+  if (!dots.length) {
+    return;
+  }
+
+  const percentage = goal > 0 ? total / goal : 0;
+  const filledDots = Math.min(dots.length, Math.round(percentage * dots.length));
+
+  dots.forEach((dot, index) => {
+    if (index < filledDots) {
+      dot.classList.add("filled");
+    } else {
+      dot.classList.remove("filled");
+    }
+  });
+}
 
 function applyWaterPreferences() {
   const waterGoal = setupData.preferences?.water?.dailyGoal;
@@ -577,10 +918,154 @@ function applyWaterPreferences() {
 }
 
 
-// =====================================================
-// 17. AVISO CASO NÃO TENHA SETUP
-// Ajuda durante desenvolvimento.
-// =====================================================
+/* =====================================================
+   16. FINANÇAS
+===================================================== */
+
+function updateFinancesDashboardData() {
+  const finances = getStorageJSON("fluir-finances", []);
+
+  const entries = Array.isArray(finances) ? finances : [];
+
+  const income = entries
+    .filter((item) => item.type === "entrada" || item.type === "income")
+    .reduce((sum, item) => sum + Number(item.value || item.amount || 0), 0);
+
+  const expense = entries
+    .filter((item) => item.type === "saida" || item.type === "expense")
+    .reduce((sum, item) => sum + Number(item.value || item.amount || 0), 0);
+
+  const balance = income - expense;
+
+  const card = document.querySelector('[data-module-card="finances"]');
+  const panel = document.querySelector('[data-module-panel="finances"]');
+
+  if (card) {
+    const strong = card.querySelector("strong");
+    const small = card.querySelector("small");
+
+    if (strong) strong.textContent = formatCurrency(balance);
+    if (small) small.textContent = "saldo atual";
+  }
+
+  if (panel) {
+    const strong = panel.querySelector("strong");
+    const p = panel.querySelector("p");
+    const smallItems = panel.querySelectorAll("small");
+
+    if (strong) strong.textContent = formatCurrency(balance);
+    if (p) p.textContent = "Saldo atual";
+
+    if (smallItems[0]) smallItems[0].textContent = `Entrada ${formatCurrency(income)}`;
+    if (smallItems[1]) smallItems[1].textContent = `Saída - ${formatCurrency(expense)}`;
+  }
+}
+
+function applyFinancePreferences() {
+  const income = setupData.preferences?.finances?.monthlyIncome;
+
+  if (!income) {
+    return;
+  }
+
+  const financeCards = document.querySelectorAll('[data-module-card="finances"] strong');
+
+  financeCards.forEach((item) => {
+    item.textContent = formatCurrency(Number(income));
+  });
+}
+
+
+/* =====================================================
+   17. DIÁRIO
+===================================================== */
+
+function updateDiaryDashboardData() {
+  const diaryEntries = getStorageJSON("fluir-diary", []);
+
+  const entries = Array.isArray(diaryEntries) ? diaryEntries : [];
+  const todayKey = getTodayKey();
+
+  const todayEntries = entries.filter((entry) => {
+    return String(entry.date || "").startsWith(todayKey);
+  });
+
+  const card = document.querySelector('[data-module-card="diary"]');
+  const panel = document.querySelector('[data-module-panel="diary"]');
+
+  if (card) {
+    const strong = card.querySelector("strong");
+    const small = card.querySelector("small");
+
+    if (strong) strong.textContent = String(todayEntries.length);
+    if (small) {
+      small.textContent = todayEntries.length === 1
+        ? "entrada hoje"
+        : "entradas hoje";
+    }
+  }
+
+  if (panel) {
+    const p = panel.querySelector("p");
+
+    if (p) {
+      p.textContent = entries.length
+        ? entries[entries.length - 1].text || entries[entries.length - 1].content || "Última entrada registrada."
+        : "Nenhuma entrada no diário ainda.";
+    }
+  }
+}
+
+
+/* =====================================================
+   18. CONQUISTAS, PLANOS E EVENTOS
+   Por enquanto, são leituras simples para não quebrar o painel.
+===================================================== */
+
+function updateAchievementsDashboardData() {
+  // Área preparada para quando conquistas tiverem dados próprios.
+}
+
+function updatePlanDashboardData() {
+  // Área preparada para quando planos tiverem integração.
+}
+
+function updateRecentEventsDashboardData() {
+  const eventList = document.querySelector(".event-list");
+
+  if (!eventList) {
+    return;
+  }
+
+  const events = getStorageJSON("fluir-events", []);
+
+  if (!Array.isArray(events) || !events.length) {
+    eventList.innerHTML = `
+      <article>
+        <span>Hoje</span>
+        <strong>Nenhum evento recente</strong>
+        <p>Os registros dos módulos aparecerão aqui.</p>
+      </article>
+    `;
+
+    return;
+  }
+
+  eventList.innerHTML = events.slice(0, 4).map((event) => {
+    return `
+      <article>
+        <span>${escapeHTML(event.date || "Hoje")}</span>
+        <strong>${escapeHTML(event.title || "Evento")}</strong>
+        <p>${escapeHTML(event.description || "")}</p>
+      </article>
+    `;
+  }).join("");
+}
+
+
+/* =====================================================
+   19. AVISO DE SETUP
+===================================================== */
 
 function showSetupNoticeIfNeeded() {
   const savedSetup = localStorage.getItem("fluir-setup");
@@ -594,531 +1079,10 @@ function showSetupNoticeIfNeeded() {
   );
 }
 
-// =====================================================
-// DADOS REAIS DO DASHBOARD
-// Puxa informações reais dos módulos salvos no localStorage.
-// =====================================================
 
-function updateDashboardRealData() {
-  updateTasksDashboardData();
-  updateHabitsDashboardData();
-  updateSleepDashboardData();
-  updateWaterDashboardData();
-  updateFinancesDashboardData();
-  updateDiaryDashboardData();
-  updateAchievementsDashboardData();
-  updatePlanDashboardData();
-  updateRecentEventsDashboardData();
-}
-
-
-// =====================================================
-// TAREFAS
-// =====================================================
-
-function updateTasksDashboardData() {
-  const tasks = getStorageJSON("fluir-tasks", []);
-
-  const total = tasks.length;
-  const completed = tasks.filter((task) => task.completed).length;
-  const pending = total - completed;
-  const percent = total ? Math.round((completed / total) * 100) : 0;
-
-  const card = document.querySelector('[data-module-card="tasks"]');
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-    const progress = card.querySelector(".mini-progress span");
-
-    if (strong) strong.textContent = String(pending);
-    if (small) small.textContent = `${completed} de ${total} concluídas`;
-    if (progress) progress.style.width = `${percent}%`;
-  }
-
-  const tasksPanel = document.querySelector('[data-module-panel="tasks"] .task-list');
-
-  if (!tasksPanel) return;
-
-  if (!tasks.length) {
-    tasksPanel.innerHTML = `
-      <div class="empty-dashboard-mini">
-        <strong>Nenhuma tarefa ainda</strong>
-        <p>Crie uma tarefa para começar a organizar o dia.</p>
-      </div>
-    `;
-    return;
-  }
-
-  const recentTasks = tasks.slice(0, 5);
-
-  tasksPanel.innerHTML = recentTasks.map((task) => {
-    const checked = task.completed ? "checked" : "";
-    const doneClass = task.completed ? "task-done" : "";
-
-    return `
-      <label class="task-item ${doneClass}">
-        <input type="checkbox" ${checked} disabled>
-        <span>${escapeHTML(task.title || "Tarefa sem título")}</span>
-      </label>
-    `;
-  }).join("");
-}
-
-
-// =====================================================
-// HÁBITOS
-// =====================================================
-
-function updateHabitsDashboardData() {
-  const habits = getStorageJSON("fluir-habits", []);
-  const todayKey = getTodayKey();
-
-  const total = habits.length;
-  const completedToday = habits.filter((habit) => {
-    return Array.isArray(habit.completedDates) && habit.completedDates.includes(todayKey);
-  }).length;
-
-  const percent = total ? Math.round((completedToday / total) * 100) : 0;
-
-  const card = document.querySelector('[data-module-card="habits"]');
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-    const progress = card.querySelector(".mini-progress span");
-
-    if (strong) strong.textContent = String(completedToday);
-    if (small) small.textContent = `${completedToday} de ${total} concluídos`;
-    if (progress) progress.style.width = `${percent}%`;
-  }
-
-  const habitsPanel = document.querySelector('[data-module-panel="habits"] .habit-list');
-
-  if (!habitsPanel) return;
-
-  if (!habits.length) {
-    habitsPanel.innerHTML = `
-      <div class="empty-dashboard-mini">
-        <strong>Nenhum hábito ainda</strong>
-        <p>Crie hábitos para acompanhar sua constância.</p>
-      </div>
-    `;
-    return;
-  }
-
-  habitsPanel.innerHTML = habits.slice(0, 4).map((habit) => {
-    const completedDates = Array.isArray(habit.completedDates) ? habit.completedDates : [];
-    const doneCount = completedDates.length;
-
-    return `
-      <div class="habit-row">
-        <span>${escapeHTML(habit.title || "Hábito sem título")}</span>
-        <p>${doneCount} registros</p>
-        <strong>${habit.streak || 0}d</strong>
-      </div>
-    `;
-  }).join("");
-}
-
-
-// =====================================================
-// SONO
-// =====================================================
-
-function updateSleepDashboardData() {
-  const sleepLogs = getStorageJSON("fluir-sleep-logs", []);
-  const lastSleep = sleepLogs[0];
-
-  const card = document.querySelector('[data-module-card="sleep"]');
-  const sidePanel = document.querySelector('[data-module-panel="sleep"]');
-
-  const sleepText = lastSleep
-    ? getSleepDurationText(lastSleep)
-    : "0h";
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-
-    if (strong) strong.textContent = sleepText;
-    if (small) small.textContent = lastSleep ? "última noite" : "sem registro";
-  }
-
-  if (sidePanel) {
-    const strong = sidePanel.querySelector("strong");
-    const p = sidePanel.querySelector("p");
-
-    if (strong) strong.textContent = sleepText;
-    if (p) p.textContent = lastSleep ? "Última noite" : "Nenhum registro";
-  }
-}
-
-function getSleepDurationText(log) {
-  if (log.durationText) return log.durationText;
-
-  if (log.durationMinutes) {
-    return formatMinutesDashboard(Number(log.durationMinutes));
-  }
-
-  if (log.durationHours) {
-    return `${Number(log.durationHours).toFixed(1)}h`;
-  }
-
-  return "0h";
-}
-
-function formatMinutesDashboard(totalMinutes) {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (!minutes) return `${hours}h`;
-
-  return `${hours}h ${minutes}m`;
-}
-
-
-// =====================================================
-// ÁGUA
-// =====================================================
-
-function updateWaterDashboardData() {
-  const waterData = getStorageJSON("fluir-water", { goal: 2000, logs: {} });
-  const todayKey = getTodayKey();
-
-  const goalMl = Number(waterData.goal) || 2000;
-  const todayMl = Number(waterData.logs?.[todayKey]) || 0;
-
-  const percent = goalMl
-    ? Math.min(Math.round((todayMl / goalMl) * 100), 100)
-    : 0;
-
-  const card = document.querySelector('[data-module-card="water"]');
-  const sidePanel = document.querySelector('[data-module-panel="water"]');
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-    const dots = card.querySelectorAll(".water-dots span");
-
-    if (strong) {
-      strong.textContent = `${todayMl}ml`;
-    }
-
-    if (small) {
-      small.textContent = `de ${goalMl}ml`;
-    }
-
-    /*
-      Mantém as bolinhas visuais do dashboard.
-      Como agora é ml, cada bolinha representa uma parte da meta.
-    */
-    dots.forEach((dot, index) => {
-      const dotLimit = ((index + 1) / dots.length) * goalMl;
-      dot.classList.toggle("filled", todayMl >= dotLimit);
-    });
-  }
-
-  if (sidePanel) {
-    const strong = sidePanel.querySelector("strong");
-    const p = sidePanel.querySelector("p");
-    const dots = sidePanel.querySelectorAll(".water-dots span");
-
-    if (strong) {
-      strong.textContent = `${todayMl}ml`;
-    }
-
-    if (p) {
-      p.textContent = `de ${goalMl}ml`;
-    }
-
-    dots.forEach((dot, index) => {
-      const dotLimit = ((index + 1) / dots.length) * goalMl;
-      dot.classList.toggle("filled", todayMl >= dotLimit);
-    });
-  }
-
-  updateFocusByRealData(percent);
-}
-
-// =====================================================
-// FINANÇAS
-// =====================================================
-
-function updateFinancesDashboardData() {
-  const transactions = getStorageJSON("fluir-finances", []);
-
-  const income = transactions
-    .filter((item) => item.type === "income" || item.type === "entrada")
-    .reduce((sum, item) => sum + (Number(item.value) || 0), 0);
-
-  const expense = transactions
-    .filter((item) => item.type === "expense" || item.type === "saida")
-    .reduce((sum, item) => sum + (Number(item.value) || 0), 0);
-
-  const balance = income - expense;
-
-  const card = document.querySelector('[data-module-card="finances"]');
-  const sidePanel = document.querySelector('[data-module-panel="finances"]');
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-
-    if (strong) strong.textContent = formatCurrency(balance);
-    if (small) small.textContent = "saldo atual";
-  }
-
-  if (sidePanel) {
-    const strong = sidePanel.querySelector("strong");
-    const smalls = sidePanel.querySelectorAll("small");
-
-    if (strong) strong.textContent = formatCurrency(balance);
-
-    if (smalls[0]) smalls[0].textContent = `Entrada ${formatCurrency(income)}`;
-    if (smalls[1]) smalls[1].textContent = `Saída - ${formatCurrency(expense)}`;
-  }
-}
-
-
-// =====================================================
-// DIÁRIO
-// =====================================================
-
-function updateDiaryDashboardData() {
-  const entries = getStorageJSON("fluir-diary", []);
-  const todayKey = getTodayKey();
-
-  const todayEntries = entries.filter((entry) => {
-    return entry.date === todayKey || String(entry.createdAt || "").startsWith(todayKey);
-  });
-
-  const lastEntry = entries[0];
-
-  const card = document.querySelector('[data-module-card="diary"]');
-  const panel = document.querySelector('[data-module-panel="diary"]');
-
-  if (card) {
-    const strong = card.querySelector("strong");
-    const small = card.querySelector("small");
-
-    if (strong) strong.textContent = String(todayEntries.length);
-    if (small) small.textContent = todayEntries.length === 1 ? "entrada hoje" : "entradas hoje";
-  }
-
-  if (panel) {
-    const p = panel.querySelector("p");
-    const link = panel.querySelector("a");
-
-    if (p) {
-      p.textContent = lastEntry
-        ? lastEntry.text || lastEntry.title || "Última entrada registrada."
-        : "Nenhuma entrada no diário ainda.";
-    }
-
-    if (link) {
-      link.href = "diary.html";
-      link.textContent = "Ver entradas →";
-    }
-  }
-}
-
-
-// =====================================================
-// CONQUISTAS
-// =====================================================
-
-function updateAchievementsDashboardData() {
-  const tasks = getStorageJSON("fluir-tasks", []);
-  const habits = getStorageJSON("fluir-habits", []);
-  const sleepLogs = getStorageJSON("fluir-sleep-logs", []);
-  const diaryEntries = getStorageJSON("fluir-diary", []);
-  const timelineEvents = getStorageJSON("fluir-timeline-events", []);
-
-  const unlocked = [
-    tasks.length >= 1,
-    tasks.filter((task) => task.completed).length >= 5,
-    habits.length >= 1,
-    sleepLogs.length >= 1,
-    diaryEntries.length >= 1,
-    timelineEvents.length >= 1
-  ].filter(Boolean).length;
-
-  localStorage.setItem("fluir-dashboard-achievements", String(unlocked));
-}
-
-
-// =====================================================
-// PLANO ATUAL
-// =====================================================
-
-function updatePlanDashboardData() {
-  const currentPlan = localStorage.getItem("fluir-current-plan") || "Gratuito";
-
-  const planElements = document.querySelectorAll("[data-dashboard-plan]");
-
-  planElements.forEach((element) => {
-    element.textContent = currentPlan;
-  });
-}
-
-
-// =====================================================
-// EVENTOS RECENTES
-// =====================================================
-
-function updateRecentEventsDashboardData() {
-  const events = getStorageJSON("fluir-timeline-events", []);
-  const eventList = document.querySelector(".event-list");
-
-  if (!eventList) return;
-
-  if (!events.length) {
-    eventList.innerHTML = `
-      <article>
-        <span>Hoje</span>
-        <strong>Nenhum evento recente</strong>
-        <p>Os registros dos módulos aparecerão aqui.</p>
-      </article>
-    `;
-    return;
-  }
-
-  eventList.innerHTML = events.slice(0, 4).map((event) => {
-    const dateLabel = formatEventDate(event.date || event.createdAt);
-    const title = event.title || "Evento registrado";
-    const description = event.description || event.category || "Registro do Fluir";
-
-    return `
-      <article>
-        <span>${escapeHTML(dateLabel)}</span>
-        <strong>${escapeHTML(title)}</strong>
-        <p>${escapeHTML(description)}</p>
-      </article>
-    `;
-  }).join("");
-}
-
-function formatEventDate(value) {
-  if (!value) return "Hoje";
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return String(value).slice(5).replace("-", "/");
-  }
-
-  return date.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short"
-  }).replace(".", "").toUpperCase();
-}
-
-
-// =====================================================
-// FOCO DO DIA COM DADOS REAIS
-// Usa tarefas e hábitos como base principal.
-// =====================================================
-
-function updateFocusByRealData(waterPercent = 0) {
-  const tasks = getStorageJSON("fluir-tasks", []);
-  const habits = getStorageJSON("fluir-habits", []);
-  const todayKey = getTodayKey();
-
-  const taskPercent = tasks.length
-    ? Math.round((tasks.filter((task) => task.completed).length / tasks.length) * 100)
-    : 0;
-
-  const habitPercent = habits.length
-    ? Math.round((habits.filter((habit) => {
-        return Array.isArray(habit.completedDates) && habit.completedDates.includes(todayKey);
-      }).length / habits.length) * 100)
-    : 0;
-
-  const values = [taskPercent, habitPercent, waterPercent].filter((value) => value > 0);
-  const finalPercent = values.length
-    ? Math.round(values.reduce((sum, value) => sum + value, 0) / values.length)
-    : 0;
-
-  if (focusPercent) {
-    focusPercent.textContent = `${finalPercent}%`;
-  }
-
-  const focusBar = document.querySelector(".focus-bar span");
-
-  if (focusBar) {
-    focusBar.style.width = `${finalPercent}%`;
-  }
-}
-
-
-// =====================================================
-// DATA DE HOJE
-// =====================================================
-
-function getTodayKey() {
-  return new Date().toISOString().split("T")[0];
-}
-
-
-// =====================================================
-// ESCAPAR HTML
-// =====================================================
-
-function escapeHTML(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-// =====================================================
-// CARDS DO DASHBOARD CLICÁVEIS
-// Leva cada card de resumo para sua tela completa
-// =====================================================
-
-function setupDashboardCardLinks() {
-  const cardRoutes = {
-    tasks: "tasks.html",
-    habits: "habits.html",
-    sleep: "sleep.html",
-    water: "water.html",
-    finances: "finances.html",
-    diary: "diary.html"
-  };
-
-  const dashboardCards = document.querySelectorAll("[data-module-card]");
-
-  dashboardCards.forEach((card) => {
-    const moduleName = card.getAttribute("data-module-card");
-    const route = cardRoutes[moduleName];
-
-    if (!route) {
-      return;
-    }
-
-    card.style.cursor = "pointer";
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("title", "Abrir módulo");
-
-    card.addEventListener("click", function () {
-      window.location.href = route;
-    });
-
-    card.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        window.location.href = route;
-      }
-    });
-  });
-}
-// =====================================================
-// 18. INICIALIZAÇÃO DO DASHBOARD
-// =====================================================
+/* =====================================================
+   20. INICIALIZAÇÃO
+===================================================== */
 
 function initDashboard() {
   console.log("initDashboard rodou");
@@ -1129,13 +1093,12 @@ function initDashboard() {
   setupNavigation();
 
   updateDashboardRealData();
-
-  setupTasksInteraction();
   setupDashboardCardLinks();
 
   applyFinancePreferences();
   applySleepPreferences();
   applyWaterPreferences();
+
   showSetupNoticeIfNeeded();
 }
 

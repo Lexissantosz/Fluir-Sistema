@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- ===================================================== -->
-  <!-- CONFIGURAÇÕES BÁSICAS -->
-  <!-- ===================================================== -->
+  <!-- Configurações básicas da página -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Fluir | Dashboard</title>
 
-  <!-- Fonte principal -->
+  <!-- Fonte principal usada no sistema -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet"
   >
 
-  <!-- CSS do dashboard -->
+  <!-- Estilos da tela -->
   <link rel="stylesheet" href="../css/dashboard.css" />
-  <!-- CSS responsivo mobile compartilhado -->
   <link rel="stylesheet" href="../css/mobile.css" />
 </head>
 
 <body>
-  <!-- ===================================================== -->
-  <!-- CONTAINER PRINCIPAL DO DASHBOARD -->
-  <!-- ===================================================== -->
   <main class="dashboard-page">
 
-    <!-- ===================================================== -->
-    <!-- SIDEBAR LATERAL -->
-    <!-- Menu principal do sistema -->
-    <!-- ===================================================== -->
+    <!-- Menu lateral do sistema -->
     <aside class="sidebar">
 
       <!-- Logo -->
@@ -51,21 +42,19 @@
         </div>
       </div>
 
-      <!-- Navegação -->
+      <!-- Navegação principal -->
       <nav class="sidebar-nav" id="sidebarNav">
-
         <a href="#" class="nav-item active" data-module="dashboard">
           <span>⌘</span>
           Dashboard
         </a>
 
         <a href="timeline.html" class="nav-item" data-module="timeline">
-  <span>☷</span>
-  Timeline
-</a>
+          <span>☷</span>
+          Timeline
+        </a>
 
-        <!-- Os módulos abaixo serão exibidos conforme o setup salvo -->
-       <a href="tasks.html" class="nav-item module-link" data-module="tasks">
+        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
           <span>☑</span>
           Tarefas
         </a>
@@ -75,7 +64,7 @@
           Hábitos
         </a>
 
-       <a href="sleep.html" class="nav-item module-link" data-module="sleep">
+        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
           <span>☾</span>
           Sono
         </a>
@@ -116,25 +105,24 @@
         </a>
 
         <a href="achievements.html" class="nav-item">
-  <span>✧</span>
-  Conquistas
-</a>
+          <span>✧</span>
+          Conquistas
+        </a>
 
         <a href="settings.html" class="nav-item" data-module="settings">
-  <span>⚙</span>
-  Configurações
-</a>
+          <span>⚙</span>
+          Configurações
+        </a>
 
-<a href="profile.html" class="nav-item" data-module="profile">
-  <span>♙</span>
-  Perfil
-</a>
+        <a href="profile.html" class="nav-item" data-module="profile">
+          <span>♙</span>
+          Perfil
+        </a>
 
-<a href="plans.html" class="nav-item" data-module="plans">
-  <span>♕</span>
-  Planos e preços
-</a>
-
+        <a href="plans.html" class="nav-item" data-module="plans">
+          <span>♕</span>
+          Planos e preços
+        </a>
       </nav>
 
       <!-- Ilustração lateral -->
@@ -145,10 +133,12 @@
 
         <div class="small-character">
           <div class="small-umbrella"></div>
+
           <div class="small-head">
             <span></span>
             <span></span>
           </div>
+
           <div class="small-body"></div>
         </div>
 
@@ -157,10 +147,11 @@
         </p>
       </div>
 
-      <!-- Foco do dia -->
+      <!-- Card de foco do dia -->
       <div class="focus-card">
         <p>Foco de hoje</p>
-        <strong id="focusPercent">60%</strong>
+
+        <strong id="focusPercent">0%</strong>
 
         <div class="focus-bar">
           <span></span>
@@ -170,40 +161,38 @@
       </div>
     </aside>
 
-    <!-- ===================================================== -->
-    <!-- ÁREA PRINCIPAL -->
-    <!-- Conteúdo do dashboard -->
-    <!-- ===================================================== -->
+    <!-- Conteúdo principal -->
     <section class="dashboard-main">
 
-      <!-- ===================================================== -->
-      <!-- TOPO DO DASHBOARD -->
-      <!-- Saudação + ações -->
-      <!-- ===================================================== -->
+      <!-- Cabeçalho do dashboard -->
       <header class="dashboard-header">
+        <div class="dashboard-welcome">
+          <span class="dashboard-eyebrow">Painel principal</span>
 
-        <div>
-          <h2 id="welcomeTitle">Olá, Deibson</h2>
-          <p id="welcomeSubtitle">Respire fundo. Um dia de cada vez, no seu ritmo.</p>
+          <h2 id="welcomeTitle">Olá, Deibson 👋</h2>
+
+          <p id="welcomeSubtitle">
+            Acompanhe sua rotina, seus hábitos e seu bem-estar em um só lugar.
+          </p>
         </div>
 
         <div class="header-actions">
-          
+          <div class="dashboard-status">
+            <span></span>
+            <p>Modo demonstração</p>
+          </div>
 
           <button class="icon-btn" type="button" aria-label="Notificações">
             ♡
           </button>
 
-          <button class="avatar-btn" type="button" aria-label="Perfil" id="avatarBtn">
+          <a class="avatar-btn" href="profile.html" aria-label="Perfil" id="avatarBtn">
             D
-          </button>
+          </a>
         </div>
       </header>
 
-      <!-- ===================================================== -->
-      <!-- CARDS RESUMO -->
-      <!-- Cards superiores do dashboard -->
-      <!-- ===================================================== -->
+      <!-- Cards de resumo -->
       <section class="summary-grid" id="summaryGrid">
 
         <article class="summary-card module-card" data-module-card="tasks">
@@ -212,11 +201,11 @@
             <p>Tarefas</p>
           </div>
 
-          <strong>5</strong>
-          <small>de 9 concluídas</small>
+          <strong>0</strong>
+          <small>0 de 0 concluídas</small>
 
           <div class="mini-progress">
-            <span style="width: 55%;"></span>
+            <span style="width: 0%;"></span>
           </div>
         </article>
 
@@ -226,11 +215,11 @@
             <p>Hábitos</p>
           </div>
 
-          <strong>4</strong>
-          <small>de 7 concluídos</small>
+          <strong>0</strong>
+          <small>0 de 0 concluídos</small>
 
           <div class="mini-progress">
-            <span style="width: 57%;"></span>
+            <span style="width: 0%;"></span>
           </div>
         </article>
 
@@ -240,8 +229,8 @@
             <p>Sono</p>
           </div>
 
-          <strong>7h 20m</strong>
-          <small>última noite</small>
+          <strong>0h</strong>
+          <small>sem registro</small>
 
           <div class="mini-wave"></div>
         </article>
@@ -253,14 +242,14 @@
           </div>
 
           <strong>0ml</strong>
-<small>de 2000ml</small>
+          <small>de 2000ml</small>
 
           <div class="water-dots">
-            <span class="filled"></span>
-            <span class="filled"></span>
-            <span class="filled"></span>
-            <span class="filled"></span>
-            <span class="filled"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
             <span></span>
             <span></span>
             <span></span>
@@ -273,7 +262,7 @@
             <p>Finanças</p>
           </div>
 
-          <strong>R$ 1.250</strong>
+          <strong>R$ 0</strong>
           <small>saldo atual</small>
 
           <div class="mini-wave"></div>
@@ -285,18 +274,14 @@
             <p>Diário</p>
           </div>
 
-          <strong>1</strong>
-          <small>entrada hoje</small>
+          <strong>0</strong>
+          <small>entradas hoje</small>
 
           <div class="mini-line"></div>
         </article>
-
       </section>
 
-      <!-- ===================================================== -->
-      <!-- GRID PRINCIPAL -->
-      <!-- Tarefas + Timeline -->
-      <!-- ===================================================== -->
+      <!-- Área principal: tarefas e timeline -->
       <section class="content-grid">
 
         <!-- Tarefas de hoje -->
@@ -311,42 +296,11 @@
             </button>
           </div>
 
-          <div class="task-list">
-            <label class="task-item">
-              <input type="checkbox">
-              <span>Revisar proposta do projeto</span>
-              <small>Trabalho</small>
-              <time>09:00</time>
-            </label>
-
-            <label class="task-item">
-              <input type="checkbox">
-              <span>Responder e-mails importantes</span>
-              <small>Trabalho</small>
-              <time>11:00</time>
-            </label>
-
-            <label class="task-item">
-              <input type="checkbox">
-              <span>Estudar capítulo 4 — Marketing</span>
-              <small>Estudos</small>
-              <time>14:00</time>
-            </label>
-
-            <label class="task-item">
-              <input type="checkbox" checked>
-              <span>Treino de força</span>
-              <small>Saúde</small>
-              <time>18:00</time>
-            </label>
-
-            <label class="task-item">
-              <input type="checkbox" checked>
-              <span>Ler 20 páginas</span>
-              <small>Pessoal</small>
-              <time>20:30</time>
-            </label>
-          </div>
+          <!--
+            A lista é preenchida pelo dashboard.js.
+            Assim o checkbox fica clicável e não vira decoração inútil, que já basta o mundo.
+          -->
+          <div class="task-list" id="dashboardTaskList"></div>
 
           <a class="panel-link" href="tasks.html">
             Ver todas as tarefas →
@@ -362,6 +316,7 @@
           <div class="timeline-list">
             <div class="timeline-item">
               <time>08:00</time>
+
               <div>
                 <strong>Acordei</strong>
                 <p>Dormi bem e me sinto disposto.</p>
@@ -370,6 +325,7 @@
 
             <div class="timeline-item">
               <time>09:15</time>
+
               <div>
                 <strong>Café da manhã</strong>
                 <p>Aveia com frutas e café.</p>
@@ -378,6 +334,7 @@
 
             <div class="timeline-item">
               <time>11:30</time>
+
               <div>
                 <strong>Reunião de alinhamento</strong>
                 <p>Projeto Fluir — sprint semanal.</p>
@@ -386,6 +343,7 @@
 
             <div class="timeline-item">
               <time>15:45</time>
+
               <div>
                 <strong>Caminhada</strong>
                 <p>20 minutos ao ar livre.</p>
@@ -394,6 +352,7 @@
 
             <div class="timeline-item">
               <time>21:30</time>
+
               <div>
                 <strong>Diário emocional</strong>
                 <p>Reflexão sobre o dia.</p>
@@ -405,20 +364,19 @@
             Ver linha do tempo completa →
           </a>
         </article>
-
       </section>
 
-      <!-- ===================================================== -->
-      <!-- GRID SECUNDÁRIO -->
-      <!-- Hábitos + cards menores -->
-      <!-- ===================================================== -->
+      <!-- Área inferior: hábitos e cards menores -->
       <section class="bottom-grid">
 
         <!-- Hábitos -->
         <article class="panel habits-panel module-panel" data-module-panel="habits">
           <div class="panel-header">
             <h3>◌ Hábitos ativos</h3>
-            <button class="small-btn" type="button">Ver todos</button>
+
+            <button class="small-btn" type="button">
+              Ver todos
+            </button>
           </div>
 
           <div class="habit-table">
@@ -453,21 +411,25 @@
 
           <article class="panel small-panel module-panel" data-module-panel="sleep">
             <h3>☾ Sono</h3>
-            <strong>7h 20m</strong>
-            <p>Última noite</p>
+
+            <strong>0h</strong>
+            <p>Nenhum registro</p>
+
             <div class="mini-wave"></div>
           </article>
 
           <article class="panel small-panel module-panel" data-module-panel="water">
             <h3>♢ Água</h3>
-            <strong>250</strong>
-            <p>de 2000 ml</p>
+
+            <strong>0ml</strong>
+            <p>de 2000ml</p>
+
             <div class="water-dots">
-              <span class="filled"></span>
-              <span class="filled"></span>
-              <span class="filled"></span>
-              <span class="filled"></span>
-              <span class="filled"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
               <span></span>
               <span></span>
               <span></span>
@@ -476,26 +438,28 @@
 
           <article class="panel small-panel module-panel" data-module-panel="finances">
             <h3>$ Finanças</h3>
-            <strong>R$ 1.250</strong>
+
+            <strong>R$ 0</strong>
             <p>Saldo atual</p>
-            <small>Entrada R$ 2.800</small>
-            <small>Saída - R$ 1.550</small>
+            <small>Entrada R$ 0</small>
+            <small>Saída - R$ 0</small>
           </article>
 
           <article class="panel small-panel module-panel" data-module-panel="diary">
             <h3>▤ Diário emocional</h3>
-            <p>
-              Hoje foi um dia de altos e baixos, mas terminei com gratidão.
-            </p>
-            <a href="diary.html">Ver entradas →</a>
-          </article>
 
+            <p>
+              Nenhuma entrada no diário ainda.
+            </p>
+
+            <a href="diary.html">
+              Ver entradas →
+            </a>
+          </article>
         </div>
       </section>
 
-      <!-- ===================================================== -->
-      <!-- EVENTOS RECENTES -->
-      <!-- ===================================================== -->
+      <!-- Eventos recentes -->
       <section class="recent-events">
         <div class="panel-header">
           <div>
@@ -510,37 +474,17 @@
 
         <div class="event-list">
           <article>
-            <span>23 MAI</span>
-            <strong>Pagamento recebido</strong>
-            <p>R$ 2.800,00</p>
-          </article>
-
-          <article>
-            <span>22 MAI</span>
-            <strong>Meta de hábitos alcançada</strong>
-            <p>6 de 7 hábitos</p>
-          </article>
-
-          <article>
-            <span>21 MAI</span>
-            <strong>Nova entrada no diário</strong>
-            <p>Reflexão da noite</p>
-          </article>
-
-          <article>
-            <span>20 MAI</span>
-            <strong>Treino concluído</strong>
-            <p>Força · 45 min</p>
+            <span>Hoje</span>
+            <strong>Nenhum evento recente</strong>
+            <p>Os registros dos módulos aparecerão aqui.</p>
           </article>
         </div>
       </section>
-
     </section>
   </main>
 
-  <!-- JS do dashboard -->
+  <!-- Scripts da tela -->
   <script src="../js/dashboard.js"></script>
-  <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
 </body>
 </html>
