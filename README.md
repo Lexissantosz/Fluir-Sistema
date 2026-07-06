@@ -765,3 +765,16 @@ Status:
 Criar a versão mobile do Fluir usando React Native com TypeScript.
 
 A versão mobile deverá ter telas próprias para celular e consumir a mesma API do backend usado pela versão web.
+
+### Melhorar visual do perfil nas configurações
+
+Ajustar o card de perfil da tela `settings.html`, pois atualmente ele está funcional, mas visualmente grande e pouco equilibrado em comparação com os outros cards.
+
+Melhorias planejadas:
+
+- Reduzir o tamanho do avatar
+- Melhorar o alinhamento entre avatar, nome e e-mail
+- Diminuir espaços vazios dentro do card
+- Deixar o botão "Editar perfil" mais integrado ao layout
+- Melhorar a proporção do card em telas grandes
+- Manter o visual consistente com os outros cards da tela de configurações

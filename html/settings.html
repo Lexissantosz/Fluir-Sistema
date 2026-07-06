@@ -202,8 +202,9 @@
            Cada botão mostra uma categoria visualmente
       ====================================================== -->
       <section class="settings-tabs" aria-label="Categorias de configurações">
-        <button class="tab-btn active" data-tab="profile" type="button">Perfil</button>
-        <button class="tab-btn" data-tab="appearance" type="button">Aparência</button>
+<button class="tab-btn active" data-tab="profile" type="button">Perfil</button>
+<button class="tab-btn" data-tab="setup" type="button">Setup</button>
+<button class="tab-btn" data-tab="appearance" type="button">Aparência</button>
         <button class="tab-btn" data-tab="notifications" type="button">Notificações</button>
         <button class="tab-btn" data-tab="privacy" type="button">Privacidade</button>
         <button class="tab-btn" data-tab="integrations" type="button">Integrações</button>
@@ -239,6 +240,69 @@
           <a href="profile.html" class="outline-button">
             ✎ Editar perfil
           </a>
+        </article>
+
+                <!-- =====================================================
+             CARD: CONFIGURAÇÃO RÁPIDA
+        ====================================================== -->
+        <article class="settings-card quick-setup-card" data-card="setup">
+          <div class="card-title">
+            <span>✦</span>
+            <h3>Configuração rápida</h3>
+          </div>
+
+          <div class="quick-setup-form">
+            <label class="quick-field">
+              <span>Nome ou apelido</span>
+              <input type="text" id="quickNameInput" placeholder="Como quer ser chamado?" />
+            </label>
+
+            <label class="quick-field">
+              <span>Meta de água diária</span>
+              <input type="number" id="quickWaterGoalInput" min="0" step="100" placeholder="Ex: 2500" />
+            </label>
+
+            <div class="quick-modules">
+              <p>Módulos ativos</p>
+
+              <label>
+                <input type="checkbox" data-quick-module="tasks" />
+                Tarefas
+              </label>
+
+              <label>
+                <input type="checkbox" data-quick-module="habits" />
+                Hábitos
+              </label>
+
+              <label>
+                <input type="checkbox" data-quick-module="water" />
+                Água
+              </label>
+
+              <label>
+                <input type="checkbox" data-quick-module="sleep" />
+                Sono
+              </label>
+
+              <label>
+                <input type="checkbox" data-quick-module="finances" />
+                Finanças
+              </label>
+
+              <label>
+                <input type="checkbox" data-quick-module="diary" />
+                Diário
+              </label>
+            </div>
+
+            <button class="setup-action-button" id="saveQuickSetupBtn" type="button">
+              Salvar alterações
+              <strong>›</strong>
+            </button>
+
+            <p class="quick-setup-message" id="quickSetupMessage"></p>
+          </div>
         </article>
 
         <!-- =====================================================
