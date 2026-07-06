@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupResetPanel();
   setupResetButtons();
   setupPreferenceSaves();
+  setupQuickSetupEditor();
 });
 
 
@@ -363,6 +364,7 @@ function setupPreferenceSaves() {
   setupCheckboxSaves();
 }
 
+
 function setupSelectSave(selectId, storageKey) {
   const select = document.getElementById(selectId);
 
@@ -393,5 +395,85 @@ function setupCheckboxSaves() {
     checkbox.addEventListener("change", () => {
       localStorage.setItem(storageKey, String(checkbox.checked));
     });
+  });
+}
+
+/* ===================================================== */
+/* CONFIGURAÇÃO RÁPIDA */
+/* Permite editar partes do setup sem voltar ao onboarding */
+/* ===================================================== */
+
+function setupQuickSetupEditor() {
+  const nameInput = document.getElementById("quickNameInput");
+  const waterGoalInput = document.getElementById("quickWaterGoalInput");
+  const moduleCheckboxes = document.querySelectorAll("[data-quick-module]");
+  const saveButton = document.getElementById("saveQuickSetupBtn");
+  const message = document.getElementById("quickSetupMessage");
+
+  if (!nameInput || !waterGoalInput || !saveButton) return;
+
+  const setupData = getStorageJSON("fluir-setup", {
+    user: {},
+    modules: {},
+    preferences: {}
+  });
+
+  const userData = setupData.user || {};
+  const modulesData = setupData.modules || {};
+  const preferencesData = setupData.preferences || {};
+  const waterData = preferencesData.water || {};
+
+  nameInput.value = userData.nickname || userData.name || "";
+  waterGoalInput.value = waterData.dailyGoal || waterData.metaFinalMl || "";
+
+  moduleCheckboxes.forEach((checkbox) => {
+    const moduleName = checkbox.dataset.quickModule;
+    checkbox.checked = modulesData[moduleName] === true;
+  });
+
+  saveButton.addEventListener("click", () => {
+    const currentSetup = getStorageJSON("fluir-setup", {
+      user: {},
+      modules: {},
+      preferences: {}
+    });
+
+    currentSetup.user = currentSetup.user || {};
+    currentSetup.modules = currentSetup.modules || {};
+    currentSetup.preferences = currentSetup.preferences || {};
+    currentSetup.preferences.water = currentSetup.preferences.water || {};
+
+    const newName = nameInput.value.trim();
+    const newWaterGoal = Number(waterGoalInput.value);
+
+    if (newName) {
+      currentSetup.user.name = newName;
+      currentSetup.user.nickname = newName;
+    }
+
+    if (newWaterGoal > 0) {
+      currentSetup.preferences.water.dailyGoal = newWaterGoal;
+      currentSetup.preferences.water.metaFinalMl = newWaterGoal;
+    }
+
+    moduleCheckboxes.forEach((checkbox) => {
+      const moduleName = checkbox.dataset.quickModule;
+      currentSetup.modules[moduleName] = checkbox.checked;
+    });
+
+    currentSetup.modules.timeline = true;
+    currentSetup.modules.attachments = true;
+    currentSetup.onboardingConcluido = true;
+    currentSetup.atualizadoEm = new Date().toISOString();
+
+    localStorage.setItem("fluir-setup", JSON.stringify(currentSetup));
+
+    if (message) {
+      message.textContent = "Configurações salvas com sucesso.";
+      message.classList.add("success");
+    }
+
+    loadUserProfile();
+    hideDisabledModules();
   });
 }
