@@ -149,6 +149,39 @@ Resultado exibido:
 
 Meta diária: 2,45 L
 
+### Preferência de registro de água
+
+No onboarding, perguntar como o usuário prefere registrar a água:
+
+- Por copos personalizados
+- Por medidas em ml
+
+Opção 1: Copos personalizados
+
+O usuário poderá criar copos/garrafas com quantidades diferentes, por exemplo:
+
+- Copo pequeno: 200 ml
+- Copo médio: 300 ml
+- Garrafa: 500 ml
+- Garrafa grande: 1 L
+
+Essa opção deixa o visual mais concreto e fácil de usar, mostrando os copos criados pela pessoa.
+
+Opção 2: Medidas em ml
+
+O usuário poderá registrar quantidades diretas, por exemplo:
+
+- 100 ml
+- 200 ml
+- 300 ml
+- 500 ml
+- Valor personalizado
+
+Essa opção deixa o visual mais simples, limpo e direto.
+
+Observação:
+
+O usuário deve poder mudar essa preferência depois nas configurações.
 ---
 
 ## 7. Módulo Hábitos
@@ -541,6 +574,7 @@ Ainda falta:
 
 - Criar opção para editar essas escolhas depois
 - Salvar essas informações no banco futuramente
+- Perguntar se o usuário prefere registrar água por copos personalizados ou por medidas em ml
 
 ## 20. Sistema de idiomas
 

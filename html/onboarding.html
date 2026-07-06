@@ -58,12 +58,27 @@
         <div class="form-group">
           <label>Quais módulos você quer usar?</label>
 
-          <div class="module-options">
+          <p class="form-hint">
+            Escolha apenas as áreas que você quer usar agora.
+            Dashboard, Timeline, Anexos, Conquistas, Configurações, Perfil e Planos ficam sempre disponíveis.
+            Você poderá mudar isso depois.
+          </p>
 
+          <div class="module-actions">
+            <button type="button" id="selectAllModules" class="secondary-btn">
+              Selecionar tudo
+            </button>
+
+            <button type="button" id="clearModules" class="secondary-btn">
+              Limpar seleção
+            </button>
+          </div>
+
+          <div class="module-options">
             <label>
-  <input type="checkbox" value="tarefas" />
-  Tarefas
-</label>
+              <input type="checkbox" value="tarefas" checked />
+              Tarefas
+            </label>
 
             <label>
               <input type="checkbox" value="diario" />
@@ -71,12 +86,12 @@
             </label>
 
             <label>
-              <input type="checkbox" value="agua" />
+              <input type="checkbox" value="agua" checked />
               Água
             </label>
 
             <label>
-              <input type="checkbox" value="habitos" />
+              <input type="checkbox" value="habitos" checked />
               Hábitos
             </label>
 

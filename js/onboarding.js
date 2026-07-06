@@ -16,6 +16,8 @@ const pronomesInput = document.getElementById("pronomes");
 const generoNascimentoInput = document.getElementById("generoNascimento");
 const alturaInput = document.getElementById("altura");
 const pesoInput = document.getElementById("peso");
+const selectAllModulesBtn = document.getElementById("selectAllModules");
+const clearModulesBtn = document.getElementById("clearModules");
 
 
 // =============================
@@ -41,6 +43,26 @@ function getSelectedModules() {
 
 function calculateWaterGoal(peso) {
   return Math.round(peso * 35);
+}
+
+function setAllModulesChecked(isChecked) {
+  const moduleInputs = document.querySelectorAll(".module-options input");
+
+  moduleInputs.forEach(function (input) {
+    input.checked = isChecked;
+  });
+}
+
+if (selectAllModulesBtn) {
+  selectAllModulesBtn.addEventListener("click", function () {
+    setAllModulesChecked(true);
+  });
+}
+
+if (clearModulesBtn) {
+  clearModulesBtn.addEventListener("click", function () {
+    setAllModulesChecked(false);
+  });
 }
 
 
