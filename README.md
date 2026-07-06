@@ -964,6 +964,42 @@ Melhorias futuras planejadas:
 
 ---
 
+### Eventos, agenda e calendário
+
+Criar uma área de eventos no Fluir para organizar compromissos, lembretes e datas importantes.
+
+Funcionalidades planejadas:
+
+- Criar eventos com título, data e horário
+- Adicionar descrição ou observação ao evento
+- Definir categoria do evento, como estudo, saúde, trabalho, pessoal ou financeiro
+- Mostrar eventos do dia no dashboard
+- Criar visualização em calendário
+- Visualizar eventos por dia, semana e mês
+- Adicionar lembretes futuros
+- Integrar eventos com a timeline
+- Futuramente permitir integração com Google Calendar
+
+A ideia é que o Fluir também ajude o usuário a organizar compromissos, não apenas hábitos, tarefas e registros pessoais.
+
+### Eventos, agenda e calendário
+
+Criar uma área de eventos no Fluir para o usuário organizar compromissos, lembretes e datas importantes.
+
+Funcionalidades planejadas:
+
+- Criar eventos com título, data e horário
+- Adicionar descrição ou observação ao evento
+- Definir categoria do evento, como estudo, saúde, trabalho, pessoal ou financeiro
+- Mostrar eventos do dia no dashboard
+- Criar uma visualização em calendário
+- Permitir visualizar eventos por dia, semana e mês
+- Adicionar lembretes futuros
+- Integrar eventos com a timeline
+- Futuramente permitir integração com Google Calendar
+
+A ideia é que o Fluir também ajude o usuário a organizar compromissos e não apenas hábitos, tarefas e registros pessoais.
+
 ### Mobile
 
 Melhorias futuras planejadas:
@@ -1006,3 +1042,40 @@ Depois que o backend do onboarding estiver funcionando, trocar gradualmente o sa
 - O `localStorage` está sendo usado temporariamente no front até a integração com o backend.
 - O onboarding é uma experiência inicial de boas-vindas.
 - As configurações rápidas servem para alterações simples depois que o usuário já configurou o sistema.
+
+### Melhorias futuras no mobile web
+
+A versão web responsiva já possui navegação mobile, menu lateral e barra inferior, mas algumas telas ainda precisam de ajustes visuais.
+
+Melhorias planejadas:
+
+- Trocar o topo mobile de "Fluir / Organização da vida" para informações do perfil do usuário
+- Remover emoji do cumprimento no dashboard mobile
+- Melhorar o texto de boas-vindas para não quebrar linha de forma estranha
+- Compactar melhor a lista de tarefas de hoje no dashboard mobile
+- Corrigir alinhamento das bolinhas/indicadores da timeline mobile
+- Melhorar a visualização dos hábitos no mobile
+- Aumentar os indicadores de hábitos para ficarem mais visíveis
+- Mostrar de forma mais clara se o hábito já foi feito hoje ou não
+- Melhorar telas vazias de registros, anexos, nutrição, saúde física e ciclo menstrual
+- Revisar cards grandes demais em telas pequenas
+- Melhorar a tela de planos no mobile
+- Ajustar a tela de água no mobile para ocupar melhor o espaço
+
+### Eventos, agenda e calendário
+
+Criar uma área de eventos no Fluir para organizar compromissos, lembretes e datas importantes.
+
+Funcionalidades planejadas:
+
+- Criar eventos com título, data e horário
+- Adicionar descrição ou observação ao evento
+- Definir categoria do evento, como estudo, saúde, trabalho, pessoal ou financeiro
+- Mostrar eventos do dia no dashboard
+- Criar visualização em calendário
+- Visualizar eventos por dia, semana e mês
+- Adicionar lembretes futuros
+- Integrar eventos com a timeline
+- Futuramente permitir integração com Google Calendar
+
+A ideia é que o Fluir também ajude o usuário a organizar compromissos, não apenas hábitos, tarefas e registros pessoais.
