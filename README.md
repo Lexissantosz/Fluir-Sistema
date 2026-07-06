@@ -622,3 +622,146 @@ Exemplo de idiomas salvos:
 - Hábitos agora permite criar primeiro hábito inicial
 - Hábitos considera frequência semanal e melhor horário
 - Onboarding ficou mais preparado para o backend salvar dados reais
+
+## Arquitetura do sistema
+
+O Fluir será dividido em três partes principais:
+
+### 1. Frontend Web
+
+A versão web do sistema será feita com:
+
+- HTML
+- CSS
+- JavaScript
+
+Essa versão roda no navegador e será usada como painel principal do usuário.
+
+Principais telas web:
+
+- Login
+- Cadastro
+- Onboarding
+- Dashboard
+- Perfil
+- Configurações
+- Módulos do sistema
+
+---
+
+### 2. Frontend Mobile
+
+A versão mobile será desenvolvida separadamente da versão web.
+
+Tecnologia planejada:
+
+- React Native
+- TypeScript
+
+Essa versão será usada como aplicativo para celular, com telas adaptadas para uso mobile.
+
+O app mobile deverá consumir a mesma API do backend usada pela versão web.
+
+Principais telas mobile planejadas:
+
+- Login
+- Cadastro
+- Onboarding
+- Dashboard mobile
+- Perfil
+- Configurações
+- Módulos escolhidos pelo usuário
+
+---
+
+### 3. Backend/API
+
+O backend será responsável por guardar e fornecer os dados para o frontend web e para o app mobile.
+
+Tecnologia usada:
+
+- Java
+- Spring Boot
+- MySQL
+
+O backend funcionará como uma API, permitindo que tanto o site web quanto o aplicativo mobile acessem os mesmos dados.
+
+Exemplo de funcionamento:
+
+```text
+Frontend Web
+        \
+         → Backend/API → Banco de Dados
+        /
+Frontend Mobile
+
+
+---
+
+# 2. Cole isso no README: Tecnologias utilizadas
+
+Procura se já existe uma parte chamada **Tecnologias utilizadas**.
+
+Se já existir, substitui ou complementa com isto:
+
+```md
+## Tecnologias utilizadas
+
+### Web
+
+- HTML
+- CSS
+- JavaScript
+
+### Mobile
+
+- React Native
+- TypeScript
+
+### Backend
+
+- Java
+- Spring Boot
+
+### Banco de dados
+
+- MySQL
+
+## Testes pendentes
+
+### Fluxo Login → Onboarding → Dashboard
+
+Foi adicionada uma lógica no `js/login.js` para redirecionar o usuário após o login:
+
+- Se o usuário ainda não concluiu o onboarding, deve ir para `onboarding.html`
+- Se o usuário já concluiu o onboarding, deve ir direto para `dashboard.html`
+
+Essa lógica ainda precisa ser testada com o backend rodando, porque no PC do curso o Java disponível é Java 11, e o backend Spring Boot atual precisa de Java 17.
+
+Teste necessário no PC com backend funcionando:
+
+1. Rodar o backend Spring Boot
+2. Abrir o login pelo Live Server
+3. Limpar o onboarding salvo no navegador:
+
+```js
+localStorage.removeItem("fluir-setup");
+localStorage.removeItem("fluir-onboarding");
+```
+
+4. Fazer login com um usuário válido
+5. Confirmar se o sistema redireciona para `onboarding.html`
+6. Concluir o onboarding
+7. Fazer login novamente
+8. Confirmar se agora o sistema redireciona para `dashboard.html`
+
+Status:
+
+- Código adicionado no `js/login.js`
+- Teste real pendente com backend rodando
+
+### Desenvolvimento mobile
+
+Criar a versão mobile do Fluir usando React Native com TypeScript.
+
+A versão mobile deverá ter telas próprias para celular e consumir a mesma API do backend usado pela versão web.

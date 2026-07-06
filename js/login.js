@@ -44,6 +44,23 @@ function clearMessages() {
   showMessage(registerMessage, "", "info");
 }
 
+function hasCompletedOnboarding() {
+  try {
+    const setup = localStorage.getItem("fluir-setup");
+
+    if (!setup) {
+      return false;
+    }
+
+    const setupData = JSON.parse(setup);
+
+    return Boolean(setupData.onboardingConcluido);
+  } catch (error) {
+    console.warn("Erro ao verificar onboarding:", error);
+    return false;
+  }
+}
+
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -221,8 +238,13 @@ if (loginForm) {
       showMessage(loginMessage, "Login realizado com sucesso.", "success");
 
       setTimeout(function () {
-        window.location.href = "dashboard.html";
-      }, 700);
+  const destination = hasCompletedOnboarding()
+    ? "dashboard.html"
+    : "onboarding.html";
+
+  window.location.href = destination;
+}, 700);
+
     } catch (error) {
       showMessage(
         loginMessage,
