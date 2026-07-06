@@ -7,62 +7,116 @@
   <title>Configuração inicial | Fluir</title>
 
   <link rel="stylesheet" href="../css/login.css" />
+  <link rel="stylesheet" href="../css/onboarding.css" />
 </head>
 <body>
-  <main class="auth-page">
-    <section class="auth-card active">
-      <div class="auth-header">
-        <h1>Vamos personalizar o Fluir</h1>
-        <p>
-          Responda algumas perguntas rápidas para deixar o sistema com a sua cara.
-        </p>
+  <main class="auth-page onboarding-page">
+    <section class="auth-card onboarding-card">
+      <header class="auth-header onboarding-header">
+        <div class="onboarding-brand">
+          <span class="brand-icon">♧</span>
+          <strong>Fluir</strong>
+        </div>
+
+        <div class="step-badge">
+          Passo <span id="currentStepText">1</span> de 3
+        </div>
+      </header>
+
+      <div class="step-progress">
+        <div class="step-item active" data-progress-step="1">
+          <span>1</span>
+          <small>Informações pessoais</small>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step-item" data-progress-step="2">
+          <span>2</span>
+          <small>Módulos</small>
+        </div>
+
+        <div class="step-line"></div>
+
+        <div class="step-item" data-progress-step="3">
+          <span>3</span>
+          <small>Configuração inicial</small>
+        </div>
       </div>
 
-      <form id="onboardingForm" class="auth-form active">
-        <div class="form-group">
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" placeholder="Digite seu nome" />
-        </div>
+      <form id="onboardingForm" class="auth-form onboarding-form">
+        <!-- PASSO 1 -->
+        <section class="onboarding-step active" data-step="1">
+          <div class="step-title">
+            <h1>Informações pessoais</h1>
+            <p>
+              Conte um pouco sobre você para o Fluir organizar melhor sua experiência.
+            </p>
+          </div>
 
-        <div class="form-group">
-          <label for="pronomes">Pronomes</label>
-          <select id="pronomes">
-            <option value="">Selecione</option>
-            <option value="ele/dele">Ele/dele</option>
-            <option value="ela/dela">Ela/dela</option>
-            <option value="elu/delu">Elu/delu</option>
-            <option value="prefiro-nao-informar">Prefiro não informar</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" placeholder="Digite seu nome" />
+          </div>
 
-        <div class="form-group">
-          <label for="generoNascimento">Gênero de nascimento</label>
-          <select id="generoNascimento">
-            <option value="">Selecione</option>
-            <option value="feminino">Feminino</option>
-            <option value="masculino">Masculino</option>
-            <option value="prefiro-nao-informar">Prefiro não informar</option>
-          </select>
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="pronomes">Pronomes</label>
+              <select id="pronomes">
+                <option value="">Selecione</option>
+                <option value="ele/dele">Ele/dele</option>
+                <option value="ela/dela">Ela/dela</option>
+                <option value="elu/delu">Elu/delu</option>
+                <option value="prefiro-nao-informar">Prefiro não informar</option>
+              </select>
+            </div>
 
-        <div class="form-group">
-          <label for="altura">Altura em cm</label>
-          <input type="number" id="altura" placeholder="Ex: 170" min="50" max="250" />
-        </div>
+            <div class="form-group">
+              <label for="generoNascimento">Gênero de nascimento</label>
+              <select id="generoNascimento">
+                <option value="">Selecione</option>
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+                <option value="prefiro-nao-informar">Prefiro não informar</option>
+              </select>
+            </div>
+          </div>
 
-        <div class="form-group">
-          <label for="peso">Peso em kg</label>
-          <input type="number" id="peso" placeholder="Ex: 65" min="20" max="300" />
-        </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="altura">Altura em cm</label>
+              <input type="number" id="altura" placeholder="Ex: 170" min="50" max="250" />
+            </div>
 
-        <div class="form-group">
-          <label>Quais módulos você quer usar?</label>
+            <div class="form-group">
+              <label for="peso">Peso em kg</label>
+              <input type="number" id="peso" placeholder="Ex: 65" min="20" max="300" />
+            </div>
+          </div>
 
-          <p class="form-hint">
-            Escolha apenas as áreas que você quer usar agora.
-            Dashboard, Timeline, Anexos, Conquistas, Configurações, Perfil e Planos ficam sempre disponíveis.
-            Você poderá mudar isso depois.
-          </p>
+          <div class="onboarding-note">
+            <span>✦</span>
+            <p>
+              Essas informações ficam salvas para personalizar metas como água, rotina e módulos do sistema.
+            </p>
+          </div>
+        </section>
+
+        <!-- PASSO 2 -->
+        <section class="onboarding-step" data-step="2">
+          <div class="step-title">
+            <h1>Quais módulos você quer usar?</h1>
+            <p>
+              Escolha apenas as áreas que fazem sentido agora. Você poderá mudar isso depois nas configurações.
+            </p>
+          </div>
+
+          <div class="fixed-modules-box">
+            <strong>Sempre disponíveis</strong>
+            <p>
+              Dashboard, Timeline, Anexos, Conquistas, Configurações, Perfil e Planos ficam ativos para todos.
+            </p>
+          </div>
 
           <div class="module-actions">
             <button type="button" id="selectAllModules" class="secondary-btn">
@@ -77,56 +131,237 @@
           <div class="module-options">
             <label>
               <input type="checkbox" value="tarefas" checked />
-              Tarefas
+              <span>
+                <strong>Tarefas</strong>
+                <small>Organize atividades por tempo, energia e prioridade.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="diario" />
-              Diário
+              <span>
+                <strong>Diário</strong>
+                <small>Registre pensamentos, humor e acontecimentos.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="agua" checked />
-              Água
+              <span>
+                <strong>Água</strong>
+                <small>Acompanhe sua meta diária de hidratação.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="habitos" checked />
-              Hábitos
+              <span>
+                <strong>Hábitos</strong>
+                <small>Crie hábitos e acompanhe sua constância.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="nutricao" />
-              Nutrição
+              <span>
+                <strong>Nutrição</strong>
+                <small>Planeje metas de alimentação e calorias.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="treinos" />
-              Treinos
+              <span>
+                <strong>Treinos</strong>
+                <small>Monte treinos, séries e descansos.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="ciclo" />
-              Ciclo menstrual
+              <span>
+                <strong>Ciclo menstrual</strong>
+                <small>Acompanhe ciclo, sintomas e estimativas.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="sono" />
-              Sono
+              <span>
+                <strong>Sono</strong>
+                <small>Registre horários, duração e qualidade do sono.</small>
+              </span>
             </label>
 
             <label>
               <input type="checkbox" value="financas" />
-              Finanças
+              <span>
+                <strong>Finanças</strong>
+                <small>Controle gastos, ganhos e metas financeiras.</small>
+              </span>
             </label>
           </div>
-        </div>
+        </section>
+
+        <!-- PASSO 3 -->
+        <section class="onboarding-step" data-step="3">
+          <div class="step-title">
+            <h1>Configuração inicial</h1>
+            <p>
+              Agora vamos deixar alguns módulos prontos para você começar sem encarar uma tela vazia.
+            </p>
+          </div>
+
+          <div id="waterPreferenceSection" class="module-config-section">
+            <div class="module-config-header">
+              <h2>Água</h2>
+              <p>
+                O Fluir calcula uma meta inicial usando seu peso. Depois você pode ajustar quando quiser.
+              </p>
+            </div>
+
+            <div class="calculated-card">
+              <span>Meta calculada</span>
+              <strong id="calculatedWaterGoal">0 ml por dia</strong>
+              <small>Base: peso × 35 ml</small>
+            </div>
+
+            <div class="form-group">
+              <label for="customWaterGoal">Quer trocar a meta?</label>
+              <input type="number" id="customWaterGoal" placeholder="Deixe vazio para usar a meta calculada" min="500" max="8000" />
+            </div>
+
+            <div class="form-group">
+              <label>Como você prefere registrar sua água?</label>
+
+              <div class="water-preference-options">
+                <label>
+                  <input type="radio" name="waterPreference" value="copos" />
+                  <span>
+                    <strong>Copos personalizados</strong>
+                    <small>Criar copos ou garrafas com quantidades próprias, como 200ml, 500ml ou 1L.</small>
+                  </span>
+                </label>
+
+                <label>
+                  <input type="radio" name="waterPreference" value="ml" checked />
+                  <span>
+                    <strong>Medidas em ml</strong>
+                    <small>Registrar valores diretos como 100ml, 200ml, 500ml ou personalizado.</small>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="tasksSetupSection" class="module-config-section">
+            <div class="module-config-header">
+              <h2>Tarefas</h2>
+              <p>
+                A ideia do Fluir é organizar tarefas considerando tempo e energia, não só jogar uma lista no seu colo.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label for="firstTaskTitle">Qual sua primeira tarefa?</label>
+              <input type="text" id="firstTaskTitle" placeholder="Ex: Revisar atividade do curso" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstTaskTime">Tempo estimado</label>
+                <select id="firstTaskTime">
+                  <option value="">Selecione</option>
+                  <option value="15">15 minutos</option>
+                  <option value="30">30 minutos</option>
+                  <option value="45">45 minutos</option>
+                  <option value="60">1 hora</option>
+                  <option value="120">2 horas</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="firstTaskEnergyCost">Energia que ela gasta</label>
+                <select id="firstTaskEnergyCost">
+                  <option value="">Selecione</option>
+                  <option value="baixa">Baixa</option>
+                  <option value="media">Média</option>
+                  <option value="alta">Alta</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="currentEnergy">Como está sua energia agora?</label>
+              <select id="currentEnergy">
+                <option value="">Selecione</option>
+                <option value="baixa">Baixa</option>
+                <option value="media">Média</option>
+                <option value="alta">Alta</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="habitsSetupSection" class="module-config-section">
+            <div class="module-config-header">
+              <h2>Hábitos</h2>
+              <p>
+                Crie um primeiro hábito simples. Nada de tentar virar uma máquina produtiva em três cliques, por favor.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label for="firstHabitTitle">Qual hábito você quer começar?</label>
+              <input type="text" id="firstHabitTitle" placeholder="Ex: Beber água ao acordar" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstHabitFrequency">Frequência semanal</label>
+                <select id="firstHabitFrequency">
+                  <option value="">Selecione</option>
+                  <option value="3">3 vezes por semana</option>
+                  <option value="5">5 vezes por semana</option>
+                  <option value="7">Todos os dias</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="firstHabitTime">Melhor horário</label>
+                <select id="firstHabitTime">
+                  <option value="">Selecione</option>
+                  <option value="manha">Manhã</option>
+                  <option value="tarde">Tarde</option>
+                  <option value="noite">Noite</option>
+                  <option value="qualquer">Qualquer horário</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="emptyModuleSetup" class="onboarding-note">
+            <span>✦</span>
+            <p>
+              Você não escolheu Água, Tarefas ou Hábitos. Sem problemas, o dashboard será montado com os módulos selecionados.
+            </p>
+          </div>
+        </section>
 
         <p id="onboardingMessage" class="form-message info"></p>
 
-        <button type="submit" class="primary-btn">
-          Salvar e continuar
-        </button>
+        <div class="onboarding-actions">
+          <button type="button" id="backStepBtn" class="secondary-btn">
+            Voltar
+          </button>
+
+          <button type="button" id="nextStepBtn" class="primary-btn">
+            Continuar
+          </button>
+
+          <button type="submit" id="finishOnboardingBtn" class="primary-btn">
+            Salvar e começar
+          </button>
+        </div>
       </form>
     </section>
   </main>

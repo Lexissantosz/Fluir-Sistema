@@ -604,3 +604,21 @@ Exemplo de idiomas salvos:
 {
   idioma: "pt-BR"
 }
+
+## Atualizações feitas no onboarding
+
+- Onboarding dividido em 3 etapas
+- Etapa 1: informações pessoais
+- Etapa 2: escolha de módulos
+- Etapa 3: configuração inicial dos módulos escolhidos
+- Água agora mostra meta calculada por peso
+- Água permite escolher meta manual futuramente
+- Água permite escolher registro por copos personalizados ou por ml
+- Tarefas agora considera:
+  - primeira tarefa
+  - tempo estimado
+  - energia que a tarefa gasta
+  - energia atual da pessoa
+- Hábitos agora permite criar primeiro hábito inicial
+- Hábitos considera frequência semanal e melhor horário
+- Onboarding ficou mais preparado para o backend salvar dados reais
