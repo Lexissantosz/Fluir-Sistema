@@ -533,10 +533,40 @@ Já foi feito:
 - Cálculo inicial da meta de água com base no peso
 - Salvamento temporário no `localStorage`
 - Redirecionamento para `dashboard.html`
+- O dashboard já lê os dados salvos pelo onboarding
+- O dashboard mostra/esconde módulos conforme a escolha do usuário
+- Tarefas também virou módulo opcional
 
 Ainda falta:
 
-- Fazer o dashboard ler os dados do onboarding
-- Mostrar ou esconder módulos de acordo com as escolhas do usuário
 - Criar opção para editar essas escolhas depois
 - Salvar essas informações no banco futuramente
+
+## 20. Sistema de idiomas
+
+Adicionar suporte a múltiplos idiomas no Fluir.
+
+Idiomas iniciais planejados:
+
+- Português do Brasil
+- Português de Portugal
+- Inglês
+- Espanhol
+
+Futuramente, permitir adicionar mais idiomas conforme necessário.
+
+Funcionalidades planejadas:
+
+- Criar seletor de idioma no sistema
+- Permitir trocar o idioma nas configurações
+- Salvar idioma escolhido pelo usuário
+- Aplicar o idioma escolhido em textos, botões, menus, mensagens e telas principais
+- Adaptar diferenças entre Português do Brasil e Português de Portugal
+- Preparar o sistema para receber novos idiomas no futuro
+
+Exemplo de idiomas salvos:
+
+```js
+{
+  idioma: "pt-BR"
+}

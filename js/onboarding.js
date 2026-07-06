@@ -84,19 +84,57 @@ if (onboardingForm) {
       return;
     }
 
-    const fluirOnboarding = {
-      nome,
-      pronomes,
-      generoNascimento,
-      altura,
-      peso,
-      modulos,
-      metaAguaMl: calculateWaterGoal(peso),
-      onboardingConcluido: true,
-      atualizadoEm: new Date().toISOString()
-    };
+    const selectedModules = {
+  timeline: true,
+  tasks: modulos.includes("tarefas"),
+  habits: modulos.includes("habitos"),
+  sleep: modulos.includes("sono"),
+  water: modulos.includes("agua"),
+  finances: modulos.includes("financas"),
+  diary: modulos.includes("diario"),
+  nutrition: modulos.includes("nutricao"),
+  physicalHealth: modulos.includes("treinos"),
+  menstrualCycle: modulos.includes("ciclo"),
+  attachments: true
+};
 
-    localStorage.setItem("fluir-onboarding", JSON.stringify(fluirOnboarding));
+const fluirSetup = {
+  user: {
+    name: nome,
+    nickname: nome,
+    sexAtBirth: generoNascimento,
+    pronouns: pronomes,
+    customPronouns: "",
+    age: "",
+    communicationTone: "calmo",
+    height: altura,
+    weight: peso
+  },
+
+  modules: selectedModules,
+
+  preferences: {
+    water: {
+      dailyGoal: calculateWaterGoal(peso)
+    }
+  },
+
+  onboardingConcluido: true,
+  atualizadoEm: new Date().toISOString()
+};
+
+localStorage.setItem("fluir-setup", JSON.stringify(fluirSetup));
+localStorage.setItem("fluir-onboarding", JSON.stringify({
+  nome,
+  pronomes,
+  generoNascimento,
+  altura,
+  peso,
+  modulos,
+  metaAguaMl: calculateWaterGoal(peso),
+  onboardingConcluido: true,
+  atualizadoEm: new Date().toISOString()
+}));
 
     showMessage("Configuração salva com sucesso.", "success");
 
