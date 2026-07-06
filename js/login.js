@@ -23,9 +23,7 @@ const showLogin = document.getElementById("showLogin");
 
 const passwordButtons = document.querySelectorAll(".password-toggle");
 
-// Quando o backend estiver pronto, troque para:
-// const API_BASE_URL = "http://localhost:8080/api/usuarios";
-const API_BASE_URL = "";
+const API_BASE_URL = "http://localhost:8080/api/usuarios";
 
 
 // =============================
