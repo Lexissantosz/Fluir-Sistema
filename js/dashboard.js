@@ -65,6 +65,34 @@ const defaultSetup = {
    Coisinhas pequenas para evitar repetição e dor de cabeça.
 ===================================================== */
 
+function isOnboardingCompleted() {
+  try {
+    const setup = localStorage.getItem("fluir-setup");
+
+    if (!setup) {
+      return false;
+    }
+
+    const setupData = JSON.parse(setup);
+
+    return setupData.onboardingConcluido === true;
+  } catch (error) {
+    console.warn("Erro ao verificar onboarding:", error);
+    return false;
+  }
+}
+
+function protectDashboardAccess() {
+  const completed = isOnboardingCompleted();
+
+  if (!completed) {
+    window.location.href = "onboarding.html";
+    return false;
+  }
+
+  return true;
+}
+
 function getStorageJSON(key, fallback) {
   try {
     const value = localStorage.getItem(key);
@@ -1102,4 +1130,6 @@ function initDashboard() {
   showSetupNoticeIfNeeded();
 }
 
-initDashboard();
+if (protectDashboardAccess()) {
+  initDashboard();
+}
