@@ -1,0 +1,107 @@
+// =============================
+// FLUIR — ONBOARDING
+// Configuração inicial do usuário
+// =============================
+
+
+// =============================
+// 1. SELEÇÃO DOS ELEMENTOS
+// =============================
+
+const onboardingForm = document.getElementById("onboardingForm");
+const onboardingMessage = document.getElementById("onboardingMessage");
+
+const nomeInput = document.getElementById("nome");
+const pronomesInput = document.getElementById("pronomes");
+const generoNascimentoInput = document.getElementById("generoNascimento");
+const alturaInput = document.getElementById("altura");
+const pesoInput = document.getElementById("peso");
+
+
+// =============================
+// 2. FUNÇÕES AUXILIARES
+// =============================
+
+function showMessage(message, type) {
+  if (!onboardingMessage) {
+    return;
+  }
+
+  onboardingMessage.textContent = message;
+  onboardingMessage.className = `form-message ${type}`;
+}
+
+function getSelectedModules() {
+  const checkedModules = document.querySelectorAll(".module-options input:checked");
+
+  return Array.from(checkedModules).map(function (input) {
+    return input.value;
+  });
+}
+
+function calculateWaterGoal(peso) {
+  return Math.round(peso * 35);
+}
+
+
+// =============================
+// 3. ENVIO DO FORMULÁRIO
+// =============================
+
+if (onboardingForm) {
+  onboardingForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const nome = nomeInput.value.trim();
+    const pronomes = pronomesInput.value;
+    const generoNascimento = generoNascimentoInput.value;
+    const altura = Number(alturaInput.value);
+    const peso = Number(pesoInput.value);
+    const modulos = getSelectedModules();
+
+    if (!nome || !pronomes || !generoNascimento || !altura || !peso) {
+      showMessage("Preencha todos os dados básicos antes de continuar.", "error");
+      return;
+    }
+
+    if (nome.length < 3) {
+      showMessage("O nome precisa ter pelo menos 3 caracteres.", "error");
+      return;
+    }
+
+    if (altura < 50 || altura > 250) {
+      showMessage("Digite uma altura válida em centímetros.", "error");
+      return;
+    }
+
+    if (peso < 20 || peso > 300) {
+      showMessage("Digite um peso válido em kg.", "error");
+      return;
+    }
+
+    if (modulos.length === 0) {
+      showMessage("Escolha pelo menos um módulo para começar.", "error");
+      return;
+    }
+
+    const fluirOnboarding = {
+      nome,
+      pronomes,
+      generoNascimento,
+      altura,
+      peso,
+      modulos,
+      metaAguaMl: calculateWaterGoal(peso),
+      onboardingConcluido: true,
+      atualizadoEm: new Date().toISOString()
+    };
+
+    localStorage.setItem("fluir-onboarding", JSON.stringify(fluirOnboarding));
+
+    showMessage("Configuração salva com sucesso.", "success");
+
+    setTimeout(function () {
+      window.location.href = "dashboard.html";
+    }, 800);
+  });
+}

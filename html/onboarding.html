@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Configuração inicial | Fluir</title>
+
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-card active">
+      <div class="auth-header">
+        <h1>Vamos personalizar o Fluir</h1>
+        <p>
+          Responda algumas perguntas rápidas para deixar o sistema com a sua cara.
+        </p>
+      </div>
+
+      <form id="onboardingForm" class="auth-form active">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Digite seu nome" />
+        </div>
+
+        <div class="form-group">
+          <label for="pronomes">Pronomes</label>
+          <select id="pronomes">
+            <option value="">Selecione</option>
+            <option value="ele/dele">Ele/dele</option>
+            <option value="ela/dela">Ela/dela</option>
+            <option value="elu/delu">Elu/delu</option>
+            <option value="prefiro-nao-informar">Prefiro não informar</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="generoNascimento">Gênero de nascimento</label>
+          <select id="generoNascimento">
+            <option value="">Selecione</option>
+            <option value="feminino">Feminino</option>
+            <option value="masculino">Masculino</option>
+            <option value="prefiro-nao-informar">Prefiro não informar</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="altura">Altura em cm</label>
+          <input type="number" id="altura" placeholder="Ex: 170" min="50" max="250" />
+        </div>
+
+        <div class="form-group">
+          <label for="peso">Peso em kg</label>
+          <input type="number" id="peso" placeholder="Ex: 65" min="20" max="300" />
+        </div>
+
+        <div class="form-group">
+          <label>Quais módulos você quer usar?</label>
+
+          <div class="module-options">
+            <label>
+              <input type="checkbox" value="diario" />
+              Diário
+            </label>
+
+            <label>
+              <input type="checkbox" value="agua" />
+              Água
+            </label>
+
+            <label>
+              <input type="checkbox" value="habitos" />
+              Hábitos
+            </label>
+
+            <label>
+              <input type="checkbox" value="nutricao" />
+              Nutrição
+            </label>
+
+            <label>
+              <input type="checkbox" value="treinos" />
+              Treinos
+            </label>
+
+            <label>
+              <input type="checkbox" value="ciclo" />
+              Ciclo menstrual
+            </label>
+
+            <label>
+              <input type="checkbox" value="sono" />
+              Sono
+            </label>
+
+            <label>
+              <input type="checkbox" value="financas" />
+              Finanças
+            </label>
+          </div>
+        </div>
+
+        <p id="onboardingMessage" class="form-message info"></p>
+
+        <button type="submit" class="primary-btn">
+          Salvar e continuar
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../js/onboarding.js"></script>
+</body>
+</html>
