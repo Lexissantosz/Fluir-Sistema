@@ -61,6 +61,40 @@
     `;
   }
 
+  function getStorageJSON(key, fallback = {}) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || fallback;
+  } catch (error) {
+    console.warn(`Erro ao ler ${key}:`, error);
+    return fallback;
+  }
+}
+
+function getMobileUserData() {
+  const setupData = getStorageJSON("fluir-setup", {});
+  const userData = setupData.user || {};
+
+  const name =
+    userData.nickname ||
+    userData.name ||
+    setupData.nickname ||
+    setupData.name ||
+    "Usuário";
+
+  const email =
+    userData.email ||
+    setupData.email ||
+    "Perfil do usuário";
+
+  const initial = name.trim().charAt(0).toUpperCase() || "F";
+
+  return {
+    name,
+    email,
+    initial
+  };
+}
+
   function openDrawer() {
     document.body.classList.add("mobile-drawer-open");
   }
@@ -70,32 +104,36 @@
   }
 
   function buildTopbar() {
-    if (document.querySelector(".mobile-topbar")) return;
+  if (document.querySelector(".mobile-topbar")) return;
 
-    const topbar = document.createElement("header");
-    topbar.className = "mobile-topbar";
-    topbar.innerHTML = `
-      <a class="mobile-brand" href="dashboard.html" aria-label="Ir para o início">
-        <span class="mobile-brand-icon">${createBrandIcon()}</span>
-        <span class="mobile-brand-meta">
-          <strong>Fluir</strong>
-          <span class="mobile-brand-subtitle">Organização da vida</span>
-        </span>
-      </a>
+  const user = getMobileUserData();
 
-      <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
-        ☰
-      </button>
-    `;
+  const topbar = document.createElement("header");
+  topbar.className = "mobile-topbar";
+  topbar.innerHTML = `
+    <a class="mobile-brand mobile-profile-brand" href="profile.html" aria-label="Ir para o perfil">
+      <span class="mobile-profile-avatar">${user.initial}</span>
 
-    document.body.prepend(topbar);
+      <span class="mobile-brand-meta">
+        <strong>${user.name}</strong>
+        <span class="mobile-brand-subtitle">${user.email}</span>
+      </span>
+    </a>
 
-    const menuButton = topbar.querySelector(".mobile-menu-btn");
-    menuButton.addEventListener("click", () => {
-      const isOpen = document.body.classList.toggle("mobile-drawer-open");
-      menuButton.setAttribute("aria-expanded", String(isOpen));
-    });
-  }
+    <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
+      ☰
+    </button>
+  `;
+
+  document.body.prepend(topbar);
+
+  const menuButton = topbar.querySelector(".mobile-menu-btn");
+
+  menuButton.addEventListener("click", () => {
+    const isOpen = document.body.classList.toggle("mobile-drawer-open");
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+  });
+}
 
   function buildDrawer() {
     if (document.querySelector(".mobile-drawer-overlay")) return;
