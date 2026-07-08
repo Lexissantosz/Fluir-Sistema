@@ -702,3 +702,50 @@
     border-radius: 18px;
   }
 }
+
+/* =====================================================
+   CORREÇÃO — SCROLL DO ONBOARDING
+   Permite terminar o formulário em telas menores
+===================================================== */
+
+html,
+body {
+  min-height: 100%;
+  height: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+
+.onboarding-page {
+  min-height: 100vh;
+  height: auto;
+  overflow-y: auto;
+  align-items: flex-start;
+}
+
+.onboarding-card {
+  margin-bottom: 48px;
+}
+
+.onboarding-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+
+  padding-top: 14px;
+  padding-bottom: 4px;
+
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (max-width: 720px) {
+  .onboarding-page {
+    padding-bottom: 90px;
+  }
+
+  .onboarding-card {
+    margin-bottom: 90px;
+  }
+}
