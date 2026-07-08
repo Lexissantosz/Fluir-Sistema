@@ -1,22 +1,29 @@
+import type { Screen } from "../types/fluir";
+
 type DrawerMenuProps = {
   isOpen: boolean;
   onClose: () => void;
+  onChangeScreen: (screen: Screen) => void;
 };
 
-const drawerItems = [
-  "Dashboard",
-  "Timeline",
-  "Tarefas",
-  "Hábitos",
-  "Água",
-  "Sono",
-  "Finanças",
-  "Diário",
-  "Configurações",
-  "Perfil",
+const drawerItems: { label: string; screen: Screen }[] = [
+  { label: "Início", screen: "dashboard" },
+  { label: "Tarefas", screen: "tasks" },
+  { label: "Hábitos", screen: "habits" },
+  { label: "Água", screen: "water" },
+  { label: "Configurações", screen: "settings" },
 ];
 
-export function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
+export function DrawerMenu({
+  isOpen,
+  onClose,
+  onChangeScreen,
+}: DrawerMenuProps) {
+  function handleNavigate(screen: Screen) {
+    onChangeScreen(screen);
+    onClose();
+  }
+
   return (
     <div className={`drawer-overlay ${isOpen ? "show" : ""}`} onClick={onClose}>
       <aside className="drawer" onClick={(event) => event.stopPropagation()}>
@@ -33,9 +40,13 @@ export function DrawerMenu({ isOpen, onClose }: DrawerMenuProps) {
 
         <div className="drawer-list">
           {drawerItems.map((item) => (
-            <button type="button" key={item} onClick={onClose}>
+            <button
+              type="button"
+              key={item.screen}
+              onClick={() => handleNavigate(item.screen)}
+            >
               <span>◇</span>
-              {item}
+              {item.label}
             </button>
           ))}
         </div>

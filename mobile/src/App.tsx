@@ -6,8 +6,12 @@ import { DrawerMenu } from "./components/DrawerMenu";
 import { MobileHeader } from "./components/MobileHeader";
 
 import { Dashboard } from "./screens/Dashboard";
+import { HabitsScreen } from "./screens/HabitsScreen";
 import { LoginScreen } from "./screens/LoginScreen";
 import { OnboardingScreen } from "./screens/OnboardingScreen";
+import { SettingsScreen } from "./screens/SettingsScreen";
+import { TasksScreen } from "./screens/TasksScreen";
+import { WaterScreen } from "./screens/WaterScreen";
 
 import { loginUser, saveOnboarding, testBackendConnection } from "./services/api";
 
@@ -34,8 +38,8 @@ function App() {
   const [peso, setPeso] = useState("");
 
   const [firstTask, setFirstTask] = useState("");
-const [firstHabit, setFirstHabit] = useState("");
-const [waterMode, setWaterMode] = useState("ml");
+  const [firstHabit, setFirstHabit] = useState("");
+  const [waterMode, setWaterMode] = useState("ml");
 
   const [modules, setModules] = useState<Modules>({
     tasks: true,
@@ -100,7 +104,7 @@ const [waterMode, setWaterMode] = useState("ml");
 
       setUser(loggedUser);
       setNome(loggedUser.nome);
-      setScreen("onboarding");
+      setScreen("dashboard");
     } catch {
       alert(
         "Backend indisponível neste PC. O app vai continuar em modo demonstração."
@@ -114,23 +118,23 @@ const [waterMode, setWaterMode] = useState("ml");
 
       setUser(demoUser);
       setNome(demoUser.nome);
-      setScreen("onboarding");
+      setScreen("dashboard");
     } finally {
       setLoading(false);
     }
   }
 
   function handleDemoAccess() {
-  const demoUser: User = {
-    id: 1,
-    nome: "Alex",
-    email: email || "usuario@email.com",
-  };
+    const demoUser: User = {
+      id: 1,
+      nome: "Alex",
+      email: email || "usuario@email.com",
+    };
 
-  setUser(demoUser);
-  setNome(demoUser.nome);
-  setScreen("onboarding");
-}
+    setUser(demoUser);
+    setNome(demoUser.nome);
+    setScreen("dashboard");
+  }
 
   async function handleSaveOnboarding() {
     if (!nome.trim()) {
@@ -164,26 +168,24 @@ const [waterMode, setWaterMode] = useState("ml");
         attachments: true,
       },
       agua: {
-  metaCalculadaMl: waterGoal,
-  metaFinalMl: waterGoal,
-  modoRegistro: waterMode,
-},
-
-primeiraTarefa: firstTask.trim()
-  ? {
-      titulo: firstTask.trim(),
-      tempoEstimadoMinutos: 30,
-      energiaGasta: "media",
-    }
-  : null,
-
-primeiroHabito: firstHabit.trim()
-  ? {
-      titulo: firstHabit.trim(),
-      frequenciaSemanal: 7,
-      melhorHorario: "manha",
-    }
-  : null,
+        metaCalculadaMl: waterGoal,
+        metaFinalMl: waterGoal,
+        modoRegistro: waterMode,
+      },
+      primeiraTarefa: firstTask.trim()
+        ? {
+            titulo: firstTask.trim(),
+            tempoEstimadoMinutos: 30,
+            energiaGasta: "media",
+          }
+        : null,
+      primeiroHabito: firstHabit.trim()
+        ? {
+            titulo: firstHabit.trim(),
+            frequenciaSemanal: 7,
+            melhorHorario: "manha",
+          }
+        : null,
     };
 
     try {
@@ -217,89 +219,137 @@ primeiroHabito: firstHabit.trim()
     if (screen === "login") {
       return (
         <LoginScreen
-  email={email}
-  senha={senha}
-  carregando={loading}
-  onEmailChange={setEmail}
-  onSenhaChange={setSenha}
-  onLogin={handleLogin}
-  onDemo={handleDemoAccess}
-/>
+          email={email}
+          senha={senha}
+          carregando={loading}
+          onEmailChange={setEmail}
+          onSenhaChange={setSenha}
+          onLogin={handleLogin}
+          onDemo={handleDemoAccess}
+        />
       );
     }
 
     if (screen === "onboarding") {
       return (
         <OnboardingScreen
-  nome={nome}
-  pronomes={pronomes}
-  altura={altura}
-  peso={peso}
-  metaAgua={waterGoal}
-  modulos={modules}
-  carregando={loading}
-  firstTask={firstTask}
-  firstHabit={firstHabit}
-  waterMode={waterMode}
-  onNomeChange={setNome}
-  onPronomesChange={setPronomes}
-  onAlturaChange={setAltura}
-  onPesoChange={setPeso}
-  onFirstTaskChange={setFirstTask}
-  onFirstHabitChange={setFirstHabit}
-  onWaterModeChange={setWaterMode}
-  onToggleModule={toggleModule}
-  onSave={handleSaveOnboarding}
-/>
+          nome={nome}
+          pronomes={pronomes}
+          altura={altura}
+          peso={peso}
+          metaAgua={waterGoal}
+          modulos={modules}
+          carregando={loading}
+          firstTask={firstTask}
+          firstHabit={firstHabit}
+          waterMode={waterMode}
+          onNomeChange={setNome}
+          onPronomesChange={setPronomes}
+          onAlturaChange={setAltura}
+          onPesoChange={setPeso}
+          onFirstTaskChange={setFirstTask}
+          onFirstHabitChange={setFirstHabit}
+          onWaterModeChange={setWaterMode}
+          onToggleModule={toggleModule}
+          onSave={handleSaveOnboarding}
+        />
+      );
+    }
+
+    if (screen === "tasks") {
+      return (
+        <TasksScreen
+          firstTask={firstTask}
+          onFirstTaskChange={setFirstTask}
+        />
+      );
+    }
+
+    if (screen === "habits") {
+      return (
+        <HabitsScreen
+          firstHabit={firstHabit}
+          onFirstHabitChange={setFirstHabit}
+        />
+      );
+    }
+
+    if (screen === "water") {
+      return (
+        <WaterScreen
+          metaAgua={waterGoal}
+          waterMode={waterMode}
+          onWaterModeChange={setWaterMode}
+        />
+      );
+    }
+
+    if (screen === "settings") {
+      return (
+        <SettingsScreen
+          nome={nome}
+          peso={peso}
+          altura={altura}
+          modulos={modules}
+          onNomeChange={setNome}
+          onPesoChange={setPeso}
+          onAlturaChange={setAltura}
+          onToggleModule={toggleModule}
+        />
       );
     }
 
     return (
       <Dashboard
-  nome={nome}
-  metaAgua={waterGoal}
-  modulos={modules}
-  firstTask={firstTask}
-  firstHabit={firstHabit}
-  waterMode={waterMode}
-  onEditSetup={() => setScreen("onboarding")}
-/>
+        nome={nome}
+        metaAgua={waterGoal}
+        modulos={modules}
+        firstTask={firstTask}
+        firstHabit={firstHabit}
+        waterMode={waterMode}
+        onEditSetup={() => setScreen("settings")}
+      />
     );
   }
+
+  const shouldShowAppNavigation =
+    screen !== "login" && screen !== "register" && screen !== "onboarding";
 
   return (
     <main className="app-shell">
       <section className="phone-frame">
         <MobileHeader user={user} onOpenMenu={() => setDrawerOpen(true)} />
 
-        <section className="api-card">
-          <div>
-            <small>Status da API</small>
-            <p>{apiStatus}</p>
-          </div>
+        {shouldShowAppNavigation && (
+          <section className="api-card">
+            <div>
+              <small>Status da API</small>
+              <p>{apiStatus}</p>
+            </div>
 
-          <button type="button" onClick={handleTestBackend}>
-            {loading ? "..." : "Testar"}
-          </button>
-        </section>
+            <button type="button" onClick={handleTestBackend}>
+              {loading ? "..." : "Testar"}
+            </button>
+          </section>
+        )}
 
         <div className="screen-area">{renderScreen()}</div>
 
-        {screen === "dashboard" && (
-  <>
-    <BottomNav
-      currentScreen={screen}
-      onChangeScreen={setScreen}
-      onOpenMenu={() => setDrawerOpen(true)}
-    />
+        {shouldShowAppNavigation && (
+          <>
+            <BottomNav
+              currentScreen={screen}
+              onChangeScreen={setScreen}
+              onOpenMenu={() => setDrawerOpen(true)}
+            />
 
-    <DrawerMenu
-      isOpen={drawerOpen}
-      onClose={() => setDrawerOpen(false)}
-    />
-  </>
-)}
-
+            <DrawerMenu
+              isOpen={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              onChangeScreen={setScreen}
+            />
+          </>
+        )}
       </section>
     </main>
   );

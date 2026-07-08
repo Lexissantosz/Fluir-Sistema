@@ -1214,3 +1214,197 @@ select:focus {
   font-weight: 700;
   line-height: 1.4;
 }
+
+/* =====================================================
+   DASHBOARD MOBILE — VERSÃO MAIS COMPLETA
+===================================================== */
+
+.dashboard-screen {
+  display: grid;
+  gap: 14px;
+}
+
+.dashboard-welcome-card,
+.today-focus-card {
+  padding: 18px;
+
+  border: 1px solid rgba(0, 0, 0, 0.11);
+  border-radius: 24px;
+
+  background: #ffffff;
+}
+
+.dashboard-welcome-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.dashboard-welcome-card span,
+.today-focus-card span {
+  display: block;
+
+  color: #777;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-welcome-card h1 {
+  margin: 8px 0 8px;
+
+  color: #171717;
+  font-size: 34px;
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.075em;
+}
+
+.dashboard-welcome-card p {
+  margin: 0;
+
+  color: #666;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.dashboard-avatar {
+  width: 56px;
+  height: 56px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 50%;
+
+  background: #f2f2ef;
+  color: #171717;
+
+  font-size: 24px;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.today-focus-card {
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0.055), rgba(0, 0, 0, 0.015)),
+    #f2f2ef;
+}
+
+.today-focus-card strong {
+  display: block;
+  margin-top: 8px;
+
+  color: #171717;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 950;
+  letter-spacing: -0.055em;
+}
+
+.today-focus-card small {
+  display: block;
+  margin-top: 8px;
+
+  color: #666;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.dashboard-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dashboard-summary-grid .summary-card {
+  min-height: 112px;
+}
+
+.dashboard-summary-grid .summary-card small {
+  display: block;
+  margin-top: 8px;
+
+  color: #666;
+  font-size: 11.5px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.module-status-list {
+  display: grid;
+  gap: 9px;
+}
+
+.module-status-card {
+  min-height: 56px;
+  padding: 12px 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 18px;
+
+  background: #ffffff;
+}
+
+.module-status-card strong {
+  display: block;
+
+  color: #171717;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.module-status-card span {
+  display: block;
+  margin-top: 4px;
+
+  color: #666;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.module-status-card small {
+  min-height: 28px;
+  padding: 0 10px;
+
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  background: rgba(0, 0, 0, 0.06);
+  color: #666;
+
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.module-status-card.active {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.module-status-card.active small {
+  background: #171717;
+  color: #ffffff;
+}
+
+@media (max-width: 360px) {
+  .dashboard-welcome-card {
+    flex-direction: column;
+  }
+
+  .dashboard-summary-grid {
+    grid-template-columns: 1fr;
+  }
+}

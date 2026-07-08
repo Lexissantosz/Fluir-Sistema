@@ -1,5 +1,13 @@
-export type Screen = "login" | "onboarding" | "dashboard";
-
+export type Screen =
+  | "login"
+  | "register"
+  | "onboarding"
+  | "dashboard"
+  | "tasks"
+  | "habits"
+  | "water"
+  | "settings";
+  
 export type User = {
   id: number;
   nome: string;
