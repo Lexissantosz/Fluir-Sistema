@@ -132,22 +132,7 @@ function getCurrentWeekKeys() {
 // 5. LER SETUP SALVO
 // =====================================================
 
-function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
-
-  if (!savedSetup) {
-    return defaultSetup;
-  }
-
-  try {
-    return JSON.parse(savedSetup);
-  } catch (error) {
-    console.warn("Erro ao ler configuração do Fluir:", error);
-    return defaultSetup;
-  }
-}
-
-const setupData = getSavedSetup();
+const setupData = FluirAPI.getSetup(defaultSetup);
 
 
 // =====================================================
@@ -155,7 +140,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirAPI.getTheme();
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -182,7 +167,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirAPI.saveTheme(isDarkMode ? "dark" : "light");
   });
 }
 
@@ -329,11 +314,7 @@ function saveWaterData() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
-
-  savedEvents.unshift(eventData);
-
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirAPI.saveTimelineEvent(eventData);
 }
 
 function createWaterTimelineEvent(title, description) {
@@ -347,7 +328,7 @@ function createWaterTimelineEvent(title, description) {
     createdAt: new Date().toISOString()
   });
 }
-
+ 
 
 // =====================================================
 // 11. DADOS DO DIA
