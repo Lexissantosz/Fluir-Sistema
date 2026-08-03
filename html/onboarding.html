@@ -227,9 +227,10 @@
             </div>
 
             <div class="form-group">
-              <label for="customWaterGoal">Quer trocar a meta?</label>
-              <input type="number" id="customWaterGoal" placeholder="Deixe vazio para usar a meta calculada" min="500" max="8000" />
-            </div>
+  <label for="customWaterGoal">Quer trocar a meta?</label>
+  <input type="number" id="customWaterGoal" placeholder="Deixe vazio para usar a meta calculada" min="500" max="8000" />
+  <small id="customWaterGoalFeedback" class="field-feedback"></small>
+</div>
 
             <div class="form-group">
               <label>Como você prefere registrar sua água?</label>
@@ -267,18 +268,23 @@
               <input type="text" id="firstTaskTitle" placeholder="Ex: Revisar atividade do curso" />
             </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="firstTaskTime">Tempo estimado</label>
-                <select id="firstTaskTime">
-                  <option value="">Selecione</option>
-                  <option value="15">15 minutos</option>
-                  <option value="30">30 minutos</option>
-                  <option value="45">45 minutos</option>
-                  <option value="60">1 hora</option>
-                  <option value="120">2 horas</option>
-                </select>
-              </div>
+            <div class="form-group">
+  <label for="firstTaskTime">Tempo estimado</label>
+  <select id="firstTaskTime">
+    <option value="">Selecione</option>
+    <option value="15">15 minutos</option>
+    <option value="30">30 minutos</option>
+    <option value="45">45 minutos</option>
+    <option value="60">1 hora</option>
+    <option value="120">2 horas</option>
+    <option value="outro">Outro (personalizado)</option>
+  </select>
+
+  <div id="firstTaskCustomTimeGroup" class="form-group" style="display: none;">
+    <label for="firstTaskCustomTime">Quantos minutos?</label>
+    <input type="number" id="firstTaskCustomTime" placeholder="Ex: 90" min="1" max="600" />
+  </div>
+</div>
 
               <div class="form-group">
                 <label for="firstTaskEnergyCost">Energia que ela gasta</label>

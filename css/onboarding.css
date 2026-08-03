@@ -295,6 +295,23 @@
   color: var(--text-muted);
 }
 
+.field-feedback {
+  display: block;
+  margin: -8px 0 15px;
+
+  font-size: 0.85rem;
+  line-height: 1.4;
+  min-height: 16px;
+}
+
+.field-feedback.error {
+  color: #dc2626;
+}
+
+.field-feedback.success {
+  color: #16a34a;
+}
+
 .onboarding-note,
 .fixed-modules-box {
   margin-top: 10px;

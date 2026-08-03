@@ -233,7 +233,7 @@ if (loginForm) {
         return;
       }
 
-      sessionStorage.setItem("fluir-user", JSON.stringify(data.usuario));
+      sessionStorage.setItem("fluir-user", JSON.stringify(data));
 
       showMessage(loginMessage, "Login realizado com sucesso.", "success");
 

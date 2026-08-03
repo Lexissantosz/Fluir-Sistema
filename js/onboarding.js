@@ -31,10 +31,15 @@ const clearModulesBtn = document.getElementById("clearModules");
 const waterPreferenceSection = document.getElementById("waterPreferenceSection");
 const calculatedWaterGoal = document.getElementById("calculatedWaterGoal");
 const customWaterGoalInput = document.getElementById("customWaterGoal");
+const customWaterGoalFeedback = document.getElementById("customWaterGoalFeedback");
 
 const tasksSetupSection = document.getElementById("tasksSetupSection");
 const firstTaskTitleInput = document.getElementById("firstTaskTitle");
 const firstTaskTimeInput = document.getElementById("firstTaskTime");
+
+const firstTaskCustomTimeGroup = document.getElementById("firstTaskCustomTimeGroup");
+const firstTaskCustomTimeInput = document.getElementById("firstTaskCustomTime");
+
 const firstTaskEnergyCostInput = document.getElementById("firstTaskEnergyCost");
 const currentEnergyInput = document.getElementById("currentEnergy");
 
@@ -47,6 +52,8 @@ const emptyModuleSetup = document.getElementById("emptyModuleSetup");
 
 let currentStep = 1;
 const totalSteps = 3;
+
+const ONBOARDING_API_URL = "http://localhost:8080/api/onboarding";
 
 
 // =============================
@@ -109,6 +116,45 @@ function setAllModulesChecked(isChecked) {
   });
 
   updateModuleSetupVisibility();
+}
+
+function updateFirstTaskCustomTimeVisibility() {
+  if (!firstTaskCustomTimeGroup || !firstTaskTimeInput) {
+    return;
+  }
+
+  const isOutro = firstTaskTimeInput.value === "outro";
+
+  firstTaskCustomTimeGroup.style.display = isOutro ? "block" : "none";
+
+  if (!isOutro && firstTaskCustomTimeInput) {
+    firstTaskCustomTimeInput.value = "";
+  }
+}
+
+function updateCustomWaterGoalFeedback() {
+  if (!customWaterGoalFeedback || !customWaterGoalInput) {
+    return;
+  }
+
+  const valorDigitado = customWaterGoalInput.value.trim();
+
+  if (!valorDigitado) {
+    customWaterGoalFeedback.textContent = "";
+    customWaterGoalFeedback.className = "field-feedback";
+    return;
+  }
+
+  const numero = Number(valorDigitado);
+
+  if (numero < 500 || numero > 8000) {
+    customWaterGoalFeedback.textContent = "Use um valor entre 500ml e 8000ml. Fora disso, usaremos a meta calculada.";
+    customWaterGoalFeedback.className = "field-feedback error";
+    return;
+  }
+
+  customWaterGoalFeedback.textContent = "Meta personalizada válida.";
+  customWaterGoalFeedback.className = "field-feedback success";
 }
 
 function updateCalculatedWaterText() {
@@ -291,7 +337,9 @@ function buildSelectedModules(modulos) {
 
 function buildInitialTask() {
   const title = firstTaskTitleInput?.value.trim();
-  const estimatedTime = firstTaskTimeInput?.value || "";
+  const estimatedTime = firstTaskTimeInput?.value === "outro"
+    ? (firstTaskCustomTimeInput?.value || "")
+    : (firstTaskTimeInput?.value || "");
   const energyCost = firstTaskEnergyCostInput?.value || "";
 
   if (!title) {
@@ -330,6 +378,59 @@ function buildInitialHabit() {
   };
 }
 
+function buildOnboardingPayload(usuarioId, dados) {
+  const firstTask = dados.firstTask;
+  const firstHabit = dados.firstHabit;
+
+  return {
+    usuarioId: usuarioId,
+    nome: dados.nome,
+    apelido: dados.nome,
+    pronomes: dados.pronomes,
+    generoNascimento: dados.generoNascimento,
+    altura: dados.altura,
+    peso: dados.peso,
+    energiaAtual: currentEnergyInput?.value || "",
+
+    modulos: dados.selectedModules,
+
+    agua: {
+      metaCalculadaMl: calculateWaterGoal(dados.peso),
+      metaFinalMl: dados.finalWaterGoal,
+      modoRegistro: dados.waterPreference
+    },
+
+    primeiraTarefa: firstTask ? {
+      titulo: firstTask.title,
+      tempoEstimadoMinutos: firstTask.estimatedMinutes,
+      energiaGasta: firstTask.energyCost
+    } : null,
+
+    primeiroHabito: firstHabit ? {
+      titulo: firstHabit.title,
+      frequenciaSemanal: firstHabit.frequency,
+      melhorHorario: firstHabit.preferredTime
+    } : null
+  };
+}
+
+async function salvarOnboardingNoBackend(payload) {
+  const response = await fetch(`${ONBOARDING_API_URL}/salvar`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const erro = await response.text();
+    throw new Error(erro || "Não foi possível salvar o onboarding no servidor.");
+  }
+
+  return response.json();
+}
+
 function saveInitialTaskIfNeeded() {
   const initialTask = buildInitialTask();
 
@@ -362,7 +463,7 @@ function saveInitialHabitIfNeeded() {
 // =============================
 
 if (onboardingForm) {
-  onboardingForm.addEventListener("submit", function (event) {
+  onboardingForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const nome = nomeInput.value.trim();
@@ -442,7 +543,32 @@ if (onboardingForm) {
     saveInitialTaskIfNeeded();
     saveInitialHabitIfNeeded();
 
-    showMessage("Configuração salva com sucesso.", "success");
+    const usuarioLogado = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+
+    if (usuarioLogado && usuarioLogado.id) {
+      try {
+        const payload = buildOnboardingPayload(usuarioLogado.id, {
+          nome,
+          pronomes,
+          generoNascimento,
+          altura,
+          peso,
+          selectedModules,
+          finalWaterGoal,
+          waterPreference,
+          firstTask,
+          firstHabit
+        });
+
+        await salvarOnboardingNoBackend(payload);
+        showMessage("Configuração salva com sucesso.", "success");
+      } catch (error) {
+        console.warn("Falha ao salvar no backend, mantendo apenas localStorage:", error);
+        showMessage("Salvo localmente. Não foi possível sincronizar com o servidor.", "info");
+      }
+    } else {
+      showMessage("Configuração salva com sucesso.", "success");
+    }
 
     setTimeout(function () {
       window.location.href = "dashboard.html";
@@ -483,10 +609,43 @@ if (pesoInput) {
   pesoInput.addEventListener("input", updateCalculatedWaterText);
 }
 
+if (customWaterGoalInput) {
+  customWaterGoalInput.addEventListener("input", updateCustomWaterGoalFeedback);
+}
+
+if (firstTaskTimeInput) {
+  firstTaskTimeInput.addEventListener("change", updateFirstTaskCustomTimeVisibility);
+}
+
 
 // =============================
 // 8. INICIALIZAÇÃO
 // =============================
 
+async function carregarOnboardingSalvo() {
+  const usuarioLogado = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+
+  if (!usuarioLogado || !usuarioLogado.id) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${ONBOARDING_API_URL}/usuario/${usuarioLogado.id}`);
+
+    if (!response.ok) {
+      return;
+    }
+
+    const dadosSalvos = await response.json();
+
+    if (dadosSalvos.onboardingConcluido) {
+      window.location.href = "dashboard.html";
+    }
+  } catch (error) {
+    console.warn("Não foi possível verificar onboarding salvo:", error);
+  }
+}
+
+carregarOnboardingSalvo();
 updateStepView();
 updateModuleSetupVisibility();

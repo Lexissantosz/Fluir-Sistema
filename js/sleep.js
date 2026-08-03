@@ -129,22 +129,7 @@ function getCurrentWeekKeys() {
 // 5. LER SETUP SALVO
 // =====================================================
 
-function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
-
-  if (!savedSetup) {
-    return defaultSetup;
-  }
-
-  try {
-    return JSON.parse(savedSetup);
-  } catch (error) {
-    console.warn("Erro ao ler configuração do Fluir:", error);
-    return defaultSetup;
-  }
-}
-
-const setupData = getSavedSetup();
+const setupData = FluirAPI.getSetup(defaultSetup);
 
 
 // =====================================================
@@ -152,7 +137,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirAPI.getTheme();
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -179,7 +164,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirAPI.saveTheme(isDarkMode ? "dark" : "light");
   });
 }
 
@@ -277,11 +262,7 @@ function saveSleepLogs() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
-
-  savedEvents.unshift(eventData);
-
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirAPI.saveTimelineEvent(eventData);
 }
 
 function createSleepTimelineEvent(title, description) {
@@ -744,31 +725,6 @@ function clearSleepInvalidFields() {
   document.querySelectorAll(".invalid").forEach((field) => {
     field.classList.remove("invalid");
   });
-}
-
-function getSleepGoalMinutes() {
-  /*
-    Primeiro tenta pegar a meta salva no setup.
-    Se não encontrar, usa 8 horas como padrão.
-  */
-  const setupData = getSavedSetup();
-  const sleepGoal = setupData.preferences?.sleep?.sleepGoal || "8h";
-
-  if (typeof sleepGoal === "number") {
-    return sleepGoal * 60;
-  }
-
-  const goalText = String(sleepGoal).toLowerCase();
-
-  if (goalText.includes("7")) {
-    return 7 * 60;
-  }
-
-  if (goalText.includes("9")) {
-    return 9 * 60;
-  }
-
-  return 8 * 60;
 }
 
 // =====================================================
