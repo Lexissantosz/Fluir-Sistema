@@ -1420,6 +1420,81 @@ body.dark .focus-bar {
   gap: 12px;
 }
 
+.habit-days-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-bottom: 10px;
+}
+
+.habit-quick-btn {
+  height: 32px;
+  padding: 0 12px;
+
+  border: 1px dashed var(--border);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-soft, var(--text));
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.habit-quick-btn:hover {
+  border-color: var(--button-bg);
+  color: var(--button-bg);
+}
+
+.habit-days-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.habit-day-btn {
+  flex: 1;
+  min-width: 40px;
+  height: 40px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.habit-day-btn:hover {
+  border-color: var(--border-strong);
+}
+
+.habit-day-btn.selected {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-color: var(--button-bg);
+}
+
+.habit-days-picker.invalid .habit-day-btn {
+  border-color: var(--danger);
+}
+
+.field-feedback {
+  display: block;
+  margin-top: 6px;
+
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--danger);
+}
 
 /* ===================================================== */
 /* 24. MENSAGEM DO MODAL */

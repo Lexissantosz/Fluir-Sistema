@@ -437,13 +437,24 @@
       </label>
 
       <label>
-        <span>Meta semanal</span>
+        <span>Repetir nos dias</span>
 
-        <select id="habitWeeklyGoalSelect">
-          <option value="3">3 vezes por semana</option>
-          <option value="5">5 vezes por semana</option>
-          <option value="7">Todos os dias</option>
-        </select>
+        <div class="habit-days-quick">
+          <button type="button" class="habit-quick-btn" id="selectAllDaysBtn">Todos os dias</button>
+          <button type="button" class="habit-quick-btn" id="selectAlternateDaysBtn">Dia sim, dia não</button>
+        </div>
+
+        <div class="habit-days-picker" id="habitDaysPicker">
+          <button type="button" class="habit-day-btn" data-day="0">dom</button>
+          <button type="button" class="habit-day-btn" data-day="1">seg</button>
+          <button type="button" class="habit-day-btn" data-day="2">ter</button>
+          <button type="button" class="habit-day-btn" data-day="3">qua</button>
+          <button type="button" class="habit-day-btn" data-day="4">qui</button>
+          <button type="button" class="habit-day-btn" data-day="5">sex</button>
+          <button type="button" class="habit-day-btn" data-day="6">sáb</button>
+        </div>
+
+        <small class="field-feedback" id="habitDaysFeedback"></small>
       </label>
 
       <label>

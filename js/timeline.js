@@ -445,6 +445,118 @@ function getTodayKey() {
   return now.toISOString().split("T")[0];
 }
 
+function getTomorrowKey() {
+  const today = new Date(`${getTodayKey()}T00:00:00`);
+  today.setDate(today.getDate() + 1);
+
+  return today.toISOString().split("T")[0];
+}
+
+function formatReminderDateLabel(dateKey) {
+  if (dateKey === getTodayKey()) {
+    return "Hoje";
+  }
+
+  if (dateKey === getTomorrowKey()) {
+    return "Amanhã";
+  }
+
+  const date = new Date(`${dateKey}T00:00:00`);
+
+  return date.toLocaleDateString("pt-BR", { day: "numeric", month: "long" });
+}
+
+function getUpcomingReminders(limit = 3) {
+  const savedTasks = JSON.parse(localStorage.getItem("fluir-tasks")) || [];
+  const todayKey = getTodayKey();
+
+  return savedTasks
+    .filter((task) => !task.completed && task.date && task.date >= todayKey)
+    .sort((a, b) => {
+      if (a.date !== b.date) {
+        return a.date.localeCompare(b.date);
+      }
+
+      return (a.time || "").localeCompare(b.time || "");
+    })
+    .slice(0, limit);
+}
+
+function renderUpcomingReminders() {
+  const reminderList = document.getElementById("reminderList");
+
+  if (!reminderList) {
+    return;
+  }
+
+  const reminders = getUpcomingReminders();
+
+  if (reminders.length === 0) {
+    reminderList.innerHTML = `<p class="reminder-empty">Nenhum lembrete próximo.</p>`;
+    return;
+  }
+
+  reminderList.innerHTML = reminders.map((task) => {
+    return `
+      <div>
+        <time>${escapeHTML(task.time || "--:--")}</time>
+        <p>
+          <strong>${escapeHTML(task.title)}</strong>
+          ${escapeHTML(formatReminderDateLabel(task.date))}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
+
+function formatOverdueLabel(dateKey) {
+  const today = new Date(`${getTodayKey()}T00:00:00`);
+  const taskDate = new Date(`${dateKey}T00:00:00`);
+  const diffDays = Math.round((today - taskDate) / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 1) {
+    return "Atrasada há 1 dia";
+  }
+
+  return `Atrasada há ${diffDays} dias`;
+}
+
+function getOverdueReminders(limit = 3) {
+  const savedTasks = JSON.parse(localStorage.getItem("fluir-tasks")) || [];
+  const todayKey = getTodayKey();
+
+  return savedTasks
+    .filter((task) => !task.completed && task.date && task.date < todayKey)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, limit);
+}
+
+function renderOverdueReminders() {
+  const overdueList = document.getElementById("overdueRemindersList");
+
+  if (!overdueList) {
+    return;
+  }
+
+  const overdueTasks = getOverdueReminders();
+
+  if (overdueTasks.length === 0) {
+    overdueList.innerHTML = `<p class="reminder-empty">Nenhuma tarefa atrasada.</p>`;
+    return;
+  }
+
+  overdueList.innerHTML = overdueTasks.map((task) => {
+    return `
+      <div>
+        <time>${escapeHTML(task.time || "--:--")}</time>
+        <p>
+          <strong>${escapeHTML(task.title)}</strong>
+          ${escapeHTML(formatOverdueLabel(task.date))}
+        </p>
+      </div>
+    `;
+  }).join("");
+}
 
 // =====================================================
 // 17. LOCALSTORAGE — SALVAR EVENTO
@@ -720,6 +832,10 @@ function initTimeline() {
 
   // Depois aplica o filtro correto
   applyTimelineVisibility();
+
+    // Carrega os lembretes reais a partir das tarefas cadastradas
+  renderUpcomingReminders();
+  renderOverdueReminders();
 
   setupTimelineFilters();
   setupEventModal();

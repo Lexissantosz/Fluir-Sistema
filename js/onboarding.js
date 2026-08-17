@@ -82,14 +82,17 @@ function getSelectedModules() {
 }
 
 function calculateWaterGoal(peso) {
-  return Math.round(Number(peso) * 35);
+  const MIN_WATER_GOAL_ML = 1000;
+  const metaPorPeso = Math.round(Number(peso) * 35);
+
+  return Math.max(MIN_WATER_GOAL_ML, metaPorPeso);
 }
 
 function getFinalWaterGoal(peso) {
   const calculatedGoal = calculateWaterGoal(peso);
   const customGoal = Number(customWaterGoalInput?.value || 0);
 
-  if (customGoal >= 500 && customGoal <= 8000) {
+  if (customGoal >= 1000 && customGoal <= 8000) {
     return customGoal;
   }
 
@@ -147,8 +150,8 @@ function updateCustomWaterGoalFeedback() {
 
   const numero = Number(valorDigitado);
 
-  if (numero < 500 || numero > 8000) {
-    customWaterGoalFeedback.textContent = "Use um valor entre 500ml e 8000ml. Fora disso, usaremos a meta calculada.";
+  if (numero < 1000 || numero > 8000) {
+    customWaterGoalFeedback.textContent = "Use um valor entre 1000ml e 8000ml. Fora disso, usaremos a meta calculada.";
     customWaterGoalFeedback.className = "field-feedback error";
     return;
   }

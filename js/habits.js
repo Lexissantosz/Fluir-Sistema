@@ -46,7 +46,13 @@ const saveHabitBtn = document.getElementById("saveHabitBtn");
 
 const habitTitleInput = document.getElementById("habitTitleInput");
 const habitCategorySelect = document.getElementById("habitCategorySelect");
-const habitWeeklyGoalSelect = document.getElementById("habitWeeklyGoalSelect");
+const habitDaysPicker = document.getElementById("habitDaysPicker");
+const habitDayButtons = document.querySelectorAll(".habit-day-btn");
+const habitDaysFeedback = document.getElementById("habitDaysFeedback");
+const selectAllDaysBtn = document.getElementById("selectAllDaysBtn");
+const selectAlternateDaysBtn = document.getElementById("selectAlternateDaysBtn");
+
+let selectedHabitDays = [];
 const habitDescriptionInput = document.getElementById("habitDescriptionInput");
 const habitFormMessage = document.getElementById("habitFormMessage");
 
@@ -813,8 +819,18 @@ function clearHabitModalFields() {
     habitCategorySelect.value = "Saúde";
   }
 
-  if (habitWeeklyGoalSelect) {
-    habitWeeklyGoalSelect.value = "3";
+  selectedHabitDays = [];
+
+  habitDayButtons.forEach((button) => {
+    button.classList.remove("selected");
+  });
+
+  if (habitDaysPicker) {
+    habitDaysPicker.classList.remove("invalid");
+  }
+
+  if (habitDaysFeedback) {
+    habitDaysFeedback.textContent = "";
   }
 
   if (habitDescriptionInput) {
@@ -823,6 +839,38 @@ function clearHabitModalFields() {
 
   clearHabitFormMessage();
   clearHabitInvalidFields();
+}
+
+const ALL_HABIT_DAYS = [0, 1, 2, 3, 4, 5, 6];
+const ALTERNATE_DAYS_A = [1, 3, 5]; // seg, qua, sex
+const ALTERNATE_DAYS_B = [2, 4, 6]; // ter, qui, sáb
+
+function isSameHabitDaySet(daysA, daysB) {
+  if (daysA.length !== daysB.length) {
+    return false;
+  }
+
+  const sortedA = [...daysA].sort((a, b) => a - b);
+  const sortedB = [...daysB].sort((a, b) => a - b);
+
+  return sortedA.every((value, index) => value === sortedB[index]);
+}
+
+function setSelectedHabitDays(days) {
+  selectedHabitDays = [...days];
+
+  habitDayButtons.forEach((button) => {
+    const day = Number(button.dataset.day);
+    button.classList.toggle("selected", selectedHabitDays.includes(day));
+  });
+
+  if (habitDaysPicker) {
+    habitDaysPicker.classList.remove("invalid");
+  }
+
+  if (habitDaysFeedback) {
+    habitDaysFeedback.textContent = "";
+  }
 }
 
 
@@ -836,7 +884,8 @@ function saveNewHabit() {
 
   const title = habitTitleInput?.value.trim();
   const category = habitCategorySelect?.value || "Saúde";
-  const weeklyGoal = Number(habitWeeklyGoalSelect?.value || 3);
+  const weekDays = [...selectedHabitDays].sort((a, b) => a - b);
+  const weeklyGoal = weekDays.length;
   const description = habitDescriptionInput?.value.trim() || "";
 
   if (!title || title.length < 2) {
@@ -849,12 +898,26 @@ function saveNewHabit() {
     return;
   }
 
+  if (weekDays.length === 0) {
+    if (habitDaysPicker) {
+      habitDaysPicker.classList.add("invalid");
+    }
+
+    if (habitDaysFeedback) {
+      habitDaysFeedback.textContent = "Selecione ao menos um dia da semana.";
+    }
+
+    showHabitFormMessage("Selecione os dias em que o hábito vai se repetir.");
+    return;
+  }
+
   const newHabit = {
     id: Date.now(),
     title,
     description,
     category,
     weeklyGoal,
+    weekDays,
     streak: 0,
     completedDates: [],
     createdAt: new Date().toISOString()
@@ -998,6 +1061,48 @@ function setupHabitModal() {
 
   if (saveHabitBtn) {
     saveHabitBtn.addEventListener("click", saveNewHabit);
+  }
+
+  habitDayButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const day = Number(button.dataset.day);
+
+      button.classList.toggle("selected");
+
+      if (button.classList.contains("selected")) {
+        selectedHabitDays.push(day);
+      } else {
+        selectedHabitDays = selectedHabitDays.filter((item) => item !== day);
+      }
+
+      if (habitDaysPicker) {
+        habitDaysPicker.classList.remove("invalid");
+      }
+
+      if (habitDaysFeedback) {
+        habitDaysFeedback.textContent = "";
+      }
+    });
+  });
+
+  if (selectAllDaysBtn) {
+    selectAllDaysBtn.addEventListener("click", () => {
+      if (isSameHabitDaySet(selectedHabitDays, ALL_HABIT_DAYS)) {
+        setSelectedHabitDays([]);
+      } else {
+        setSelectedHabitDays(ALL_HABIT_DAYS);
+      }
+    });
+  }
+
+  if (selectAlternateDaysBtn) {
+    selectAlternateDaysBtn.addEventListener("click", () => {
+      if (isSameHabitDaySet(selectedHabitDays, ALTERNATE_DAYS_A)) {
+        setSelectedHabitDays(ALTERNATE_DAYS_B);
+      } else {
+        setSelectedHabitDays(ALTERNATE_DAYS_A);
+      }
+    });
   }
 
   if (habitTitleInput) {

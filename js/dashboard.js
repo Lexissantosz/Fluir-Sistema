@@ -221,7 +221,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Deibson";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName} 👋`;
+    welcomeTitle.textContent = `Olá, ${displayName} `;
   }
 
   if (avatarBtn) {

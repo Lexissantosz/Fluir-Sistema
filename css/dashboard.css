@@ -1096,8 +1096,8 @@ body.dark .mini-progress {
 .timeline-item > div::before {
   content: "";
   position: absolute;
-  left: -6px;
-  top: 3px;
+  left: -8px;
+  top: 0px;
 
   width: 11px;
   height: 11px;

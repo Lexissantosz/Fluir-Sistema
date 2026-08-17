@@ -472,7 +472,6 @@
           <article class="side-card">
             <div class="side-card-title">
               <h4>Resumo do dia</h4>
-              <span>⌁</span>
             </div>
 
             <div class="stats-grid">
@@ -513,47 +512,32 @@
             </div>
           </article>
 
-          <!-- Lembretes -->
+                    <!-- Lembretes -->
           <article class="side-card">
             <div class="side-card-title">
               <h4>Próximos lembretes</h4>
-              <span>♡</span>
             </div>
 
-            <div class="reminder-list">
-              <div>
-                <time>10:00</time>
-                <p>
-                  <strong>Reunião com a equipe</strong>
-                  Amanhã
-                </p>
-              </div>
+            <div class="reminder-list" id="reminderList"></div>
 
-              <div>
-                <time>14:00</time>
-                <p>
-                  <strong>Enviar proposta</strong>
-                  26 de maio
-                </p>
-              </div>
+            <a href="tasks.html?filter=pending" class="side-link">Ver todos →</a>
+          </article>
 
-              <div>
-                <time>20:30</time>
-                <p>
-                  <strong>Alongamento</strong>
-                  Hoje
-                </p>
-              </div>
+          <!-- Atrasadas -->
+          <article class="side-card">
+            <div class="side-card-title">
+              <h4>Tarefas atrasadas</h4>
             </div>
 
-            <a href="#" class="side-link">Ver todos →</a>
+            <div class="reminder-list" id="overdueRemindersList"></div>
+
+            <a href="tasks.html?filter=overdue" class="side-link">Ver todos →</a>
           </article>
 
           <!-- Humor -->
           <article class="side-card">
             <div class="side-card-title">
               <h4>Humor recente</h4>
-              <span>☻</span>
             </div>
 
             <div class="mood-row">

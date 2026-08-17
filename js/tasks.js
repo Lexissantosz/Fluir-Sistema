@@ -415,8 +415,12 @@ function taskMatchesFilter(task) {
     return task.priority === "high";
   }
 
-  if (activeFilter === "today") {
+    if (activeFilter === "today") {
     return task.date === getTodayKey();
+  }
+
+  if (activeFilter === "overdue") {
+    return !task.completed && task.date && task.date < getTodayKey();
   }
 
   return true;
@@ -526,12 +530,13 @@ function updateTaskListSubtitle(visibleCount) {
     return;
   }
 
-  const subtitles = {
+    const subtitles = {
     all: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} no total.`,
     pending: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"}.`,
     completed: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} concluída${visibleCount === 1 ? "" : "s"}.`,
     high: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} de alta prioridade.`,
-    today: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} para hoje.`
+    today: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} para hoje.`,
+    overdue: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} atrasada${visibleCount === 1 ? "" : "s"}.`
   };
 
   taskListSubtitle.textContent = subtitles[activeFilter] || subtitles.all;
@@ -952,6 +957,23 @@ function clearCompletedTasks() {
 // 30. FILTROS
 // =====================================================
 
+function applyFilterFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const requestedFilter = params.get("filter");
+
+  const validFilters = ["all", "pending", "completed", "high", "today", "overdue"];
+
+  if (!requestedFilter || !validFilters.includes(requestedFilter)) {
+    return;
+  }
+
+  activeFilter = requestedFilter;
+
+  filterButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.filter === requestedFilter);
+  });
+}
+
 function setupFilters() {
   filterButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -1038,9 +1060,10 @@ function initTasksPage() {
   updateWelcomeArea();
   applySelectedModulesToMenu();
 
-  loadTasks();
+    loadTasks();
 
   setupFilters();
+  applyFilterFromURL();
   setupTaskModal();
   setupClearCompletedButton();
 
