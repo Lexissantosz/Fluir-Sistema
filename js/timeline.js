@@ -8,6 +8,13 @@
 // 1. ELEMENTOS PRINCIPAIS DA PÁGINA
 // =====================================================
 
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const body = document.body;
 
 const themeBtn = document.getElementById("themeBtn");
@@ -442,14 +449,14 @@ function getCurrentTimeLabel() {
 function getTodayKey() {
   const now = new Date();
 
-  return now.toISOString().split("T")[0];
+  return toLocalDateKey(now);
 }
 
 function getTomorrowKey() {
   const today = new Date(`${getTodayKey()}T00:00:00`);
   today.setDate(today.getDate() + 1);
 
-  return today.toISOString().split("T")[0];
+  return toLocalDateKey(today);
 }
 
 function formatReminderDateLabel(dateKey) {
@@ -617,6 +624,44 @@ function escapeHTML(value) {
 // =====================================================
 // 20. ADICIONAR EVENTO NA TELA
 // =====================================================
+// Antes, os eventos eram sempre inseridos no topo (prepend).
+// Isso só ficava correto se a ordem de inserção fosse sempre
+// igual à ordem cronológica real — o que não acontecia quando
+// eventos de módulos diferentes (tarefas, hábitos, água...)
+// eram salvos fora de ordem, ou quando a página era recarregada.
+// Agora, todo evento é inserido e a lista é reordenada pelo
+// horário real (campo <time>), então a ordem exibida sempre
+// bate com o horário do evento, não com a ordem de inserção.
+
+function parseTimeToMinutes(timeLabel) {
+  if (!timeLabel) {
+    return -1;
+  }
+
+  const [hours, minutes] = timeLabel.split(":").map(Number);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return -1;
+  }
+
+  return hours * 60 + minutes;
+}
+
+function sortEventListByTime(eventList) {
+  if (!eventList) {
+    return;
+  }
+
+  const items = Array.from(eventList.querySelectorAll(".event-item"));
+
+  items.sort((a, b) => {
+    const timeA = parseTimeToMinutes(a.querySelector("time")?.textContent.trim());
+    const timeB = parseTimeToMinutes(b.querySelector("time")?.textContent.trim());
+    return timeA - timeB;
+  });
+
+  items.forEach((item) => eventList.appendChild(item));
+}
 
 function addEventToTimeline(eventData) {
   const todayEventList = document.querySelector(".timeline-day .event-list");
@@ -627,7 +672,8 @@ function addEventToTimeline(eventData) {
 
   const eventElement = createEventElement(eventData);
 
-  todayEventList.prepend(eventElement);
+  todayEventList.appendChild(eventElement);
+  sortEventListByTime(todayEventList);
 }
 
 

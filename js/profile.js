@@ -8,6 +8,13 @@
 // 1. ELEMENTOS PRINCIPAIS
 // =====================================================
 
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const body = document.body;
 
 const themeBtn = document.getElementById("themeBtn");
@@ -273,7 +280,7 @@ function renderProfileStats() {
   }
 
   if (completedHabitsWeek) {
-    const todayKey = new Date().toISOString().split("T")[0];
+    const todayKey = toLocalDateKey(new Date());
 
     const completedToday = habits.filter((habit) => {
       return Array.isArray(habit.completedDates) && habit.completedDates.includes(todayKey);
@@ -296,7 +303,7 @@ function renderProfileStats() {
   }
 
   if (waterToday) {
-    const todayKey = new Date().toISOString().split("T")[0];
+    const todayKey = toLocalDateKey(new Date());
     const todayValue = waterData.logs?.[todayKey] || 0;
 
     waterToday.textContent = todayValue;

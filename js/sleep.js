@@ -8,6 +8,13 @@
 // 1. ELEMENTOS PRINCIPAIS
 // =====================================================
 
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const body = document.body;
 
 const themeBtn = document.getElementById("themeBtn");
@@ -96,7 +103,7 @@ let sleepLogs = [];
 // =====================================================
 
 function getTodayKey() {
-  return new Date().toISOString().split("T")[0];
+  return toLocalDateKey(new Date());
 }
 
 function getCurrentTimeLabel() {
@@ -118,7 +125,7 @@ function getCurrentWeekKeys() {
   for (let index = 0; index < 7; index++) {
     const date = new Date(sunday);
     date.setDate(sunday.getDate() + index);
-    week.push(date.toISOString().split("T")[0]);
+    week.push(toLocalDateKey(date));
   }
 
   return week;

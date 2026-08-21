@@ -8,6 +8,13 @@
 // 1. ELEMENTOS PRINCIPAIS
 // =====================================================
 
+function toLocalDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 const body = document.body;
 
 const welcomeTitle = document.getElementById("welcomeTitle");
@@ -575,7 +582,7 @@ if (achievementModal) {
 // =====================================================
 
 function getTodayKey() {
-  return new Date().toISOString().split("T")[0];
+  return toLocalDateKey(new Date());
 }
 
 function escapeHTML(value) {
