@@ -152,28 +152,6 @@
     <main class="settings-content">
 
       <!-- =====================================================
-           TOPO DA PÁGINA
-      ====================================================== -->
-      <header class="settings-top">
-
-        <div class="top-user">
-          <h2 id="topGreeting">Olá, Usuário</h2>
-          <p>Um dia de cada vez, no seu ritmo.</p>
-        </div>
-
-        <div class="top-actions">
-          <!-- Botão apenas visual de status do tema atual -->
-          <button class="round-action" id="themeStatusBtn" type="button" title="Tema atual">
-            ◐
-          </button>
-
-          <button class="round-action" type="button" title="Notificações">
-            ♧
-          </button>
-        </div>
-      </header>
-
-      <!-- =====================================================
            CABEÇALHO DA ÁREA DE CONFIGURAÇÕES
       ====================================================== -->
       <section class="settings-heading">
@@ -190,11 +168,6 @@
             Personalize sua experiência e gerencie sua rotina do seu jeito.
           </p>
         </div>
-
-        <a href="profile.html" class="account-button">
-          <span>♙</span>
-          Conta pessoal
-        </a>
       </section>
 
       <!-- =====================================================
@@ -202,9 +175,8 @@
            Cada botão mostra uma categoria visualmente
       ====================================================== -->
       <section class="settings-tabs" aria-label="Categorias de configurações">
-<button class="tab-btn active" data-tab="profile" type="button">Perfil</button>
-<button class="tab-btn" data-tab="setup" type="button">Setup</button>
-<button class="tab-btn" data-tab="appearance" type="button">Aparência</button>
+        <button class="tab-btn" data-tab="setup" type="button">Setup</button>
+        <button class="tab-btn" data-tab="appearance" type="button">Aparência</button>
         <button class="tab-btn" data-tab="notifications" type="button">Notificações</button>
         <button class="tab-btn" data-tab="privacy" type="button">Privacidade</button>
         <button class="tab-btn" data-tab="integrations" type="button">Integrações</button>
@@ -216,35 +188,9 @@
       ====================================================== -->
       <section class="settings-grid">
 
-        <!-- =====================================================
-             CARD: PERFIL
-        ====================================================== -->
-        <article class="settings-card" data-card="profile">
-          <div class="card-title">
-            <span>♙</span>
-            <h3>Perfil</h3>
-          </div>
-
-          <div class="profile-preview">
-            <div class="profile-avatar" id="profileAvatar">
-              D
-            </div>
-
-            <div class="profile-info">
-              <h4 id="profileName">Usuário</h4>
-              <p id="profileEmail">usuario@email.com</p>
-              <small>Membro desde 2024</small>
-            </div>
-          </div>
-
-          <a href="profile.html" class="outline-button">
-            ✎ Editar perfil
-          </a>
-        </article>
-
-                <!-- =====================================================
-             CARD: CONFIGURAÇÃO RÁPIDA
-        ====================================================== -->
+      <!-- =====================================================
+           CARD: CONFIGURAÇÃO RÁPIDA
+      ====================================================== -->
         <article class="settings-card quick-setup-card" data-card="setup">
           <div class="card-title">
             <span>✦</span>

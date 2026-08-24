@@ -178,16 +178,84 @@
         </div>
 
         <div class="header-actions">
-          
 
-          <button class="icon-btn" type="button" aria-label="Notificações">
-            ♡
-          </button>
+  <div class="notif-wrapper">
+    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </button>
 
-          <button class="avatar-btn" type="button" id="avatarBtn">
-            D
-          </button>
+    <div class="notif-dropdown" id="notifDropdown">
+      <div class="notif-dropdown-header">
+        <span>Notificações</span>
+        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="notif-list">
+        <div class="notif-row">
+          <span class="notif-row-icon notif-row-icon-info">i</span>
+          <div class="notif-row-content">
+            <p class="notif-row-title">Bem-vindo ao Fluir!</p>
+            <p class="notif-row-desc">Explore seus módulos na barra lateral.</p>
+            <span class="notif-row-time">há 2 horas</span>
+          </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-wrapper">
+    <button class="avatar-btn" type="button" id="avatarBtn">
+      D
+    </button>
+
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="profile-dropdown-top">
+        <div class="profile-dropdown-photo" id="headerProfilePhoto">
+          <span id="headerProfileInitial">D</span>
+          <img id="headerProfileImage" alt="Foto de perfil">
+        </div>
+        <div class="profile-dropdown-top-text">
+          <strong id="headerProfileName">Deibson</strong>
+          <span id="headerProfileEmail" class="profile-dropdown-email">usuario@email.com</span>
+        </div>
+      </div>
+
+      <div class="profile-dropdown-divider"></div>
+
+      <div class="profile-dropdown-list">
+        <label class="profile-dropdown-row" for="headerPhotoInput">
+          <span class="profile-dropdown-row-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </span>
+          <span>Trocar foto</span>
+        </label>
+        <input type="file" id="headerPhotoInput" accept="image/*" hidden>
+
+        <a href="settings.html" class="profile-dropdown-row">
+          <span class="profile-dropdown-row-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
+            </svg>
+          </span>
+          <span>Ir para configurações</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
       </header>
 
       <!-- Título -->

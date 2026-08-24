@@ -93,7 +93,7 @@ function protectDashboardAccess() {
   const completed = isOnboardingCompleted();
 
   if (!completed) {
-    window.location.href = "onboarding.html";
+    window.location.href = "setup.html";
     return false;
   }
 

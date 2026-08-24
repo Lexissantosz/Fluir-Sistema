@@ -44,6 +44,12 @@ const categoryList = document.getElementById("categoryList");
 const taskMiniTimeline = document.getElementById("taskMiniTimeline");
 
 const filterButtons = document.querySelectorAll(".filter-btn");
+const periodBtn = document.getElementById("periodBtn");
+const periodBtnLabel = document.getElementById("periodBtnLabel");
+const periodDropdown = document.getElementById("periodDropdown");
+const periodOptions = document.querySelectorAll(".period-option");
+
+let activePeriod = "today";
 
 const newTaskBtn = document.getElementById("newTaskBtn");
 const taskModal = document.getElementById("taskModal");
@@ -200,12 +206,57 @@ function getTodayKey() {
 // =====================================================
 
 function getCurrentTimeLabel() {
+  
   const now = new Date();
 
   return now.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit"
   });
+}
+
+function getCurrentWeekKeys() {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - dayOfWeek);
+
+  const week = [];
+
+  for (let index = 0; index < 7; index++) {
+    const date = new Date(sunday);
+    date.setDate(sunday.getDate() + index);
+    week.push(toLocalDateKey(date));
+  }
+
+  return week;
+}
+
+function taskMatchesPeriod(task) {
+  if (!task.date) {
+    return true;
+  }
+
+  if (activePeriod === "today") {
+    return task.date === getTodayKey();
+  }
+
+  if (activePeriod === "week") {
+    return getCurrentWeekKeys().includes(task.date);
+  }
+
+  if (activePeriod === "month") {
+    const now = new Date();
+    const taskDate = new Date(`${task.date}T00:00:00`);
+
+    return (
+      taskDate.getFullYear() === now.getFullYear() &&
+      taskDate.getMonth() === now.getMonth()
+    );
+  }
+
+  return true;
 }
 
 
@@ -406,6 +457,10 @@ function escapeHTML(value) {
 // =====================================================
 
 function taskMatchesFilter(task) {
+  if (!taskMatchesPeriod(task)) {
+    return false;
+  }
+
   if (activeFilter === "all") {
     return true;
   }
@@ -997,6 +1052,40 @@ function setupFilters() {
   });
 }
 
+function setupPeriodSelector() {
+  if (!periodBtn || !periodDropdown) {
+    return;
+  }
+
+  periodBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    periodDropdown.classList.toggle("open");
+  });
+
+  periodOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      activePeriod = option.dataset.period;
+
+      periodOptions.forEach((item) => {
+        item.classList.toggle("active", item === option);
+      });
+
+      if (periodBtnLabel) {
+        periodBtnLabel.textContent = option.textContent;
+      }
+
+      periodDropdown.classList.remove("open");
+      renderTasks();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!periodDropdown.contains(event.target) && event.target !== periodBtn) {
+      periodDropdown.classList.remove("open");
+    }
+  });
+}
+
 
 // =====================================================
 // 31. CONFIGURAR EVENTOS DO MODAL
@@ -1069,7 +1158,8 @@ function initTasksPage() {
 
     loadTasks();
 
-  setupFilters();
+    setupFilters();
+  setupPeriodSelector();
   applyFilterFromURL();
   setupTaskModal();
   setupClearCompletedButton();

@@ -240,7 +240,7 @@ if (loginForm) {
       setTimeout(function () {
   const destination = hasCompletedOnboarding()
     ? "dashboard.html"
-    : "onboarding.html";
+    : "setup.html";
 
   window.location.href = destination;
 }, 700);

@@ -1376,12 +1376,76 @@ function finishSetup() {
   collectSelectedModules();
   collectPreferences();
 
+  setupData.onboardingConcluido = true;
+  setupData.atualizadoEm = new Date().toISOString();
+
   localStorage.setItem("fluir-setup", JSON.stringify(setupData));
+
+  seedExampleContent();
 
   clearFormMessage();
   openSuccessModal();
 
   window.location.href = "dashboard.html";
+}
+
+
+// =====================================================
+// 31.1 CRIAR EXEMPLOS PARA ENSINAR A USAR O SISTEMA
+// Só cria se o módulo correspondente foi selecionado,
+// e só na primeira vez (não duplica se já existir algo).
+// =====================================================
+
+function getTodayKeyForSeed() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function seedExampleContent() {
+  if (setupData.modules.tasks) {
+    const existingTasks = JSON.parse(localStorage.getItem("fluir-tasks") || "[]");
+
+    if (existingTasks.length === 0) {
+      const exampleTask = {
+        id: Date.now(),
+        title: "Toque aqui para concluir sua primeira tarefa",
+        description: "Essa é só um exemplo — pode apagar quando quiser.",
+        category: "Pessoal",
+        priority: "medium",
+        time: "",
+        completed: false,
+        date: getTodayKeyForSeed(),
+        createdAt: new Date().toISOString()
+      };
+
+      existingTasks.unshift(exampleTask);
+      localStorage.setItem("fluir-tasks", JSON.stringify(existingTasks));
+    }
+  }
+
+  if (setupData.modules.habits) {
+    const existingHabits = JSON.parse(localStorage.getItem("fluir-habits") || "[]");
+
+    if (existingHabits.length === 0) {
+      const exampleHabit = {
+        id: Date.now() + 1,
+        title: "Beber um copo de água",
+        description: "Marque quando completar — esse hábito é só um exemplo.",
+        category: "Saúde",
+        weeklyGoal: 7,
+        weekDays: [0, 1, 2, 3, 4, 5, 6],
+        streak: 0,
+        completedDates: [],
+        createdAt: new Date().toISOString()
+      };
+
+      existingHabits.unshift(exampleHabit);
+      localStorage.setItem("fluir-habits", JSON.stringify(existingHabits));
+    }
+  }
 }
 
 
