@@ -531,6 +531,29 @@ body.dark .focus-bar {
   box-shadow: var(--shadow-soft);
 }
 
+.avatar-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.avatar-btn.has-image span {
+  display: none;
+}
+
+.avatar-btn.has-image img {
+  display: block;
+}
+
 .notif-wrapper,
 .profile-wrapper {
   position: relative;

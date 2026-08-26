@@ -23,6 +23,17 @@ const welcomeTitle = document.getElementById("welcomeTitle");
 const welcomeSubtitle = document.getElementById("welcomeSubtitle");
 const avatarBtn = document.getElementById("avatarBtn");
 
+const notifBtn = document.getElementById("notifBtn");
+const notifDropdown = document.getElementById("notifDropdown");
+
+const profileDropdown = document.getElementById("profileDropdown");
+const headerProfilePhoto = document.getElementById("headerProfilePhoto");
+const headerProfileInitial = document.getElementById("headerProfileInitial");
+const headerProfileImage = document.getElementById("headerProfileImage");
+const headerProfileName = document.getElementById("headerProfileName");
+const headerProfileEmail = document.getElementById("headerProfileEmail");
+const headerPhotoInput = document.getElementById("headerPhotoInput");
+
 const moduleLinks = document.querySelectorAll(".module-link");
 
 const newCycleBtn = document.getElementById("newCycleBtn");
@@ -219,7 +230,10 @@ function updateWelcomeArea() {
   }
 
   if (avatarBtn) {
-    avatarBtn.textContent = getInitial(displayName);
+    const avatarBtnInitialEl = document.getElementById("avatarBtnInitial");
+if (avatarBtnInitialEl) {
+  avatarBtnInitialEl.textContent = getInitial(displayName);
+}
   }
 
   if (welcomeSubtitle) {
@@ -847,3 +861,121 @@ function initCyclePage() {
 }
 
 initCyclePage();
+
+// =====================================================
+// 21. DROPDOWNS DO CABEÇALHO (NOTIFICAÇÕES E PERFIL)
+// =====================================================
+
+function closeAllHeaderDropdowns() {
+  if (notifDropdown) notifDropdown.classList.remove("open");
+  if (profileDropdown) profileDropdown.classList.remove("open");
+}
+
+if (notifBtn && notifDropdown) {
+  notifBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const willOpen = !notifDropdown.classList.contains("open");
+    closeAllHeaderDropdowns();
+    if (willOpen) notifDropdown.classList.add("open");
+  });
+}
+
+if (avatarBtn && profileDropdown) {
+  avatarBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const willOpen = !profileDropdown.classList.contains("open");
+    closeAllHeaderDropdowns();
+    if (willOpen) profileDropdown.classList.add("open");
+  });
+}
+
+document.addEventListener("click", () => {
+  closeAllHeaderDropdowns();
+});
+
+if (profileDropdown) {
+  profileDropdown.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+}
+
+if (notifDropdown) {
+  notifDropdown.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+}
+
+
+// =====================================================
+// 22. FOTO E NOME NO DROPDOWN DE PERFIL
+// =====================================================
+
+function getHeaderProfile() {
+  try {
+    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveHeaderProfile(profile) {
+  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+}
+
+function renderHeaderProfileDropdown() {
+  const nickname = setupData.user?.nickname?.trim();
+  const name = setupData.user?.name?.trim();
+  const displayName = nickname || name || "Deibson";
+
+  const profile = getHeaderProfile();
+
+  if (headerProfileName) {
+    headerProfileName.textContent = displayName;
+  }
+
+  if (headerProfileEmail) {
+    headerProfileEmail.textContent = setupData.user?.email || "usuario@email.com";
+  }
+
+  if (headerProfileInitial) {
+    headerProfileInitial.textContent = getInitial(displayName);
+  }
+
+  if (profile.photo && headerProfileImage && headerProfilePhoto) {
+    headerProfileImage.src = profile.photo;
+    headerProfilePhoto.classList.add("has-image");
+  } else if (headerProfilePhoto) {
+    headerProfilePhoto.classList.remove("has-image");
+  }
+  
+  const avatarBtnImage = document.getElementById("avatarBtnImage");
+
+  if (profile.photo && avatarBtnImage && avatarBtn) {
+    avatarBtnImage.src = profile.photo;
+    avatarBtn.classList.add("has-image");
+  } else if (avatarBtn) {
+    avatarBtn.classList.remove("has-image");
+  }
+}
+
+if (headerPhotoInput) {
+  headerPhotoInput.addEventListener("change", () => {
+    const file = headerPhotoInput.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const profile = getHeaderProfile();
+      profile.photo = reader.result;
+
+      saveHeaderProfile(profile);
+      renderHeaderProfileDropdown();
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+renderHeaderProfileDropdown();

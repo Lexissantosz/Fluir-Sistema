@@ -613,6 +613,29 @@ body.dark .focus-bar {
     border-color 0.2s ease;
 }
 
+.avatar-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.avatar-btn.has-image span {
+  display: none;
+}
+
+.avatar-btn.has-image img {
+  display: block;
+}
+
 .icon-btn:hover,
 .avatar-btn:hover {
   transform: translateY(-1px);

@@ -22,6 +22,7 @@ const themeBtn = document.getElementById("themeBtn");
 const welcomeTitle = document.getElementById("welcomeTitle");
 const welcomeSubtitle = document.getElementById("welcomeSubtitle");
 const avatarBtn = document.getElementById("avatarBtn");
+
 const notifBtn = document.getElementById("notifBtn");
 const notifDropdown = document.getElementById("notifDropdown");
 
@@ -156,7 +157,10 @@ function updateWelcomeArea() {
   }
 
   if (avatarBtn) {
-    avatarBtn.textContent = getInitial(displayName);
+    const avatarBtnInitialEl = document.getElementById("avatarBtnInitial");
+if (avatarBtnInitialEl) {
+  avatarBtnInitialEl.textContent = getInitial(displayName);
+}
   }
 
   if (welcomeSubtitle) {
@@ -985,6 +989,15 @@ function renderHeaderProfileDropdown() {
     headerProfilePhoto.classList.add("has-image");
   } else if (headerProfilePhoto) {
     headerProfilePhoto.classList.remove("has-image");
+  }
+  
+  const avatarBtnImage = document.getElementById("avatarBtnImage");
+
+  if (profile.photo && avatarBtnImage && avatarBtn) {
+    avatarBtnImage.src = profile.photo;
+    avatarBtn.classList.add("has-image");
+  } else if (avatarBtn) {
+    avatarBtn.classList.remove("has-image");
   }
 }
 
