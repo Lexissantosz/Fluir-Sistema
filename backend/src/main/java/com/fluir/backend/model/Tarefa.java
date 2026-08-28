@@ -24,6 +24,18 @@ public class Tarefa {
     @Column(length = 100)
     private String categoria;
 
+    @Column(length = 500)
+    private String descricao;
+
+    @Column(length = 20)
+    private String prioridade;
+
+    @Column(length = 10)
+    private String horario;
+
+    @Column(name = "data_tarefa")
+    private java.time.LocalDate dataTarefa;
+
     @Column(name = "tempo_estimado_minutos")
     private Integer tempoEstimadoMinutos;
 
@@ -104,5 +116,37 @@ public class Tarefa {
 
     public void setConcluida(Boolean concluida) {
         this.concluida = concluida;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getPrioridade() {
+       return prioridade;
+    }
+
+    public void setPrioridade(String prioridade) {
+        this.prioridade = prioridade;
+    }
+
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+    }
+
+    public java.time.LocalDate getDataTarefa() {
+        return dataTarefa;
+    }
+
+    public void setDataTarefa(java.time.LocalDate dataTarefa) {
+     this.dataTarefa = dataTarefa;
     }
 }
