@@ -2,6 +2,7 @@ package com.fluir.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "usuarios")
@@ -57,6 +58,7 @@ public class Usuario {
     }
 
 
+    @JsonIgnore
     public String getSenha() {
         return senha;
     }
