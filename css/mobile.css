@@ -10,6 +10,22 @@
 }
 
 @media (max-width: 760px) {
+  /* Dashboard mobile — tarefas de hoje mais compactas */
+body.mobile-ui-ready .dashboard-main .task-list {
+  gap: 6px !important;
+}
+
+body.mobile-ui-ready .dashboard-main .task-item {
+  min-height: 46px !important;
+  padding: 8px 10px !important;
+  gap: 8px !important;
+}
+
+body.mobile-ui-ready .dashboard-main .task-item small,
+body.mobile-ui-ready .dashboard-main .task-item time {
+  margin-top: 2px;
+  line-height: 1.25;
+}
   html {
     min-width: 0;
     scroll-behavior: smooth;
