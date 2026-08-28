@@ -1,19 +1,18 @@
 services:
   db:
-    image: mysql:8
+    image: postgres:16
     container_name: fluir-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: fluir
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: fluir
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3307:3306"
+      - "5433:5432"
     volumes:
-      - fluir_db_data:/var/lib/mysql
+      - fluir_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 5s
       timeout: 5s
       retries: 10
