@@ -131,6 +131,18 @@ function escapeHTML(value) {
     .replaceAll("'", "&#039;");
 }
 
+function isValidHttpUrl(value) {
+  try {
+    const url = new URL(value);
+
+    return (
+      (url.protocol === "http:" || url.protocol === "https:") &&
+      Boolean(url.hostname)
+    );
+  } catch (error) {
+    return false;
+  }
+}
 
 // =====================================================
 // 5. LER SETUP SALVO
@@ -703,6 +715,15 @@ function saveAttachment() {
     showAttachmentFormMessage("Digite um link, nome de arquivo ou referência.");
     return;
   }
+
+  if (type === "link" && !isValidHttpUrl(reference)) {
+  attachmentReferenceInput.classList.add("invalid");
+  attachmentReferenceInput.focus();
+  showAttachmentFormMessage(
+    "Digite um link válido começando com http:// ou https://."
+  );
+  return;
+}
 
   const newAttachment = {
     id: Date.now(),
