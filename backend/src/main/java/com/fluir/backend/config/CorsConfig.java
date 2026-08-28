@@ -19,6 +19,7 @@ public class CorsConfig {
                                 "http://localhost:5500",
                                 "http://localhost:5173",
                                 "https://lexissantosz.github.io"
+                                "https://fluir-sistema.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
