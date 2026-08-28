@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PreferenciasAguaRepository extends JpaRepository<PreferenciasAgua, Integer> {
 
-    Optional<PreferenciasAgua> findByUsuarioId(Integer usuarioId);
+    Optional<PreferenciasAgua> findByUsuario_Id(Integer usuarioId);
 }

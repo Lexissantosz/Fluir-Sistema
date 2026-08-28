@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PerfilUsuarioRepository extends JpaRepository<PerfilUsuario, Integer> {
 
-    Optional<PerfilUsuario> findByUsuarioId(Integer usuarioId);
+    Optional<PerfilUsuario> findByUsuario_Id(Integer usuarioId);
 }

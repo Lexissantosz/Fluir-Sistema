@@ -42,7 +42,7 @@ public class OnboardingService {
             throw new RuntimeException("Usuário não encontrado");
         }
 
-        PerfilUsuario perfil = perfilUsuarioRepository.findByUsuarioId(request.getUsuarioId())
+        PerfilUsuario perfil = perfilUsuarioRepository.findByUsuario_Id(request.getUsuarioId())
                 .orElse(new PerfilUsuario());
 
         perfil.setUsuarioId(request.getUsuarioId());
@@ -69,7 +69,7 @@ public class OnboardingService {
     }
 
     public OnboardingResponse buscarPorUsuario(Integer usuarioId) {
-        PerfilUsuario perfil = perfilUsuarioRepository.findByUsuarioId(usuarioId)
+        PerfilUsuario perfil = perfilUsuarioRepository.findByUsuario_Id(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Onboarding não encontrado para este usuário"));
 
         OnboardingResponse response = new OnboardingResponse();
@@ -84,10 +84,10 @@ public class OnboardingService {
         response.setEnergiaAtual(perfil.getEnergiaAtual());
         response.setOnboardingConcluido(perfil.getOnboardingConcluido());
 
-        modulosUsuarioRepository.findByUsuarioId(usuarioId)
+        modulosUsuarioRepository.findByUsuario_Id(usuarioId)
                 .ifPresent(modulos -> response.setModulos(converterModulos(modulos)));
 
-        preferenciasAguaRepository.findByUsuarioId(usuarioId)
+        preferenciasAguaRepository.findByUsuario_Id(usuarioId)
                 .ifPresent(agua -> response.setAgua(converterAgua(agua)));
 
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
@@ -106,7 +106,7 @@ public class OnboardingService {
             return;
         }
 
-        ModulosUsuario modulos = modulosUsuarioRepository.findByUsuarioId(request.getUsuarioId())
+        ModulosUsuario modulos = modulosUsuarioRepository.findByUsuario_Id(request.getUsuarioId())
                 .orElse(new ModulosUsuario());
 
         modulos.setUsuarioId(request.getUsuarioId());
@@ -130,7 +130,7 @@ public class OnboardingService {
             return;
         }
 
-        PreferenciasAgua agua = preferenciasAguaRepository.findByUsuarioId(request.getUsuarioId())
+        PreferenciasAgua agua = preferenciasAguaRepository.findByUsuario_Id(request.getUsuarioId())
                 .orElse(new PreferenciasAgua());
 
         agua.setUsuarioId(request.getUsuarioId());

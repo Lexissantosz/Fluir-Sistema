@@ -10,8 +10,9 @@ public class ModulosUsuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "usuario_id", nullable = false, unique = true)
-    private Integer usuarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    private Usuario usuario;
 
     private Boolean timeline = true;
     private Boolean tasks = false;
@@ -34,12 +35,26 @@ public class ModulosUsuario {
         return id;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public Integer getUsuarioId() {
-        return usuarioId;
+        return usuario != null ? usuario.getId() : null;
     }
 
     public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
+        if (usuarioId == null) {
+            this.usuario = null;
+        } else {
+            Usuario u = new Usuario();
+            u.setId(usuarioId);
+            this.usuario = u;
+        }
     }
 
     public Boolean getTimeline() {

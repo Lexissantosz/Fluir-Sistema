@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ModulosUsuarioRepository extends JpaRepository<ModulosUsuario, Integer> {
 
-    Optional<ModulosUsuario> findByUsuarioId(Integer usuarioId);
+    Optional<ModulosUsuario> findByUsuario_Id(Integer usuarioId);
 }
