@@ -375,29 +375,58 @@ function applySelectedModulesToMenu() {
 
 
 // =====================================================
-// 11. LOCALSTORAGE — TAREFAS
+// =====================================================
+// 11. API — TAREFAS
 // =====================================================
 
-function loadTasks() {
-  const savedTasks = localStorage.getItem("fluir-tasks");
+const TASKS_API_URL = "https://fluir-sistema.onrender.com/api/tarefas";
 
-  if (!savedTasks) {
-    tasks = [...defaultTasks];
-    saveTasks();
+function getCurrentUser() {
+  try {
+    return JSON.parse(sessionStorage.getItem("fluir-user")) || null;
+  } catch (error) {
+    console.error("Erro ao ler usuário logado:", error);
+    return null;
+  }
+}
+
+function mapTaskFromApi(task) {
+  return {
+    id: task.id,
+    title: task.titulo,
+    description: task.descricao || "",
+    category: task.categoria || "Pessoal",
+    priority: task.prioridade || "low",
+    time: task.horario || "",
+    completed: Boolean(task.concluida),
+    date: task.dataTarefa || "",
+    createdAt: task.criadoEm || new Date().toISOString()
+  };
+}
+
+async function loadTasks() {
+  const user = getCurrentUser();
+
+  if (!user?.id) {
+    console.error("Usuário não encontrado na sessão.");
+    tasks = [];
     return;
   }
 
   try {
-    tasks = JSON.parse(savedTasks);
-  } catch (error) {
-    console.warn("Erro ao ler tarefas salvas:", error);
-    tasks = [...defaultTasks];
-    saveTasks();
-  }
-}
+    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`);
 
-function saveTasks() {
-  localStorage.setItem("fluir-tasks", JSON.stringify(tasks));
+    if (!response.ok) {
+      throw new Error("Não foi possível carregar as tarefas.");
+    }
+
+    const data = await response.json();
+
+    tasks = data.map(mapTaskFromApi);
+  } catch (error) {
+    console.error("Erro ao carregar tarefas:", error);
+    tasks = [];
+  }
 }
 
 
@@ -916,7 +945,7 @@ function clearTaskModalFields() {
 // 26. CRIAR NOVA TAREFA
 // =====================================================
 
-function saveNewTask() {
+async function saveNewTask() {
   clearTaskFormMessage();
   clearTaskInvalidFields();
 
@@ -936,56 +965,108 @@ function saveNewTask() {
     return;
   }
 
-  const newTask = {
-    id: Date.now(),
-    title,
-    description,
-    category,
-    priority,
-    time,
-    completed: false,
-    date: getTodayKey(),
-    createdAt: new Date().toISOString()
-  };
+  const user = getCurrentUser();
 
-  tasks.unshift(newTask);
-  saveTasks();
+  if (!user?.id) {
+    showTaskFormMessage("Sessão inválida. Faça login novamente.");
+    return;
+  }
 
-  createTaskTimelineEvent("Tarefa criada", title);
+  try {
+    if (saveTaskBtn) {
+      saveTaskBtn.disabled = true;
+      saveTaskBtn.textContent = "Salvando...";
+    }
 
-  renderTasks();
+    const response = await fetch(TASKS_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        usuarioId: user.id,
+        titulo: title,
+        categoria: category,
+        descricao: description,
+        prioridade: priority,
+        horario: time,
+        dataTarefa: getTodayKey(),
+        concluida: false
+      })
+    });
 
-  showTaskFormMessage("Tarefa salva com sucesso.", "success");
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
 
-  setTimeout(() => {
-    closeTaskModal();
-    clearTaskModalFields();
-  }, 450);
+    const savedTask = await response.json();
+
+    tasks.unshift(mapTaskFromApi(savedTask));
+
+    createTaskTimelineEvent("Tarefa criada", title);
+
+    renderTasks();
+
+    showTaskFormMessage("Tarefa salva com sucesso.", "success");
+
+    setTimeout(() => {
+      closeTaskModal();
+      clearTaskModalFields();
+    }, 450);
+
+  } catch (error) {
+    console.error("Erro ao salvar tarefa:", error);
+    showTaskFormMessage("Não foi possível salvar a tarefa.");
+  } finally {
+    if (saveTaskBtn) {
+      saveTaskBtn.disabled = false;
+      saveTaskBtn.textContent = "Salvar tarefa";
+    }
+  }
 }
-
 
 // =====================================================
 // 27. MARCAR / DESMARCAR TAREFA CONCLUÍDA
 // =====================================================
 
-function toggleTaskCompleted(taskId) {
+async function toggleTaskCompleted(taskId) {
   const task = tasks.find((item) => item.id === taskId);
 
   if (!task) {
     return;
   }
 
-  task.completed = !task.completed;
+  const newStatus = !task.completed;
 
-  saveTasks();
+  try {
+    const response = await fetch(
+      `${TASKS_API_URL}/${taskId}/status?concluida=${newStatus}`,
+      {
+        method: "PUT"
+      }
+    );
 
-  if (task.completed) {
-    createTaskTimelineEvent("Tarefa concluída", task.title);
-  } else {
-    createTaskTimelineEvent("Tarefa reaberta", task.title);
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar tarefa.");
+    }
+
+    task.completed = newStatus;
+
+    if (task.completed) {
+      createTaskTimelineEvent("Tarefa concluída", task.title);
+    } else {
+      createTaskTimelineEvent("Tarefa reaberta", task.title);
+    }
+
+    renderTasks();
+
+  } catch (error) {
+    console.error("Erro ao atualizar tarefa:", error);
+
+    alert("Não foi possível atualizar a tarefa.");
+
+    renderTasks();
   }
-
-  renderTasks();
 }
 
 
@@ -993,18 +1074,39 @@ function toggleTaskCompleted(taskId) {
 // 28. EXCLUIR TAREFA
 // =====================================================
 
-function deleteTask(taskId) {
+async function deleteTask(taskId) {
   const task = tasks.find((item) => item.id === taskId);
 
-  tasks = tasks.filter((item) => item.id !== taskId);
-
-  saveTasks();
-
-  if (task) {
-    createTaskTimelineEvent("Tarefa removida", task.title);
+  if (!task) {
+    return;
   }
 
-  renderTasks();
+  try {
+    const response = await fetch(
+      `${TASKS_API_URL}/${taskId}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Erro ao excluir tarefa.");
+    }
+
+    tasks = tasks.filter((item) => item.id !== taskId);
+
+    createTaskTimelineEvent(
+      "Tarefa removida",
+      task.title
+    );
+
+    renderTasks();
+
+  } catch (error) {
+    console.error("Erro ao excluir tarefa:", error);
+
+    alert("Não foi possível excluir a tarefa.");
+  }
 }
 
 
@@ -1012,20 +1114,61 @@ function deleteTask(taskId) {
 // 29. LIMPAR TAREFAS CONCLUÍDAS
 // =====================================================
 
-function clearCompletedTasks() {
-  const completedCount = tasks.filter((task) => task.completed).length;
+async function clearCompletedTasks() {
+  const completed = tasks.filter((task) => task.completed);
 
-  if (completedCount === 0) {
+  if (completed.length === 0) {
     return;
   }
 
-  tasks = tasks.filter((task) => !task.completed);
+  try {
+    const responses = await Promise.all(
+      completed.map((task) =>
+        fetch(`${TASKS_API_URL}/${task.id}`, {
+          method: "DELETE"
+        })
+      )
+    );
 
-  saveTasks();
+    const hasError = responses.some(
+      (response) => !response.ok
+    );
 
-  createTaskTimelineEvent("Tarefas concluídas limpas", `${completedCount} tarefa${completedCount === 1 ? "" : "s"} removida${completedCount === 1 ? "" : "s"} da lista.`);
+    if (hasError) {
+      throw new Error(
+        "Uma ou mais tarefas não puderam ser excluídas."
+      );
+    }
 
-  renderTasks();
+    tasks = tasks.filter(
+      (task) => !task.completed
+    );
+
+    createTaskTimelineEvent(
+      "Tarefas concluídas limpas",
+      `${completed.length} tarefa${
+        completed.length === 1 ? "" : "s"
+      } removida${
+        completed.length === 1 ? "" : "s"
+      } da lista.`
+    );
+
+    renderTasks();
+
+  } catch (error) {
+    console.error(
+      "Erro ao limpar tarefas concluídas:",
+      error
+    );
+
+    await loadTasks();
+
+    renderTasks();
+
+    alert(
+      "Não foi possível limpar todas as tarefas concluídas."
+    );
+  }
 }
 
 
@@ -1037,23 +1180,37 @@ function applyFilterFromURL() {
   const params = new URLSearchParams(window.location.search);
   const requestedFilter = params.get("filter");
 
-  const validFilters = ["all", "pending", "completed", "high", "today", "overdue"];
+  const validFilters = [
+    "all",
+    "pending",
+    "completed",
+    "high",
+    "today",
+    "overdue"
+  ];
 
-  if (!requestedFilter || !validFilters.includes(requestedFilter)) {
+  if (
+    !requestedFilter ||
+    !validFilters.includes(requestedFilter)
+  ) {
     return;
   }
 
   activeFilter = requestedFilter;
 
   filterButtons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.filter === requestedFilter);
+    button.classList.toggle(
+      "active",
+      button.dataset.filter === requestedFilter
+    );
   });
 }
 
 function setupFilters() {
   filterButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      activeFilter = button.dataset.filter || "all";
+      activeFilter =
+        button.dataset.filter || "all";
 
       filterButtons.forEach((item) => {
         item.classList.remove("active");
@@ -1073,6 +1230,7 @@ function setupPeriodSelector() {
 
   periodBtn.addEventListener("click", (event) => {
     event.stopPropagation();
+
     periodDropdown.classList.toggle("open");
   });
 
@@ -1081,20 +1239,28 @@ function setupPeriodSelector() {
       activePeriod = option.dataset.period;
 
       periodOptions.forEach((item) => {
-        item.classList.toggle("active", item === option);
+        item.classList.toggle(
+          "active",
+          item === option
+        );
       });
 
       if (periodBtnLabel) {
-        periodBtnLabel.textContent = option.textContent;
+        periodBtnLabel.textContent =
+          option.textContent;
       }
 
       periodDropdown.classList.remove("open");
+
       renderTasks();
     });
   });
 
   document.addEventListener("click", (event) => {
-    if (!periodDropdown.contains(event.target) && event.target !== periodBtn) {
+    if (
+      !periodDropdown.contains(event.target) &&
+      event.target !== periodBtn
+    ) {
       periodDropdown.classList.remove("open");
     }
   });
@@ -1107,43 +1273,61 @@ function setupPeriodSelector() {
 
 function setupTaskModal() {
   if (newTaskBtn) {
-    newTaskBtn.addEventListener("click", openTaskModal);
+    newTaskBtn.addEventListener(
+      "click",
+      openTaskModal
+    );
   }
 
   if (closeTaskModalBtn) {
-    closeTaskModalBtn.addEventListener("click", () => {
-      closeTaskModal();
-      clearTaskModalFields();
-    });
-  }
-
-  if (saveTaskBtn) {
-    saveTaskBtn.addEventListener("click", saveNewTask);
-  }
-
-  if (taskTitleInput) {
-    taskTitleInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        saveNewTask();
-      }
-    });
-  }
-
-  if (taskDescriptionInput) {
-    taskDescriptionInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        saveNewTask();
-      }
-    });
-  }
-
-  if (taskModal) {
-    taskModal.addEventListener("click", (event) => {
-      if (event.target === taskModal) {
+    closeTaskModalBtn.addEventListener(
+      "click",
+      () => {
         closeTaskModal();
         clearTaskModalFields();
       }
-    });
+    );
+  }
+
+  if (saveTaskBtn) {
+    saveTaskBtn.addEventListener(
+      "click",
+      saveNewTask
+    );
+  }
+
+  if (taskTitleInput) {
+    taskTitleInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter") {
+          saveNewTask();
+        }
+      }
+    );
+  }
+
+  if (taskDescriptionInput) {
+    taskDescriptionInput.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Enter") {
+          saveNewTask();
+        }
+      }
+    );
+  }
+
+  if (taskModal) {
+    taskModal.addEventListener(
+      "click",
+      (event) => {
+        if (event.target === taskModal) {
+          closeTaskModal();
+          clearTaskModalFields();
+        }
+      }
+    );
   }
 }
 
@@ -1157,7 +1341,10 @@ function setupClearCompletedButton() {
     return;
   }
 
-  clearCompletedBtn.addEventListener("click", clearCompletedTasks);
+  clearCompletedBtn.addEventListener(
+    "click",
+    clearCompletedTasks
+  );
 }
 
 
@@ -1165,138 +1352,20 @@ function setupClearCompletedButton() {
 // 33. INICIALIZAÇÃO
 // =====================================================
 
-function initTasksPage() {
+async function initTasksPage() {
   applySavedTheme();
   updateWelcomeArea();
   applySelectedModulesToMenu();
 
-    loadTasks();
-
-    setupFilters();
+  setupFilters();
   setupPeriodSelector();
   applyFilterFromURL();
   setupTaskModal();
   setupClearCompletedButton();
 
+  await loadTasks();
+
   renderTasks();
 }
 
 initTasksPage();
-
-// =====================================================
-// 21. DROPDOWNS DO CABEÇALHO (NOTIFICAÇÕES E PERFIL)
-// =====================================================
-
-function closeAllHeaderDropdowns() {
-  if (notifDropdown) notifDropdown.classList.remove("open");
-  if (profileDropdown) profileDropdown.classList.remove("open");
-}
-
-if (notifBtn && notifDropdown) {
-  notifBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-    const willOpen = !notifDropdown.classList.contains("open");
-    closeAllHeaderDropdowns();
-    if (willOpen) notifDropdown.classList.add("open");
-  });
-}
-
-if (avatarBtn && profileDropdown) {
-  avatarBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
-    const willOpen = !profileDropdown.classList.contains("open");
-    closeAllHeaderDropdowns();
-    if (willOpen) profileDropdown.classList.add("open");
-  });
-}
-
-document.addEventListener("click", () => {
-  closeAllHeaderDropdowns();
-});
-
-if (profileDropdown) {
-  profileDropdown.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-}
-
-if (notifDropdown) {
-  notifDropdown.addEventListener("click", (event) => {
-    event.stopPropagation();
-  });
-}
-
-
-// =====================================================
-// 22. FOTO E NOME NO DROPDOWN DE PERFIL
-// =====================================================
-
-function getHeaderProfile() {
-  try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
-  } catch (error) {
-    return {};
-  }
-}
-
-function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
-}
-
-function renderHeaderProfileDropdown() {
-  const nickname = setupData.user?.nickname?.trim();
-  const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Deibson";
-
-  const profile = getHeaderProfile();
-
-  if (headerProfileName) {
-    headerProfileName.textContent = displayName;
-  }
-
-  if (headerProfileEmail) {
-    headerProfileEmail.textContent = setupData.user?.email || "usuario@email.com";
-  }
-
-  if (headerProfileInitial) {
-    headerProfileInitial.textContent = getInitial(displayName);
-  }
-
-  if (profile.photo && headerProfileImage && headerProfilePhoto) {
-    headerProfileImage.src = profile.photo;
-    headerProfilePhoto.classList.add("has-image");
-  } else if (headerProfilePhoto) {
-    headerProfilePhoto.classList.remove("has-image");
-  }
-  
-  const avatarBtnImage = document.getElementById("avatarBtnImage");
-
-  if (profile.photo && avatarBtnImage && avatarBtn) {
-    avatarBtnImage.src = profile.photo;
-    avatarBtn.classList.add("has-image");
-  } else if (avatarBtn) {
-    avatarBtn.classList.remove("has-image");
-  }
-}
-
-if (headerPhotoInput) {
-  headerPhotoInput.addEventListener("change", () => {
-    const file = headerPhotoInput.files[0];
-
-    if (!file) return;
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const profile = getHeaderProfile();
-      profile.photo = reader.result;
-
-      saveHeaderProfile(profile);
-      renderHeaderProfileDropdown();
-    };
-
-    reader.readAsDataURL(file);
-  });
-}
-
-renderHeaderProfileDropdown();
