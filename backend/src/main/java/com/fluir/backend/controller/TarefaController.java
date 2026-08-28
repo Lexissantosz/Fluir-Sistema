@@ -1,5 +1,7 @@
 package com.fluir.backend.controller;
 
+import com.fluir.backend.dto.TarefaRequest;
+
 import com.fluir.backend.model.Tarefa;
 import com.fluir.backend.model.Usuario;
 import com.fluir.backend.repository.TarefaRepository;
@@ -35,25 +37,38 @@ public class TarefaController {
 
     @PostMapping
     public ResponseEntity<?> criar(
-            @RequestBody Tarefa tarefa
+            @RequestBody TarefaRequest request
     ) {
-        Integer usuarioId = tarefa.getUsuarioId();
-
-        if (usuarioId == null) {
+        if (request.usuarioId() == null) {
             return ResponseEntity.badRequest().body("usuarioId é obrigatório");
         }
 
-        Usuario usuario = usuarioRepository.findById(usuarioId).orElse(null);
+        if (request.titulo() == null || request.titulo().isBlank()) {
+            return ResponseEntity.badRequest().body("titulo é obrigatório");
+        }
+
+        Usuario usuario = usuarioRepository.findById(request.usuarioId()).orElse(null);
 
         if (usuario == null) {
             return ResponseEntity.badRequest().body("Usuário não encontrado");
         }
 
+        Tarefa tarefa = new Tarefa();
+
         tarefa.setUsuario(usuario);
+        tarefa.setTitulo(request.titulo());
+        tarefa.setCategoria(request.categoria());
+        tarefa.setDescricao(request.descricao());
+        tarefa.setPrioridade(request.prioridade());
+        tarefa.setHorario(request.horario());
+        tarefa.setDataTarefa(request.dataTarefa());
+        tarefa.setTempoEstimadoMinutos(request.tempoEstimadoMinutos());
+        tarefa.setEnergiaGasta(request.energiaGasta());
+        tarefa.setConcluida(
+                request.concluida() != null ? request.concluida() : false
+        );
 
-        Tarefa salva = tarefaRepository.save(tarefa);
-
-        return ResponseEntity.ok(salva);
+        return ResponseEntity.ok(tarefaRepository.save(tarefa));
     }
 
     @PutMapping("/{id}/concluir")
