@@ -1371,22 +1371,82 @@ backBtn.addEventListener("click", () => {
 // Futuramente, aqui conectaremos com backend
 // =====================================================
 
-function finishSetup() {
+async function finishSetup() {
   collectUserData();
   collectSelectedModules();
   collectPreferences();
 
-  setupData.onboardingConcluido = true;
-  setupData.atualizadoEm = new Date().toISOString();
-
-  localStorage.setItem("fluir-setup", JSON.stringify(setupData));
-
-  seedExampleContent();
-
   clearFormMessage();
-  openSuccessModal();
 
-  window.location.href = "dashboard.html";
+  try {
+    const usuarioSalvo = sessionStorage.getItem("fluir-user");
+
+    if (!usuarioSalvo) {
+      showFormMessage("Sua sessão expirou. Faça login novamente.");
+      return;
+    }
+
+    const usuario = JSON.parse(usuarioSalvo);
+
+    const pronomes =
+      setupData.user.pronouns === "personalizado"
+        ? setupData.user.customPronouns
+        : setupData.user.pronouns;
+
+    const payload = {
+      usuarioId: usuario.id,
+      nome: setupData.user.name,
+      apelido: setupData.user.nickname,
+      pronomes: pronomes,
+      generoNascimento: setupData.user.sexAtBirth,
+      modulos: setupData.modules
+    };
+
+    const response = await fetch(
+      "https://fluir-sistema.onrender.com/api/onboarding/salvar",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const text = await response.text();
+
+    let data = {};
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = {};
+    }
+
+    if (!response.ok) {
+      showFormMessage(
+        data.mensagem || text || "Não foi possível salvar sua configuração."
+      );
+      return;
+    }
+
+    setupData.onboardingConcluido = true;
+    setupData.atualizadoEm = new Date().toISOString();
+
+    // Mantemos localmente porque outras telas ainda dependem disso.
+    localStorage.setItem("fluir-setup", JSON.stringify(setupData));
+
+    seedExampleContent();
+
+    window.location.href = "dashboard.html";
+
+  } catch (error) {
+    console.error("Erro ao salvar onboarding:", error);
+
+    showFormMessage(
+      "Não foi possível salvar sua configuração. Tente novamente."
+    );
+  }
 }
 
 
