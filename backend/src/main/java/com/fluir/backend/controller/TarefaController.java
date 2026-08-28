@@ -71,15 +71,26 @@ public class TarefaController {
         return ResponseEntity.ok(tarefaRepository.save(tarefa));
     }
 
-    @PutMapping("/{id}/concluir")
-    public ResponseEntity<?> concluir(
-            @PathVariable Integer id
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> alterarStatus(
+            @PathVariable Integer id,
+            @RequestParam Boolean concluida
     ) {
         return tarefaRepository.findById(id)
                 .map(tarefa -> {
-                    tarefa.setConcluida(true);
+                    tarefa.setConcluida(concluida);
                     return ResponseEntity.ok(tarefaRepository.save(tarefa));
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> excluir(@PathVariable Integer id) {
+        if (!tarefaRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        tarefaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }
