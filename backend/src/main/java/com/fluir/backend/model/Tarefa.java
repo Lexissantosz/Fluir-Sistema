@@ -1,6 +1,8 @@
 package com.fluir.backend.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,6 +15,7 @@ public class Tarefa {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
     @Column(nullable = false, length = 150)
@@ -41,7 +44,7 @@ public class Tarefa {
         return id;
     }
 
-        public Usuario getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
