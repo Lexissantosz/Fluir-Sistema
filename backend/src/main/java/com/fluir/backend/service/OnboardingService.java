@@ -90,10 +90,10 @@ public class OnboardingService {
         preferenciasAguaRepository.findByUsuarioId(usuarioId)
                 .ifPresent(agua -> response.setAgua(converterAgua(agua)));
 
-        tarefaRepository.findFirstByUsuarioIdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
+        tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
                 .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
 
-        habitoRepository.findFirstByUsuarioIdAndCategoriaOrderByIdDesc(usuarioId, "Primeiro hábito")
+        habitoRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeiro hábito")
                 .ifPresent(habito -> response.setPrimeiroHabito(converterHabito(habito)));
 
         return response;
@@ -151,7 +151,7 @@ public class OnboardingService {
         }
 
         Tarefa tarefa = tarefaRepository
-                .findFirstByUsuarioIdAndCategoriaOrderByIdDesc(request.getUsuarioId(), "Primeira tarefa")
+                .findFirstByUsuario_IdAndCategoriaOrderByIdDesc(request.getUsuarioId(), "Primeira tarefa")
                 .orElse(new Tarefa());
 
         tarefa.setUsuarioId(request.getUsuarioId());
@@ -174,7 +174,7 @@ public class OnboardingService {
         }
 
         Habito habito = habitoRepository
-                .findFirstByUsuarioIdAndCategoriaOrderByIdDesc(request.getUsuarioId(), "Primeiro hábito")
+                .findFirstByUsuario_IdAndCategoriaOrderByIdDesc(request.getUsuarioId(), "Primeiro hábito")
                 .orElse(new Habito());
 
         habito.setUsuarioId(request.getUsuarioId());

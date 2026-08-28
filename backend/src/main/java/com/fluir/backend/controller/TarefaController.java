@@ -22,7 +22,7 @@ public class TarefaController {
     public ResponseEntity<List<Tarefa>> buscarPorUsuario(
             @PathVariable Integer usuarioId
     ) {
-        List<Tarefa> tarefas = tarefaRepository.findByUsuarioId(usuarioId);
+        List<Tarefa> tarefas = tarefaRepository.findByUsuario_Id(usuarioId);
         return ResponseEntity.ok(tarefas);
     }
 

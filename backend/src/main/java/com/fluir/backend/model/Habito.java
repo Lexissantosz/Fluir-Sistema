@@ -11,8 +11,9 @@ public class Habito {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Integer usuarioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @Column(nullable = false, length = 150)
     private String titulo;
@@ -38,12 +39,26 @@ public class Habito {
         return id;
     }
 
+        public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     public Integer getUsuarioId() {
-        return usuarioId;
+        return usuario != null ? usuario.getId() : null;
     }
 
     public void setUsuarioId(Integer usuarioId) {
-        this.usuarioId = usuarioId;
+        if (usuarioId == null) {
+            this.usuario = null;
+        } else {
+            Usuario u = new Usuario();
+            u.setId(usuarioId);
+            this.usuario = u;
+        }
     }
 
     public String getTitulo() {

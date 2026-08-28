@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface HabitoRepository extends JpaRepository<Habito, Integer> {
 
-    Optional<Habito> findFirstByUsuarioIdAndCategoriaOrderByIdDesc(Integer usuarioId, String categoria);
+        Optional<Habito> findFirstByUsuario_IdAndCategoriaOrderByIdDesc(Integer usuarioId, String categoria);
 }

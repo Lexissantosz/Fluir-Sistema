@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface TarefaRepository extends JpaRepository<Tarefa, Integer> {
 
-    List<Tarefa> findByUsuarioId(Integer usuarioId);
+    List<Tarefa> findByUsuario_Id(Integer usuarioId);
 
-    Optional<Tarefa> findFirstByUsuarioIdAndCategoriaOrderByIdDesc(
+    Optional<Tarefa> findFirstByUsuario_IdAndCategoriaOrderByIdDesc(
             Integer usuarioId,
             String categoria
     );
