@@ -139,17 +139,15 @@ function hideDisabledModules() {
 
   if (!savedModules) return;
 
-  const activeModules = Object.keys(savedModules).filter((moduleName) => {
-    return savedModules[moduleName] === true;
-  });
-
-  if (!activeModules.length) return;
-
   moduleLinks.forEach((link) => {
     const moduleName = link.dataset.module;
 
-    if (!activeModules.includes(moduleName)) {
+    if (!moduleName) return;
+
+    if (savedModules[moduleName] === false) {
       link.style.display = "none";
+    } else {
+      link.style.display = "";
     }
   });
 }
@@ -677,10 +675,12 @@ function saveHeaderProfile(profile) {
 }
 
 function renderHeaderProfileDropdown() {
+  const setupData = getSetupData();
+
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Deibson";
-
+  const displayName = nickname || name || "Usuário";
+  
   const profile = getHeaderProfile();
 
   if (headerProfileName) {
