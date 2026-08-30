@@ -144,6 +144,74 @@ function isValidHttpUrl(value) {
   }
 }
 
+const allowedFileExtensions = [
+  "pdf",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "csv",
+  "txt",
+  "rtf",
+  "odt",
+  "ods",
+  "ppt",
+  "pptx",
+  "zip",
+  "rar",
+  "7z"
+];
+
+const allowedImageExtensions = [
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "webp",
+  "svg"
+];
+
+function getFileExtension(value) {
+  const reference = value.trim();
+
+  const lastDotIndex = reference.lastIndexOf(".");
+
+  if (
+    lastDotIndex <= 0 ||
+    lastDotIndex === reference.length - 1
+  ) {
+    return "";
+  }
+
+  return reference
+    .slice(lastDotIndex + 1)
+    .toLowerCase();
+}
+
+function isValidFileReference(value) {
+  const reference = value.trim();
+
+  if (!reference || isValidHttpUrl(reference)) {
+    return false;
+  }
+
+  const extension = getFileExtension(reference);
+
+  return allowedFileExtensions.includes(extension);
+}
+
+function isValidImageReference(value) {
+  const reference = value.trim();
+
+  if (!reference || isValidHttpUrl(reference)) {
+    return false;
+  }
+
+  const extension = getFileExtension(reference);
+
+  return allowedImageExtensions.includes(extension);
+}
+
 // =====================================================
 // 5. LER SETUP SALVO
 // =====================================================
@@ -721,6 +789,40 @@ function saveAttachment() {
   attachmentReferenceInput.focus();
   showAttachmentFormMessage(
     "Digite um link válido começando com http:// ou https://."
+  );
+  return;
+}
+
+if (type === "file" && !isValidFileReference(reference)) {
+  attachmentReferenceInput.classList.add("invalid");
+  attachmentReferenceInput.focus();
+  showAttachmentFormMessage(
+    "Digite um arquivo válido, como exame.pdf ou documento.docx."
+  );
+  return;
+}
+
+if (type === "image" && !isValidImageReference(reference)) {
+  attachmentReferenceInput.classList.add("invalid");
+  attachmentReferenceInput.focus();
+  showAttachmentFormMessage(
+    "Digite uma imagem válida, como foto.png ou imagem.jpg."
+  );
+  return;
+}
+
+if (
+  type === "note" &&
+  (
+    isValidHttpUrl(reference) ||
+    isValidFileReference(reference) ||
+    isValidImageReference(reference)
+  )
+) {
+  attachmentReferenceInput.classList.add("invalid");
+  attachmentReferenceInput.focus();
+  showAttachmentFormMessage(
+    "Para notas, use apenas texto. Links, arquivos e imagens devem ser salvos no tipo correspondente."
   );
   return;
 }
