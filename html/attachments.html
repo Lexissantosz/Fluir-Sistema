@@ -345,10 +345,24 @@
           </div>
 
           <div class="empty-state" id="emptyState">
-            <span>⌁</span>
-            <strong>Nenhum anexo encontrado</strong>
-            <p>Salve um link, referência, nome de arquivo ou observação importante.</p>
-          </div>
+  <span>⌁</span>
+
+  <strong id="emptyStateTitle">
+    Nenhum anexo por aqui
+  </strong>
+
+  <p id="emptyStateText">
+    Guarde arquivos, imagens, links ou notas importantes em um só lugar.
+  </p>
+
+  <button
+    type="button"
+    class="primary-btn empty-state-btn"
+    id="emptyStateAddBtn"
+  >
+    Adicionar primeiro anexo
+  </button>
+</div>
         </article>
 
         <!-- Lateral interna -->
@@ -451,14 +465,74 @@
         </select>
       </label>
 
-      <label>
-        <span>Link, nome do arquivo ou referência</span>
-        <input 
-          type="text" 
-          id="attachmentReferenceInput"
-          placeholder="Ex: https://..., exame.pdf, pasta tal..."
-        />
-      </label>
+      <!-- Campo usado quando o tipo for Link -->
+<div id="attachmentLinkField" hidden>
+  <span class="attachment-upload-label">Links</span>
+
+  <div class="attachment-link-input-row">
+    <input
+      type="url"
+      id="attachmentReferenceInput"
+      placeholder="https://exemplo.com"
+    />
+
+    <button
+      type="button"
+      class="secondary-btn"
+      id="addAttachmentLinkBtn"
+    >
+      Adicionar
+    </button>
+  </div>
+
+  <div
+    class="attachment-selected-links"
+    id="attachmentSelectedLinks"
+  ></div>
+</div>
+
+<!-- Campo usado quando o tipo for Arquivo ou Imagem -->
+<div class="attachment-upload-field" id="attachmentUploadField">
+  <span class="attachment-upload-label" id="attachmentUploadLabel">
+    Arquivo
+  </span>
+
+  <label class="attachment-dropzone" id="attachmentDropzone" for="attachmentFileInput">
+    <input
+      type="file"
+      id="attachmentFileInput"
+      multiple
+      hidden
+    />
+
+    <span class="attachment-dropzone-icon">↑</span>
+
+    <strong id="attachmentDropzoneTitle">
+      Clique para selecionar
+    </strong>
+
+    <small id="attachmentDropzoneText">
+      ou arraste o arquivo até aqui
+    </small>
+
+    <small
+      class="attachment-accepted-types"
+      id="attachmentAcceptedTypes"
+    ></small>
+
+  </label>
+
+  <div
+  class="attachment-selected-files"
+  id="attachmentSelectedFile"
+></div>
+
+<div
+  class="attachment-upload-message"
+  id="attachmentUploadMessage"
+></div>
+
+</div>
 
       <label>
         <span>Observação opcional</span>
@@ -480,6 +554,104 @@
 
     </div>
   </div>
+
+<!-- ===================================================== -->
+<!-- MODAL DE DETALHES DO ANEXO -->
+<!-- ===================================================== -->
+<div class="attachment-details-overlay" id="attachmentDetailsModal">
+  <div class="attachment-details-modal">
+
+    <div class="attachment-details-header">
+      <div>
+        <span class="attachment-details-type" id="attachmentDetailsType">
+          Anexo
+        </span>
+
+        <h3 id="attachmentDetailsTitle">
+          Título do anexo
+        </h3>
+      </div>
+
+      <button
+        type="button"
+        class="attachment-details-close"
+        id="closeAttachmentDetailsBtn"
+        title="Fechar"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="attachment-details-meta" id="attachmentDetailsMeta">
+      <!-- Categoria e data -->
+    </div>
+
+    <div class="attachment-details-description">
+      <strong>Descrição</strong>
+
+      <p id="attachmentDetailsDescription">
+        Sem descrição.
+      </p>
+    </div>
+
+    <div class="attachment-details-files">
+      <strong>Arquivos</strong>
+
+      <div id="attachmentDetailsFiles">
+        <!-- Arquivos gerados pelo JavaScript -->
+      </div>
+    </div>
+
+    <div class="attachment-details-actions">
+      <button
+        type="button"
+        class="secondary-btn"
+        id="editAttachmentBtn"
+      >
+        Editar
+      </button>
+
+      <button
+        type="button"
+        class="danger-btn"
+        id="deleteAttachmentDetailsBtn"
+      >
+        Excluir anexo
+      </button>
+    </div>
+
+  </div>
+</div>
+
+  <div class="confirm-modal-overlay" id="confirmModal">
+  <div class="confirm-modal">
+    <div class="confirm-modal-icon">!</div>
+
+    <h3 id="confirmModalTitle">Confirmar exclusão</h3>
+
+    <p id="confirmModalText">
+      Tem certeza de que deseja excluir?
+    </p>
+
+    <div class="confirm-modal-actions">
+      <button
+        type="button"
+        class="secondary-btn"
+        id="confirmModalCancelBtn"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        class="danger-btn"
+        id="confirmModalConfirmBtn"
+      >
+        Excluir
+      </button>
+    </div>
+  </div>
+</div>
 
   <script src="../js/attachments.js"></script>
   <!-- UI mobile compartilhada -->
