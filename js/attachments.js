@@ -1452,7 +1452,7 @@ function renderSelectedAttachmentFiles() {
 
     item.innerHTML = `
       <div class="attachment-selected-info">
-        <strong>${file.name}</strong>
+        <strong>${escapeHTML(file.name)}</strong>
         <small>${formatAttachmentFileSize(file.size)}</small>
       </div>
 
