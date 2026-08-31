@@ -2214,8 +2214,10 @@ function setupAttachmentEvents() {
   }
 
   if (quickAttachmentBtn) {
-    quickAttachmentBtn.addEventListener("click", openAttachmentModal);
-  }
+  quickAttachmentBtn.addEventListener("click", () => {
+    openAttachmentModal();
+  });
+}
 
   if (closeAttachmentModalBtn) {
     closeAttachmentModalBtn.addEventListener("click", () => {
