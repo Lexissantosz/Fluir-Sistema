@@ -1770,13 +1770,8 @@ function openAttachmentModal(attachment = null) {
   }
 
   renderSelectedAttachmentLinks();
-} else {
-  if (attachment.type === "link") {
-  attachment.links = [...selectedAttachmentLinks];
-  attachment.reference = selectedAttachmentLinks[0] || "";
-}
-}
     }
+  }
 
     if (attachmentNoteInput) {
       attachmentNoteInput.value = attachment.note || "";
