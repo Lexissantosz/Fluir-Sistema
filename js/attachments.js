@@ -1748,8 +1748,9 @@ function openAttachmentModal(attachment = null) {
     }
 
     if (attachmentTypeSelect) {
-      attachmentTypeSelect.value = attachment.type || "file";
-    }
+  attachmentTypeSelect.value = attachment.type || "file";
+  attachmentTypeSelect.disabled = true;
+}
 
     if (attachmentCategorySelect) {
       attachmentCategorySelect.value = attachment.category || "Pessoal";
@@ -1785,10 +1786,14 @@ function openAttachmentModal(attachment = null) {
       saveAttachmentBtn.textContent = "Salvar alterações";
     }
   } else {
-    if (saveAttachmentBtn) {
-      saveAttachmentBtn.textContent = "Salvar anexo";
-    }
+  if (attachmentTypeSelect) {
+    attachmentTypeSelect.disabled = false;
   }
+
+  if (saveAttachmentBtn) {
+    saveAttachmentBtn.textContent = "Salvar anexo";
+  }
+}
 
   updateAttachmentTypeFields();
 
@@ -2203,7 +2208,9 @@ function setupAttachmentEvents() {
 }
 
   if (newAttachmentBtn) {
-    newAttachmentBtn.addEventListener("click", openAttachmentModal);
+    newAttachmentBtn.addEventListener("click", () => {
+  openAttachmentModal();
+});
   }
 
   if (quickAttachmentBtn) {
