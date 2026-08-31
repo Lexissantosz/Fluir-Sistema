@@ -52,6 +52,8 @@ public class OnboardingService {
         perfil.setGeneroNascimento(request.getGeneroNascimento());
         perfil.setAltura(request.getAltura());
         perfil.setPeso(request.getPeso());
+        perfil.setIdade(request.getIdade());
+        perfil.setTomComunicacao(request.getTomComunicacao());
         perfil.setEnergiaAtual(request.getEnergiaAtual());
         perfil.setOnboardingConcluido(true);
 
@@ -81,6 +83,8 @@ public class OnboardingService {
         response.setGeneroNascimento(perfil.getGeneroNascimento());
         response.setAltura(perfil.getAltura());
         response.setPeso(perfil.getPeso());
+        response.setIdade(perfil.getIdade());
+        response.setTomComunicacao(perfil.getTomComunicacao());
         response.setEnergiaAtual(perfil.getEnergiaAtual());
         response.setOnboardingConcluido(perfil.getOnboardingConcluido());
 

@@ -9,6 +9,8 @@ public class OnboardingRequest {
     private String generoNascimento;
     private Integer altura;
     private Double peso;
+    private Integer idade;
+    private String tomComunicacao;
     private String energiaAtual;
 
     private ModulosRequest modulos;
@@ -72,6 +74,22 @@ public class OnboardingRequest {
     public void setPeso(Double peso) {
         this.peso = peso;
     }
+
+    public Integer getIdade() {
+    return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    public String getTomComunicacao() {
+    return tomComunicacao;
+'    }
+
+    public void setTomComunicacao(String tomComunicacao) {
+        this.tomComunicacao = tomComunicacao;
+    }'
 
     public String getEnergiaAtual() {
         return energiaAtual;

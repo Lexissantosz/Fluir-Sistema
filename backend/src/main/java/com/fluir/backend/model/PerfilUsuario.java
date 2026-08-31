@@ -34,6 +34,11 @@ public class PerfilUsuario {
 
     private Double peso;
 
+    private Integer idade;
+
+    @Column(name = "tom_comunicacao", length = 20)
+    private String tomComunicacao;
+
     @Column(name = "energia_atual", length = 20)
     private String energiaAtual;
 
@@ -130,6 +135,22 @@ public class PerfilUsuario {
 
     public void setPeso(Double peso) {
         this.peso = peso;
+    }
+
+    public Integer getIdade() {
+    return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    public String getTomComunicacao() {
+    return tomComunicacao;
+    }
+
+    public void setTomComunicacao(String tomComunicacao) {
+        this.tomComunicacao = tomComunicacao;
     }
 
     public String getEnergiaAtual() {

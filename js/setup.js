@@ -1399,7 +1399,8 @@ async function finishSetup() {
       apelido: setupData.user.nickname,
       pronomes: pronomes,
       generoNascimento: setupData.user.sexAtBirth,
-      modulos: setupData.modules
+      modulos: setupData.modules,
+      idade: Number(setupData.user.age)
     };
 
     const response = await fetch(
