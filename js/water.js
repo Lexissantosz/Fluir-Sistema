@@ -42,6 +42,10 @@ const addCupMainBtn = document.getElementById("addCupMainBtn");
 const removeCupBtn = document.getElementById("removeCupBtn");
 const resetWaterBtn = document.getElementById("resetWaterBtn");
 
+const resetWaterModal = document.getElementById("resetWaterModal");
+const cancelResetWaterBtn = document.getElementById("cancelResetWaterBtn");
+const confirmResetWaterBtn = document.getElementById("confirmResetWaterBtn");
+
 const todayCups = document.getElementById("todayCups");
 const waterProgress = document.getElementById("waterProgress");
 const remainingCups = document.getElementById("remainingCups");
@@ -701,14 +705,15 @@ function removeCup() {
 }
 
 function resetTodayWater() {
-  setTodayCups(0);
+  const todayWater = getTodayCups();
 
-  createWaterTimelineEvent(
-    "Água reiniciada",
-    "A água de hoje foi reiniciada."
-  );
+  if (todayWater <= 0) {
+    return;
+  }
 
-  renderWaterPage();
+  if (resetWaterModal) {
+    resetWaterModal.classList.add("active");
+  }
 }
 
 
