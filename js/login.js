@@ -74,6 +74,22 @@ function setButtonLoading(button, isLoading, loadingText, normalText) {
   button.textContent = isLoading ? loadingText : normalText;
 }
 
+async function readResponse(response) {
+  const text = await response.text();
+
+  if (!text) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    return {
+      mensagem: text
+    };
+  }
+}
+
 
 // =============================
 // 3. APLICAR TEMA SALVO
@@ -222,7 +238,7 @@ if (loginForm) {
         })
       });
 
-      const data = await response.json();
+      const data = await readResponse(response);
 
       if (!response.ok) {
         showMessage(
@@ -330,7 +346,7 @@ if (registerForm) {
         })
       });
 
-      const data = await response.json();
+      const data = await readResponse(response);
 
       if (!response.ok) {
         showMessage(
