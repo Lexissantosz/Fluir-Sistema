@@ -83,8 +83,15 @@ const defaultSetup = {
    Coisinhas pequenas para evitar repetição e dor de cabeça.
 ===================================================== */
 
-function isOnboardingCompleted() {
+  function isOnboardingCompleted() {
   try {
+    const onboardingCompleted =
+      sessionStorage.getItem("fluir-onboarding-completed");
+
+    if (onboardingCompleted === "true" || onboardingCompleted === "false") {
+      return onboardingCompleted === "true";
+    }
+
     const setup = localStorage.getItem("fluir-setup");
 
     if (!setup) {

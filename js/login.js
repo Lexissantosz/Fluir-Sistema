@@ -46,21 +46,51 @@ function clearMessages() {
   showMessage(registerMessage, "", "info");
 }
 
-async function hasCompletedOnboarding(usuarioId) {
-  const response = await fetch(
-    `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
-  );
+function hasCompletedOnboardingLocally() {
+  try {
+    const setup = localStorage.getItem("fluir-setup");
 
-  if (response.ok) {
-    const onboarding = await readResponse(response);
-    return onboarding.onboardingConcluido === true;
-  }
+    if (!setup) {
+      return false;
+    }
 
-  if (response.status === 400) {
+    const setupData = JSON.parse(setup);
+    return setupData.onboardingConcluido === true;
+  } catch (error) {
+    console.warn("Erro ao verificar onboarding local:", error);
     return false;
   }
+}
 
-  throw new Error("Não foi possível verificar o onboarding.");
+async function hasCompletedOnboarding(usuarioId) {
+  try {
+    const response = await fetch(
+      `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
+    );
+
+    const onboarding = await readResponse(response);
+
+    if (response.ok) {
+      return onboarding.onboardingConcluido === true;
+    }
+
+    const onboardingNaoEncontrado =
+      response.status === 400 &&
+      onboarding.mensagem === "Onboarding não encontrado para este usuário";
+
+    if (onboardingNaoEncontrado) {
+      return false;
+    }
+
+    throw new Error("Não foi possível verificar o onboarding.");
+  } catch (error) {
+    console.warn(
+      "Não foi possível consultar o onboarding no backend. Usando dados locais:",
+      error
+    );
+
+    return hasCompletedOnboardingLocally();
+  }
 }
 
 function isValidEmail(email) {
@@ -256,6 +286,11 @@ if (loginForm) {
       showMessage(loginMessage, "Login realizado com sucesso.", "success");
 
       const onboardingConcluido = await hasCompletedOnboarding(data.id);
+
+      sessionStorage.setItem(
+        "fluir-onboarding-completed",
+        String(onboardingConcluido)
+      );
 
       setTimeout(function () {
         const destination = onboardingConcluido
