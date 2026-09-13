@@ -49,6 +49,14 @@ let currentStep = 1;
 const totalSteps = 4;
 let isFinishingSetup = false;
 
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted && isFinishingSetup) {
+    isFinishingSetup = false;
+    nextBtn.disabled = false;
+    nextBtn.textContent = "Finalizar";
+  }
+});
+
 const setupData = {
   user: {
     name: "",
