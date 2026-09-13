@@ -47,6 +47,15 @@ const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
 
 let currentStep = 1;
 const totalSteps = 4;
+let isFinishingSetup = false;
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted && isFinishingSetup) {
+    isFinishingSetup = false;
+    nextBtn.disabled = false;
+    nextBtn.textContent = "Finalizar";
+  }
+});
 
 const setupData = {
   user: {
@@ -1372,6 +1381,16 @@ backBtn.addEventListener("click", () => {
 // =====================================================
 
 async function finishSetup() {
+  let setupSaved = false;
+
+  if (isFinishingSetup) {
+    return;
+  }
+
+  isFinishingSetup = true;
+  nextBtn.disabled = true;
+  nextBtn.textContent = "Salvando...";
+
   collectUserData();
   collectSelectedModules();
   collectPreferences();
@@ -1438,17 +1457,23 @@ async function finishSetup() {
 
     seedExampleContent();
 
-    window.location.href = "dashboard.html";
+    setupSaved = true;
 
+    window.location.href = "dashboard.html";
   } catch (error) {
     console.error("Erro ao salvar onboarding:", error);
 
     showFormMessage(
       "Não foi possível salvar sua configuração. Tente novamente."
     );
+  } finally {
+    if (!setupSaved) {
+      isFinishingSetup = false;
+      nextBtn.disabled = false;
+      nextBtn.textContent = "Finalizar";
+    }
   }
 }
-
 
 // =====================================================
 // 31.1 CRIAR EXEMPLOS PARA ENSINAR A USAR O SISTEMA
