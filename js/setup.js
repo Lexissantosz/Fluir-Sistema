@@ -1448,13 +1448,14 @@ async function finishSetup() {
       );
       return;
     }
-
+    setupData.usuarioId = usuario.id;
     setupData.onboardingConcluido = true;
     setupData.atualizadoEm = new Date().toISOString();
 
     // Mantemos localmente porque outras telas ainda dependem disso.
     localStorage.setItem("fluir-setup", JSON.stringify(setupData));
-
+    sessionStorage.setItem("fluir-onboarding", JSON.stringify(data));
+    sessionStorage.setItem("fluir-onboarding-completed", "true");
     seedExampleContent();
 
     setupSaved = true;

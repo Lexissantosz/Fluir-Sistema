@@ -25,6 +25,8 @@ const passwordButtons = document.querySelectorAll(".password-toggle");
 
 const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
 
+const ONBOARDING_API_BASE_URL =
+  "https://fluir-sistema.onrender.com/api/onboarding";
 
 // =============================
 // 2. FUNÇÕES AUXILIARES
@@ -44,21 +46,42 @@ function clearMessages() {
   showMessage(registerMessage, "", "info");
 }
 
-function hasCompletedOnboarding() {
-  try {
-    const setup = localStorage.getItem("fluir-setup");
+async function hasCompletedOnboarding(usuarioId) {
+  sessionStorage.removeItem("fluir-onboarding");
 
-    if (!setup) {
-      return false;
+  const response = await fetch(
+    `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
+  );
+
+  const onboarding = await readResponse(response);
+
+  if (response.ok) {
+    const respostaValida =
+      onboarding &&
+      typeof onboarding.onboardingConcluido === "boolean" &&
+      String(onboarding.usuarioId) === String(usuarioId);
+
+    if (!respostaValida) {
+      throw new Error("Resposta inválida ao verificar o onboarding.");
     }
 
-    const setupData = JSON.parse(setup);
+    sessionStorage.setItem(
+      "fluir-onboarding",
+      JSON.stringify(onboarding)
+    );
 
-    return Boolean(setupData.onboardingConcluido);
-  } catch (error) {
-    console.warn("Erro ao verificar onboarding:", error);
+    return onboarding.onboardingConcluido;
+  }
+
+  const onboardingNaoEncontrado =
+    response.status === 400 &&
+    onboarding.mensagem === "Onboarding não encontrado para este usuário";
+
+  if (onboardingNaoEncontrado) {
     return false;
   }
+
+  throw new Error("Não foi possível verificar o onboarding.");
 }
 
 function isValidEmail(email) {
@@ -249,17 +272,26 @@ if (loginForm) {
         return;
       }
 
+      sessionStorage.removeItem("fluir-user");
+      sessionStorage.setItem("fluir-onboarding-completed", "false");
+
+      const onboardingConcluido = await hasCompletedOnboarding(data.id);
+
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      sessionStorage.setItem(
+        "fluir-onboarding-completed",
+        String(onboardingConcluido)
+      );
 
       showMessage(loginMessage, "Login realizado com sucesso.", "success");
 
       setTimeout(function () {
-  const destination = hasCompletedOnboarding()
-    ? "dashboard.html"
-    : "setup.html";
+        const destination = onboardingConcluido
+          ? "dashboard.html"
+          : "setup.html";
 
-  window.location.href = destination;
-}, 700);
+        window.location.href = destination;
+      }, 700);
 
     } catch (error) {
       showMessage(
@@ -356,21 +388,23 @@ if (registerForm) {
         );
         return;
       }
+      sessionStorage.removeItem("fluir-onboarding");
+      sessionStorage.setItem("fluir-onboarding-completed", "false");
+      sessionStorage.setItem("fluir-user", JSON.stringify(data));
 
       showMessage(
         registerMessage,
-        data.mensagem || "Conta criada com sucesso. Faça login para continuar.",
+        data.mensagem || "Conta criada com sucesso.",
         "success"
       );
 
       registerForm.reset();
 
       setTimeout(function () {
-        registerForm.classList.remove("active");
-        loginForm.classList.add("active");
-        showMessage(loginMessage, "Conta criada. Agora faça login.", "success");
-      }, 900);
-    } catch (error) {
+        window.location.href = "setup.html";
+      }, 700);
+
+      } catch (error) {
       showMessage(
         registerMessage,
         "Não foi possível conectar ao servidor. Verifique se o backend está rodando.",
