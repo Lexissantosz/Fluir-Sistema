@@ -47,6 +47,8 @@ function clearMessages() {
 }
 
 async function hasCompletedOnboarding(usuarioId) {
+  sessionStorage.removeItem("fluir-onboarding");
+
   const response = await fetch(
     `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
   );
@@ -54,9 +56,19 @@ async function hasCompletedOnboarding(usuarioId) {
   const onboarding = await readResponse(response);
 
   if (response.ok) {
-    if (typeof onboarding.onboardingConcluido !== "boolean") {
+    const respostaValida =
+      onboarding &&
+      typeof onboarding.onboardingConcluido === "boolean" &&
+      String(onboarding.usuarioId) === String(usuarioId);
+
+    if (!respostaValida) {
       throw new Error("Resposta inválida ao verificar o onboarding.");
     }
+
+    sessionStorage.setItem(
+      "fluir-onboarding",
+      JSON.stringify(onboarding)
+    );
 
     return onboarding.onboardingConcluido;
   }
@@ -376,7 +388,7 @@ if (registerForm) {
         );
         return;
       }
-
+      sessionStorage.removeItem("fluir-onboarding");
       sessionStorage.setItem("fluir-onboarding-completed", "false");
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
 

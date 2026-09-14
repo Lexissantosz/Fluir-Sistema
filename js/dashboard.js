@@ -181,22 +181,66 @@ function getTodayKey() {
 ===================================================== */
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
-
-  if (!savedSetup) {
-    return defaultSetup;
+  function readJSON(storage, key) {
+    try {
+      return JSON.parse(storage.getItem(key) || "null");
+    } catch (error) {
+      console.warn(`Erro ao ler ${key}:`, error);
+      return null;
+    }
   }
 
-  try {
-    return JSON.parse(savedSetup);
-  } catch (error) {
-    console.warn("Erro ao ler configuração do Fluir:", error);
-    return defaultSetup;
+  const usuario = readJSON(sessionStorage, "fluir-user");
+  const onboarding = readJSON(sessionStorage, "fluir-onboarding");
+  const salvo = readJSON(localStorage, "fluir-setup");
+
+  const pertenceAoUsuario = (dados) =>
+    usuario?.id != null &&
+    dados?.usuarioId != null &&
+    String(dados.usuarioId) === String(usuario.id);
+
+  const local = pertenceAoUsuario(salvo) ? salvo : {};
+  const backend = pertenceAoUsuario(onboarding) ? onboarding : null;
+
+  const preferences = { ...(local.preferences || {}) };
+
+  if (backend?.agua?.metaFinalMl > 0) {
+    preferences.water = {
+      ...(preferences.water || {}),
+      dailyGoal: backend.agua.metaFinalMl
+    };
   }
+
+  return {
+    usuarioId: usuario?.id,
+    onboardingConcluido:
+      backend?.onboardingConcluido ??
+      local.onboardingConcluido ??
+      false,
+    user: {
+      ...(local.user || {}),
+      name: backend
+        ? backend.nome || usuario?.nome || "Você"
+        : local.user?.name || usuario?.nome || "Você",
+      nickname: backend
+        ? backend.apelido || ""
+        : local.user?.nickname || "",
+      pronouns: backend
+        ? backend.pronomes || ""
+        : local.user?.pronouns || "",
+      sexAtBirth: backend
+        ? backend.generoNascimento || ""
+        : local.user?.sexAtBirth || "",
+      email: usuario?.email || ""
+    },
+    modules: backend
+      ? backend.modulos || {}
+      : local.modules || {},
+    preferences
+  };
 }
 
 const setupData = getSavedSetup();
-
 
 /* =====================================================
    5. TEMA CLARO / ESCURO
