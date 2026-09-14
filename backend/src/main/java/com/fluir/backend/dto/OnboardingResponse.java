@@ -9,6 +9,7 @@ public class OnboardingResponse {
     private String generoNascimento;
     private Integer altura;
     private Double peso;
+    private Integer idade;
     private String energiaAtual;
     private Boolean onboardingConcluido;
     private String mensagem;
@@ -129,5 +130,13 @@ public class OnboardingResponse {
 
     public void setPrimeiroHabito(PrimeiroHabitoRequest primeiroHabito) {
         this.primeiroHabito = primeiroHabito;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
     }
 }

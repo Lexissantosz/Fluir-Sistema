@@ -1440,6 +1440,7 @@ async function finishSetup() {
       apelido: setupData.user.nickname,
       pronomes: pronomes,
       generoNascimento: setupData.user.sexAtBirth,
+      idade: Number(setupData.user.age),
       modulos: setupData.modules
     };
 

@@ -33,6 +33,7 @@ public class PerfilUsuario {
     private Integer altura;
 
     private Double peso;
+    private Integer idade;
 
     @Column(name = "energia_atual", length = 20)
     private String energiaAtual;
@@ -146,5 +147,13 @@ public class PerfilUsuario {
 
     public void setOnboardingConcluido(Boolean onboardingConcluido) {
         this.onboardingConcluido = onboardingConcluido;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
     }
 }
