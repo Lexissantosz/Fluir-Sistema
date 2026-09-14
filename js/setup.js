@@ -1444,7 +1444,8 @@ async function finishSetup() {
       tomComunicacao: setupData.user.communicationTone,
       modulos: setupData.modules,
       tarefas: setupData.preferences.tasks || null,
-      habitos: setupData.preferences.habits || null
+      habitos: setupData.preferences.habits || null,
+      sono: setupData.preferences.sleep || null
     };
 
     const response = await fetch(

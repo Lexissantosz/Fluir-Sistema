@@ -17,6 +17,7 @@ public class OnboardingResponse {
     private ModulosRequest modulos;
     private PreferenciasTarefasRequest tarefas;
     private PreferenciasHabitosRequest habitos;
+    private PreferenciasSonoRequest sono;
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
@@ -164,5 +165,13 @@ public class OnboardingResponse {
 
     public void setHabitos(PreferenciasHabitosRequest habitos) {
         this.habitos = habitos;
+    }
+
+    public PreferenciasSonoRequest getSono() {
+        return sono;
+    }
+
+    public void setSono(PreferenciasSonoRequest sono) {
+        this.sono = sono;
     }
 }

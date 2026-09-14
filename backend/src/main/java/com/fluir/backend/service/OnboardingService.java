@@ -12,10 +12,11 @@ public class OnboardingService {
     private final PerfilUsuarioRepository perfilUsuarioRepository;
     private final ModulosUsuarioRepository modulosUsuarioRepository;
     private final PreferenciasAguaRepository preferenciasAguaRepository;
-    private final TarefaRepository tarefaRepository;
-    private final HabitoRepository habitoRepository;
     private final PreferenciasTarefasRepository preferenciasTarefasRepository;
     private final PreferenciasHabitosRepository preferenciasHabitosRepository;
+    private final PreferenciasSonoRepository preferenciasSonoRepository;
+    private final TarefaRepository tarefaRepository;
+    private final HabitoRepository habitoRepository;
 
     public OnboardingService(
             UsuarioRepository usuarioRepository,
@@ -24,6 +25,7 @@ public class OnboardingService {
             PreferenciasAguaRepository preferenciasAguaRepository,
             PreferenciasTarefasRepository preferenciasTarefasRepository,
             PreferenciasHabitosRepository preferenciasHabitosRepository,
+            PreferenciasSonoRepository preferenciasSonoRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
     ) {
@@ -33,6 +35,7 @@ public class OnboardingService {
         this.preferenciasAguaRepository = preferenciasAguaRepository;
         this.preferenciasTarefasRepository = preferenciasTarefasRepository;
         this.preferenciasHabitosRepository = preferenciasHabitosRepository;
+        this.preferenciasSonoRepository = preferenciasSonoRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
     }
@@ -68,6 +71,7 @@ public class OnboardingService {
         salvarModulos(request);
         salvarTarefas(request);
         salvarHabitos(request);
+        salvarSono(request);
         salvarAgua(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
@@ -97,22 +101,25 @@ public class OnboardingService {
         response.setOnboardingConcluido(perfil.getOnboardingConcluido());
 
         modulosUsuarioRepository.findByUsuario_Id(usuarioId)
-                .ifPresent(modulos -> response.setModulos(converterModulos(modulos)));
+            .ifPresent(modulos -> response.setModulos(converterModulos(modulos)));
 
         preferenciasAguaRepository.findByUsuario_Id(usuarioId)
-                .ifPresent(agua -> response.setAgua(converterAgua(agua)));
+            .ifPresent(agua -> response.setAgua(converterAgua(agua)));
 
         preferenciasTarefasRepository.findByUsuario_Id(usuarioId)
-        .ifPresent(tarefas -> response.setTarefas(converterTarefas(tarefas)));
+            .ifPresent(tarefas -> response.setTarefas(converterTarefas(tarefas)));
 
         preferenciasHabitosRepository.findByUsuario_Id(usuarioId)
-        .ifPresent(habitos -> response.setHabitos(converterHabitos(habitos)));
+            .ifPresent(habitos -> response.setHabitos(converterHabitos(habitos)));
+
+        preferenciasSonoRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(sono -> response.setSono(converterSono(sono)));
 
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
-                .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
+            .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
 
         habitoRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeiro hábito")
-                .ifPresent(habito -> response.setPrimeiroHabito(converterHabito(habito)));
+            .ifPresent(habito -> response.setPrimeiroHabito(converterHabito(habito)));
 
         return response;
     }
@@ -250,6 +257,26 @@ public class OnboardingService {
         preferenciasHabitosRepository.save(habitos);
     }
 
+    private void salvarSono(OnboardingRequest request) {
+        if (request.getSono() == null) {
+            return;
+        }
+
+        PreferenciasSono sono = preferenciasSonoRepository
+                .findByUsuario_Id(request.getUsuarioId())
+                .orElse(new PreferenciasSono());
+
+        sono.setUsuarioId(request.getUsuarioId());
+        sono.setMetaSono(request.getSono().getSleepGoal());
+        sono.setHorarioDormir(request.getSono().getUsualSleepTime());
+        sono.setHorarioAcordar(request.getSono().getUsualWakeTime());
+        sono.setRegistrarQualidade(request.getSono().getTrackQuality());
+        sono.setDificuldadeDormir(request.getSono().getSleepDifficulty());
+        sono.setLembreteDormir(request.getSono().getSleepReminder());
+
+        preferenciasSonoRepository.save(sono);
+    }
+
     private Boolean valorOuPadrao(Boolean valor, Boolean padrao) {
         return valor != null ? valor : padrao;
     }
@@ -291,6 +318,19 @@ public class OnboardingService {
         if (tarefas.getCategorias() != null && !tarefas.getCategorias().isBlank()) {
             dto.setCategories(java.util.Arrays.asList(tarefas.getCategorias().split(",")));
         }
+
+        return dto;
+    }
+
+    private PreferenciasSonoRequest converterSono(PreferenciasSono sono) {
+        PreferenciasSonoRequest dto = new PreferenciasSonoRequest();
+
+        dto.setSleepGoal(sono.getMetaSono());
+        dto.setUsualSleepTime(sono.getHorarioDormir());
+        dto.setUsualWakeTime(sono.getHorarioAcordar());
+        dto.setTrackQuality(sono.getRegistrarQualidade());
+        dto.setSleepDifficulty(sono.getDificuldadeDormir());
+        dto.setSleepReminder(sono.getLembreteDormir());
 
         return dto;
     }
