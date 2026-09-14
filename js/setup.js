@@ -1441,6 +1441,7 @@ async function finishSetup() {
       pronomes: pronomes,
       generoNascimento: setupData.user.sexAtBirth,
       idade: Number(setupData.user.age),
+      tomComunicacao: setupData.user.communicationTone,
       modulos: setupData.modules
     };
 

@@ -10,6 +10,7 @@ public class OnboardingResponse {
     private Integer altura;
     private Double peso;
     private Integer idade;
+    private String tomComunicacao;
     private String energiaAtual;
     private Boolean onboardingConcluido;
     private String mensagem;
@@ -138,5 +139,13 @@ public class OnboardingResponse {
 
     public void setIdade(Integer idade) {
         this.idade = idade;
+    }
+
+    public String getTomComunicacao() {
+        return tomComunicacao;
+    }
+
+    public void setTomComunicacao(String tomComunicacao) {
+        this.tomComunicacao = tomComunicacao;
     }
 }
