@@ -46,51 +46,30 @@ function clearMessages() {
   showMessage(registerMessage, "", "info");
 }
 
-function hasCompletedOnboardingLocally() {
-  try {
-    const setup = localStorage.getItem("fluir-setup");
+async function hasCompletedOnboarding(usuarioId) {
+  const response = await fetch(
+    `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
+  );
 
-    if (!setup) {
-      return false;
+  const onboarding = await readResponse(response);
+
+  if (response.ok) {
+    if (typeof onboarding.onboardingConcluido !== "boolean") {
+      throw new Error("Resposta inválida ao verificar o onboarding.");
     }
 
-    const setupData = JSON.parse(setup);
-    return setupData.onboardingConcluido === true;
-  } catch (error) {
-    console.warn("Erro ao verificar onboarding local:", error);
+    return onboarding.onboardingConcluido;
+  }
+
+  const onboardingNaoEncontrado =
+    response.status === 400 &&
+    onboarding.mensagem === "Onboarding não encontrado para este usuário";
+
+  if (onboardingNaoEncontrado) {
     return false;
   }
-}
 
-async function hasCompletedOnboarding(usuarioId) {
-  try {
-    const response = await fetch(
-      `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
-    );
-
-    const onboarding = await readResponse(response);
-
-    if (response.ok) {
-      return onboarding.onboardingConcluido === true;
-    }
-
-    const onboardingNaoEncontrado =
-      response.status === 400 &&
-      onboarding.mensagem === "Onboarding não encontrado para este usuário";
-
-    if (onboardingNaoEncontrado) {
-      return false;
-    }
-
-    throw new Error("Não foi possível verificar o onboarding.");
-  } catch (error) {
-    console.warn(
-      "Não foi possível consultar o onboarding no backend. Usando dados locais:",
-      error
-    );
-
-    return hasCompletedOnboardingLocally();
-  }
+  throw new Error("Não foi possível verificar o onboarding.");
 }
 
 function isValidEmail(email) {
@@ -281,16 +260,18 @@ if (loginForm) {
         return;
       }
 
-      sessionStorage.setItem("fluir-user", JSON.stringify(data));
-
-      showMessage(loginMessage, "Login realizado com sucesso.", "success");
+      sessionStorage.removeItem("fluir-user");
+      sessionStorage.setItem("fluir-onboarding-completed", "false");
 
       const onboardingConcluido = await hasCompletedOnboarding(data.id);
 
+      sessionStorage.setItem("fluir-user", JSON.stringify(data));
       sessionStorage.setItem(
         "fluir-onboarding-completed",
         String(onboardingConcluido)
       );
+
+      showMessage(loginMessage, "Login realizado com sucesso.", "success");
 
       setTimeout(function () {
         const destination = onboardingConcluido
@@ -396,6 +377,7 @@ if (registerForm) {
         return;
       }
 
+      sessionStorage.setItem("fluir-onboarding-completed", "false");
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
 
       showMessage(
