@@ -15,6 +15,7 @@ public class OnboardingService {
     private final TarefaRepository tarefaRepository;
     private final HabitoRepository habitoRepository;
     private final PreferenciasTarefasRepository preferenciasTarefasRepository;
+    private final PreferenciasHabitosRepository preferenciasHabitosRepository;
 
     public OnboardingService(
             UsuarioRepository usuarioRepository,
@@ -22,6 +23,7 @@ public class OnboardingService {
             ModulosUsuarioRepository modulosUsuarioRepository,
             PreferenciasAguaRepository preferenciasAguaRepository,
             PreferenciasTarefasRepository preferenciasTarefasRepository,
+            PreferenciasHabitosRepository preferenciasHabitosRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
     ) {
@@ -30,6 +32,7 @@ public class OnboardingService {
         this.modulosUsuarioRepository = modulosUsuarioRepository;
         this.preferenciasAguaRepository = preferenciasAguaRepository;
         this.preferenciasTarefasRepository = preferenciasTarefasRepository;
+        this.preferenciasHabitosRepository = preferenciasHabitosRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
     }
@@ -64,6 +67,7 @@ public class OnboardingService {
 
         salvarModulos(request);
         salvarTarefas(request);
+        salvarHabitos(request);
         salvarAgua(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
@@ -100,6 +104,9 @@ public class OnboardingService {
 
         preferenciasTarefasRepository.findByUsuario_Id(usuarioId)
         .ifPresent(tarefas -> response.setTarefas(converterTarefas(tarefas)));
+
+        preferenciasHabitosRepository.findByUsuario_Id(usuarioId)
+        .ifPresent(habitos -> response.setHabitos(converterHabitos(habitos)));
 
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
                 .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
@@ -217,7 +224,31 @@ public class OnboardingService {
     }
 
     preferenciasTarefasRepository.save(tarefas);
-}
+    }
+
+    private void salvarHabitos(OnboardingRequest request) {
+        if (request.getHabitos() == null) {
+            return;
+        }
+
+        PreferenciasHabitos habitos = preferenciasHabitosRepository
+                .findByUsuario_Id(request.getUsuarioId())
+                .orElse(new PreferenciasHabitos());
+
+        habitos.setUsuarioId(request.getUsuarioId());
+        habitos.setTipoAcompanhamento(request.getHabitos().getTrackingType());
+        habitos.setMetaSemanal(request.getHabitos().getWeeklyGoal());
+
+        if (request.getHabitos().getSelectedHabits() != null) {
+            habitos.setHabitosSelecionados(
+                    String.join(",", request.getHabitos().getSelectedHabits())
+            );
+        } else {
+            habitos.setHabitosSelecionados(null);
+        }
+
+        preferenciasHabitosRepository.save(habitos);
+    }
 
     private Boolean valorOuPadrao(Boolean valor, Boolean padrao) {
         return valor != null ? valor : padrao;
@@ -252,17 +283,33 @@ public class OnboardingService {
     }
 
     private PreferenciasTarefasRequest converterTarefas(PreferenciasTarefas tarefas) {
-    PreferenciasTarefasRequest dto = new PreferenciasTarefasRequest();
+        PreferenciasTarefasRequest dto = new PreferenciasTarefasRequest();
 
-    dto.setPreferredView(tarefas.getVisualizacaoPreferida());
-    dto.setReminders(tarefas.getLembretes());
+        dto.setPreferredView(tarefas.getVisualizacaoPreferida());
+        dto.setReminders(tarefas.getLembretes());
 
-    if (tarefas.getCategorias() != null && !tarefas.getCategorias().isBlank()) {
-        dto.setCategories(java.util.Arrays.asList(tarefas.getCategorias().split(",")));
+        if (tarefas.getCategorias() != null && !tarefas.getCategorias().isBlank()) {
+            dto.setCategories(java.util.Arrays.asList(tarefas.getCategorias().split(",")));
+        }
+
+        return dto;
     }
 
-    return dto;
-}
+    private PreferenciasHabitosRequest converterHabitos(PreferenciasHabitos habitos) {
+        PreferenciasHabitosRequest dto = new PreferenciasHabitosRequest();
+
+        dto.setTrackingType(habitos.getTipoAcompanhamento());
+        dto.setWeeklyGoal(habitos.getMetaSemanal());
+
+        if (habitos.getHabitosSelecionados() != null
+                && !habitos.getHabitosSelecionados().isBlank()) {
+            dto.setSelectedHabits(
+                    java.util.Arrays.asList(habitos.getHabitosSelecionados().split(","))
+            );
+        }
+
+        return dto;
+    }
 
     private PrimeiraTarefaRequest converterTarefa(Tarefa tarefa) {
         PrimeiraTarefaRequest dto = new PrimeiraTarefaRequest();

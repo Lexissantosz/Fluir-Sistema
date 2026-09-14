@@ -1443,7 +1443,8 @@ async function finishSetup() {
       idade: Number(setupData.user.age),
       tomComunicacao: setupData.user.communicationTone,
       modulos: setupData.modules,
-      tarefas: setupData.preferences.tasks || null
+      tarefas: setupData.preferences.tasks || null,
+      habitos: setupData.preferences.habits || null
     };
 
     const response = await fetch(
