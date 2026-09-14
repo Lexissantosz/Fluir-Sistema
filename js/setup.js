@@ -85,6 +85,28 @@ const setupData = {
   preferences: {}
 };
 
+function preencherDadosDaConta() {
+  try {
+    const usuarioSalvo = sessionStorage.getItem("fluir-user");
+
+    if (!usuarioSalvo) {
+      return;
+    }
+
+    const usuario = JSON.parse(usuarioSalvo);
+    const nameField = document.getElementById("userName");
+
+    if (nameField && usuario?.nome && !nameField.value.trim()) {
+      nameField.value = usuario.nome;
+      setupData.user.name = usuario.nome;
+    }
+  } catch (error) {
+    console.warn("Não foi possível reaproveitar os dados da conta:", error);
+  }
+}
+
+preencherDadosDaConta();
+
 
 // =====================================================
 // 3. NOMES VISUAIS DOS MÓDULOS
