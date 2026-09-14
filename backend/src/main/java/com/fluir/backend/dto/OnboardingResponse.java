@@ -14,8 +14,8 @@ public class OnboardingResponse {
     private String energiaAtual;
     private Boolean onboardingConcluido;
     private String mensagem;
-
     private ModulosRequest modulos;
+    private PreferenciasTarefasRequest tarefas;
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
@@ -147,5 +147,13 @@ public class OnboardingResponse {
 
     public void setTomComunicacao(String tomComunicacao) {
         this.tomComunicacao = tomComunicacao;
+    }
+
+    public PreferenciasTarefasRequest getTarefas() {
+        return tarefas;
+    }
+
+    public void setTarefas(PreferenciasTarefasRequest tarefas) {
+        this.tarefas = tarefas;
     }
 }

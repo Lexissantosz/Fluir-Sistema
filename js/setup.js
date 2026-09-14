@@ -1442,7 +1442,8 @@ async function finishSetup() {
       generoNascimento: setupData.user.sexAtBirth,
       idade: Number(setupData.user.age),
       tomComunicacao: setupData.user.communicationTone,
-      modulos: setupData.modules
+      modulos: setupData.modules,
+      tarefas: setupData.preferences.tasks || null
     };
 
     const response = await fetch(

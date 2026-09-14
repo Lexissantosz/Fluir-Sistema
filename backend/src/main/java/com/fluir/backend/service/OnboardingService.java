@@ -14,12 +14,14 @@ public class OnboardingService {
     private final PreferenciasAguaRepository preferenciasAguaRepository;
     private final TarefaRepository tarefaRepository;
     private final HabitoRepository habitoRepository;
+    private final PreferenciasTarefasRepository preferenciasTarefasRepository;
 
     public OnboardingService(
             UsuarioRepository usuarioRepository,
             PerfilUsuarioRepository perfilUsuarioRepository,
             ModulosUsuarioRepository modulosUsuarioRepository,
             PreferenciasAguaRepository preferenciasAguaRepository,
+            PreferenciasTarefasRepository preferenciasTarefasRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
     ) {
@@ -27,6 +29,7 @@ public class OnboardingService {
         this.perfilUsuarioRepository = perfilUsuarioRepository;
         this.modulosUsuarioRepository = modulosUsuarioRepository;
         this.preferenciasAguaRepository = preferenciasAguaRepository;
+        this.preferenciasTarefasRepository = preferenciasTarefasRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
     }
@@ -60,6 +63,7 @@ public class OnboardingService {
         perfilUsuarioRepository.save(perfil);
 
         salvarModulos(request);
+        salvarTarefas(request);
         salvarAgua(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
@@ -93,6 +97,9 @@ public class OnboardingService {
 
         preferenciasAguaRepository.findByUsuario_Id(usuarioId)
                 .ifPresent(agua -> response.setAgua(converterAgua(agua)));
+
+        preferenciasTarefasRepository.findByUsuario_Id(usuarioId)
+        .ifPresent(tarefas -> response.setTarefas(converterTarefas(tarefas)));
 
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
                 .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
@@ -190,6 +197,28 @@ public class OnboardingService {
         habitoRepository.save(habito);
     }
 
+    private void salvarTarefas(OnboardingRequest request) {
+    if (request.getTarefas() == null) {
+        return;
+    }
+
+    PreferenciasTarefas tarefas = preferenciasTarefasRepository
+            .findByUsuario_Id(request.getUsuarioId())
+            .orElse(new PreferenciasTarefas());
+
+    tarefas.setUsuarioId(request.getUsuarioId());
+    tarefas.setVisualizacaoPreferida(request.getTarefas().getPreferredView());
+    tarefas.setLembretes(request.getTarefas().getReminders());
+
+    if (request.getTarefas().getCategories() != null) {
+        tarefas.setCategorias(String.join(",", request.getTarefas().getCategories()));
+    } else {
+        tarefas.setCategorias(null);
+    }
+
+    preferenciasTarefasRepository.save(tarefas);
+}
+
     private Boolean valorOuPadrao(Boolean valor, Boolean padrao) {
         return valor != null ? valor : padrao;
     }
@@ -221,6 +250,19 @@ public class OnboardingService {
 
         return dto;
     }
+
+    private PreferenciasTarefasRequest converterTarefas(PreferenciasTarefas tarefas) {
+    PreferenciasTarefasRequest dto = new PreferenciasTarefasRequest();
+
+    dto.setPreferredView(tarefas.getVisualizacaoPreferida());
+    dto.setReminders(tarefas.getLembretes());
+
+    if (tarefas.getCategorias() != null && !tarefas.getCategorias().isBlank()) {
+        dto.setCategories(java.util.Arrays.asList(tarefas.getCategorias().split(",")));
+    }
+
+    return dto;
+}
 
     private PrimeiraTarefaRequest converterTarefa(Tarefa tarefa) {
         PrimeiraTarefaRequest dto = new PrimeiraTarefaRequest();
