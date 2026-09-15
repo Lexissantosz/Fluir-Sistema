@@ -17,6 +17,7 @@ public class OnboardingRequest {
     private PreferenciasHabitosRequest habitos;
     private PreferenciasSonoRequest sono;
     private PreferenciasFinancasRequest financas;
+    private PreferenciasDiarioRequest diario;
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
@@ -164,5 +165,13 @@ public class OnboardingRequest {
 
     public void setFinancas(PreferenciasFinancasRequest financas) {
         this.financas = financas;
+    }
+
+    public PreferenciasDiarioRequest getDiario() {
+        return diario;
+    }
+
+    public void setDiario(PreferenciasDiarioRequest diario) {
+        this.diario = diario;
     }
 }

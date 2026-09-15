@@ -1454,7 +1454,8 @@ async function finishSetup() {
               ? Number(setupData.preferences.finances.monthlyIncome)
               : null
           }
-        : null
+        : null,
+      diario: setupData.preferences.diary || null,
     };
 
     const response = await fetch(

@@ -22,6 +22,7 @@ public class OnboardingResponse {
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
+    private PreferenciasDiarioRequest diario;
 
     public Integer getUsuarioId() {
         return usuarioId;
@@ -182,5 +183,13 @@ public class OnboardingResponse {
 
     public void setFinancas(PreferenciasFinancasRequest financas) {
         this.financas = financas;
+    }
+
+    public PreferenciasDiarioRequest getDiario() {
+        return diario;
+    }
+
+    public void setDiario(PreferenciasDiarioRequest diario) {
+        this.diario = diario;
     }
 }
