@@ -1445,7 +1445,8 @@ async function finishSetup() {
       modulos: setupData.modules,
       tarefas: setupData.preferences.tasks || null,
       habitos: setupData.preferences.habits || null,
-      sono: setupData.preferences.sleep || null
+      sono: setupData.preferences.sleep || null,
+      agua: setupData.preferences.water || null
     };
 
     const response = await fetch(

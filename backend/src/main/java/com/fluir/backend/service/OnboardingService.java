@@ -162,6 +162,10 @@ public class OnboardingService {
         agua.setMetaCalculadaMl(request.getAgua().getMetaCalculadaMl());
         agua.setMetaFinalMl(request.getAgua().getMetaFinalMl());
         agua.setModoRegistro(request.getAgua().getModoRegistro());
+        agua.setMetaDiaria(request.getAgua().getDailyGoal());
+        agua.setUnidade(request.getAgua().getUnit());
+        agua.setLembretes(request.getAgua().getReminders());
+        agua.setFrequenciaLembrete(request.getAgua().getReminderFrequency());
 
         preferenciasAguaRepository.save(agua);
     }
@@ -305,6 +309,10 @@ public class OnboardingService {
         dto.setMetaCalculadaMl(agua.getMetaCalculadaMl());
         dto.setMetaFinalMl(agua.getMetaFinalMl());
         dto.setModoRegistro(agua.getModoRegistro());
+        dto.setDailyGoal(agua.getMetaDiaria());
+        dto.setUnit(agua.getUnidade());
+        dto.setReminders(agua.getLembretes());
+        dto.setReminderFrequency(agua.getFrequenciaLembrete());
 
         return dto;
     }
