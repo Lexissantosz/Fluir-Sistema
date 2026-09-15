@@ -15,6 +15,7 @@ public class OnboardingService {
     private final PreferenciasTarefasRepository preferenciasTarefasRepository;
     private final PreferenciasHabitosRepository preferenciasHabitosRepository;
     private final PreferenciasSonoRepository preferenciasSonoRepository;
+    private final PreferenciasFinancasRepository preferenciasFinancasRepository;
     private final TarefaRepository tarefaRepository;
     private final HabitoRepository habitoRepository;
 
@@ -26,6 +27,7 @@ public class OnboardingService {
             PreferenciasTarefasRepository preferenciasTarefasRepository,
             PreferenciasHabitosRepository preferenciasHabitosRepository,
             PreferenciasSonoRepository preferenciasSonoRepository,
+            PreferenciasFinancasRepository preferenciasFinancasRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
     ) {
@@ -36,6 +38,7 @@ public class OnboardingService {
         this.preferenciasTarefasRepository = preferenciasTarefasRepository;
         this.preferenciasHabitosRepository = preferenciasHabitosRepository;
         this.preferenciasSonoRepository = preferenciasSonoRepository;
+        this.preferenciasFinancasRepository = preferenciasFinancasRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
     }
@@ -73,6 +76,7 @@ public class OnboardingService {
         salvarHabitos(request);
         salvarSono(request);
         salvarAgua(request);
+        salvarFinancas(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
 
@@ -114,6 +118,9 @@ public class OnboardingService {
 
         preferenciasSonoRepository.findByUsuario_Id(usuarioId)
             .ifPresent(sono -> response.setSono(converterSono(sono)));
+
+        preferenciasFinancasRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(financas -> response.setFinancas(converterFinancas(financas)));
 
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
             .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
@@ -281,6 +288,32 @@ public class OnboardingService {
         preferenciasSonoRepository.save(sono);
     }
 
+    private void salvarFinancas(OnboardingRequest request) {
+        if (request.getFinancas() == null) {
+            return;
+        }
+
+        PreferenciasFinancas financas = preferenciasFinancasRepository
+                .findByUsuario_Id(request.getUsuarioId())
+                .orElse(new PreferenciasFinancas());
+
+        financas.setUsuarioId(request.getUsuarioId());
+        financas.setRendaMensal(request.getFinancas().getMonthlyIncome());
+        financas.setControlarGastos(request.getFinancas().getTrackExpenses());
+        financas.setControlarDividas(request.getFinancas().getTrackDebts());
+        financas.setMetaFinanceira(request.getFinancas().getFinancialGoal());
+
+        if (request.getFinancas().getCategories() != null) {
+            financas.setCategorias(
+                    String.join(",", request.getFinancas().getCategories())
+            );
+        } else {
+            financas.setCategorias(null);
+        }
+
+        preferenciasFinancasRepository.save(financas);
+    }
+
     private Boolean valorOuPadrao(Boolean valor, Boolean padrao) {
         return valor != null ? valor : padrao;
     }
@@ -375,6 +408,24 @@ public class OnboardingService {
         dto.setTitulo(habito.getTitulo());
         dto.setFrequenciaSemanal(habito.getFrequenciaSemanal());
         dto.setMelhorHorario(habito.getMelhorHorario());
+
+        return dto;
+    }
+
+
+    private PreferenciasFinancasRequest converterFinancas(PreferenciasFinancas financas) {
+        PreferenciasFinancasRequest dto = new PreferenciasFinancasRequest();
+
+        dto.setMonthlyIncome(financas.getRendaMensal());
+        dto.setTrackExpenses(financas.getControlarGastos());
+        dto.setTrackDebts(financas.getControlarDividas());
+        dto.setFinancialGoal(financas.getMetaFinanceira());
+
+        if (financas.getCategorias() != null && !financas.getCategorias().isBlank()) {
+            dto.setCategories(
+                    java.util.Arrays.asList(financas.getCategorias().split(","))
+            );
+        }
 
         return dto;
     }

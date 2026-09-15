@@ -1446,7 +1446,15 @@ async function finishSetup() {
       tarefas: setupData.preferences.tasks || null,
       habitos: setupData.preferences.habits || null,
       sono: setupData.preferences.sleep || null,
-      agua: setupData.preferences.water || null
+      agua: setupData.preferences.water || null,
+      financas: setupData.preferences.finances
+        ? {
+            ...setupData.preferences.finances,
+            monthlyIncome: setupData.preferences.finances.monthlyIncome
+              ? Number(setupData.preferences.finances.monthlyIncome)
+              : null
+          }
+        : null
     };
 
     const response = await fetch(
