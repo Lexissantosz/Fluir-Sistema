@@ -1456,6 +1456,7 @@ async function finishSetup() {
           }
         : null,
       diario: setupData.preferences.diary || null,
+alimentacao: setupData.preferences.nutrition || null,
     };
 
     const response = await fetch(

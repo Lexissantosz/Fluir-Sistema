@@ -17,6 +17,7 @@ public class OnboardingService {
     private final PreferenciasSonoRepository preferenciasSonoRepository;
     private final PreferenciasFinancasRepository preferenciasFinancasRepository;
     private final PreferenciasDiarioRepository preferenciasDiarioRepository;
+    private final PreferenciasAlimentacaoRepository preferenciasAlimentacaoRepository;
     private final TarefaRepository tarefaRepository;
     private final HabitoRepository habitoRepository;
 
@@ -30,6 +31,7 @@ public class OnboardingService {
             PreferenciasSonoRepository preferenciasSonoRepository,
             PreferenciasFinancasRepository preferenciasFinancasRepository,
             PreferenciasDiarioRepository preferenciasDiarioRepository,
+            PreferenciasAlimentacaoRepository preferenciasAlimentacaoRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
     ) {
@@ -42,6 +44,7 @@ public class OnboardingService {
         this.preferenciasSonoRepository = preferenciasSonoRepository;
         this.preferenciasFinancasRepository = preferenciasFinancasRepository;
         this.preferenciasDiarioRepository = preferenciasDiarioRepository;
+        this.preferenciasAlimentacaoRepository = preferenciasAlimentacaoRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
     }
@@ -81,6 +84,7 @@ public class OnboardingService {
         salvarAgua(request);
         salvarFinancas(request);
         salvarDiario(request);
+        salvarAlimentacao(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
 
@@ -129,6 +133,9 @@ public class OnboardingService {
         preferenciasDiarioRepository.findByUsuario_Id(usuarioId)
             .ifPresent(diario -> response.setDiario(converterDiario(diario)));
 
+        preferenciasAlimentacaoRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(alimentacao ->
+                    response.setAlimentacao(converterAlimentacao(alimentacao)));
         tarefaRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeira tarefa")
             .ifPresent(tarefa -> response.setPrimeiraTarefa(converterTarefa(tarefa)));
 
@@ -339,6 +346,25 @@ public class OnboardingService {
         preferenciasDiarioRepository.save(diario);
     }
 
+    private void salvarAlimentacao(OnboardingRequest request) {
+    if (request.getAlimentacao() == null) {
+        return;
+    }
+
+    PreferenciasAlimentacao alimentacao = preferenciasAlimentacaoRepository
+            .findByUsuario_Id(request.getUsuarioId())
+            .orElse(new PreferenciasAlimentacao());
+
+    alimentacao.setUsuarioId(request.getUsuarioId());
+    alimentacao.setAltura(request.getAlimentacao().getHeight());
+    alimentacao.setPeso(request.getAlimentacao().getWeight());
+    alimentacao.setObjetivoAlimentar(request.getAlimentacao().getGoal());
+    alimentacao.setRefeicoesPorDia(request.getAlimentacao().getMealsPerDay());
+    alimentacao.setRestricoes(request.getAlimentacao().getRestrictions());
+
+    preferenciasAlimentacaoRepository.save(alimentacao);
+}
+
     private Boolean valorOuPadrao(Boolean valor, Boolean padrao) {
         return valor != null ? valor : padrao;
     }
@@ -465,4 +491,20 @@ public class OnboardingService {
 
         return dto;
     }
+
+    private PreferenciasAlimentacaoRequest converterAlimentacao(
+            PreferenciasAlimentacao alimentacao
+    ) {
+        PreferenciasAlimentacaoRequest dto =
+                new PreferenciasAlimentacaoRequest();
+
+        dto.setHeight(alimentacao.getAltura());
+        dto.setWeight(alimentacao.getPeso());
+        dto.setGoal(alimentacao.getObjetivoAlimentar());
+        dto.setMealsPerDay(alimentacao.getRefeicoesPorDia());
+        dto.setRestrictions(alimentacao.getRestricoes());
+
+        return dto;
+    }
+
 }

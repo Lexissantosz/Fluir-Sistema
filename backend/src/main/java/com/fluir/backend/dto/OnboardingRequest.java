@@ -18,12 +18,21 @@ public class OnboardingRequest {
     private PreferenciasSonoRequest sono;
     private PreferenciasFinancasRequest financas;
     private PreferenciasDiarioRequest diario;
+    private PreferenciasAlimentacaoRequest alimentacao;
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
 
     public Integer getUsuarioId() {
         return usuarioId;
+    }
+
+    public PreferenciasAlimentacaoRequest getAlimentacao() {
+        return alimentacao;
+    }
+
+    public void setAlimentacao(PreferenciasAlimentacaoRequest alimentacao) {
+        this.alimentacao = alimentacao;
     }
 
     public void setUsuarioId(Integer usuarioId) {
@@ -37,7 +46,6 @@ public class OnboardingRequest {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
     public String getApelido() {
         return apelido;
@@ -174,4 +182,5 @@ public class OnboardingRequest {
     public void setDiario(PreferenciasDiarioRequest diario) {
         this.diario = diario;
     }
+
 }

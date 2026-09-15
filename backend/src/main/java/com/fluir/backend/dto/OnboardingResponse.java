@@ -20,10 +20,18 @@ public class OnboardingResponse {
     private PreferenciasSonoRequest sono;
     private PreferenciasFinancasRequest financas;
     private AguaRequest agua;
+    private PreferenciasAlimentacaoRequest alimentacao;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
     private PreferenciasDiarioRequest diario;
 
+    public PreferenciasAlimentacaoRequest getAlimentacao() {
+        return alimentacao;
+    }
+
+    public void setAlimentacao(PreferenciasAlimentacaoRequest alimentacao) {
+        this.alimentacao = alimentacao;
+    }
     public Integer getUsuarioId() {
         return usuarioId;
     }
