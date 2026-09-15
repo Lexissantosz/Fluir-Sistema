@@ -24,6 +24,9 @@ public class OnboardingResponse {
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
     private PreferenciasDiarioRequest diario;
+    private PreferenciasSaudeFisicaRequest saudeFisica;
+    private PreferenciasCicloMenstrualRequest cicloMenstrual;
+    private PreferenciasAnexosRequest anexos;
 
     public PreferenciasAlimentacaoRequest getAlimentacao() {
         return alimentacao;
@@ -200,4 +203,28 @@ public class OnboardingResponse {
     public void setDiario(PreferenciasDiarioRequest diario) {
         this.diario = diario;
     }
+
+    public PreferenciasSaudeFisicaRequest getSaudeFisica() {
+        return saudeFisica;
+    }
+
+    public void setSaudeFisica(PreferenciasSaudeFisicaRequest saudeFisica) {
+        this.saudeFisica = saudeFisica;
+    }
+
+    public PreferenciasCicloMenstrualRequest getCicloMenstrual() {
+        return cicloMenstrual;
+    }
+
+    public void setCicloMenstrual(PreferenciasCicloMenstrualRequest cicloMenstrual) {
+        this.cicloMenstrual = cicloMenstrual;
+    }
+
+    public PreferenciasAnexosRequest getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(PreferenciasAnexosRequest anexos) {
+        this.anexos = anexos;
+}
 }

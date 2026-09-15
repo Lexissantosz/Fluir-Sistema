@@ -20,6 +20,9 @@ public class OnboardingService {
     private final PreferenciasAlimentacaoRepository preferenciasAlimentacaoRepository;
     private final TarefaRepository tarefaRepository;
     private final HabitoRepository habitoRepository;
+    private final PreferenciasSaudeFisicaRepository preferenciasSaudeFisicaRepository;
+    private final PreferenciasCicloMenstrualRepository preferenciasCicloMenstrualRepository;
+    private final PreferenciasAnexosRepository preferenciasAnexosRepository;
 
     public OnboardingService(
             UsuarioRepository usuarioRepository,
@@ -31,6 +34,9 @@ public class OnboardingService {
             PreferenciasSonoRepository preferenciasSonoRepository,
             PreferenciasFinancasRepository preferenciasFinancasRepository,
             PreferenciasDiarioRepository preferenciasDiarioRepository,
+            PreferenciasSaudeFisicaRepository preferenciasSaudeFisicaRepository,
+            PreferenciasCicloMenstrualRepository preferenciasCicloMenstrualRepository,
+            PreferenciasAnexosRepository preferenciasAnexosRepository,
             PreferenciasAlimentacaoRepository preferenciasAlimentacaoRepository,
             TarefaRepository tarefaRepository,
             HabitoRepository habitoRepository
@@ -47,6 +53,9 @@ public class OnboardingService {
         this.preferenciasAlimentacaoRepository = preferenciasAlimentacaoRepository;
         this.tarefaRepository = tarefaRepository;
         this.habitoRepository = habitoRepository;
+        this.preferenciasSaudeFisicaRepository = preferenciasSaudeFisicaRepository;
+        this.preferenciasCicloMenstrualRepository = preferenciasCicloMenstrualRepository;
+        this.preferenciasAnexosRepository = preferenciasAnexosRepository;
     }
 
     public OnboardingResponse salvar(OnboardingRequest request) {
@@ -87,6 +96,9 @@ public class OnboardingService {
         salvarAlimentacao(request);
         salvarPrimeiraTarefa(request);
         salvarPrimeiroHabito(request);
+        salvarSaudeFisica(request);
+        salvarCicloMenstrual(request);
+        salvarAnexos(request);
 
         OnboardingResponse response = buscarPorUsuario(request.getUsuarioId());
         response.setMensagem("Onboarding salvo com sucesso");
@@ -142,8 +154,19 @@ public class OnboardingService {
         habitoRepository.findFirstByUsuario_IdAndCategoriaOrderByIdDesc(usuarioId, "Primeiro hábito")
             .ifPresent(habito -> response.setPrimeiroHabito(converterHabito(habito)));
 
-        return response;
-    }
+        preferenciasSaudeFisicaRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(saudeFisica ->
+                    response.setSaudeFisica(converterSaudeFisica(saudeFisica)));
+
+    preferenciasCicloMenstrualRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(ciclo ->
+                    response.setCicloMenstrual(converterCicloMenstrual(ciclo)));
+
+    preferenciasAnexosRepository.findByUsuario_Id(usuarioId)
+            .ifPresent(anexos ->
+                    response.setAnexos(converterAnexos(anexos)));
+            return response;
+        }
 
     private void salvarModulos(OnboardingRequest request) {
         ModulosRequest modulosRequest = request.getModulos();
@@ -506,5 +529,142 @@ public class OnboardingService {
 
         return dto;
     }
+
+    private void salvarSaudeFisica(OnboardingRequest request) {
+    if (request.getSaudeFisica() == null) {
+        return;
+    }
+
+    PreferenciasSaudeFisica saudeFisica = preferenciasSaudeFisicaRepository
+            .findByUsuario_Id(request.getUsuarioId())
+            .orElse(new PreferenciasSaudeFisica());
+
+    saudeFisica.setUsuarioId(request.getUsuarioId());
+    saudeFisica.setPraticaAtividade(request.getSaudeFisica().getExercises());
+    saudeFisica.setFrequenciaSemanal(request.getSaudeFisica().getWeeklyFrequency());
+    saudeFisica.setTipoTreino(request.getSaudeFisica().getTrainingType());
+    saudeFisica.setRegistrarDorEnergia(request.getSaudeFisica().getTrackPainEnergy());
+    saudeFisica.setLimitacoes(request.getSaudeFisica().getLimitations());
+
+    preferenciasSaudeFisicaRepository.save(saudeFisica);
+}
+
+private void salvarCicloMenstrual(OnboardingRequest request) {
+    if (request.getCicloMenstrual() == null) {
+        return;
+    }
+
+    PreferenciasCicloMenstrual ciclo = preferenciasCicloMenstrualRepository
+            .findByUsuario_Id(request.getUsuarioId())
+            .orElse(new PreferenciasCicloMenstrual());
+
+    ciclo.setUsuarioId(request.getUsuarioId());
+    ciclo.setMenstruaAtualmente(request.getCicloMenstrual().getCurrentlyMenstruates());
+    ciclo.setCicloRegular(request.getCicloMenstrual().getRegularCycle());
+    ciclo.setDataUltimaMenstruacao(request.getCicloMenstrual().getLastPeriodDate());
+    ciclo.setDuracaoCiclo(request.getCicloMenstrual().getCycleLength());
+    ciclo.setDuracaoSangramento(request.getCicloMenstrual().getBleedingLength());
+    ciclo.setColicas(request.getCicloMenstrual().getCramps());
+    ciclo.setGravida(request.getCicloMenstrual().getPregnant());
+    ciclo.setAmamentando(request.getCicloMenstrual().getBreastfeeding());
+    ciclo.setMetodoHormonal(request.getCicloMenstrual().getHormonalMethod());
+    ciclo.setLembretes(request.getCicloMenstrual().getReminders());
+
+    if (request.getCicloMenstrual().getSymptoms() != null) {
+        ciclo.setSintomas(String.join(",", request.getCicloMenstrual().getSymptoms()));
+    } else {
+        ciclo.setSintomas(null);
+    }
+
+    preferenciasCicloMenstrualRepository.save(ciclo);
+}
+
+private void salvarAnexos(OnboardingRequest request) {
+    if (request.getAnexos() == null) {
+        return;
+    }
+
+    PreferenciasAnexos anexos = preferenciasAnexosRepository
+            .findByUsuario_Id(request.getUsuarioId())
+            .orElse(new PreferenciasAnexos());
+
+    anexos.setUsuarioId(request.getUsuarioId());
+
+    if (request.getAnexos().getFileTypes() != null) {
+        anexos.setTiposArquivo(String.join(",", request.getAnexos().getFileTypes()));
+    } else {
+        anexos.setTiposArquivo(null);
+    }
+
+    if (request.getAnexos().getLinkToModules() != null) {
+        anexos.setVincularModulos(String.join(",", request.getAnexos().getLinkToModules()));
+    } else {
+        anexos.setVincularModulos(null);
+    }
+
+    preferenciasAnexosRepository.save(anexos);
+}
+
+private PreferenciasSaudeFisicaRequest converterSaudeFisica(
+        PreferenciasSaudeFisica saudeFisica
+) {
+    PreferenciasSaudeFisicaRequest dto =
+            new PreferenciasSaudeFisicaRequest();
+
+    dto.setExercises(saudeFisica.getPraticaAtividade());
+    dto.setWeeklyFrequency(saudeFisica.getFrequenciaSemanal());
+    dto.setTrainingType(saudeFisica.getTipoTreino());
+    dto.setTrackPainEnergy(saudeFisica.getRegistrarDorEnergia());
+    dto.setLimitations(saudeFisica.getLimitacoes());
+
+    return dto;
+}
+
+private PreferenciasCicloMenstrualRequest converterCicloMenstrual(
+        PreferenciasCicloMenstrual ciclo
+) {
+    PreferenciasCicloMenstrualRequest dto =
+            new PreferenciasCicloMenstrualRequest();
+
+    dto.setCurrentlyMenstruates(ciclo.getMenstruaAtualmente());
+    dto.setRegularCycle(ciclo.getCicloRegular());
+    dto.setLastPeriodDate(ciclo.getDataUltimaMenstruacao());
+    dto.setCycleLength(ciclo.getDuracaoCiclo());
+    dto.setBleedingLength(ciclo.getDuracaoSangramento());
+    dto.setCramps(ciclo.getColicas());
+    dto.setPregnant(ciclo.getGravida());
+    dto.setBreastfeeding(ciclo.getAmamentando());
+    dto.setHormonalMethod(ciclo.getMetodoHormonal());
+    dto.setReminders(ciclo.getLembretes());
+
+    if (ciclo.getSintomas() != null && !ciclo.getSintomas().isBlank()) {
+        dto.setSymptoms(
+                java.util.Arrays.asList(ciclo.getSintomas().split(","))
+        );
+    }
+
+    return dto;
+}
+
+private PreferenciasAnexosRequest converterAnexos(
+        PreferenciasAnexos anexos
+) {
+    PreferenciasAnexosRequest dto = new PreferenciasAnexosRequest();
+
+    if (anexos.getTiposArquivo() != null && !anexos.getTiposArquivo().isBlank()) {
+        dto.setFileTypes(
+                java.util.Arrays.asList(anexos.getTiposArquivo().split(","))
+        );
+    }
+
+    if (anexos.getVincularModulos() != null
+            && !anexos.getVincularModulos().isBlank()) {
+        dto.setLinkToModules(
+                java.util.Arrays.asList(anexos.getVincularModulos().split(","))
+        );
+    }
+
+    return dto;
+}
 
 }

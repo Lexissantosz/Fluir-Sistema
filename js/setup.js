@@ -1456,7 +1456,10 @@ async function finishSetup() {
           }
         : null,
       diario: setupData.preferences.diary || null,
-alimentacao: setupData.preferences.nutrition || null,
+      alimentacao: setupData.preferences.nutrition || null,
+      saudeFisica: setupData.preferences.physicalHealth || null,
+      cicloMenstrual: setupData.preferences.menstrualCycle || null,
+      anexos: setupData.preferences.attachments || null,
     };
 
     const response = await fetch(
