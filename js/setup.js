@@ -1320,8 +1320,7 @@ function generateReview() {
     <div class="review-section">
       <h4>Preferências configuradas</h4>
       <p>
-        Suas respostas foram salvas localmente por enquanto. 
-        Depois conectaremos isso ao backend Spring Boot do Fluir.
+        Suas preferências serão salvas no Fluir e usadas para personalizar sua experiência.
       </p>
     </div>
   `;
@@ -1398,8 +1397,8 @@ backBtn.addEventListener("click", () => {
 
 // =====================================================
 // 31. FINALIZAR SETUP
-// Salva a configuração no localStorage
-// Futuramente, aqui conectaremos com backend
+// Salva a configuração no backend
+// Mantém também uma cópia local para telas que ainda dependem dela
 // =====================================================
 
 async function finishSetup() {
