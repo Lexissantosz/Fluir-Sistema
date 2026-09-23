@@ -11,6 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import com.fluir.backend.security.FluirSessionFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -53,9 +55,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            CorsConfigurationSource corsConfigurationSource
-    ) throws Exception {
+        HttpSecurity http,
+        CorsConfigurationSource corsConfigurationSource,
+        FluirSessionFilter fluirSessionFilter
+) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
@@ -66,8 +69,13 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/usuarios/**").permitAll()
-                        .requestMatchers("/api/onboarding/**").permitAll()
+                        .requestMatchers("/api/onboarding/**").authenticated()
                         .anyRequest().permitAll()
+                )
+
+                .addFilterBefore(
+                        fluirSessionFilter,
+                        UsernamePasswordAuthenticationFilter.class
                 );
 
         return http.build();

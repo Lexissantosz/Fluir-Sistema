@@ -46,11 +46,119 @@ function clearMessages() {
   showMessage(registerMessage, "", "info");
 }
 
-async function hasCompletedOnboarding(usuarioId) {
+function hydrateSetupFromOnboarding(usuario, onboarding) {
+  let localSetup = {};
+
+  try {
+    const salvo = JSON.parse(
+      localStorage.getItem("fluir-setup") || "null"
+    );
+
+    const pertenceAoUsuario =
+      salvo?.usuarioId != null &&
+      String(salvo.usuarioId) === String(usuario.id);
+
+    if (pertenceAoUsuario) {
+      localSetup = salvo;
+    }
+  } catch (error) {
+    console.warn("Erro ao ler setup local:", error);
+  }
+
+  const preferences = {
+    ...(localSetup.preferences || {})
+  };
+
+  if (onboarding.tarefas) {
+    preferences.tasks = onboarding.tarefas;
+  }
+
+  if (onboarding.habitos) {
+    preferences.habits = onboarding.habitos;
+  }
+
+  if (onboarding.sono) {
+    preferences.sleep = onboarding.sono;
+  }
+
+  if (onboarding.agua) {
+    preferences.water = {
+      ...(preferences.water || {}),
+      dailyGoal:
+        onboarding.agua.dailyGoal ||
+        onboarding.agua.metaFinalMl ||
+        "",
+      unit: onboarding.agua.unit || "",
+      reminders: onboarding.agua.reminders || "",
+      reminderFrequency:
+        onboarding.agua.reminderFrequency || ""
+    };
+  }
+
+  if (onboarding.financas) {
+    preferences.finances = onboarding.financas;
+  }
+
+  if (onboarding.diario) {
+    preferences.diary = onboarding.diario;
+  }
+
+  if (onboarding.alimentacao) {
+    preferences.nutrition = onboarding.alimentacao;
+  }
+
+  if (onboarding.saudeFisica) {
+    preferences.physicalHealth = onboarding.saudeFisica;
+  }
+
+  if (onboarding.cicloMenstrual) {
+    preferences.menstrualCycle = onboarding.cicloMenstrual;
+  }
+
+  if (onboarding.anexos) {
+    preferences.attachments = onboarding.anexos;
+  }
+
+  const setup = {
+    ...localSetup,
+    usuarioId: usuario.id,
+    onboardingConcluido:
+      onboarding.onboardingConcluido === true,
+
+    user: {
+      ...(localSetup.user || {}),
+      name: onboarding.nome || usuario.nome || "",
+      nickname: onboarding.apelido || "",
+      pronouns: onboarding.pronomes || "",
+      sexAtBirth: onboarding.generoNascimento || "",
+      age: onboarding.idade ?? "",
+      communicationTone:
+        onboarding.tomComunicacao || "calmo",
+      energy: onboarding.energiaAtual || "",
+      email: usuario.email || ""
+    },
+
+    modules: onboarding.modulos || {},
+    preferences,
+    atualizadoEm: new Date().toISOString()
+  };
+
+  localStorage.setItem(
+    "fluir-setup",
+    JSON.stringify(setup)
+  );
+}
+
+async function hasCompletedOnboarding(usuario) {
   sessionStorage.removeItem("fluir-onboarding");
 
   const response = await fetch(
-    `${ONBOARDING_API_BASE_URL}/usuario/${usuarioId}`
+    `${ONBOARDING_API_BASE_URL}/usuario/${usuario.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${usuario.token}`
+      }
+    }
   );
 
   const onboarding = await readResponse(response);
@@ -59,10 +167,12 @@ async function hasCompletedOnboarding(usuarioId) {
     const respostaValida =
       onboarding &&
       typeof onboarding.onboardingConcluido === "boolean" &&
-      String(onboarding.usuarioId) === String(usuarioId);
+      String(onboarding.usuarioId) === String(usuario.id);
 
     if (!respostaValida) {
-      throw new Error("Resposta inválida ao verificar o onboarding.");
+      throw new Error(
+        "Resposta inválida ao verificar o onboarding."
+      );
     }
 
     sessionStorage.setItem(
@@ -70,18 +180,26 @@ async function hasCompletedOnboarding(usuarioId) {
       JSON.stringify(onboarding)
     );
 
+    hydrateSetupFromOnboarding(
+      usuario,
+      onboarding
+    );
+
     return onboarding.onboardingConcluido;
   }
 
   const onboardingNaoEncontrado =
     response.status === 400 &&
-    onboarding.mensagem === "Onboarding não encontrado para este usuário";
+    onboarding.mensagem ===
+      "Onboarding não encontrado para este usuário";
 
   if (onboardingNaoEncontrado) {
     return false;
   }
 
-  throw new Error("Não foi possível verificar o onboarding.");
+  throw new Error(
+    "Não foi possível verificar o onboarding."
+  );
 }
 
 function isValidEmail(email) {
@@ -275,7 +393,8 @@ if (loginForm) {
       sessionStorage.removeItem("fluir-user");
       sessionStorage.setItem("fluir-onboarding-completed", "false");
 
-      const onboardingConcluido = await hasCompletedOnboarding(data.id);
+      const onboardingConcluido =
+        await hasCompletedOnboarding(data);
 
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
       sessionStorage.setItem(

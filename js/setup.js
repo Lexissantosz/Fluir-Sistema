@@ -1427,6 +1427,12 @@ async function finishSetup() {
     }
 
     const usuario = JSON.parse(usuarioSalvo);
+    if (!usuario.token) {
+      showFormMessage(
+        "Sua sessão expirou. Faça login novamente."
+      );
+      return;
+    }
 
     const pronomes =
       setupData.user.pronouns === "personalizado"
@@ -1466,7 +1472,8 @@ async function finishSetup() {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`
         },
         body: JSON.stringify(payload)
       }
