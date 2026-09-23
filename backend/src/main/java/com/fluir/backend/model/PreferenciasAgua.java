@@ -26,6 +26,18 @@ public class PreferenciasAgua {
     @Column(name = "modo_registro", length = 20)
     private String modoRegistro;
 
+    @Column(name = "meta_diaria", length = 50)
+    private String metaDiaria;
+
+    @Column(length = 20)
+    private String unidade;
+
+    @Column(length = 20)
+    private String lembretes;
+
+    @Column(name = "frequencia_lembrete", length = 30)
+    private String frequenciaLembrete;
+
     public Integer getId() {
         return id;
     }
@@ -74,5 +86,37 @@ public class PreferenciasAgua {
 
     public void setModoRegistro(String modoRegistro) {
         this.modoRegistro = modoRegistro;
+    }
+
+    public String getMetaDiaria() {
+    return metaDiaria;
+    }
+
+    public void setMetaDiaria(String metaDiaria) {
+        this.metaDiaria = metaDiaria;
+    }
+
+    public String getUnidade() {
+        return unidade;
+    }
+
+    public void setUnidade(String unidade) {
+        this.unidade = unidade;
+    }
+
+    public String getLembretes() {
+        return lembretes;
+    }
+
+    public void setLembretes(String lembretes) {
+        this.lembretes = lembretes;
+    }
+
+    public String getFrequenciaLembrete() {
+        return frequenciaLembrete;
+    }
+
+    public void setFrequenciaLembrete(String frequenciaLembrete) {
+        this.frequenciaLembrete = frequenciaLembrete;
     }
 }

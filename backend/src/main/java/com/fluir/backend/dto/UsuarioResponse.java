@@ -8,23 +8,36 @@ public class UsuarioResponse {
     private String nome;
     private String email;
     private String mensagem;
+    private String token;
 
     public UsuarioResponse() {
     }
 
-    public UsuarioResponse(Integer id, String nome, String email, String mensagem) {
+    public UsuarioResponse(
+        Integer id,
+        String nome,
+        String email,
+        String mensagem,
+        String token
+    ) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.mensagem = mensagem;
+        this.token = token;
     }
 
-    public static UsuarioResponse fromUsuario(Usuario usuario, String mensagem) {
+    public static UsuarioResponse fromUsuario(
+        Usuario usuario,
+        String mensagem,
+        String token
+    ) {
         return new UsuarioResponse(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                mensagem
+                mensagem,
+                token
         );
     }
 
@@ -64,5 +77,13 @@ public class UsuarioResponse {
 
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

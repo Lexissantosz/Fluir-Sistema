@@ -1320,8 +1320,7 @@ function generateReview() {
     <div class="review-section">
       <h4>Preferências configuradas</h4>
       <p>
-        Suas respostas foram salvas localmente por enquanto. 
-        Depois conectaremos isso ao backend Spring Boot do Fluir.
+        Suas preferências serão salvas no Fluir e usadas para personalizar sua experiência.
       </p>
     </div>
   `;
@@ -1398,8 +1397,8 @@ backBtn.addEventListener("click", () => {
 
 // =====================================================
 // 31. FINALIZAR SETUP
-// Salva a configuração no localStorage
-// Futuramente, aqui conectaremos com backend
+// Salva a configuração no backend
+// Mantém também uma cópia local para telas que ainda dependem dela
 // =====================================================
 
 async function finishSetup() {
@@ -1428,6 +1427,12 @@ async function finishSetup() {
     }
 
     const usuario = JSON.parse(usuarioSalvo);
+    if (!usuario.token) {
+      showFormMessage(
+        "Sua sessão expirou. Faça login novamente."
+      );
+      return;
+    }
 
     const pronomes =
       setupData.user.pronouns === "personalizado"
@@ -1440,7 +1445,26 @@ async function finishSetup() {
       apelido: setupData.user.nickname,
       pronomes: pronomes,
       generoNascimento: setupData.user.sexAtBirth,
-      modulos: setupData.modules
+      idade: Number(setupData.user.age),
+      tomComunicacao: setupData.user.communicationTone,
+      modulos: setupData.modules,
+      tarefas: setupData.preferences.tasks || null,
+      habitos: setupData.preferences.habits || null,
+      sono: setupData.preferences.sleep || null,
+      agua: setupData.preferences.water || null,
+      financas: setupData.preferences.finances
+        ? {
+            ...setupData.preferences.finances,
+            monthlyIncome: setupData.preferences.finances.monthlyIncome
+              ? Number(setupData.preferences.finances.monthlyIncome)
+              : null
+          }
+        : null,
+      diario: setupData.preferences.diary || null,
+      alimentacao: setupData.preferences.nutrition || null,
+      saudeFisica: setupData.preferences.physicalHealth || null,
+      cicloMenstrual: setupData.preferences.menstrualCycle || null,
+      anexos: setupData.preferences.attachments || null,
     };
 
     const response = await fetch(
@@ -1448,7 +1472,8 @@ async function finishSetup() {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${usuario.token}`
         },
         body: JSON.stringify(payload)
       }

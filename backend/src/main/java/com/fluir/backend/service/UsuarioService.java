@@ -13,10 +13,16 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthSessionService authSessionService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(
+        UsuarioRepository usuarioRepository,
+        PasswordEncoder passwordEncoder,
+        AuthSessionService authSessionService
+    ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authSessionService = authSessionService;
     }
 
     public UsuarioResponse cadastrar(CadastroRequest request) {
@@ -34,8 +40,13 @@ public class UsuarioService {
         usuario.setSenha(senhaCriptografada);
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        String token = authSessionService.criarToken(usuarioSalvo.getId());
 
-        return UsuarioResponse.fromUsuario(usuarioSalvo, "Usuário cadastrado com sucesso");
+        return UsuarioResponse.fromUsuario(
+                usuarioSalvo,
+                "Usuário cadastrado com sucesso",
+                token
+        );
     }
 
     public UsuarioResponse login(LoginRequest request) {
@@ -50,6 +61,12 @@ public class UsuarioService {
             throw new RuntimeException("E-mail ou senha inválidos");
         }
 
-        return UsuarioResponse.fromUsuario(usuario, "Login realizado com sucesso");
+        String token = authSessionService.criarToken(usuario.getId());
+
+        return UsuarioResponse.fromUsuario(
+                usuario,
+                "Login realizado com sucesso",
+                token
+        );
     }
 }

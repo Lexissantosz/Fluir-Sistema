@@ -9,15 +9,33 @@ public class OnboardingRequest {
     private String generoNascimento;
     private Integer altura;
     private Double peso;
+    private Integer idade;
+    private String tomComunicacao;
     private String energiaAtual;
-
     private ModulosRequest modulos;
+    private PreferenciasTarefasRequest tarefas;
+    private PreferenciasHabitosRequest habitos;
+    private PreferenciasSonoRequest sono;
+    private PreferenciasFinancasRequest financas;
+    private PreferenciasDiarioRequest diario;
+    private PreferenciasAlimentacaoRequest alimentacao;
+    private PreferenciasSaudeFisicaRequest saudeFisica;
+    private PreferenciasCicloMenstrualRequest cicloMenstrual;
+    private PreferenciasAnexosRequest anexos;
     private AguaRequest agua;
     private PrimeiraTarefaRequest primeiraTarefa;
     private PrimeiroHabitoRequest primeiroHabito;
 
     public Integer getUsuarioId() {
         return usuarioId;
+    }
+
+    public PreferenciasAlimentacaoRequest getAlimentacao() {
+        return alimentacao;
+    }
+
+    public void setAlimentacao(PreferenciasAlimentacaoRequest alimentacao) {
+        this.alimentacao = alimentacao;
     }
 
     public void setUsuarioId(Integer usuarioId) {
@@ -31,7 +49,6 @@ public class OnboardingRequest {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
 
     public String getApelido() {
         return apelido;
@@ -112,4 +129,85 @@ public class OnboardingRequest {
     public void setPrimeiroHabito(PrimeiroHabitoRequest primeiroHabito) {
         this.primeiroHabito = primeiroHabito;
     }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    public String getTomComunicacao() {
+        return tomComunicacao;
+    }
+
+    public void setTomComunicacao(String tomComunicacao) {
+        this.tomComunicacao = tomComunicacao;
+    }
+
+    public PreferenciasTarefasRequest getTarefas() {
+        return tarefas;
+    }
+
+    public void setTarefas(PreferenciasTarefasRequest tarefas) {
+        this.tarefas = tarefas;
+    }
+
+    public PreferenciasHabitosRequest getHabitos() {
+        return habitos;
+    }
+
+    public void setHabitos(PreferenciasHabitosRequest habitos) {
+        this.habitos = habitos;
+    }
+
+    public PreferenciasSonoRequest getSono() {
+        return sono;
+    }
+
+    public void setSono(PreferenciasSonoRequest sono) {
+        this.sono = sono;
+    }
+
+    public PreferenciasFinancasRequest getFinancas() {
+        return financas;
+    }
+
+    public void setFinancas(PreferenciasFinancasRequest financas) {
+        this.financas = financas;
+    }
+
+    public PreferenciasDiarioRequest getDiario() {
+        return diario;
+    }
+
+    public void setDiario(PreferenciasDiarioRequest diario) {
+        this.diario = diario;
+    }
+
+    public PreferenciasSaudeFisicaRequest getSaudeFisica() {
+        return saudeFisica;
+    }
+
+    public void setSaudeFisica(PreferenciasSaudeFisicaRequest saudeFisica) {
+        this.saudeFisica = saudeFisica;
+    }
+
+    public PreferenciasCicloMenstrualRequest getCicloMenstrual() {
+        return cicloMenstrual;
+    }
+
+    public void setCicloMenstrual(PreferenciasCicloMenstrualRequest cicloMenstrual) {
+        this.cicloMenstrual = cicloMenstrual;
+    }
+
+    public PreferenciasAnexosRequest getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(PreferenciasAnexosRequest anexos) {
+        this.anexos = anexos;
+    }
+
 }
