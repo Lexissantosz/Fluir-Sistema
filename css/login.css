@@ -1524,6 +1524,9 @@ body.dark .preview {
     grid-template-rows: 52px minmax(0, 1fr) 125px;
     gap: 12px;
     padding: 22px 42px 26px;
+    
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .top {
