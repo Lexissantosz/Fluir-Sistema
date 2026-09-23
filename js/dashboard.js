@@ -204,12 +204,56 @@ function getSavedSetup() {
 
   const preferences = { ...(local.preferences || {}) };
 
-  if (backend?.agua?.metaFinalMl > 0) {
+  if (backend) {
+  if (backend.tarefas) {
+    preferences.tasks = backend.tarefas;
+  }
+
+  if (backend.habitos) {
+    preferences.habits = backend.habitos;
+  }
+
+  if (backend.sono) {
+    preferences.sleep = backend.sono;
+  }
+
+  if (backend.agua) {
     preferences.water = {
       ...(preferences.water || {}),
-      dailyGoal: backend.agua.metaFinalMl
+      dailyGoal:
+        backend.agua.dailyGoal ||
+        backend.agua.metaFinalMl ||
+        "",
+      unit: backend.agua.unit || "",
+      reminders: backend.agua.reminders || "",
+      reminderFrequency: backend.agua.reminderFrequency || ""
     };
   }
+
+  if (backend.financas) {
+    preferences.finances = backend.financas;
+  }
+
+  if (backend.diario) {
+    preferences.diary = backend.diario;
+  }
+
+  if (backend.alimentacao) {
+    preferences.nutrition = backend.alimentacao;
+  }
+
+  if (backend.saudeFisica) {
+    preferences.physicalHealth = backend.saudeFisica;
+  }
+
+  if (backend.cicloMenstrual) {
+    preferences.menstrualCycle = backend.cicloMenstrual;
+  }
+
+  if (backend.anexos) {
+    preferences.attachments = backend.anexos;
+  }
+}
 
   return {
     usuarioId: usuario?.id,
@@ -231,11 +275,24 @@ function getSavedSetup() {
       sexAtBirth: backend
         ? backend.generoNascimento || ""
         : local.user?.sexAtBirth || "",
+      age: backend
+        ? backend.idade ?? ""
+        : local.user?.age ?? "",
+
+      communicationTone: backend
+        ? backend.tomComunicacao || "calmo"
+        : local.user?.communicationTone || "calmo",
+
+      energy: backend
+        ? backend.energiaAtual || ""
+        : local.user?.energy || "",
+
       email: usuario?.email || ""
     },
-    modules: backend
-      ? backend.modulos || {}
-      : local.modules || {},
+
+      modules: backend
+        ? backend.modulos || {}
+        : local.modules || {},
     preferences
   };
 }
