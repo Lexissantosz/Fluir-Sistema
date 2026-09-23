@@ -37,6 +37,7 @@ const headerPhotoInput = document.getElementById("headerPhotoInput");
 const moduleLinks = document.querySelectorAll(".module-link");
 
 const filterButtons = document.querySelectorAll(".filter-btn");
+const loadMoreEventsBtn = document.getElementById("loadMoreEventsBtn");
 
 const newEventBtn = document.getElementById("newEventBtn");
 const eventModal = document.getElementById("eventModal");
@@ -707,6 +708,17 @@ function loadSavedTimelineEvents() {
   });
 }
 
+function reloadTimelineEvents() {
+  const loadedEvents = document.querySelectorAll(".user-created-event");
+
+  loadedEvents.forEach((event) => {
+    event.remove();
+  });
+
+  loadSavedTimelineEvents();
+  applyTimelineVisibility();
+}
+
 
 // =====================================================
 // 22. LIMPAR CAMPOS DO MODAL
@@ -863,6 +875,17 @@ function setupEventModal() {
 // 26. BOTÕES DE HUMOR
 // =====================================================
 
+function setupLoadMoreEventsButton() {
+  if (!loadMoreEventsBtn) {
+    return;
+  }
+
+  loadMoreEventsBtn.addEventListener("click", () => {
+    reloadTimelineEvents();
+  });
+}
+
+
 function setupMoodButtons() {
   const moodButtons = document.querySelectorAll(".mood-options button");
 
@@ -899,6 +922,7 @@ function initTimeline() {
 
   setupTimelineFilters();
   setupEventModal();
+  setupLoadMoreEventsButton();
   setupMoodButtons();
 }
 
