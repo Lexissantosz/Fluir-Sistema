@@ -4,6 +4,7 @@ import com.fluir.backend.dto.*;
 import com.fluir.backend.model.*;
 import com.fluir.backend.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OnboardingService {
@@ -58,6 +59,7 @@ public class OnboardingService {
         this.preferenciasAnexosRepository = preferenciasAnexosRepository;
     }
 
+    @Transactional
     public OnboardingResponse salvar(OnboardingRequest request) {
         if (request.getUsuarioId() == null) {
             throw new RuntimeException("O usuarioId é obrigatório");
