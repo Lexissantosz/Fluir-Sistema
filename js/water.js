@@ -42,6 +42,10 @@ const addCupMainBtn = document.getElementById("addCupMainBtn");
 const removeCupBtn = document.getElementById("removeCupBtn");
 const resetWaterBtn = document.getElementById("resetWaterBtn");
 
+const resetWaterModal = document.getElementById("resetWaterModal");
+const cancelResetWaterBtn = document.getElementById("cancelResetWaterBtn");
+const confirmResetWaterBtn = document.getElementById("confirmResetWaterBtn");
+
 const todayCups = document.getElementById("todayCups");
 const waterProgress = document.getElementById("waterProgress");
 const remainingCups = document.getElementById("remainingCups");
@@ -608,31 +612,6 @@ function renderMiniTimeline() {
 // Nova função para trabalhar com ml
 // =====================================================
 
-function addWaterAmount(amount) {
-  const todayKey = getTodayKey();
-
-  if (!waterData.logs) {
-    waterData.logs = {};
-  }
-
-  /*
-    Agora cada dia guarda o total em ml.
-    Exemplo:
-    waterData.logs["2026-05-20"] = 750
-  */
-  const currentAmount = Number(waterData.logs[todayKey]) || 0;
-
-  waterData.logs[todayKey] = currentAmount + amount;
-
-  saveWaterData();
-  renderWater();
-
-  createWaterTimelineEvent(
-    "Água registrada",
-    `${amount}ml adicionados · total de ${waterData.logs[todayKey]}ml hoje`
-  );
-}
-
 function addCup() {
   /*
     Mantemos o nome addCup por compatibilidade,
@@ -701,6 +680,33 @@ function removeCup() {
 }
 
 function resetTodayWater() {
+  const todayWater = getTodayCups();
+
+  if (todayWater <= 0) {
+    return;
+  }
+
+  if (resetWaterModal) {
+    resetWaterModal.classList.add("active");
+  }
+}
+
+function closeResetWaterModal() {
+  if (!resetWaterModal) {
+    return;
+  }
+
+  resetWaterModal.classList.remove("active");
+}
+
+function confirmResetTodayWater() {
+  const todayWater = getTodayCups();
+
+  if (todayWater <= 0) {
+    closeResetWaterModal();
+    return;
+  }
+
   setTodayCups(0);
 
   createWaterTimelineEvent(
@@ -709,6 +715,7 @@ function resetTodayWater() {
   );
 
   renderWaterPage();
+  closeResetWaterModal();
 }
 
 
@@ -868,6 +875,22 @@ function setupWaterEvents() {
 
   if (resetWaterBtn) {
     resetWaterBtn.addEventListener("click", resetTodayWater);
+  }
+
+  if (cancelResetWaterBtn) {
+    cancelResetWaterBtn.addEventListener("click", closeResetWaterModal);
+  }
+
+  if (confirmResetWaterBtn) {
+    confirmResetWaterBtn.addEventListener("click", confirmResetTodayWater);
+  }
+
+  if (resetWaterModal) {
+    resetWaterModal.addEventListener("click", (event) => {
+      if (event.target === resetWaterModal) {
+        closeResetWaterModal();
+      }
+    });
   }
 
   if (openGoalModalBtn) {

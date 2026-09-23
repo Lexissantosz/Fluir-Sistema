@@ -37,6 +37,11 @@ const headerPhotoInput = document.getElementById("headerPhotoInput");
 const moduleLinks = document.querySelectorAll(".module-link");
 
 const filterButtons = document.querySelectorAll(".filter-btn");
+const loadMoreEventsBtn = document.getElementById("loadMoreEventsBtn");
+
+const INITIAL_VISIBLE_EVENTS = 8;
+const EVENTS_PER_LOAD = 5;
+let visibleEventLimit = INITIAL_VISIBLE_EVENTS;
 
 const newEventBtn = document.getElementById("newEventBtn");
 const eventModal = document.getElementById("eventModal");
@@ -283,6 +288,7 @@ function setupTimelineFilters() {
 
       button.classList.add("active");
 
+      visibleEventLimit = INITIAL_VISIBLE_EVENTS;
       applyTimelineVisibility();
     });
   });
@@ -357,9 +363,31 @@ function eventMatchesActiveModules(eventType) {
 // Ela considera filtro + módulos ativos ao mesmo tempo.
 // =====================================================
 
+function updateLoadMoreButton(totalEligibleEvents, visibleEligibleEvents) {
+  if (!loadMoreEventsBtn) {
+    return;
+  }
+
+  const remainingEvents = Math.max(0, totalEligibleEvents - visibleEligibleEvents);
+
+  if (remainingEvents > 0) {
+    loadMoreEventsBtn.dataset.mode = "load-more";
+    loadMoreEventsBtn.disabled = false;
+    loadMoreEventsBtn.textContent = `Carregar mais eventos (${remainingEvents}) ↓`;
+    return;
+  }
+
+  loadMoreEventsBtn.dataset.mode = "refresh";
+  loadMoreEventsBtn.disabled = false;
+  loadMoreEventsBtn.textContent = "Atualizar eventos ↻";
+}
+
 function applyTimelineVisibility() {
   const activeFilter = getActiveTimelineFilter();
-  const allEvents = getAllEventItems();
+  const allEvents = Array.from(getAllEventItems());
+
+  let eligibleEvents = 0;
+  let visibleEligibleEvents = 0;
 
   allEvents.forEach((event) => {
     const eventType = event.dataset.type;
@@ -367,14 +395,23 @@ function applyTimelineVisibility() {
     const matchesFilter = eventMatchesFilter(eventType, activeFilter);
     const matchesModule = eventMatchesActiveModules(eventType);
 
-    if (matchesFilter && matchesModule) {
+    if (!matchesFilter || !matchesModule) {
+      event.classList.add("hidden-event");
+      return;
+    }
+
+    eligibleEvents += 1;
+
+    if (visibleEligibleEvents < visibleEventLimit) {
       event.classList.remove("hidden-event");
+      visibleEligibleEvents += 1;
     } else {
       event.classList.add("hidden-event");
     }
   });
 
   updateDayCounters();
+  updateLoadMoreButton(eligibleEvents, visibleEligibleEvents);
 }
 
 
@@ -464,6 +501,42 @@ function getTodayKey() {
   const now = new Date();
 
   return toLocalDateKey(now);
+}
+
+function getYesterdayKey() {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return toLocalDateKey(yesterday);
+}
+
+function formatTimelineDayLabel(dateKey) {
+  const date = new Date(`${dateKey}T00:00:00`);
+
+  const formattedDate = date.toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long"
+  });
+
+  if (dateKey === getTodayKey()) {
+    return `Hoje, ${formattedDate}`;
+  }
+
+  if (dateKey === getYesterdayKey()) {
+    return `Ontem, ${formattedDate}`;
+  }
+
+  const currentYear = new Date().getFullYear();
+
+  if (date.getFullYear() !== currentYear) {
+    return date.toLocaleDateString("pt-BR", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  return formattedDate;
 }
 
 function getTomorrowKey() {
@@ -677,17 +750,93 @@ function sortEventListByTime(eventList) {
   items.forEach((item) => eventList.appendChild(item));
 }
 
-function addEventToTimeline(eventData) {
-  const todayEventList = document.querySelector(".timeline-day .event-list");
+function sortUserCreatedDays() {
+  const timelinePanel = document.querySelector(".timeline-panel");
 
-  if (!todayEventList) {
+  if (!timelinePanel) {
+    return;
+  }
+
+  const userDays = Array.from(
+    timelinePanel.querySelectorAll(".timeline-day.user-created-day")
+  ).sort((a, b) => {
+    return b.dataset.date.localeCompare(a.dataset.date);
+  });
+
+  if (!userDays.length) {
+    return;
+  }
+
+  const firstStaticDay = timelinePanel.querySelector(
+    ".timeline-day:not(.user-created-day)"
+  );
+  const anchor = firstStaticDay || loadMoreEventsBtn;
+
+  const fragment = document.createDocumentFragment();
+
+  userDays.forEach((day) => {
+    fragment.appendChild(day);
+  });
+
+  if (anchor) {
+    timelinePanel.insertBefore(fragment, anchor);
+  } else {
+    timelinePanel.appendChild(fragment);
+  }
+}
+
+function getOrCreateTimelineDay(dateKey) {
+  const timelinePanel = document.querySelector(".timeline-panel");
+
+  if (!timelinePanel) {
+    return null;
+  }
+
+  const existingDay = timelinePanel.querySelector(
+    `.timeline-day.user-created-day[data-date="${dateKey}"]`
+  );
+
+  if (existingDay) {
+    return existingDay.querySelector(".event-list");
+  }
+
+  const day = document.createElement("div");
+  day.className = "timeline-day user-created-day";
+  day.dataset.date = dateKey;
+
+  const title = document.createElement("h4");
+  title.textContent = formatTimelineDayLabel(dateKey);
+
+  const eventList = document.createElement("div");
+  eventList.className = "event-list";
+
+  day.appendChild(title);
+  day.appendChild(eventList);
+
+  if (loadMoreEventsBtn) {
+    timelinePanel.insertBefore(day, loadMoreEventsBtn);
+  } else {
+    timelinePanel.appendChild(day);
+  }
+
+  sortUserCreatedDays();
+
+  return day.querySelector(".event-list");
+}
+
+function addEventToTimeline(eventData) {
+  const dateKey = eventData.date || getTodayKey();
+  const eventList = getOrCreateTimelineDay(dateKey);
+
+  if (!eventList) {
     return;
   }
 
   const eventElement = createEventElement(eventData);
+  eventElement.dataset.date = dateKey;
 
-  todayEventList.appendChild(eventElement);
-  sortEventListByTime(todayEventList);
+  eventList.appendChild(eventElement);
+  sortEventListByTime(eventList);
 }
 
 
@@ -705,6 +854,24 @@ function loadSavedTimelineEvents() {
   savedEvents.forEach((eventData) => {
     addEventToTimeline(eventData);
   });
+}
+
+function reloadTimelineEvents() {
+  const userCreatedDays = document.querySelectorAll(
+    ".timeline-day.user-created-day"
+  );
+
+  userCreatedDays.forEach((day) => {
+    day.remove();
+  });
+
+  const loadedEvents = document.querySelectorAll(".user-created-event");
+
+  loadedEvents.forEach((event) => {
+    event.remove();
+  });
+
+  loadSavedTimelineEvents();
 }
 
 
@@ -863,6 +1030,35 @@ function setupEventModal() {
 // 26. BOTÕES DE HUMOR
 // =====================================================
 
+function setupLoadMoreEventsButton() {
+  if (!loadMoreEventsBtn) {
+    return;
+  }
+
+  loadMoreEventsBtn.addEventListener("click", () => {
+    const mode = loadMoreEventsBtn.dataset.mode || "load-more";
+
+    reloadTimelineEvents();
+
+    if (mode === "load-more") {
+      visibleEventLimit += EVENTS_PER_LOAD;
+      applyTimelineVisibility();
+      return;
+    }
+
+    applyTimelineVisibility();
+
+    loadMoreEventsBtn.disabled = true;
+    loadMoreEventsBtn.textContent = "Eventos atualizados ✓";
+
+    setTimeout(() => {
+      loadMoreEventsBtn.disabled = false;
+      applyTimelineVisibility();
+    }, 800);
+  });
+}
+
+
 function setupMoodButtons() {
   const moodButtons = document.querySelectorAll(".mood-options button");
 
@@ -899,6 +1095,7 @@ function initTimeline() {
 
   setupTimelineFilters();
   setupEventModal();
+  setupLoadMoreEventsButton();
   setupMoodButtons();
 }
 
