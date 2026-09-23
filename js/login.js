@@ -436,7 +436,7 @@ if (registerForm) {
 
     const nomeInput = registerForm.querySelector('input[type="text"]');
     const emailInput = registerForm.querySelector('input[type="email"]');
-    const senhaInput = registerForm.querySelector('input[type="password"]');
+    const senhaInput = document.getElementById("registerPassword");
     const submitButton = registerForm.querySelector('button[type="submit"]');
     const confirmarSenhaInput = document.getElementById("registerConfirmPassword");
 
