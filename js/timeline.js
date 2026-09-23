@@ -39,6 +39,10 @@ const moduleLinks = document.querySelectorAll(".module-link");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const loadMoreEventsBtn = document.getElementById("loadMoreEventsBtn");
 
+const INITIAL_VISIBLE_EVENTS = 8;
+const EVENTS_PER_LOAD = 5;
+let visibleEventLimit = INITIAL_VISIBLE_EVENTS;
+
 const newEventBtn = document.getElementById("newEventBtn");
 const eventModal = document.getElementById("eventModal");
 const closeEventModalBtn = document.getElementById("closeEventModalBtn");
@@ -284,6 +288,7 @@ function setupTimelineFilters() {
 
       button.classList.add("active");
 
+      visibleEventLimit = INITIAL_VISIBLE_EVENTS;
       applyTimelineVisibility();
     });
   });
@@ -358,9 +363,31 @@ function eventMatchesActiveModules(eventType) {
 // Ela considera filtro + módulos ativos ao mesmo tempo.
 // =====================================================
 
+function updateLoadMoreButton(totalEligibleEvents, visibleEligibleEvents) {
+  if (!loadMoreEventsBtn) {
+    return;
+  }
+
+  const remainingEvents = Math.max(0, totalEligibleEvents - visibleEligibleEvents);
+
+  if (remainingEvents > 0) {
+    loadMoreEventsBtn.dataset.mode = "load-more";
+    loadMoreEventsBtn.disabled = false;
+    loadMoreEventsBtn.textContent = `Carregar mais eventos (${remainingEvents}) ↓`;
+    return;
+  }
+
+  loadMoreEventsBtn.dataset.mode = "refresh";
+  loadMoreEventsBtn.disabled = false;
+  loadMoreEventsBtn.textContent = "Atualizar eventos ↻";
+}
+
 function applyTimelineVisibility() {
   const activeFilter = getActiveTimelineFilter();
-  const allEvents = getAllEventItems();
+  const allEvents = Array.from(getAllEventItems());
+
+  let eligibleEvents = 0;
+  let visibleEligibleEvents = 0;
 
   allEvents.forEach((event) => {
     const eventType = event.dataset.type;
@@ -368,14 +395,23 @@ function applyTimelineVisibility() {
     const matchesFilter = eventMatchesFilter(eventType, activeFilter);
     const matchesModule = eventMatchesActiveModules(eventType);
 
-    if (matchesFilter && matchesModule) {
+    if (!matchesFilter || !matchesModule) {
+      event.classList.add("hidden-event");
+      return;
+    }
+
+    eligibleEvents += 1;
+
+    if (visibleEligibleEvents < visibleEventLimit) {
       event.classList.remove("hidden-event");
+      visibleEligibleEvents += 1;
     } else {
       event.classList.add("hidden-event");
     }
   });
 
   updateDayCounters();
+  updateLoadMoreButton(eligibleEvents, visibleEligibleEvents);
 }
 
 
@@ -716,7 +752,6 @@ function reloadTimelineEvents() {
   });
 
   loadSavedTimelineEvents();
-  applyTimelineVisibility();
 }
 
 
@@ -881,7 +916,25 @@ function setupLoadMoreEventsButton() {
   }
 
   loadMoreEventsBtn.addEventListener("click", () => {
+    const mode = loadMoreEventsBtn.dataset.mode || "load-more";
+
     reloadTimelineEvents();
+
+    if (mode === "load-more") {
+      visibleEventLimit += EVENTS_PER_LOAD;
+      applyTimelineVisibility();
+      return;
+    }
+
+    applyTimelineVisibility();
+
+    loadMoreEventsBtn.disabled = true;
+    loadMoreEventsBtn.textContent = "Eventos atualizados ✓";
+
+    setTimeout(() => {
+      loadMoreEventsBtn.disabled = false;
+      applyTimelineVisibility();
+    }, 800);
   });
 }
 
