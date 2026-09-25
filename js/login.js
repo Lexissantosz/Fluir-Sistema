@@ -436,19 +436,23 @@ if (registerForm) {
 
     const nomeInput = registerForm.querySelector('input[type="text"]');
     const emailInput = registerForm.querySelector('input[type="email"]');
-    const senhaInput = registerForm.querySelector('input[type="password"]');
+    const senhaInput = document.getElementById("registerPassword");
     const submitButton = registerForm.querySelector('button[type="submit"]');
+    const confirmarSenhaInput = document.getElementById("registerConfirmPassword");
 
     const nome = nomeInput ? nomeInput.value.trim() : "";
     const email = emailInput ? emailInput.value.trim() : "";
     const senha = senhaInput ? senhaInput.value.trim() : "";
+    const confirmarSenha = confirmarSenhaInput
+      ? confirmarSenhaInput.value.trim()
+      : "";
 
     showMessage(registerMessage, "", "info");
 
-    if (!nome || !email || !senha) {
+    if (!nome || !email || !senha || !confirmarSenha) {
       showMessage(
         registerMessage,
-        "Preencha nome, e-mail e senha para criar sua conta.",
+        "Preencha nome, e-mail, senha e confirmação de senha para criar sua conta.",
         "error"
       );
       return;
@@ -468,6 +472,15 @@ if (registerForm) {
       showMessage(
         registerMessage,
         "A senha precisa ter pelo menos 6 caracteres.",
+        "error"
+      );
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      showMessage(
+        registerMessage,
+        "As senhas não coincidem.",
         "error"
       );
       return;
