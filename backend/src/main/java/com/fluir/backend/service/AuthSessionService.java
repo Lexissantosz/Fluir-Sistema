@@ -1,13 +1,20 @@
 package com.fluir.backend.service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HexFormat;
+import java.util.Optional;
+
+import com.fluir.backend.model.SessaoLogin;
+import com.fluir.backend.repository.SessaoLoginRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthSessionService {
@@ -15,8 +22,15 @@ public class AuthSessionService {
     private static final Duration DURACAO_SESSAO = Duration.ofHours(12);
 
     private final SecureRandom secureRandom = new SecureRandom();
-    private final Map<String, Sessao> sessoes = new ConcurrentHashMap<>();
+    private final SessaoLoginRepository sessaoLoginRepository;
 
+    public AuthSessionService(
+            SessaoLoginRepository sessaoLoginRepository
+    ) {
+        this.sessaoLoginRepository = sessaoLoginRepository;
+    }
+
+    @Transactional
     public String criarToken(Integer usuarioId) {
         limparSessoesExpiradas();
 
@@ -27,47 +41,66 @@ public class AuthSessionService {
                 .withoutPadding()
                 .encodeToString(bytes);
 
-        sessoes.put(
-                token,
-                new Sessao(
-                        usuarioId,
-                        Instant.now().plus(DURACAO_SESSAO)
-                )
+        Instant agora = Instant.now();
+
+        SessaoLogin sessao = new SessaoLogin(
+                gerarHashToken(token),
+                usuarioId,
+                agora,
+                agora.plus(DURACAO_SESSAO)
         );
+
+        sessaoLoginRepository.save(sessao);
 
         return token;
     }
 
+    @Transactional
     public Integer obterUsuarioId(String token) {
         if (token == null || token.isBlank()) {
             return null;
         }
 
-        Sessao sessao = sessoes.get(token);
+        String tokenHash = gerarHashToken(token);
 
-        if (sessao == null) {
+        Optional<SessaoLogin> sessaoOptional =
+                sessaoLoginRepository.findById(tokenHash);
+
+        if (sessaoOptional.isEmpty()) {
             return null;
         }
 
-        if (sessao.expiraEm().isBefore(Instant.now())) {
-            sessoes.remove(token);
+        SessaoLogin sessao = sessaoOptional.get();
+
+        if (sessao.getExpiraEm().isBefore(Instant.now())) {
+            sessaoLoginRepository.delete(sessao);
             return null;
         }
 
-        return sessao.usuarioId();
+        return sessao.getUsuarioId();
     }
 
     private void limparSessoesExpiradas() {
-        Instant agora = Instant.now();
-
-        sessoes.entrySet().removeIf(
-                entry -> entry.getValue().expiraEm().isBefore(agora)
+        sessaoLoginRepository.deleteByExpiraEmBefore(
+                Instant.now()
         );
     }
 
-    private record Sessao(
-            Integer usuarioId,
-            Instant expiraEm
-    ) {
+    private String gerarHashToken(String token) {
+        try {
+            MessageDigest digest =
+                    MessageDigest.getInstance("SHA-256");
+
+            byte[] hash = digest.digest(
+                    token.getBytes(StandardCharsets.UTF_8)
+            );
+
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException error) {
+            throw new IllegalStateException(
+                    "SHA-256 não está disponível.",
+                    error
+            );
+        }
     }
 }
