@@ -364,6 +364,33 @@
               <button class="secondary-btn" type="button" id="openGoalModalBtn">
                 Alterar meta
               </button>
+
+              <div class="water-custom-register">
+                <input
+                  type="number"
+                  id="customWaterAmountInput"
+                  min="1"
+                  max="2000"
+                  step="1"
+                  inputmode="numeric"
+                  placeholder="Outro valor em ml"
+                  aria-label="Quantidade personalizada de água em mililitros"
+                />
+                <button class="secondary-btn" type="button" id="addCustomWaterBtn">
+                  Registrar
+                </button>
+              </div>
+
+              <small class="water-registration-hint">
+                Máximo de 2000ml por registro.
+              </small>
+
+              <div
+                class="water-form-message water-registration-message"
+                id="waterRegistrationMessage"
+                role="status"
+                aria-live="polite"
+              ></div>
             </div>
           </section>
 
@@ -457,9 +484,10 @@
         <input 
           type="number" 
           id="waterGoalInput"
-          min="1"
-          max="30"
-          placeholder="Ex: 8"
+          min="300"
+          max="6000"
+          step="50"
+          placeholder="Ex: 2000"
         />
       </label>
 
