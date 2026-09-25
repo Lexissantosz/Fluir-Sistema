@@ -81,7 +81,7 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     grid-template-columns: 1fr !important;
   }
 
-  body.mobile-ui-ready .sidebar {
+  .sidebar {
     display: none !important;
   }
 
@@ -264,18 +264,24 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     top: 0;
     right: 0;
     width: min(88vw, 360px);
+    max-width: calc(100vw - 44px);
+    height: 100vh;
     height: 100dvh;
+    box-sizing: border-box;
     padding: 18px;
     border-left: 1px solid var(--border);
     background: var(--bg);
     box-shadow: var(--shadow);
-    transform: translateX(104%);
+    transform: translate3d(104%, 0, 0);
     transition: transform 0.24s ease;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
   }
 
   body.mobile-drawer-open .mobile-drawer {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   .mobile-drawer-head {
@@ -856,5 +862,12 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   .mobile-profile-brand strong,
   .mobile-profile-brand .mobile-brand-subtitle {
     max-width: 150px;
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .mobile-drawer-overlay,
+  .mobile-drawer {
+    transition: none !important;
   }
 }
