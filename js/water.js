@@ -77,6 +77,9 @@ const waterFormMessage = document.getElementById("waterFormMessage");
 // 2. CONFIGURAÇÃO PADRÃO
 // =====================================================
 
+const MIN_WATER_PER_REGISTRATION_ML = 1;
+const MAX_WATER_PER_REGISTRATION_ML = 2000;
+
 const defaultSetup = {
   user: {
     name: "Deibson",
