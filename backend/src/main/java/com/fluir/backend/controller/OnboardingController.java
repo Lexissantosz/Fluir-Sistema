@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/onboarding")
@@ -19,9 +20,8 @@ public class OnboardingController {
         this.onboardingService = onboardingService;
     }
 
-    @PostMapping("/salvar")
     public ResponseEntity<?> salvar(
-            @RequestBody OnboardingRequest request,
+            @Valid @RequestBody OnboardingRequest request,
             Authentication authentication
     ) {
         Integer usuarioAutenticadoId =

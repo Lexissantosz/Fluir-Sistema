@@ -1,25 +1,57 @@
 package com.fluir.backend.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.Valid;
+
 public class OnboardingRequest {
 
+    @NotNull(message = "O usuarioId é obrigatório")
     private Integer usuarioId;
+
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 80, message = "O nome deve ter no máximo 80 caracteres")
     private String nome;
+
+    @NotBlank(message = "O apelido é obrigatório")
+    @Size(max = 50, message = "O apelido deve ter no máximo 50 caracteres")
     private String apelido;
+
+    @NotBlank(message = "Os pronomes são obrigatórios")
+    @Size(max = 50, message = "Os pronomes devem ter no máximo 50 caracteres")
     private String pronomes;
+
+    @NotBlank(message = "O gênero de nascimento é obrigatório")
+    @Size(max = 30, message = "O gênero de nascimento deve ter no máximo 30 caracteres")
     private String generoNascimento;
+
     private Integer altura;
     private Double peso;
+
+    @NotNull(message = "A idade é obrigatória")
+    @Min(value = 13, message = "A idade mínima é 13 anos")
+    @Max(value = 120, message = "A idade máxima é 120 anos")
     private Integer idade;
+
+    @NotBlank(message = "O tom de comunicação é obrigatório")
+    @Size(max = 30, message = "O tom de comunicação deve ter no máximo 30 caracteres")
     private String tomComunicacao;
+
     private String energiaAtual;
+
     private ModulosRequest modulos;
     private PreferenciasTarefasRequest tarefas;
     private PreferenciasHabitosRequest habitos;
     private PreferenciasSonoRequest sono;
+    @Valid
     private PreferenciasFinancasRequest financas;
     private PreferenciasDiarioRequest diario;
     private PreferenciasAlimentacaoRequest alimentacao;
     private PreferenciasSaudeFisicaRequest saudeFisica;
+    @Valid
     private PreferenciasCicloMenstrualRequest cicloMenstrual;
     private PreferenciasAnexosRequest anexos;
     private AguaRequest agua;

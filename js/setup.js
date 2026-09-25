@@ -213,11 +213,16 @@ function validateStep1() {
     firstInvalidField = firstInvalidField || customPronounsInput;
   }
 
-  // Validação da idade
-// Aceita apenas entre 13 e 120 anos
+// Validação da idade
+// Aceita apenas números inteiros entre 13 e 120 anos
 const ageValue = Number(ageField.value);
 
-if (!ageField.value || ageValue < 13 || ageValue > 120) {
+if (
+  !ageField.value ||
+  !Number.isInteger(ageValue) ||
+  ageValue < 13 ||
+  ageValue > 120
+) {
   markInvalidField(ageField);
   firstInvalidField = firstInvalidField || ageField;
 }
@@ -228,7 +233,9 @@ if (!ageField.value || ageValue < 13 || ageValue > 120) {
   }
 
   if (firstInvalidField) {
-    showFormMessage("Preencha os campos principais corretamente. A idade deve estar entre 13 e 120 anos.");
+    showFormMessage(
+      "Preencha os campos principais corretamente. A idade deve ser um número inteiro entre 13 e 120 anos."
+    );
     firstInvalidField.focus();
     return false;
   }
@@ -251,6 +258,64 @@ function validateStep2() {
 
   if (selectedModules.length === 0) {
     showFormMessage("Escolha pelo menos uma funcionalidade para continuar.");
+    return false;
+  }
+
+  return true;
+}
+
+// =====================================================
+// VALIDAÇÃO DA ETAPA 3
+// Valida preferências opcionais somente quando preenchidas
+// =====================================================
+
+function validateStep3() {
+  clearInvalidFields();
+  clearFormMessage();
+
+  const monthlyIncomeField = document.querySelector(
+    '[data-pref="finances.monthlyIncome"]'
+  );
+
+  const lastPeriodDateField = document.querySelector(
+    '[data-pref="menstrualCycle.lastPeriodDate"]'
+  );
+
+  let firstInvalidField = null;
+  let errorMessage = "";
+
+  if (monthlyIncomeField && monthlyIncomeField.value !== "") {
+    const monthlyIncome = Number(monthlyIncomeField.value);
+
+    if (!Number.isFinite(monthlyIncome) || monthlyIncome < 0) {
+      markInvalidField(monthlyIncomeField);
+      firstInvalidField = firstInvalidField || monthlyIncomeField;
+      errorMessage = "A renda mensal não pode ser negativa.";
+    }
+  }
+
+  if (lastPeriodDateField && lastPeriodDateField.value) {
+    const today = new Date();
+    const todayKey = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0")
+    ].join("-");
+
+    if (lastPeriodDateField.value > todayKey) {
+      markInvalidField(lastPeriodDateField);
+      firstInvalidField = firstInvalidField || lastPeriodDateField;
+
+      if (!errorMessage) {
+        errorMessage =
+          "A data da última menstruação não pode estar no futuro.";
+      }
+    }
+  }
+
+  if (firstInvalidField) {
+    showFormMessage(errorMessage);
+    firstInvalidField.focus();
     return false;
   }
 
@@ -774,7 +839,13 @@ function createFinancesQuestions() {
       <div class="question-grid">
         <label class="field">
           <span>Renda mensal aproximada</span>
-          <input type="number" data-pref="finances.monthlyIncome" placeholder="Ex: 2500" />
+          <input
+            type="number"
+            data-pref="finances.monthlyIncome"
+            min="0"
+            step="0.01"
+            placeholder="Ex: 2500"
+          />
         </label>
 
         <label class="field">
@@ -1366,6 +1437,10 @@ nextBtn.addEventListener("click", () => {
   }
 
   if (currentStep === 3) {
+    if (!validateStep3()) {
+      return;
+    }
+
     collectPreferences();
     generateReview();
   }

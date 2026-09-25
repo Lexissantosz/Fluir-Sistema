@@ -1,6 +1,10 @@
 package com.fluir.backend.dto;
 
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+
+import jakarta.validation.constraints.AssertTrue;
 
 public class PreferenciasCicloMenstrualRequest {
 
@@ -102,5 +106,22 @@ public class PreferenciasCicloMenstrualRequest {
 
     public void setSymptoms(List<String> symptoms) {
         this.symptoms = symptoms;
+    }
+
+    @AssertTrue(
+            message = "A data da última menstruação deve ser válida e não pode estar no futuro"
+    )
+    public boolean isLastPeriodDateValida() {
+        if (lastPeriodDate == null || lastPeriodDate.isBlank()) {
+            return true;
+        }
+
+        try {
+            LocalDate data = LocalDate.parse(lastPeriodDate);
+
+            return !data.isAfter(LocalDate.now());
+        } catch (DateTimeParseException erro) {
+            return false;
+        }
     }
 }

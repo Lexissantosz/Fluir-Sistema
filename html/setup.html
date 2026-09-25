@@ -153,6 +153,7 @@
               <input 
                 type="text" 
                 id="userName" 
+                maxlength="80"
                 placeholder="Ex: Deibson" 
               />
             </label>
@@ -162,7 +163,8 @@
               <span>Como você quer ser chamado(a)?</span>
               <input 
                 type="text" 
-                id="userNickname" 
+                id="userNickname"
+                maxlength="50"
                 placeholder="Ex: Lexis" 
               />
             </label>
@@ -202,6 +204,7 @@
               <input 
                 type="text" 
                 id="customPronouns" 
+                maxlength="50"
                 placeholder="Ex: ele/elu, ela/elu..." 
               />
             </label>
@@ -210,18 +213,15 @@
             <label class="field">
               <span>Idade</span>
 
-              <<!-- ===================================================== -->
-<!-- IDADE -->
-<!-- Limite definido para evitar valores impossíveis -->
-<!-- Depois podemos adaptar regras específicas para menores -->
-<!-- ===================================================== -->
-<input 
-  type="number" 
-  id="userAge" 
-  placeholder="Ex: 22" 
-  min="13" 
-  max="120" 
-/>
+              <input
+                type="number"
+                id="userAge"
+                placeholder="Ex: 22"
+                min="13"
+                max="120"
+                step="1"
+              />
+            </label>
             </label>
 
             <!-- Forma de comunicação -->
