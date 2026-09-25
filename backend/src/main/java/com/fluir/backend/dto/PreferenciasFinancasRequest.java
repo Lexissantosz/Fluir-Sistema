@@ -2,9 +2,11 @@ package com.fluir.backend.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import jakarta.validation.constraints.PositiveOrZero;
 
 public class PreferenciasFinancasRequest {
 
+    @PositiveOrZero(message = "A renda mensal não pode ser negativa")
     private BigDecimal monthlyIncome;
     private String trackExpenses;
     private String trackDebts;
