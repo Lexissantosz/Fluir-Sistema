@@ -1,0 +1,143 @@
+/* ===================================================== */
+/* FLUIR — SISTEMA COMPARTILHADO DE ÍCONES */
+/* ===================================================== */
+
+.sidebar-nav .nav-item > span:first-child,
+.mobile-drawer-link i,
+.mobile-nav-link i {
+  width: 20px;
+  height: 20px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  font-size: 0 !important;
+  line-height: 1;
+
+  background-color: currentColor;
+
+  -webkit-mask-image: var(--icon);
+  mask-image: var(--icon);
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Dashboard */
+.sidebar-nav .nav-item[href="dashboard.html"] > span:first-child,
+.sidebar-nav .nav-item[data-module="dashboard"] > span:first-child,
+.mobile-drawer-link[href="dashboard.html"] i,
+.mobile-nav-link[href="dashboard.html"] i {
+  --icon: url("../Assets/icons/navigation/layout-dashboard.svg");
+}
+
+/* Timeline */
+.sidebar-nav .nav-item[href="timeline.html"] > span:first-child,
+.mobile-drawer-link[href="timeline.html"] i,
+.mobile-nav-link[href="timeline.html"] i {
+  --icon: url("../Assets/icons/navigation/history.svg");
+}
+
+/* Tarefas */
+.sidebar-nav .nav-item[href="tasks.html"] > span:first-child,
+.mobile-drawer-link[href="tasks.html"] i,
+.mobile-nav-link[href="tasks.html"] i {
+  --icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+/* Hábitos */
+.sidebar-nav .nav-item[href="habits.html"] > span:first-child,
+.mobile-drawer-link[href="habits.html"] i,
+.mobile-nav-link[href="habits.html"] i {
+  --icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+/* Sono */
+.sidebar-nav .nav-item[href="sleep.html"] > span:first-child,
+.mobile-drawer-link[href="sleep.html"] i,
+.mobile-nav-link[href="sleep.html"] i {
+  --icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+/* Água */
+.sidebar-nav .nav-item[href="water.html"] > span:first-child,
+.mobile-drawer-link[href="water.html"] i,
+.mobile-nav-link[href="water.html"] i {
+  --icon: url("../Assets/icons/navigation/droplets.svg");
+}
+
+/* Finanças */
+.sidebar-nav .nav-item[href="finances.html"] > span:first-child,
+.mobile-drawer-link[href="finances.html"] i,
+.mobile-nav-link[href="finances.html"] i {
+  --icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+/* Diário */
+.sidebar-nav .nav-item[href="diary.html"] > span:first-child,
+.mobile-drawer-link[href="diary.html"] i,
+.mobile-nav-link[href="diary.html"] i {
+  --icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+/* Alimentação */
+.sidebar-nav .nav-item[href="nutrition.html"] > span:first-child,
+.mobile-drawer-link[href="nutrition.html"] i,
+.mobile-nav-link[href="nutrition.html"] i {
+  --icon: url("../Assets/icons/navigation/apple.svg");
+}
+
+/* Saúde física */
+.sidebar-nav .nav-item[href="physical-health.html"] > span:first-child,
+.mobile-drawer-link[href="physical-health.html"] i,
+.mobile-nav-link[href="physical-health.html"] i {
+  --icon: url("../Assets/icons/navigation/dumbbell.svg");
+}
+
+/* Ciclo menstrual */
+.sidebar-nav .nav-item[href="menstrual-cycle.html"] > span:first-child,
+.mobile-drawer-link[href="menstrual-cycle.html"] i,
+.mobile-nav-link[href="menstrual-cycle.html"] i {
+  --icon: url("../Assets/icons/navigation/calendar-heart.svg");
+}
+
+/* Anexos */
+.sidebar-nav .nav-item[href="attachments.html"] > span:first-child,
+.mobile-drawer-link[href="attachments.html"] i,
+.mobile-nav-link[href="attachments.html"] i {
+  --icon: url("../Assets/icons/navigation/paperclip.svg");
+}
+
+/* Conquistas */
+.sidebar-nav .nav-item[href="achievements.html"] > span:first-child,
+.mobile-drawer-link[href="achievements.html"] i,
+.mobile-nav-link[href="achievements.html"] i {
+  --icon: url("../Assets/icons/navigation/trophy.svg");
+}
+
+/* Configurações */
+.sidebar-nav .nav-item[href="settings.html"] > span:first-child,
+.mobile-drawer-link[href="settings.html"] i,
+.mobile-nav-link[href="settings.html"] i {
+  --icon: url("../Assets/icons/navigation/settings.svg");
+}
+
+/* Perfil */
+.sidebar-nav .nav-item[href="profile.html"] > span:first-child,
+.mobile-drawer-link[href="profile.html"] i,
+.mobile-nav-link[href="profile.html"] i {
+  --icon: url("../Assets/icons/navigation/circle-user-round.svg");
+}
+
+/* Planos */
+.sidebar-nav .nav-item[href="plans.html"] > span:first-child,
+.mobile-drawer-link[href="plans.html"] i,
+.mobile-nav-link[href="plans.html"] i {
+  --icon: url("../Assets/icons/navigation/crown.svg");
+}
