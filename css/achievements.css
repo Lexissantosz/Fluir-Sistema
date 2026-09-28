@@ -1354,3 +1354,24 @@ body.dark .modal-progress-bar {
   font-weight: 400;
   color: var(--muted);
 }
+
+/* ===================================================== */
+/* AJUSTES MOBILE — CONQUISTAS */
+/* ===================================================== */
+
+@media (max-width: 760px) {
+  body.mobile-ui-ready .achievements-main {
+    padding-top: 8px !important;
+  }
+
+  body.mobile-ui-ready .achievements-header {
+    padding-top: 0 !important;
+    margin-bottom: 14px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  body.mobile-ui-ready .achievements-page .achievements-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
