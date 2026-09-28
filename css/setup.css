@@ -1417,65 +1417,70 @@ body.dark .form-message.success {
 
 /* Container principal da tela de setup */
 /* Divide a tela em 2 colunas iguais: texto | perguntas */
-.setup-content {
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 48px;
-  align-items: center;
-}
+@media (min-width: 1101px) {
 
-/* Parte esquerda da tela */
-/* Mantém o texto bem posicionado dentro da metade esquerda */
-.setup-info {
-  width: 100%;
-  max-width: none;
-  padding-left: 44px;
-  padding-right: 20px;
-}
+  .setup-content {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+  }
 
-/* Título grande da esquerda */
-/* Limita o texto para não invadir a outra metade */
-.setup-info h2 {
-  max-width: 680px;
-}
+  /* Parte esquerda da tela */
+  /* Mantém o texto bem posicionado dentro da metade esquerda */
+  .setup-info {
+    width: 100%;
+    max-width: none;
+    padding-left: 44px;
+    padding-right: 20px;
+  }
 
-/* Descrição da esquerda */
-.info-description {
-  max-width: 640px;
-}
+  /* Título grande da esquerda */
+  /* Limita o texto para não invadir a outra metade */
+  .setup-info h2 {
+    max-width: 680px;
+  }
 
-/* Cards 01, 02, 03 da esquerda */
-.info-cards {
-  max-width: 700px;
-}
+  /* Descrição da esquerda */
+  .info-description {
+    max-width: 640px;
+  }
 
-/* Card principal das perguntas */
-/* Agora ocupa toda a metade direita disponível */
-.setup-card {
-  width: 100%;
-  max-width: none;
-  min-height: 700px;
-  justify-self: stretch;
-}
+  /* Cards 01, 02, 03 da esquerda */
+  .info-cards {
+    max-width: 700px;
+  }
 
-/* Conteúdo interno do card de perguntas */
-/* Garante que as etapas usem bem o espaço */
-.setup-step {
-  width: 100%;
-}
+  /* Card principal das perguntas */
+  /* Agora ocupa toda a metade direita disponível */
+  .setup-card {
+    width: 100%;
+    max-width: none;
+    min-height: 700px;
+    justify-self: stretch;
+  }
 
-/* Blocos das perguntas dentro da etapa 3 */
-/* Ficam mais largos e mais confortáveis */
-.question-block {
-  width: 100%;
-}
+  /* Conteúdo interno do card de perguntas */
+  /* Garante que as etapas usem bem o espaço */
+  .setup-step {
+    width: 100%;
+  }
 
-/* Grid interno das perguntas */
-/* Mantém campos lado a lado quando houver espaço */
-.question-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
+  /* Blocos das perguntas dentro da etapa 3 */
+  /* Ficam mais largos e mais confortáveis */
+  .question-block {
+    width: 100%;
+  }
 
-/* Revisão final também usa bem a largura do card */
-.review-box {
-  width: 100%;
-}
+  /* Grid interno das perguntas */
+  /* Mantém campos lado a lado quando houver espaço */
+  .question-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Revisão final também usa bem a largura do card */
+  .review-box {
+    width: 100%;
+  }
+  .review-box {
+    width: 100%;
+  }
