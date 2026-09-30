@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <!-- Configurações básicas da página -->
@@ -17,6 +17,7 @@
 
   <!-- Estilos da tela -->
   <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel="stylesheet" href="../css/sidebar.css" />
   <link rel="stylesheet" href="../css/mobile.css" />
   <link rel="stylesheet" href="../css/icons.css" />
 </head>
@@ -25,142 +26,26 @@
   <main class="dashboard-page">
 
     <!-- Menu lateral do sistema -->
-    <aside class="sidebar">
+    <aside
+      class="sidebar"
+      data-shared-sidebar
+      data-sidebar-quote="Pequenas ações constantes constroem mudanças profundas."
+    >
 
-      <!-- Logo -->
-      <div class="brand">
-        <div class="brand-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-            <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"/>
-            <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"/>
-            <path d="M9.7 15c1.5.5 3.1.5 4.6 0"/>
-          </svg>
-        </div>
+    <!-- Conteúdo contextual específico do Dashboard -->
+    <div class="focus-card" data-sidebar-context>
+      <p>Foco de hoje</p>
 
-        <div>
-          <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
-        </div>
+      <strong id="focusPercent">0%</strong>
+
+      <div class="focus-bar">
+        <span></span>
       </div>
 
-      <!-- Navegação principal -->
-      <nav class="sidebar-nav" id="sidebarNav">
-        <a href="#" class="nav-item active" data-module="dashboard">
-          <span>⌘</span>
-          Dashboard
-        </a>
+      <small>Continue assim.</small>
+    </div>
 
-        <a href="timeline.html" class="nav-item" data-module="timeline">
-          <span>☷</span>
-          Timeline
-        </a>
-
-        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
-          <span>☑</span>
-          Tarefas
-        </a>
-
-        <a href="habits.html" class="nav-item module-link" data-module="habits">
-          <span>◌</span>
-          Hábitos
-        </a>
-
-        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
-          <span>☾</span>
-          Sono
-        </a>
-
-        <a href="water.html" class="nav-item module-link" data-module="water">
-          <span>𓏑</span>
-          Água
-        </a>
-
-        <a href="finances.html" class="nav-item module-link" data-module="finances">
-          <span>$</span>
-          Finanças
-        </a>
-
-        <a href="diary.html" class="nav-item module-link" data-module="diary">
-          <span>▤</span>
-          Diário emocional
-        </a>
-
-        <a href="nutrition.html" class="nav-item module-link" data-module="nutrition">
-          <span>◒</span>
-          Alimentação
-        </a>
-
-        <a href="physical-health.html" class="nav-item module-link" data-module="physicalHealth">
-          <span>✦</span>
-          Saúde física
-        </a>
-
-        <a href="menstrual-cycle.html" class="nav-item module-link" data-module="menstrualCycle">
-          <span>◍</span>
-          Ciclo menstrual
-        </a>
-
-        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
-          <span>⌁</span>
-          Anexos
-        </a>
-
-        <a href="achievements.html" class="nav-item">
-          <span>✧</span>
-          Conquistas
-        </a>
-
-        <a href="settings.html" class="nav-item" data-module="settings">
-          <span>⚙</span>
-          Configurações
-        </a>
-
-        <a href="profile.html" class="nav-item" data-module="profile">
-          <span>♙</span>
-          Perfil
-        </a>
-
-        <a href="plans.html" class="nav-item" data-module="plans">
-          <span>♕</span>
-          Planos e preços
-        </a>
-      </nav>
-
-      <!-- Ilustração lateral -->
-      <div class="sidebar-illustration">
-        <div class="rain rain-1"></div>
-        <div class="rain rain-2"></div>
-        <div class="rain rain-3"></div>
-
-        <div class="small-character">
-          <div class="small-umbrella"></div>
-
-          <div class="small-head">
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="small-body"></div>
-        </div>
-
-        <p>
-          “Pequenas ações constantes constroem mudanças profundas.”
-        </p>
-      </div>
-
-      <!-- Card de foco do dia -->
-      <div class="focus-card">
-        <p>Foco de hoje</p>
-
-        <strong id="focusPercent">0%</strong>
-
-        <div class="focus-bar">
-          <span></span>
-        </div>
-
-        <small>Continue assim.</small>
-      </div>
-    </aside>
+  </aside>
 
     <!-- Conteúdo principal -->
     <section class="dashboard-main">
@@ -549,6 +434,9 @@
       </section>
     </section>
   </main>
+
+  <!-- Sidebar compartilhada -->
+  <script src="../js/sidebar.js"></script>
 
   <!-- Scripts da tela -->
   <script src="../js/dashboard.js"></script>
