@@ -14,98 +14,6 @@
 (() => {
   "use strict";
 
-  const NAV_ITEMS = [
-    {
-      href: "dashboard.html",
-      label: "Dashboard",
-      dataModule: "dashboard"
-    },
-    {
-      href: "timeline.html",
-      label: "Timeline",
-      dataModule: "timeline"
-    },
-    {
-      href: "tasks.html",
-      label: "Tarefas",
-      dataModule: "tasks",
-      filterable: true
-    },
-    {
-      href: "habits.html",
-      label: "Hábitos",
-      dataModule: "habits",
-      filterable: true
-    },
-    {
-      href: "sleep.html",
-      label: "Sono",
-      dataModule: "sleep",
-      filterable: true
-    },
-    {
-      href: "water.html",
-      label: "Água",
-      dataModule: "water",
-      filterable: true
-    },
-    {
-      href: "finances.html",
-      label: "Finanças",
-      dataModule: "finances",
-      filterable: true
-    },
-    {
-      href: "diary.html",
-      label: "Diário emocional",
-      dataModule: "diary",
-      filterable: true
-    },
-    {
-      href: "nutrition.html",
-      label: "Alimentação",
-      dataModule: "nutrition",
-      filterable: true
-    },
-    {
-      href: "physical-health.html",
-      label: "Saúde física",
-      dataModule: "physicalHealth",
-      filterable: true
-    },
-    {
-      href: "menstrual-cycle.html",
-      label: "Ciclo menstrual",
-      dataModule: "menstrualCycle",
-      filterable: true
-    },
-    {
-      href: "attachments.html",
-      label: "Anexos",
-      dataModule: "attachments",
-      filterable: true
-    },
-    {
-      href: "achievements.html",
-      label: "Conquistas",
-    },
-    {
-      href: "settings.html",
-      label: "Configurações",
-      dataModule: "settings"
-    },
-    {
-      href: "profile.html",
-      label: "Perfil",
-      dataModule: "profile"
-    },
-    {
-      href: "plans.html",
-      label: "Planos e preços",
-      dataModule: "plans"
-    }
-  ];
-
   function getCurrentPage() {
     const fileName = window.location.pathname.split("/").pop();
 
@@ -138,49 +46,39 @@
 
   function renderNavigation() {
     const currentPage = getCurrentPage();
+    const navigationItems = window.FluirSections.getAll();
 
-    const links = NAV_ITEMS.map((item) => {
-      const isActive = item.href === currentPage;
+    const links = navigationItems.map((item) => {
+        const isActive = item.href === currentPage;
+        const classes = ["nav-item"];
 
-      const classes = ["nav-item"];
-
-      if (item.filterable) {
-        classes.push("module-link");
-      }
-
-      if (isActive) {
+        if (isActive) {
         classes.push("active");
-      }
+        }
 
-      const href = item.href;
-
-      const moduleAttribute = item.dataModule
-        ? ` data-module="${item.dataModule}"`
-        : "";
-
-      const ariaCurrent = isActive
+        const ariaCurrent = isActive
         ? ' aria-current="page"'
         : "";
 
-      return `
+        return `
         <a
-          href="${href}"
-          class="${classes.join(" ")}"
-          ${moduleAttribute}
-          ${ariaCurrent}
+            href="${item.href}"
+            class="${classes.join(" ")}"
+            data-section="${item.key}"
+            ${ariaCurrent}
         >
-          <span aria-hidden="true"></span>
-          ${item.label}
+            <span aria-hidden="true"></span>
+            ${item.label}
         </a>
-      `;
+        `;
     }).join("");
 
     return `
-      <nav class="sidebar-nav" aria-label="Navegação principal">
+        <nav class="sidebar-nav" aria-label="Navegação principal">
         ${links}
-      </nav>
+        </nav>
     `;
-  }
+    }
 
   function renderIllustration(quote) {
     return `
@@ -215,6 +113,14 @@
     if (!sidebar) {
       return;
     }
+
+    if (!window.FluirSections) {
+        console.error(
+            "Catálogo de áreas do Fluir não foi carregado antes da sidebar."
+        );
+
+        return;
+        }
 
     if (sidebar.dataset.sidebarReady === "true") {
       return;
