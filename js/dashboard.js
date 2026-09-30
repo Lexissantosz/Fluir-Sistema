@@ -37,7 +37,6 @@ const headerProfileEmail = document.getElementById("headerProfileEmail");
 const headerPhotoInput = document.getElementById("headerPhotoInput");
 
 const navItems = document.querySelectorAll(".nav-item");
-const moduleLinks = document.querySelectorAll(".module-link");
 const moduleCards = document.querySelectorAll(".module-card");
 const modulePanels = document.querySelectorAll(".module-panel");
 
@@ -390,20 +389,6 @@ function getSubtitleByTone(tone) {
 
 function applySelectedModules() {
   const modules = setupData.modules || defaultSetup.modules;
-
-  moduleLinks.forEach((link) => {
-    const moduleName = link.dataset.module;
-
-    if (!moduleName) {
-      return;
-    }
-
-    if (modules[moduleName]) {
-      link.classList.remove("module-hidden");
-    } else {
-      link.classList.add("module-hidden");
-    }
-  });
 
   moduleCards.forEach((card) => {
     const moduleName = card.dataset.moduleCard;
