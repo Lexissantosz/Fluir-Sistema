@@ -406,11 +406,37 @@ function setupCheckboxSaves() {
 function setupQuickSetupEditor() {
   const nameInput = document.getElementById("quickNameInput");
   const waterGoalInput = document.getElementById("quickWaterGoalInput");
-  const moduleCheckboxes = document.querySelectorAll("[data-quick-module]");
+  const modulesList = document.getElementById("quickModulesList");
   const saveButton = document.getElementById("saveQuickSetupBtn");
   const message = document.getElementById("quickSetupMessage");
 
-  if (!nameInput || !waterGoalInput || !saveButton) return;
+  if (!nameInput || !waterGoalInput || !modulesList || !saveButton) {
+    return;
+  }
+
+  if (!window.FluirSections) {
+    console.error("Catálogo de áreas do Fluir não foi carregado.");
+    return;
+  }
+
+  window.FluirSections.getModules().forEach((module) => {
+    const label = document.createElement("label");
+    const checkbox = document.createElement("input");
+
+    checkbox.type = "checkbox";
+    checkbox.dataset.quickModule = module.key;
+
+    label.append(
+      checkbox,
+      document.createTextNode(module.label)
+    );
+
+    modulesList.appendChild(label);
+  });
+
+  const moduleCheckboxes = modulesList.querySelectorAll(
+    "[data-quick-module]"
+  );
 
   const setupData = getStorageJSON("fluir-setup", {
     user: {},
@@ -462,7 +488,6 @@ function setupQuickSetupEditor() {
     });
 
     currentSetup.modules.timeline = true;
-    currentSetup.modules.attachments = true;
     currentSetup.onboardingConcluido = true;
     currentSetup.atualizadoEm = new Date().toISOString();
 
