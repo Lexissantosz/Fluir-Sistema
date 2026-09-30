@@ -3,11 +3,13 @@
    Fonte única de estilo para marca e navegação lateral.
    ===================================================== */
 
-@media (min-width: 761px) {
-  :root {
-    --fluir-sidebar-nav-item-height: 42px;
-    --fluir-sidebar-nav-gap: 7px;
-  }
+    @media (min-width: 761px) {
+    :root {
+        --fluir-sidebar-nav-item-height: 42px;
+        --fluir-sidebar-nav-gap: 7px;
+        --fluir-sidebar-illustration-height: 160px;
+        --fluir-sidebar-section-gap: 14px;
+    }
 
   /* =====================================================
      ESTRUTURA DA SIDEBAR
@@ -142,5 +144,30 @@
 
     display: grid;
     place-items: center;
+  }
+
+    /* =====================================================
+     ILUSTRAÇÃO COMPARTILHADA
+     Mantém a região visual fora da área rolável.
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] .sidebar-illustration {
+    flex: 0 0 var(--fluir-sidebar-illustration-height);
+
+    width: 100%;
+    min-height: var(--fluir-sidebar-illustration-height);
+    height: var(--fluir-sidebar-illustration-height);
+
+    margin: var(--fluir-sidebar-section-gap) 0;
+  }
+
+  /* =====================================================
+     ÁREA CONTEXTUAL
+     Cada página controla o conteúdo, não a geometria.
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] [data-sidebar-context] {
+    flex: 0 0 auto;
+    margin-top: 0;
   }
 }
