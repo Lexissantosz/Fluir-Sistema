@@ -12,67 +12,149 @@
 </head>
 <body class="mockup-app" data-page="dashboard">
   <div class="demo-ribbon">Mockup visual · dados demonstrativos</div>
+
   <div class="app-layout">
     <aside class="app-sidebar" data-shell-nav></aside>
+
     <main class="app-main">
       <header class="page-header">
         <div>
           <span class="eyebrow">Visão geral</span>
           <h1>Seu dia</h1>
         </div>
+
         <div class="header-actions">
           <button class="icon-button" type="button" data-theme-toggle aria-label="Alternar tema">◐</button>
           <div class="avatar" title="Alex">AS</div>
         </div>
       </header>
-      
-  <section class="welcome-card">
-    <div>
-      <span class="eyebrow">Quinta-feira, 2 de outubro</span>
-      <h2>Bom dia, Alex.</h2>
-      <p>Você não precisa fazer tudo. Só precisa saber o que importa agora.</p>
-    </div>
-    <div class="focus-score"><strong>72%</strong><span>dia encaminhado</span></div>
-  </section>
 
-  <section class="metric-grid">
-    <article class="metric-card"><span>Tarefas</span><strong>3/5</strong><small>2 ainda pedem atenção</small></article>
-    <article class="metric-card"><span>Hábitos</span><strong>4/6</strong><small>boa constância hoje</small></article>
-    <article class="metric-card"><span>Água</span><strong data-water-value>1,4 L</strong><small>meta de 2 L</small></article>
-    <article class="metric-card"><span>Bem-estar</span><strong>Calmo</strong><small>último registro às 09:40</small></article>
-  </section>
+      <section class="welcome-card">
+        <div class="welcome-copy">
+          <span class="eyebrow">Quinta-feira, 2 de outubro</span>
+          <h2>Bom dia, Alex.</h2>
+          <p>Você não precisa fazer tudo hoje. Foque no que realmente importa e celebre cada pequeno progresso.</p>
 
-  <section class="dashboard-grid">
-    <article class="panel">
-      <div class="panel-heading"><div><span class="eyebrow">Prioridades</span><h3>Para hoje</h3></div><a href="tasks.html">Ver tarefas</a></div>
-      <div class="list">
-        <label class="list-row"><input type="checkbox" checked><span><strong>Revisar apresentação do PI</strong><small>Estudos · 10:30</small></span></label>
-        <label class="list-row"><input type="checkbox"><span><strong>Finalizar tela do mockup</strong><small>Projeto · 14:00</small></span></label>
-        <label class="list-row"><input type="checkbox"><span><strong>Separar material do curso</strong><small>Rotina · 18:20</small></span></label>
-      </div>
-    </article>
+          <div class="welcome-tags" aria-label="Resumo rápido do dia">
+            <span>3 prioridades</span>
+            <span>4 hábitos concluídos</span>
+            <span>600 ml para a meta</span>
+          </div>
+        </div>
 
-    <article class="panel">
-      <div class="panel-heading"><div><span class="eyebrow">Ritmo</span><h3>Hábitos de hoje</h3></div><a href="habits.html">Abrir</a></div>
-      <div class="habit-preview">
-        <div><span>Beber água</span><b>5/7</b></div><progress value="5" max="7"></progress>
-        <div><span>Estudar 30 min</span><b>1/1</b></div><progress value="1" max="1"></progress>
-        <div><span>Organizar o quarto</span><b>0/1</b></div><progress value="0" max="1"></progress>
-      </div>
-    </article>
+        <div class="focus-score">
+          <div class="score-ring"><strong>72%</strong></div>
+          <span>dia encaminhado</span>
+        </div>
+      </section>
 
-    <article class="panel span-2">
-      <div class="panel-heading"><div><span class="eyebrow">Linha do dia</span><h3>Pequenas ações, contexto maior</h3></div></div>
-      <div class="timeline-preview">
-        <div><time>08:10</time><span></span><p><strong>400 ml de água</strong><small>Você começou o dia hidratando.</small></p></div>
-        <div><time>09:40</time><span></span><p><strong>Humor: calmo</strong><small>Registro rápido no diário.</small></p></div>
-        <div><time>10:25</time><span></span><p><strong>Tarefa concluída</strong><small>Revisar conteúdo de inglês.</small></p></div>
-      </div>
-    </article>
-  </section>
+      <section class="metric-grid" aria-label="Resumo do dia">
+        <article class="metric-card">
+          <div class="metric-top"><span>Tarefas</span><i class="metric-icon" aria-hidden="true">✓</i></div>
+          <strong>3/5</strong>
+          <small>2 ainda pedem atenção</small>
+        </article>
 
+        <article class="metric-card">
+          <div class="metric-top"><span>Hábitos</span><i class="metric-icon" aria-hidden="true">↻</i></div>
+          <strong>4/6</strong>
+          <small>boa constância hoje</small>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-top"><span>Água</span><i class="metric-icon" aria-hidden="true">◌</i></div>
+          <strong data-water-value>1,4 L</strong>
+          <small>meta diária de 2 L</small>
+        </article>
+
+        <article class="metric-card">
+          <div class="metric-top"><span>Bem-estar</span><i class="metric-icon" aria-hidden="true">♡</i></div>
+          <strong>Calmo</strong>
+          <small>último registro às 09:40</small>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">Prioridades</span>
+              <h3>Para hoje</h3>
+            </div>
+            <a href="tasks.html">Ver tarefas</a>
+          </div>
+
+          <div class="list">
+            <label class="list-row">
+              <input type="checkbox" checked>
+              <span><strong>Revisar apresentação do PI</strong><small>Estudos · 10:30</small></span>
+            </label>
+
+            <label class="list-row">
+              <input type="checkbox">
+              <span><strong>Finalizar tela do mockup</strong><small>Projeto · 14:00</small></span>
+            </label>
+
+            <label class="list-row">
+              <input type="checkbox">
+              <span><strong>Separar material do curso</strong><small>Rotina · 18:20</small></span>
+            </label>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">Ritmo</span>
+              <h3>Hábitos de hoje</h3>
+            </div>
+            <a href="habits.html">Abrir</a>
+          </div>
+
+          <div class="habit-preview">
+            <div><span>Beber água</span><b>5/7</b></div>
+            <progress value="5" max="7"></progress>
+
+            <div><span>Estudar 30 min</span><b>1/1</b></div>
+            <progress value="1" max="1"></progress>
+
+            <div><span>Organizar o quarto</span><b>0/1</b></div>
+            <progress value="0" max="1"></progress>
+          </div>
+        </article>
+
+        <article class="panel span-2">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">Linha do dia</span>
+              <h3>Pequenas ações, contexto maior</h3>
+            </div>
+          </div>
+
+          <div class="timeline-preview">
+            <div>
+              <time>08:10</time>
+              <span></span>
+              <p><strong>400 ml de água</strong><small>Você começou o dia hidratando.</small></p>
+            </div>
+
+            <div>
+              <time>09:40</time>
+              <span></span>
+              <p><strong>Humor: calmo</strong><small>Registro rápido no diário.</small></p>
+            </div>
+
+            <div>
+              <time>10:25</time>
+              <span></span>
+              <p><strong>Tarefa concluída</strong><small>Revisar conteúdo de inglês.</small></p>
+            </div>
+          </div>
+        </article>
+      </section>
     </main>
   </div>
+
   <nav class="mobile-nav" data-mobile-nav aria-label="Navegação mobile"></nav>
   <script src="../js/mockup.js"></script>
 </body>
