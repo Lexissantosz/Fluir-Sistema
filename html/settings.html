@@ -1,451 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- =====================================================
-       FLUIR — CONFIGURAÇÕES
-       Tela inspirada no layout visual enviado:
-       sidebar fixa + topo + abas + cards organizados
-  ====================================================== -->
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
- <title>Configurações | Fluir</title>
-
-<!-- Fonte principal usada em todo o projeto Fluir -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<title>Configurações · Fluir MVP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link 
-  href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" 
-  rel="stylesheet"
->
-
-<!-- CSS específico da tela de configurações -->
-<link rel="stylesheet" href="../css/settings.css" />
-<link rel="stylesheet" href="../css/mobile.css" />
-  <link rel="stylesheet" href="../css/icons.css" />
-
-<body>
-  <!-- =====================================================
-       CONTAINER PRINCIPAL
-       Mantém o mesmo padrão das outras páginas do Fluir
-  ====================================================== -->
-  <div class="settings-page">
-
-    <!-- =====================================================
-         SIDEBAR LATERAL
-         Menu fixo, igual ao restante do sistema
-    ====================================================== -->
-    <aside class="sidebar">
-
-      <!-- MARCA DO FLUIR -->
-      <div class="brand">
-        <div class="brand-icon" aria-hidden="true">
-          <!-- Ícone em SVG para manter aparência profissional -->
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M5 20C7 13 10 8 19 4C18 13 13 18 5 20Z" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M5 20C8.5 15.5 11.5 12.5 16 9" stroke="currentColor" stroke-width="1.4"/>
-          </svg>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/mvp.css"></head>
+<body data-page="settings">
+  <div class="app-shell">
+    <aside class="sidebar" data-sidebar></aside>
+    <main class="main">
+      <header class="topbar">
+        <div><span class="eyebrow">Preferências do MVP</span><h1>Configurações</h1></div>
+        <div class="top-actions">
+          <button class="icon-btn" type="button" data-theme-toggle aria-label="Alternar tema">◐</button>
+          <button class="avatar" type="button" data-nav="settings.html" title="Configurações">AS</button>
         </div>
+      </header>
+      
+  <section class="grid two">
+    <article class="card setting-card">
+      <span class="eyebrow">Perfil</span><h3>Como o Fluir chama você</h3>
+      <form data-profile-form>
+        <label>Nome<input name="name" data-settings-name></label>
+        <button class="button primary compact" type="submit">Salvar</button>
+      </form>
+    </article>
+
+    <article class="card setting-card">
+      <span class="eyebrow">Aparência</span><h3>Tema</h3><p class="muted">Alterne entre claro e escuro.</p>
+      <button class="button ghost compact" type="button" data-theme-toggle>Alternar tema</button>
+    </article>
+
+    <article class="card setting-card">
+      <span class="eyebrow">Água</span><h3>Meta diária</h3>
+      <form data-water-goal-form>
+        <label>Meta em ml<input name="goal" type="number" min="500" max="5000" step="100" data-settings-water></label>
+        <button class="button primary compact" type="submit">Atualizar meta</button>
+      </form>
+    </article>
+
+    <article class="card setting-card danger">
+      <span class="eyebrow">Dados locais</span><h3>Recomeçar demonstração</h3>
+      <p class="muted">Apaga tarefas, hábitos e registros deste navegador.</p>
+      <button class="button ghost compact" type="button" data-reset-app>Resetar MVP</button>
+    </article>
+  </section>
 
-        <div>
-          <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
-        </div>
-      </div>
-
-      <!-- MENU PRINCIPAL -->
-      <nav class="sidebar-nav">
-
-        <a href="dashboard.html" class="nav-item">
-          <span class="nav-icon">▦</span>
-          <span>Dashboard</span>
-        </a>
-
-        <a href="timeline.html" class="nav-item">
-          <span class="nav-icon">☷</span>
-          <span>Timeline</span>
-        </a>
-
-        <a href="tasks.html" class="nav-item module-link" data-module="tasks">
-          <span class="nav-icon">☑</span>
-          <span>Tarefas</span>
-        </a>
-
-        <a href="habits.html" class="nav-item module-link" data-module="habits">
-          <span class="nav-icon">♡</span>
-          <span>Hábitos</span>
-        </a>
-
-        <a href="sleep.html" class="nav-item module-link" data-module="sleep">
-          <span class="nav-icon">☾</span>
-          <span>Sono</span>
-        </a>
-
-        <a href="water.html" class="nav-item module-link" data-module="water">
-          <span class="nav-icon">♧</span>
-          <span>Água</span>
-        </a>
-
-        <a href="finances.html" class="nav-item module-link" data-module="finances">
-          <span class="nav-icon">▣</span>
-          <span>Finanças</span>
-        </a>
-
-        <a href="diary.html" class="nav-item module-link" data-module="diary">
-          <span class="nav-icon">♡</span>
-          <span>Diário emocional</span>
-        </a>
-
-        <a href="attachments.html" class="nav-item module-link" data-module="attachments">
-          <span class="nav-icon">◇</span>
-          <span>Anexos</span>
-        </a>
-
-        <a href="achievements.html" class="nav-item">
-  <span>✧</span>
-  Conquistas
-</a>
-
-        <a href="settings.html" class="nav-item active">
-          <span class="nav-icon">⚙</span>
-          <span>Configurações</span>
-        </a>
-
-        <a href="profile.html" class="nav-item">
-          <span class="nav-icon">♙</span>
-          <span>Perfil</span>
-        </a>
-
-        <a href="plans.html" class="nav-item">
-          <span class="nav-icon">♕</span>
-          <span>Planos e preços</span>
-        </a>
-      </nav>
-
-      <!-- BLOCO VISUAL INFERIOR -->
-      <div class="sidebar-illustration">
-        <div class="rain-lines">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <div class="little-character">
-          ☂
-        </div>
-
-        <p>Foco de hoje</p>
-        <strong>60%</strong>
-
-        <div class="focus-bar">
-          <span></span>
-        </div>
-
-        <small>Continue assim.</small>
-      </div>
-    </aside>
-
-    <!-- =====================================================
-         CONTEÚDO PRINCIPAL
-    ====================================================== -->
-    <main class="settings-content">
-
-      <!-- =====================================================
-           CABEÇALHO DA ÁREA DE CONFIGURAÇÕES
-      ====================================================== -->
-      <section class="settings-heading">
-
-        <div>
-          <p class="section-kicker">Preferências</p>
-
-          <h1>
-            <span class="heading-icon">⚙</span>
-            Configurações
-          </h1>
-
-          <p>
-            Personalize sua experiência e gerencie sua rotina do seu jeito.
-          </p>
-        </div>
-      </section>
-
-      <!-- =====================================================
-           ABAS DE CONFIGURAÇÕES
-           Cada botão mostra uma categoria visualmente
-      ====================================================== -->
-      <section class="settings-tabs" aria-label="Categorias de configurações">
-        <button class="tab-btn" data-tab="setup" type="button">Setup</button>
-        <button class="tab-btn" data-tab="appearance" type="button">Aparência</button>
-        <button class="tab-btn" data-tab="notifications" type="button">Notificações</button>
-        <button class="tab-btn" data-tab="privacy" type="button">Privacidade</button>
-        <button class="tab-btn" data-tab="integrations" type="button">Integrações</button>
-        <button class="tab-btn" data-tab="data" type="button">Dados</button>
-      </section>
-
-      <!-- =====================================================
-           GRID PRINCIPAL DOS CARDS
-      ====================================================== -->
-      <section class="settings-grid">
-
-      <!-- =====================================================
-           CARD: CONFIGURAÇÃO RÁPIDA
-      ====================================================== -->
-        <article class="settings-card quick-setup-card" data-card="setup">
-          <div class="card-title">
-            <span>✦</span>
-            <h3>Configuração rápida</h3>
-          </div>
-
-          <div class="quick-setup-form">
-            <label class="quick-field">
-              <span>Nome ou apelido</span>
-              <input type="text" id="quickNameInput" placeholder="Como quer ser chamado?" />
-            </label>
-
-            <label class="quick-field">
-              <span>Meta de água diária</span>
-              <input type="number" id="quickWaterGoalInput" min="0" step="100" placeholder="Ex: 2500" />
-            </label>
-
-            <div class="quick-modules" id="quickModulesList">
-              <p>Módulos ativos</p>
-            </div>
-
-            <button class="setup-action-button" id="saveQuickSetupBtn" type="button">
-              Salvar alterações
-              <strong>›</strong>
-            </button>
-
-            <p class="quick-setup-message" id="quickSetupMessage"></p>
-          </div>
-        </article>
-
-        <!-- =====================================================
-             CARD: APARÊNCIA
-        ====================================================== -->
-        <article class="settings-card" data-card="appearance">
-          <div class="card-title">
-            <span>◉</span>
-            <h3>Aparência</h3>
-          </div>
-
-          <div class="setting-row">
-            <span>Tema</span>
-
-            <div class="segmented-control">
-              <button class="theme-option" data-theme="light" type="button">Claro</button>
-              <button class="theme-option" data-theme="dark" type="button">Escuro</button>
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <span>Tamanho da fonte</span>
-
-            <div class="segmented-control">
-              <button class="font-option" data-font="small" type="button">Pequena</button>
-              <button class="font-option active" data-font="medium" type="button">Média</button>
-              <button class="font-option" data-font="large" type="button">Grande</button>
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <span>Densidade do layout</span>
-
-            <div class="segmented-control">
-              <button class="density-option" data-density="compact" type="button">Compacta</button>
-              <button class="density-option active" data-density="comfortable" type="button">Confortável</button>
-            </div>
-          </div>
-
-          <label class="select-row">
-            <span>Idioma</span>
-
-            <select id="languageSelect">
-              <option value="pt-BR">Português (Brasil)</option>
-              <option value="en-US">English</option>
-              <option value="es">Español</option>
-            </select>
-          </label>
-        </article>
-
-        <!-- =====================================================
-             CARD: NOTIFICAÇÕES
-        ====================================================== -->
-        <article class="settings-card" data-card="notifications">
-          <div class="card-title">
-            <span>♧</span>
-            <h3>Notificações</h3>
-          </div>
-
-          <label class="toggle-row">
-            <span>Lembretes de hábitos</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="toggle-row">
-            <span>Resumo diário</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="toggle-row">
-            <span>Alertas de sono</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="toggle-row">
-            <span>Lembretes de hidratação</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="select-row margin-top">
-            <span>Horário do resumo</span>
-
-            <select id="summaryTime">
-              <option value="20:00">20:00</option>
-              <option value="19:00">19:00</option>
-              <option value="21:00">21:00</option>
-            </select>
-          </label>
-        </article>
-
-        <!-- =====================================================
-             CARD: PRIVACIDADE
-        ====================================================== -->
-        <article class="settings-card" data-card="privacy">
-          <div class="card-title">
-            <span>♢</span>
-            <h3>Privacidade</h3>
-          </div>
-
-          <label class="toggle-row">
-            <span>Bloquear com senha</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="toggle-row">
-            <span>Verificação em duas etapas</span>
-            <input type="checkbox" />
-          </label>
-
-          <label class="toggle-row">
-            <span>Ocultar valores financeiros</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <label class="toggle-row">
-            <span>Perfil visível apenas para mim</span>
-            <input type="checkbox" checked />
-          </label>
-
-          <div class="sessions-row">
-            <span>▱</span>
-            <p>Sessões ativas: 2 dispositivos</p>
-          </div>
-        </article>
-
-        <!-- =====================================================
-             CARD: INTEGRAÇÕES
-        ====================================================== -->
-        <article class="settings-card" data-card="integrations">
-          <div class="card-title">
-            <span>♧</span>
-            <h3>Integrações</h3>
-          </div>
-
-          <div class="integration-row">
-            <span><i class="ui-icon ui-icon-calendar" aria-hidden="true"></i> Google Calendar</span>
-            <button type="button">Conectar</button>
-          </div>
-
-          <div class="integration-row">
-            <span>▧ Notion</span>
-            <button type="button" class="connected">Ativo ✓</button>
-          </div>
-
-          <div class="integration-row">
-            <span><i class="ui-icon ui-icon-cloud" aria-hidden="true"></i> Google Drive</span>
-            <button type="button">Conectar</button>
-          </div>
-
-          <div class="integration-row">
-            <span><i class="ui-icon ui-icon-heart" aria-hidden="true"></i> Apple Health</span>
-            <button type="button">Conectar</button>
-          </div>
-        </article>
-
-        <!-- =====================================================
-             CARD: DADOS
-        ====================================================== -->
-        <article class="settings-card" data-card="data">
-          <div class="card-title">
-            <span>▤</span>
-            <h3>Dados</h3>
-          </div>
-
-          <button class="data-action" type="button">
-            <span>⇩ Exportar dados</span>
-            <strong>›</strong>
-          </button>
-
-          <button class="data-action" type="button">
-            <span>⇧ Importar backup</span>
-            <strong>›</strong>
-          </button>
-
-          <button class="data-action danger-action" id="openResetArea" type="button">
-            <span>♲ Limpar dados locais</span>
-            <strong>›</strong>
-          </button>
-
-          <div class="sync-row">
-            <small>Última sincronização: agora há pouco</small>
-            <span>Sincronizado ✓</span>
-          </div>
-        </article>
-      </section>
-
-      <!-- =====================================================
-           ÁREA DE RESET ESPECÍFICO
-           Aparece quando o usuário clica em "Limpar dados locais"
-      ====================================================== -->
-      <section class="reset-panel" id="resetPanel">
-        <div class="reset-header">
-          <div>
-            <h3>Começar partes específicas do zero</h3>
-            <p>Apague apenas o módulo desejado sem reiniciar todo o Fluir.</p>
-          </div>
-
-          <button id="closeResetArea" type="button">Fechar</button>
-        </div>
-
-        <div class="reset-grid">
-          <button data-reset="fluir-tasks" type="button">Resetar tarefas</button>
-          <button data-reset="fluir-habits" type="button">Resetar hábitos</button>
-          <button data-reset="fluir-sleep-logs" type="button">Resetar sono</button>
-          <button data-reset="fluir-water" type="button">Resetar água</button>
-          <button data-reset="fluir-finances" type="button">Resetar finanças</button>
-          <button data-reset="fluir-diary" type="button">Resetar diário</button>
-          <button data-reset="fluir-nutrition" type="button">Resetar alimentação</button>
-          <button data-reset="fluir-timeline-events" type="button">Resetar timeline</button>
-        </div>
-      </section>
-
-      <!-- RODAPÉ SUTIL -->
-      <footer class="settings-footer">
-        <span class="ui-icon ui-icon-heart" aria-hidden="true"></span> Organizar também é cuidar de si.
-      </footer>
     </main>
   </div>
-
-  <!-- Catálogo compartilhado das áreas do Fluir -->
-  <script src="../js/app-sections.js"></script>
-
-  <!-- JS específico da tela -->
-  <script src="../js/settings.js"></script>
-
-  <!-- UI mobile compartilhada -->
-  <script src="../js/mobile.js"></script>
+  <nav class="bottom-nav" data-bottom-nav></nav>
+  <div class="toast" data-toast></div>
+  <script src="../js/mvp.js"></script>
 </body>
 </html>

@@ -1,448 +1,53 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Configurações básicas da página -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Fluir | Dashboard</title>
-
-  <!-- Fonte principal usada no sistema -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
-  <!-- Estilos da tela -->
-  <link rel="stylesheet" href="../css/dashboard.css" />
-  <link rel="stylesheet" href="../css/sidebar.css" />
-  <link rel="stylesheet" href="../css/mobile.css" />
-  <link rel="stylesheet" href="../css/icons.css" />
-</head>
-
-<body>
-  <main class="dashboard-page">
-
-    <!-- Menu lateral do sistema -->
-    <aside
-      class="sidebar"
-      data-shared-sidebar
-      data-sidebar-quote="Pequenas ações constantes constroem mudanças profundas."
-    >
-
-    <!-- Conteúdo contextual específico do Dashboard -->
-    <div class="focus-card" data-sidebar-context>
-      <p>Foco de hoje</p>
-
-      <strong id="focusPercent">0%</strong>
-
-      <div class="focus-bar">
-        <span></span>
-      </div>
-
-      <small>Continue assim.</small>
-    </div>
-
-  </aside>
-
-    <!-- Conteúdo principal -->
-    <section class="dashboard-main">
-
-      <!-- Cabeçalho do dashboard -->
-      <header class="dashboard-header">
-        <div class="dashboard-welcome">
-          <span class="dashboard-eyebrow">Painel principal</span>
-
-          <h2 id="welcomeTitle">Olá, Deibson </h2>
-
-          <p id="welcomeSubtitle">
-            Acompanhe sua rotina, seus hábitos e seu bem-estar em um só lugar.
-          </p>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<title>Meu dia · Fluir MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/mvp.css"></head>
+<body data-page="dashboard">
+  <div class="app-shell">
+    <aside class="sidebar" data-sidebar></aside>
+    <main class="main">
+      <header class="topbar">
+        <div><span class="eyebrow">Visão geral</span><h1>Meu dia</h1></div>
+        <div class="top-actions">
+          <button class="icon-btn" type="button" data-theme-toggle aria-label="Alternar tema">◐</button>
+          <button class="avatar" type="button" data-nav="settings.html" title="Configurações">AS</button>
         </div>
-
-        <div class="header-actions">
-
-  <div class="notif-wrapper">
-    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-    </button>
-
-    <div class="notif-dropdown" id="notifDropdown">
-      <div class="notif-dropdown-header">
-        <span>Notificações</span>
-        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações">
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
-          </svg>
-        </a>
-      </div>
-
-      <div class="notif-list">
-        <div class="notif-row">
-          <span class="notif-row-icon notif-row-icon-info">i</span>
-          <div class="notif-row-content">
-            <p class="notif-row-title">Bem-vindo ao Fluir!</p>
-            <p class="notif-row-desc">Explore seus módulos na barra lateral.</p>
-            <span class="notif-row-time">há 2 horas</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="profile-wrapper">
-    <button class="avatar-btn" type="button" id="avatarBtn">
-  <span id="avatarBtnInitial">D</span>
-  <img id="avatarBtnImage" alt="Foto de perfil">
-</button>
-
-    <div class="profile-dropdown" id="profileDropdown">
-      <div class="profile-dropdown-top">
-        <div class="profile-dropdown-photo" id="headerProfilePhoto">
-          <span id="headerProfileInitial">D</span>
-          <img id="headerProfileImage" alt="Foto de perfil">
-        </div>
-        <div class="profile-dropdown-top-text">
-          <strong id="headerProfileName">Deibson</strong>
-          <span id="headerProfileEmail" class="profile-dropdown-email">usuario@email.com</span>
-        </div>
-      </div>
-
-      <div class="profile-dropdown-divider"></div>
-
-      <div class="profile-dropdown-list">
-        <label class="profile-dropdown-row" for="headerPhotoInput">
-          <span class="profile-dropdown-row-icon">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-          </span>
-          <span>Trocar foto</span>
-        </label>
-        <input type="file" id="headerPhotoInput" accept="image/*" hidden>
-
-        <a href="settings.html" class="profile-dropdown-row">
-          <span class="profile-dropdown-row-icon">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
-            </svg>
-          </span>
-          <span>Ir para configurações</span>
-        </a>
-      </div>
-    </div>
-  </div>
-
-</div>
       </header>
+      
+  <section class="welcome">
+    <div><span class="eyebrow">Hoje</span><h2>Bom dia, <span data-user-name>Alex</span>.</h2><p>Seu dia não precisa estar perfeito para estar andando.</p></div>
+    <div class="day-score"><strong data-score>0%</strong><small>progresso do dia</small></div>
+  </section>
 
-      <!-- Cards de resumo -->
-      <section class="summary-grid" id="summaryGrid">
+  <section class="stats">
+    <article><span>Tarefas</span><strong data-stat-tasks>0/0</strong><small>concluídas hoje</small></article>
+    <article><span>Hábitos</span><strong data-stat-habits>0/0</strong><small>marcados hoje</small></article>
+    <article><span>Água</span><strong data-stat-water>0 ml</strong><small data-stat-water-goal>de 2000 ml</small></article>
+  </section>
 
-        <article class="summary-card module-card" data-module-card="tasks">
-          <div class="card-title">
-            <span>☑</span>
-            <p>Tarefas</p>
-          </div>
+  <section class="grid two">
+    <article class="card">
+      <div class="card-head"><div><span class="eyebrow">Prioridades</span><h3>Tarefas de hoje</h3></div><a href="tasks.html">Abrir</a></div>
+      <div class="simple-list" data-dashboard-tasks></div>
+    </article>
 
-          <strong>0</strong>
-          <small>0 de 0 concluídas</small>
+    <article class="card">
+      <div class="card-head"><div><span class="eyebrow">Rotina</span><h3>Hábitos de hoje</h3></div><a href="habits.html">Abrir</a></div>
+      <div class="simple-list" data-dashboard-habits></div>
+    </article>
+  </section>
 
-          <div class="mini-progress">
-            <span style="width: 0%;"></span>
-          </div>
-        </article>
-
-        <article class="summary-card module-card" data-module-card="habits">
-          <div class="card-title">
-            <span>◌</span>
-            <p>Hábitos</p>
-          </div>
-
-          <strong>0</strong>
-          <small>0 de 0 concluídos</small>
-
-          <div class="mini-progress">
-            <span style="width: 0%;"></span>
-          </div>
-        </article>
-
-        <article class="summary-card module-card" data-module-card="sleep">
-          <div class="card-title">
-            <span>☾</span>
-            <p>Sono</p>
-          </div>
-
-          <strong>0h</strong>
-          <small>sem registro</small>
-
-          <div class="mini-wave"></div>
-        </article>
-
-        <article class="summary-card module-card" data-module-card="water">
-          <div class="card-title">
-            <span>𓏑</span>
-            <p>Água</p>
-          </div>
-
-          <strong>0ml</strong>
-          <small>de 2000ml</small>
-
-          <div class="water-dots">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </article>
-
-        <article class="summary-card module-card" data-module-card="finances">
-          <div class="card-title">
-            <span>$</span>
-            <p>Finanças</p>
-          </div>
-
-          <strong>R$ 0</strong>
-          <small>saldo atual</small>
-
-          <div class="mini-wave"></div>
-        </article>
-
-        <article class="summary-card module-card" data-module-card="diary">
-          <div class="card-title">
-            <span>▤</span>
-            <p>Diário</p>
-          </div>
-
-          <strong>0</strong>
-          <small>entradas hoje</small>
-
-          <div class="mini-line"></div>
-        </article>
-      </section>
-
-      <!-- Área principal: tarefas e timeline -->
-      <section class="content-grid">
-
-        <!-- Tarefas de hoje -->
-        <article class="panel panel-large module-panel" data-module-panel="tasks">
-          <div class="panel-header">
-            <div>
-              <h3><span class="module-icon icon-tasks" aria-hidden="true"></span> Tarefas de hoje</h3>
-            </div>
-
-            <button class="small-btn" type="button">
-              <span class="ui-icon ui-icon-plus" aria-hidden="true"></span> Nova tarefa
-            </button>
-          </div>
-
-          <!--
-            A lista é preenchida pelo dashboard.js.
-            Assim o checkbox fica clicável e não vira decoração inútil, que já basta o mundo.
-          -->
-          <div class="task-list" id="dashboardTaskList"></div>
-
-          <a class="panel-link" href="tasks.html">
-            Ver todas as tarefas →
-          </a>
-        </article>
-
-        <!-- Timeline -->
-        <article class="panel panel-large">
-          <div class="panel-header">
-            <h3><span class="module-icon icon-timeline" aria-hidden="true"></span> Timeline</h3>
-          </div>
-
-          <div class="timeline-list">
-            <div class="timeline-item">
-              <time>08:00</time>
-
-              <div>
-                <strong>Acordei</strong>
-                <p>Dormi bem e me sinto disposto.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>09:15</time>
-
-              <div>
-                <strong>Café da manhã</strong>
-                <p>Aveia com frutas e café.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>11:30</time>
-
-              <div>
-                <strong>Reunião de alinhamento</strong>
-                <p>Projeto Fluir — sprint semanal.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>15:45</time>
-
-              <div>
-                <strong>Caminhada</strong>
-                <p>20 minutos ao ar livre.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>21:30</time>
-
-              <div>
-                <strong>Diário emocional</strong>
-                <p>Reflexão sobre o dia.</p>
-              </div>
-            </div>
-          </div>
-
-          <a class="panel-link" href="timeline.html">
-            Ver linha do tempo completa →
-          </a>
-        </article>
-      </section>
-
-      <!-- Área inferior: hábitos e cards menores -->
-      <section class="bottom-grid">
-
-        <!-- Hábitos -->
-        <article class="panel habits-panel module-panel" data-module-panel="habits">
-          <div class="panel-header">
-            <h3><span class="module-icon icon-habits" aria-hidden="true"></span> Hábitos ativos</h3>
-
-            <button class="small-btn" type="button">
-              Ver todos
-            </button>
-          </div>
-
-          <div class="habit-table">
-            <div class="habit-row">
-              <span>Meditar 10 min</span>
-              <p>● ● ● ● ○ ○ ●</p>
-              <strong>5/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Ler diariamente</span>
-              <p>● ● ● ● ● ○ ●</p>
-              <strong>6/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Treinar</span>
-              <p>● ● ● ○ ○ ○ ●</p>
-              <strong>3/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Beber 2L de água</span>
-              <p>● ● ● ● ○ ● ●</p>
-              <strong>5/7</strong>
-            </div>
-          </div>
-        </article>
-
-        <!-- Cards laterais -->
-        <div class="side-panels">
-
-          <article class="panel small-panel module-panel" data-module-panel="sleep">
-            <h3><span class="module-icon icon-sleep" aria-hidden="true"></span> Sono</h3>
-
-            <strong>0h</strong>
-            <p>Nenhum registro</p>
-
-            <div class="mini-wave"></div>
-          </article>
-
-          <article class="panel small-panel module-panel" data-module-panel="water">
-            <h3><span class="module-icon icon-water" aria-hidden="true"></span> Água</h3>
-
-            <strong>0ml</strong>
-            <p>de 2000ml</p>
-
-            <div class="water-dots">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </article>
-
-          <article class="panel small-panel module-panel" data-module-panel="finances">
-            <h3><span class="module-icon icon-finances" aria-hidden="true"></span> Finanças</h3>
-
-            <strong>R$ 0</strong>
-            <p>Saldo atual</p>
-            <small>Entrada R$ 0</small>
-            <small>Saída - R$ 0</small>
-          </article>
-
-          <article class="panel small-panel module-panel" data-module-panel="diary">
-            <h3><span class="module-icon icon-diary" aria-hidden="true"></span> Diário emocional</h3>
-
-            <p>
-              Nenhuma entrada no diário ainda.
-            </p>
-
-            <a href="diary.html">
-              Ver entradas →
-            </a>
-          </article>
-        </div>
-      </section>
-
-      <!-- Eventos recentes -->
-      <section class="recent-events">
-        <div class="panel-header">
-          <div>
-            <h3>▣ Eventos recentes</h3>
-            <p>O que aconteceu nos últimos dias.</p>
-          </div>
-
-          <button class="small-btn" type="button">
-            Ver todos
-          </button>
-        </div>
-
-        <div class="event-list">
-          <article>
-            <span>Hoje</span>
-            <strong>Nenhum evento recente</strong>
-            <p>Os registros dos módulos aparecerão aqui.</p>
-          </article>
-        </div>
-      </section>
-    </section>
-  </main>
-
-  <!-- Catálogo compartilhado das áreas do Fluir -->
-  <script src="../js/app-sections.js"></script>
-
-  <!-- Sidebar compartilhada -->
-  <script src="../js/sidebar.js"></script>
-
-  <!-- Scripts da tela -->
-  <script src="../js/dashboard.js"></script>
-  <script src="../js/mobile.js"></script>
+    </main>
+  </div>
+  <nav class="bottom-nav" data-bottom-nav></nav>
+  <div class="toast" data-toast></div>
+  <script src="../js/mvp.js"></script>
 </body>
 </html>
