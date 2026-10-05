@@ -56,9 +56,9 @@
     }
 
     .topbar{
-      width:min(1820px,100%);
+      width:min(1900px,100%);
       margin:0 auto;
-      padding:14px 22px 7px;
+      padding:16px 28px 8px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -89,9 +89,9 @@
       align-items:center;
       gap:9px;
       color:var(--muted);
-      font-size:10px;
+      font-size:11px;
       font-weight:800;
-      letter-spacing:.08em;
+      letter-spacing:.07em;
       text-transform:uppercase;
     }
 
@@ -113,27 +113,28 @@
     }
 
     .slide{
-      width:min(1820px,100%);
+      width:min(1900px,100%);
       margin:0 auto;
-      padding:4px 22px 9px;
+      padding:6px 28px 10px;
       min-height:0;
       display:grid;
       grid-template-rows:auto 1fr;
-      gap:11px;
+      gap:14px;
     }
 
     .slide-heading{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,420px);
-      gap:22px;
+      grid-template-columns:minmax(0,1fr) minmax(360px,520px);
+      gap:34px;
       align-items:end;
+      padding-bottom:2px;
     }
 
     .eyebrow{
       display:block;
       margin-bottom:7px;
       color:var(--muted);
-      font-size:9px;
+      font-size:10px;
       font-weight:800;
       letter-spacing:.18em;
       text-transform:uppercase;
@@ -142,32 +143,32 @@
     .slide-heading h1{
       margin:0;
       max-width:850px;
-      font-size:clamp(28px,2.55vw,42px);
-      line-height:1.02;
+      font-size:clamp(34px,2.85vw,50px);
+      line-height:1.01;
       letter-spacing:-.055em;
     }
 
     .slide-heading p{
       margin:0;
       color:var(--muted);
-      font-size:11px;
-      line-height:1.55;
-      max-width:420px;
+      font-size:14px;
+      line-height:1.6;
+      max-width:520px;
     }
 
     .showcase{
       min-height:0;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 210px;
-      gap:14px;
+      grid-template-columns:minmax(0,1fr) minmax(320px,360px);
+      gap:18px;
     }
 
     .devices{
       min-width:0;
       min-height:0;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 300px;
-      gap:15px;
+      grid-template-columns:minmax(0,1fr) 285px;
+      gap:16px;
       align-items:stretch;
     }
 
@@ -185,6 +186,30 @@
       min-height:0;
       display:grid;
       grid-template-columns:150px 1fr;
+    }
+
+
+    .desktop-device::after,
+    .phone-device::after{
+      content:attr(data-device-label);
+      position:absolute;
+      z-index:8;
+      right:10px;
+      top:8px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:var(--surface);
+      color:var(--muted);
+      padding:4px 7px;
+      font-size:6.5px;
+      font-weight:800;
+      letter-spacing:.12em;
+      box-shadow:var(--soft);
+    }
+
+    .phone-device::after{
+      top:31px;
+      right:9px;
     }
 
     .desktop-device::before{
@@ -389,60 +414,129 @@
     .notes{
       min-height:0;
       display:grid;
+      grid-auto-rows:max-content;
       align-content:start;
-      gap:7px;
+      gap:10px;
       overflow:auto;
-      padding-right:2px;
+      padding:2px 5px 4px 1px;
     }
 
-    .notes::-webkit-scrollbar{width:4px}
+    .notes::-webkit-scrollbar{width:5px}
+    .notes::-webkit-scrollbar-track{background:transparent}
     .notes::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
 
-    .note-card{
-      background:var(--surface);
+    .presentation-guide{
       border:1px solid var(--line);
-      border-radius:15px;
-      padding:11px 12px;
+      background:linear-gradient(145deg,var(--surface),var(--paper));
+      border-radius:20px;
+      padding:16px 17px;
       box-shadow:var(--soft);
     }
 
+    .presentation-guide span{
+      display:block;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .presentation-guide strong{
+      display:block;
+      font-size:15px;
+      line-height:1.25;
+      letter-spacing:-.03em;
+      margin-bottom:7px;
+    }
+
+    .presentation-guide p{
+      margin:0;
+      color:var(--muted);
+      font-size:10.5px;
+      line-height:1.55;
+    }
+
+    .note-card{
+      position:relative;
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:19px;
+      padding:15px 16px 15px 52px;
+      box-shadow:var(--soft);
+      min-height:88px;
+    }
+
     .note-index{
+      position:absolute;
+      left:16px;
+      top:16px;
       display:grid;
       place-items:center;
-      width:21px;height:21px;
-      border-radius:7px;
-      background:var(--strong);color:var(--inverse);
-      font-size:8px;font-weight:800;
-      margin-bottom:9px;
+      width:25px;
+      height:25px;
+      border-radius:8px;
+      background:var(--strong);
+      color:var(--inverse);
+      font-size:9px;
+      font-weight:800;
     }
 
     .note-card h3{
       margin:0 0 6px;
-      font-size:10px;
+      font-size:13px;
+      line-height:1.25;
       letter-spacing:-.025em;
     }
 
     .note-card p{
       margin:0;
       color:var(--muted);
-      font-size:7.5px;
-      line-height:1.5;
-    }
-
-    .hint-card{
-      margin-top:2px;
-      border:1px dashed var(--line);
-      border-radius:15px;
-      padding:12px;
-      color:var(--muted);
-      font-size:7px;
+      font-size:10.5px;
       line-height:1.55;
     }
 
+    .interaction-guide{
+      border:1px dashed var(--line);
+      background:color-mix(in srgb,var(--surface) 72%,transparent);
+      border-radius:17px;
+      padding:13px 14px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      color:var(--muted);
+    }
+
+    .interaction-guide b{
+      width:28px;
+      height:28px;
+      border-radius:9px;
+      display:grid;
+      place-items:center;
+      background:var(--surface-2);
+      color:var(--text);
+      font-size:11px;
+    }
+
+    .interaction-guide strong{
+      display:block;
+      color:var(--text);
+      font-size:10px;
+      margin-bottom:3px;
+    }
+
+    .interaction-guide span{
+      display:block;
+      font-size:9px;
+      line-height:1.5;
+    }
+
     .controls{
-      width:min(1820px,100%);
+      width:min(1900px,100%);
       margin:0 auto;
-      padding:3px 22px 11px;
+      padding:4px 28px 14px;
       display:grid;
       grid-template-columns:120px 1fr 120px;
       align-items:center;
@@ -452,11 +546,11 @@
     .deck-btn{
       border:1px solid var(--line);
       background:var(--surface);
-      min-height:38px;
-      border-radius:12px;
-      padding:0 13px;
+      min-height:42px;
+      border-radius:13px;
+      padding:0 15px;
       cursor:pointer;
-      font-size:9px;
+      font-size:10px;
       font-weight:800;
       box-shadow:var(--soft);
     }
@@ -485,8 +579,8 @@
 
     /* Conteúdo do sistema dentro dos dispositivos */
     .mock-page{display:grid;gap:11px;color:var(--text)}
-    .desktop-canvas .mock-page{zoom:1.16}
-    .phone-canvas .mock-page{zoom:1.06}
+    .desktop-canvas .mock-page{zoom:1.12}
+    .phone-canvas .mock-page{zoom:1.08}
     .mock-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
     .mock-head h2{margin:0;font-size:22px;letter-spacing:-.05em;line-height:1}
     .mock-head p{margin:5px 0 0;color:var(--muted);font-size:8px;line-height:1.45}
@@ -742,13 +836,19 @@
     .phone-device .settings-list{grid-template-columns:1fr}
     .phone-device .module-grid{grid-template-columns:1fr 1fr}
 
-    @media(max-width:1120px){
+    @media(max-width:1480px){
       body{overflow:auto}
       .deck{height:auto;min-height:100vh}
       .slide-heading{grid-template-columns:1fr}
+      .slide-heading p{font-size:13px;max-width:900px}
       .showcase{grid-template-columns:1fr}
-      .notes{grid-template-columns:repeat(3,1fr)}
-      .devices{min-height:600px}
+      .notes{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        overflow:visible;
+      }
+      .presentation-guide,
+      .interaction-guide{grid-column:1/-1}
+      .devices{min-height:620px}
     }
 
     @media(max-width:760px){
@@ -789,7 +889,7 @@
 
       <section class="showcase">
         <div class="devices">
-          <div class="desktop-device">
+          <div class="desktop-device" data-device-label="DESKTOP">
             <aside class="device-sidebar">
               <div class="device-brand"><b>F</b><strong>Fluir</strong></div>
 
@@ -808,7 +908,7 @@
             <div class="desktop-canvas" id="desktopCanvas"></div>
           </div>
 
-          <div class="phone-device">
+          <div class="phone-device" data-device-label="MOBILE">
             <div class="phone-notch"></div>
             <div class="phone-top">
               <strong>Fluir</strong>
@@ -1076,7 +1176,7 @@
           key:"dashboard",
           kicker:"Visão do produto",
           title:"Organizar a vida sem transformar rotina em cobrança.",
-          description:"O Fluir reúne áreas do cotidiano em uma experiência simples, modular e responsiva. Nesta apresentação, computador e celular mostram a mesma lógica visual.",
+          description:"O Fluir centraliza diferentes áreas da vida em uma experiência modular, simples e responsiva. O mockup mostra como essa proposta se comporta em computador e celular antes da implementação definitiva.",
           notes:[
             ["01","Problema","Organizar diferentes áreas da vida em aplicativos separados gera fragmentação e exige que a pessoa reconstrua o próprio contexto o tempo todo."],
             ["02","Decisão de produto","O Dashboard concentra somente o que ajuda a decidir o próximo passo: prioridades, hábitos, hidratação e bem-estar."],
@@ -1088,7 +1188,7 @@
           key:"setup",
           kicker:"Personalização inicial",
           title:"O sistema começa perguntando o que realmente importa.",
-          description:"O onboarding seleciona áreas e preferências antes de montar a experiência. O objetivo é evitar uma interface cheia de módulos irrelevantes.",
+          description:"O onboarding define quais áreas realmente importam para cada pessoa. Assim, o sistema começa personalizado e evita apresentar uma interface cheia de módulos que talvez nunca sejam usados.",
           notes:[
             ["01","Por que existe","O Fluir possui muitas áreas, mas isso não significa que todas precisam aparecer para todo usuário desde o primeiro acesso."],
             ["02","Personalização","No onboarding, a pessoa escolhe quais módulos fazem sentido e monta uma experiência inicial mais relevante."],
@@ -1100,7 +1200,7 @@
           key:"tasks",
           kicker:"Planejamento",
           title:"Tarefas com prioridade, contexto e espaço para respirar.",
-          description:"A tela mostra o que precisa de atenção agora, sem transformar produtividade em uma lista interminável de obrigações.",
+          description:"A área de Tarefas organiza prioridade, status e contexto em uma única visão. O objetivo é facilitar a tomada de decisão sobre o que fazer agora, sem criar uma lista visualmente opressiva.",
           notes:[
             ["01","Objetivo","A tela de Tarefas transforma uma lista extensa em uma visão clara do que está pendente, concluído e realmente prioritário."],
             ["02","Hierarquia","Os indicadores aparecem antes da lista para que a pessoa entenda a situação do dia em poucos segundos."],
@@ -1112,7 +1212,7 @@
           key:"habits",
           kicker:"Constância",
           title:"Hábitos acompanham ritmo, não perfeição.",
-          description:"O usuário enxerga consistência, sequência e progresso de forma leve. Falhar um dia não transforma a interface em um painel de culpa digital.",
+          description:"Hábitos mostram frequência e constância sem exigir perfeição. A interface foi pensada para informar o ritmo da pessoa e incentivar continuidade, sem usar culpa como mecanismo de engajamento.",
           notes:[
             ["01","Objetivo","Hábitos servem para visualizar constância ao longo do tempo, e não para transformar uma falha pontual em sensação de fracasso."],
             ["02","Indicadores","Sequência, conclusão diária e consistência mostram progresso por ângulos diferentes."],
@@ -1124,7 +1224,7 @@
           key:"water",
           kicker:"Autocuidado",
           title:"Registrar água precisa levar menos tempo do que beber água.",
-          description:"A tela concentra meta, progresso e botões rápidos. O comportamento demonstra como pequenas ações podem ser registradas sem atrito.",
+          description:"A tela de Água prioriza velocidade: a pessoa vê a meta, entende o progresso visualmente e registra ou corrige quantidades com poucos cliques. É uma ação recorrente, então o fluxo precisa ser quase instantâneo.",
           notes:[
             ["01","Objetivo","O registro de água é uma ação frequente, então o fluxo precisa ser mais rápido do que preencher um formulário comum."],
             ["02","Visualização","O círculo mostra graficamente quanto da meta diária já foi alcançado, enquanto o valor central mantém a leitura precisa."],
@@ -1136,7 +1236,7 @@
           key:"settings",
           kicker:"Preferências",
           title:"O Fluir se adapta sem perder consistência.",
-          description:"Tema e áreas ativas mudam, mas a linguagem visual permanece. A personalização acontece dentro de limites claros para proteger a experiência.",
+          description:"Configurações permitem adaptar aparência e áreas ativas sem desmontar a identidade do produto. A pessoa personaliza o que usa, enquanto o sistema mantém consistência visual e de navegação.",
           notes:[
             ["01","Objetivo","Configurações concentram preferências que alteram a experiência sem mudar a lógica central do sistema."],
             ["02","Aparência","Tema claro e escuro preservam contraste, hierarquia e componentes, evitando duas identidades diferentes."],
@@ -1148,7 +1248,7 @@
           key:"summary",
           kicker:"Responsividade",
           title:"PC e celular fazem parte da mesma experiência.",
-          description:"O mockup não propõe duas aplicações desconectadas. Ele mostra uma única linguagem responsiva que pode evoluir para o sistema completo.",
+          description:"Desktop e celular fazem parte do mesmo produto. O conteúdo e a lógica permanecem, enquanto a organização visual muda para aproveitar melhor cada tamanho de tela e forma de interação.",
           notes:[
             ["01","Uma única experiência","PC e celular não são dois produtos diferentes. Eles compartilham linguagem visual, conteúdo e regras de interação."],
             ["02","Desktop","O espaço maior permite painéis lado a lado, contexto adicional e navegação persistente."],
@@ -1180,11 +1280,15 @@
 
       function renderNotes(items){
         notes.innerHTML =
-          '<div class="hint-card"><strong style="display:block;color:var(--text);font-size:8px;margin-bottom:4px">O que esta tela demonstra</strong>Use os tópicos abaixo como apoio de fala durante a apresentação.</div>' +
+          '<section class="presentation-guide">' +
+            '<span>Guia de apresentação</span>' +
+            '<strong>O que vale explicar nesta etapa</strong>' +
+            '<p>Use estes pontos como roteiro visual. A ideia é apresentar a decisão por trás da tela, não apenas mostrar que ela existe.</p>' +
+          '</section>' +
           items.map(function(item){
             return '<article class="note-card"><span class="note-index">' + item[0] + '</span><h3>' + item[1] + '</h3><p>' + item[2] + '</p></article>';
           }).join("") +
-          '<div class="hint-card">Interaja com o PC ou celular para demonstrar o comportamento do protótipo. Use ← → para trocar de etapa.</div>';
+          '<section class="interaction-guide"><b>↗</b><div><strong>Demonstração ao vivo</strong><span>Interaja com o PC ou celular. Use ← → para trocar de etapa e mostre apenas as ações relevantes para a fala.</span></div></section>';
       }
 
       function syncActiveNav(key){
