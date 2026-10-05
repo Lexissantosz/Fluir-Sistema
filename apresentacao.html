@@ -284,6 +284,7 @@
       min-width:0;
       min-height:0;
       overflow:auto;
+      isolation:isolate;
       background:var(--bg);
       padding:22px 17px 18px;
     }
@@ -331,6 +332,7 @@
     }
 
     .phone-canvas{
+      position:relative;
       min-height:0;
       height:100%;
       overflow-y:scroll;
@@ -388,14 +390,19 @@
       min-height:0;
       display:grid;
       align-content:start;
-      gap:8px;
+      gap:7px;
+      overflow:auto;
+      padding-right:2px;
     }
+
+    .notes::-webkit-scrollbar{width:4px}
+    .notes::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
 
     .note-card{
       background:var(--surface);
       border:1px solid var(--line);
-      border-radius:16px;
-      padding:13px;
+      border-radius:15px;
+      padding:11px 12px;
       box-shadow:var(--soft);
     }
 
@@ -608,50 +615,71 @@
     .mini-btn.primary{background:var(--strong);color:var(--inverse);border-color:var(--strong)}
 
     .prototype-modal-overlay{
-      position:fixed;
+      position:absolute;
       inset:0;
-      z-index:100;
+      z-index:30;
       display:grid;
       place-items:center;
-      padding:20px;
-      background:rgba(10,10,10,.44);
-      backdrop-filter:blur(8px);
+      padding:14px;
+      background:rgba(10,10,10,.30);
+      backdrop-filter:blur(5px);
+      border-radius:inherit;
     }
     .prototype-modal{
-      width:min(390px,100%);
+      width:min(360px,92%);
       background:var(--surface);
       border:1px solid var(--line);
-      border-radius:22px;
-      padding:20px;
-      box-shadow:0 28px 90px rgba(0,0,0,.28);
+      border-radius:17px;
+      padding:15px;
+      box-shadow:0 18px 52px rgba(0,0,0,.25);
     }
-    .prototype-modal h3{margin:0 0 6px;font-size:19px;letter-spacing:-.04em}
-    .prototype-modal p{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.5}
-    .prototype-modal label{display:grid;gap:7px;font-size:9px;font-weight:800}
+    .prototype-modal h3{margin:0 0 5px;font-size:14px;letter-spacing:-.04em}
+    .prototype-modal p{margin:0 0 12px;color:var(--muted);font-size:7px;line-height:1.5}
+    .prototype-modal label{display:grid;gap:5px;font-size:7px;font-weight:800}
     .prototype-modal input{
       width:100%;
-      min-height:42px;
+      min-height:34px;
       border:1px solid var(--line);
-      border-radius:12px;
+      border-radius:9px;
       background:var(--bg);
       color:var(--text);
-      padding:0 12px;
+      padding:0 9px;
       outline:none;
+      font-size:8px;
     }
-    .prototype-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+    .prototype-modal-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:12px}
+    .prototype-modal .mini-btn{font-size:6px;min-height:24px}
+    .phone-device .prototype-modal-overlay{
+      position:sticky;
+      top:0;
+      min-height:100%;
+      width:100%;
+      padding:8px;
+      z-index:40;
+    }
+    .phone-device .prototype-modal{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+    }
+    .phone-device .prototype-modal h3{font-size:12px}
+    .phone-device .prototype-modal p{font-size:6px}
+    .phone-device .prototype-modal input{min-height:31px;font-size:7px}
     .prototype-toast{
-      position:fixed;
+      position:absolute;
       left:50%;
-      bottom:24px;
-      z-index:120;
+      bottom:12px;
+      z-index:45;
       transform:translateX(-50%);
+      max-width:calc(100% - 22px);
       background:var(--strong);
       color:var(--inverse);
       border-radius:999px;
-      padding:9px 13px;
-      font-size:8px;
+      padding:7px 10px;
+      font-size:6px;
       font-weight:800;
       box-shadow:var(--shadow);
+      white-space:nowrap;
     }
 
     .setup-box{
@@ -1050,9 +1078,10 @@
           title:"Organizar a vida sem transformar rotina em cobrança.",
           description:"O Fluir reúne áreas do cotidiano em uma experiência simples, modular e responsiva. Nesta apresentação, computador e celular mostram a mesma lógica visual.",
           notes:[
-            ["01","Visão unificada","O Dashboard reúne prioridades, hábitos, hidratação e bem-estar sem exigir que a pessoa abra vários lugares."],
-            ["02","Mesma identidade","A hierarquia, os cards e a navegação se adaptam ao espaço disponível sem virar um desktop espremido."],
-            ["03","Protótipo clicável","Use a navegação dos dispositivos e os controles para explorar os fluxos demonstrativos."]
+            ["01","Problema","Organizar diferentes áreas da vida em aplicativos separados gera fragmentação e exige que a pessoa reconstrua o próprio contexto o tempo todo."],
+            ["02","Decisão de produto","O Dashboard concentra somente o que ajuda a decidir o próximo passo: prioridades, hábitos, hidratação e bem-estar."],
+            ["03","Responsividade","Desktop aproveita espaço para contexto; celular reorganiza a mesma informação em leitura vertical e navegação rápida."],
+            ["04","O que validamos","Este protótipo permite testar hierarquia, navegação e sensação de uso antes de investir na implementação completa."]
           ]
         },
         {
@@ -1061,9 +1090,10 @@
           title:"O sistema começa perguntando o que realmente importa.",
           description:"O onboarding seleciona áreas e preferências antes de montar a experiência. O objetivo é evitar uma interface cheia de módulos irrelevantes.",
           notes:[
-            ["01","Escolha de módulos","A pessoa ativa somente as áreas que fazem sentido para o momento atual."],
-            ["02","Menos sobrecarga","A configuração inicial reduz ruído visual e ajuda o Dashboard a nascer mais relevante."],
-            ["03","Interação","Clique nos cartões do onboarding para simular a seleção e remoção de módulos."]
+            ["01","Por que existe","O Fluir possui muitas áreas, mas isso não significa que todas precisam aparecer para todo usuário desde o primeiro acesso."],
+            ["02","Personalização","No onboarding, a pessoa escolhe quais módulos fazem sentido e monta uma experiência inicial mais relevante."],
+            ["03","Redução de ruído","Menos módulos ativos significam menos distração e uma navegação mais simples no uso diário."],
+            ["04","Interação","Clique nos cartões para ativar ou remover módulos e use Continuar para simular o salvamento das preferências."]
           ]
         },
         {
@@ -1072,9 +1102,10 @@
           title:"Tarefas com prioridade, contexto e espaço para respirar.",
           description:"A tela mostra o que precisa de atenção agora, sem transformar produtividade em uma lista interminável de obrigações.",
           notes:[
-            ["01","Prioridades visíveis","Resumo, status e prioridade aparecem antes da lista detalhada."],
-            ["02","Ação direta","Concluir uma tarefa acontece no próprio item, sem abrir uma sequência desnecessária de telas."],
-            ["03","Interação","Clique em qualquer tarefa para alternar entre pendente e concluída."]
+            ["01","Objetivo","A tela de Tarefas transforma uma lista extensa em uma visão clara do que está pendente, concluído e realmente prioritário."],
+            ["02","Hierarquia","Os indicadores aparecem antes da lista para que a pessoa entenda a situação do dia em poucos segundos."],
+            ["03","Ação direta","Tarefas podem ser concluídas no próprio item e novas tarefas podem ser criadas sem abandonar a tela."],
+            ["04","Interação","Clique em uma tarefa para concluir ou use + Nova tarefa. O formulário aparece somente dentro do dispositivo utilizado."]
           ]
         },
         {
@@ -1083,9 +1114,10 @@
           title:"Hábitos acompanham ritmo, não perfeição.",
           description:"O usuário enxerga consistência, sequência e progresso de forma leve. Falhar um dia não transforma a interface em um painel de culpa digital.",
           notes:[
-            ["01","Ritmo do dia","O resumo indica quantos hábitos avançaram sem esconder o contexto."],
-            ["02","Sequências úteis","A sequência aparece como informação, não como punição quando é interrompida."],
-            ["03","Interação","Marque e desmarque hábitos diretamente na lista para demonstrar o fluxo."]
+            ["01","Objetivo","Hábitos servem para visualizar constância ao longo do tempo, e não para transformar uma falha pontual em sensação de fracasso."],
+            ["02","Indicadores","Sequência, conclusão diária e consistência mostram progresso por ângulos diferentes."],
+            ["03","Tom do produto","A interface evita linguagem punitiva e prioriza informação útil sobre o ritmo real da pessoa."],
+            ["04","Interação","Marque hábitos ou crie um novo. O formulário abre dentro da tela do PC ou do celular correspondente."]
           ]
         },
         {
@@ -1094,9 +1126,10 @@
           title:"Registrar água precisa levar menos tempo do que beber água.",
           description:"A tela concentra meta, progresso e botões rápidos. O comportamento demonstra como pequenas ações podem ser registradas sem atrito.",
           notes:[
-            ["01","Meta clara","O volume atual e a meta aparecem juntos, sem exigir interpretação de gráficos complexos."],
-            ["02","Registro rápido","Botões rápidos permitem adicionar água e também corrigir um registro feito por engano."],
-            ["03","Interação","Adicione ou remova água e acompanhe o círculo preencher, a porcentagem e o valor restante em tempo real."]
+            ["01","Objetivo","O registro de água é uma ação frequente, então o fluxo precisa ser mais rápido do que preencher um formulário comum."],
+            ["02","Visualização","O círculo mostra graficamente quanto da meta diária já foi alcançado, enquanto o valor central mantém a leitura precisa."],
+            ["03","Correção de erros","Além de adicionar 200, 300 ou 500 ml, o protótipo permite remover registros feitos por engano."],
+            ["04","Interação","Teste os botões e observe círculo, porcentagem e quantidade restante mudarem simultaneamente."]
           ]
         },
         {
@@ -1105,9 +1138,10 @@
           title:"O Fluir se adapta sem perder consistência.",
           description:"Tema e áreas ativas mudam, mas a linguagem visual permanece. A personalização acontece dentro de limites claros para proteger a experiência.",
           notes:[
-            ["01","Tema claro e escuro","As duas aparências usam a mesma hierarquia, contraste e estrutura."],
-            ["02","Módulos ativos","A configuração controla quais áreas fazem parte da experiência diária."],
-            ["03","Interação","Clique no switch de aparência ou no botão ◐ do topo para alternar o tema da apresentação inteira."]
+            ["01","Objetivo","Configurações concentram preferências que alteram a experiência sem mudar a lógica central do sistema."],
+            ["02","Aparência","Tema claro e escuro preservam contraste, hierarquia e componentes, evitando duas identidades diferentes."],
+            ["03","Áreas ativas","A pessoa controla quais módulos participam da rotina, reforçando a proposta modular do Fluir."],
+            ["04","Interação","Use o switch ou o botão ◐ no topo para demonstrar a mudança de tema em toda a apresentação."]
           ]
         },
         {
@@ -1116,9 +1150,10 @@
           title:"PC e celular fazem parte da mesma experiência.",
           description:"O mockup não propõe duas aplicações desconectadas. Ele mostra uma única linguagem responsiva que pode evoluir para o sistema completo.",
           notes:[
-            ["01","Desktop","Mais espaço permite contexto, painéis lado a lado e navegação persistente."],
-            ["02","Celular","A prioridade muda para ações rápidas, leitura vertical e navegação inferior."],
-            ["03","Próximo passo","Validar o mockup, consolidar os componentes e levar as decisões aprovadas para a implementação funcional."]
+            ["01","Uma única experiência","PC e celular não são dois produtos diferentes. Eles compartilham linguagem visual, conteúdo e regras de interação."],
+            ["02","Desktop","O espaço maior permite painéis lado a lado, contexto adicional e navegação persistente."],
+            ["03","Celular","A interface prioriza leitura vertical, toque, rolagem e ações rápidas sem simplesmente encolher o desktop."],
+            ["04","Resultado do mockup","Com a experiência validada, essas decisões podem orientar a implementação do sistema funcional com menos retrabalho."]
           ]
         }
       ];
@@ -1144,9 +1179,12 @@
       }
 
       function renderNotes(items){
-        notes.innerHTML = items.map(function(item){
-          return '<article class="note-card"><span class="note-index">' + item[0] + '</span><h3>' + item[1] + '</h3><p>' + item[2] + '</p></article>';
-        }).join("") + '<div class="hint-card">Dica: use ← → no teclado, clique nos pontos abaixo ou navegue pelos botões dentro dos dispositivos.</div>';
+        notes.innerHTML =
+          '<div class="hint-card"><strong style="display:block;color:var(--text);font-size:8px;margin-bottom:4px">O que esta tela demonstra</strong>Use os tópicos abaixo como apoio de fala durante a apresentação.</div>' +
+          items.map(function(item){
+            return '<article class="note-card"><span class="note-index">' + item[0] + '</span><h3>' + item[1] + '</h3><p>' + item[2] + '</p></article>';
+          }).join("") +
+          '<div class="hint-card">Interaja com o PC ou celular para demonstrar o comportamento do protótipo. Use ← → para trocar de etapa.</div>';
       }
 
       function syncActiveNav(key){
@@ -1155,48 +1193,68 @@
         });
       }
 
-      function showToast(message){
-        var old = document.querySelector(".prototype-toast");
+      function getDeviceCanvas(source){
+        if(!source){return desktopCanvas;}
+        return source.closest(".desktop-canvas,.phone-canvas") || desktopCanvas;
+      }
+
+      function showToast(message,source){
+        var canvas = getDeviceCanvas(source);
+        var old = canvas.querySelector(".prototype-toast");
         if(old){old.remove();}
+
         var toast = document.createElement("div");
         toast.className = "prototype-toast";
         toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(function(){toast.remove();},1500);
+        canvas.appendChild(toast);
+
+        setTimeout(function(){
+          if(toast.parentNode){toast.remove();}
+        },1500);
       }
 
       function bindCheckRows(){
         document.querySelectorAll("[data-check]").forEach(function(row){
           if(row.dataset.boundCheck === "true"){return;}
           row.dataset.boundCheck = "true";
+
           row.addEventListener("click",function(){
             row.classList.toggle("done");
             var check = row.querySelector(".check");
-            if(check){check.textContent = row.classList.contains("done") ? "✓" : "";}
+            if(check){
+              check.textContent = row.classList.contains("done") ? "✓" : "";
+            }
           });
         });
       }
 
-      function addPrototypeItem(type,label){
+      function addPrototypeItem(type,label,source){
+        var canvas = getDeviceCanvas(source);
         var selector = type === "task" ? "[data-task-list]" : "[data-habit-list]";
+        var list = canvas.querySelector(selector);
 
-        document.querySelectorAll(selector).forEach(function(list){
-          var row = document.createElement("div");
-          row.className = type === "task" ? "task-mini" : "habit-mini";
-          row.setAttribute("data-check","");
-          row.innerHTML =
-            '<span class="check"></span>' +
-            '<span><strong></strong><small>' + (type === "task" ? 'Mockup · agora' : 'Novo hábito · diário') + '</small></span>' +
-            '<span class="pill">' + (type === "task" ? 'Normal' : '0 dias') + '</span>';
-          row.querySelector("strong").textContent = label;
-          list.appendChild(row);
-        });
+        if(!list){return;}
+
+        var row = document.createElement("div");
+        row.className = type === "task" ? "task-mini" : "habit-mini";
+        row.setAttribute("data-check","");
+        row.innerHTML =
+          '<span class="check"></span>' +
+          '<span><strong></strong><small>' + (type === "task" ? 'Mockup · agora' : 'Novo hábito · diário') + '</small></span>' +
+          '<span class="pill">' + (type === "task" ? 'Normal' : '0 dias') + '</span>';
+
+        row.querySelector("strong").textContent = label;
+        list.appendChild(row);
 
         bindCheckRows();
-        showToast(type === "task" ? "Tarefa adicionada ao protótipo" : "Hábito adicionado ao protótipo");
+        showToast(type === "task" ? "Tarefa adicionada" : "Hábito adicionado",source);
       }
 
-      function openComposer(type){
+      function openComposer(type,source){
+        var canvas = getDeviceCanvas(source);
+        var previous = canvas.querySelector(".prototype-modal-overlay");
+        if(previous){previous.remove();}
+
         var overlay = document.createElement("div");
         overlay.className = "prototype-modal-overlay";
         var isTask = type === "task";
@@ -1204,7 +1262,7 @@
         overlay.innerHTML =
           '<div class="prototype-modal" role="dialog" aria-modal="true">' +
             '<h3>' + (isTask ? 'Nova tarefa' : 'Novo hábito') + '</h3>' +
-            '<p>' + (isTask ? 'Adicione uma tarefa demonstrativa ao protótipo.' : 'Adicione um hábito demonstrativo ao protótipo.') + '</p>' +
+            '<p>' + (isTask ? 'Adicione uma tarefa demonstrativa nesta tela.' : 'Adicione um hábito demonstrativo nesta tela.') + '</p>' +
             '<label>Nome<input type="text" data-composer-input maxlength="50" placeholder="' + (isTask ? 'Ex: Revisar documentação' : 'Ex: Ler 10 minutos') + '"></label>' +
             '<div class="prototype-modal-actions">' +
               '<button class="mini-btn" type="button" data-composer-cancel>Cancelar</button>' +
@@ -1212,7 +1270,7 @@
             '</div>' +
           '</div>';
 
-        document.body.appendChild(overlay);
+        canvas.appendChild(overlay);
 
         var input = overlay.querySelector("[data-composer-input]");
         input.focus();
@@ -1220,6 +1278,7 @@
         function close(){overlay.remove();}
 
         overlay.querySelector("[data-composer-cancel]").addEventListener("click",close);
+
         overlay.addEventListener("click",function(event){
           if(event.target === overlay){close();}
         });
@@ -1227,7 +1286,7 @@
         overlay.querySelector("[data-composer-save]").addEventListener("click",function(){
           var value = input.value.trim();
           if(!value){input.focus();return;}
-          addPrototypeItem(type,value);
+          addPrototypeItem(type,value,source);
           close();
         });
 
@@ -1248,7 +1307,7 @@
 
           canvas.addEventListener("pointerdown",function(event){
             if(event.pointerType === "touch"){return;}
-            if(event.target.closest("button,[data-check],[data-choice],input")){return;}
+            if(event.target.closest("button,[data-check],[data-choice],input,.prototype-modal-overlay")){return;}
 
             dragging = true;
             startY = event.clientY;
@@ -1308,17 +1367,17 @@
         });
 
         document.querySelectorAll("[data-new-task]").forEach(function(btn){
-          btn.addEventListener("click",function(){openComposer("task");});
+          btn.addEventListener("click",function(){openComposer("task",btn);});
         });
 
         document.querySelectorAll("[data-new-habit]").forEach(function(btn){
-          btn.addEventListener("click",function(){openComposer("habit");});
+          btn.addEventListener("click",function(){openComposer("habit",btn);});
         });
 
         document.querySelectorAll("[data-setup-next]").forEach(function(btn){
           btn.addEventListener("click",function(){
             btn.textContent = "Preferências salvas ✓";
-            showToast("Configuração demonstrativa salva");
+            showToast("Configuração salva",btn);
           });
         });
 
