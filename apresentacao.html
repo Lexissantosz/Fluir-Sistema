@@ -297,8 +297,9 @@
       border-radius:36px;
       padding:29px 8px 8px;
       display:grid;
-      grid-template-rows:auto 1fr auto;
+      grid-template-rows:auto minmax(0,1fr) auto;
       min-height:0;
+      height:100%;
       background:var(--surface);
     }
 
@@ -331,12 +332,25 @@
 
     .phone-canvas{
       min-height:0;
-      overflow:auto;
+      height:100%;
+      overflow-y:scroll;
+      overflow-x:hidden;
+      overscroll-behavior:contain;
+      touch-action:pan-y;
+      scrollbar-width:thin;
+      cursor:grab;
       background:var(--bg);
-      padding:11px 9px 74px;
+      padding:11px 9px 88px;
     }
 
-    .phone-canvas::-webkit-scrollbar{width:0}
+    .phone-canvas.dragging{
+      cursor:grabbing;
+      user-select:none;
+    }
+
+    .phone-canvas::-webkit-scrollbar{width:4px}
+    .phone-canvas::-webkit-scrollbar-track{background:transparent}
+    .phone-canvas::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
 
     .phone-nav{
       position:absolute;
@@ -593,6 +607,53 @@
     }
     .mini-btn.primary{background:var(--strong);color:var(--inverse);border-color:var(--strong)}
 
+    .prototype-modal-overlay{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:rgba(10,10,10,.44);
+      backdrop-filter:blur(8px);
+    }
+    .prototype-modal{
+      width:min(390px,100%);
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 28px 90px rgba(0,0,0,.28);
+    }
+    .prototype-modal h3{margin:0 0 6px;font-size:19px;letter-spacing:-.04em}
+    .prototype-modal p{margin:0 0 16px;color:var(--muted);font-size:10px;line-height:1.5}
+    .prototype-modal label{display:grid;gap:7px;font-size:9px;font-weight:800}
+    .prototype-modal input{
+      width:100%;
+      min-height:42px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--bg);
+      color:var(--text);
+      padding:0 12px;
+      outline:none;
+    }
+    .prototype-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+    .prototype-toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      z-index:120;
+      transform:translateX(-50%);
+      background:var(--strong);
+      color:var(--inverse);
+      border-radius:999px;
+      padding:9px 13px;
+      font-size:8px;
+      font-weight:800;
+      box-shadow:var(--shadow);
+    }
+
     .setup-box{
       min-height:100%;
       display:grid;
@@ -809,7 +870,7 @@
         </div>
 
         <div style="display:flex;justify-content:flex-end">
-          <button class="mini-btn primary" type="button">Continuar →</button>
+          <button class="mini-btn primary" type="button" data-setup-next>Continuar →</button>
         </div>
       </section>
     </div>
@@ -823,7 +884,7 @@
           <h2>Tarefas</h2>
           <p>Prioridades visíveis, sem transformar o dia em uma lista infinita.</p>
         </div>
-        <button class="mini-btn primary" type="button">+ Nova tarefa</button>
+        <button class="mini-btn primary" type="button" data-new-task>+ Nova tarefa</button>
       </header>
 
       <section class="stats">
@@ -833,7 +894,7 @@
         <article class="stat"><span>Alta prioridade</span><strong>1</strong><small>atenção</small></article>
       </section>
 
-      <section class="panel-mini">
+      <section class="panel-mini" data-task-list>
         <div class="panel-title"><strong>Hoje</strong><span>Clique nas tarefas</span></div>
         <div class="task-mini done" data-check><span class="check">✓</span><span><strong>Revisar apresentação do PI</strong><small>Estudos · 10:30</small></span><span class="pill">Alta</span></div>
         <div class="task-mini" data-check><span class="check"></span><span><strong>Finalizar tela do mockup</strong><small>Fluir · 14:00</small></span><span class="pill">Média</span></div>
@@ -851,7 +912,7 @@
           <h2>Hábitos</h2>
           <p>O foco é acompanhar ritmo e frequência, não criar uma cobrança perfeita.</p>
         </div>
-        <button class="mini-btn" type="button">+ Hábito</button>
+        <button class="mini-btn" type="button" data-new-habit>+ Hábito</button>
       </header>
 
       <section class="stats">
@@ -861,7 +922,7 @@
         <article class="stat"><span>Ritmo</span><strong>Bom</strong><small>sem pressão</small></article>
       </section>
 
-      <section class="panel-mini">
+      <section class="panel-mini" data-habit-list>
         <div class="panel-title"><strong>Seu ritmo de hoje</strong><span>Clique para marcar</span></div>
         <div class="habit-mini done" data-check><span class="check">✓</span><span><strong>Beber água ao acordar</strong><small>Saúde · diário</small></span><span class="pill">8 dias</span></div>
         <div class="habit-mini done" data-check><span class="check">✓</span><span><strong>Estudar inglês</strong><small>Estudos · 20 min</small></span><span class="pill">5 dias</span></div>
@@ -1094,14 +1155,137 @@
         });
       }
 
-      function attachInteractions(){
+      function showToast(message){
+        var old = document.querySelector(".prototype-toast");
+        if(old){old.remove();}
+        var toast = document.createElement("div");
+        toast.className = "prototype-toast";
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(function(){toast.remove();},1500);
+      }
+
+      function bindCheckRows(){
         document.querySelectorAll("[data-check]").forEach(function(row){
+          if(row.dataset.boundCheck === "true"){return;}
+          row.dataset.boundCheck = "true";
           row.addEventListener("click",function(){
             row.classList.toggle("done");
             var check = row.querySelector(".check");
             if(check){check.textContent = row.classList.contains("done") ? "✓" : "";}
           });
         });
+      }
+
+      function addPrototypeItem(type,label){
+        var selector = type === "task" ? "[data-task-list]" : "[data-habit-list]";
+
+        document.querySelectorAll(selector).forEach(function(list){
+          var row = document.createElement("div");
+          row.className = type === "task" ? "task-mini" : "habit-mini";
+          row.setAttribute("data-check","");
+          row.innerHTML =
+            '<span class="check"></span>' +
+            '<span><strong></strong><small>' + (type === "task" ? 'Mockup · agora' : 'Novo hábito · diário') + '</small></span>' +
+            '<span class="pill">' + (type === "task" ? 'Normal' : '0 dias') + '</span>';
+          row.querySelector("strong").textContent = label;
+          list.appendChild(row);
+        });
+
+        bindCheckRows();
+        showToast(type === "task" ? "Tarefa adicionada ao protótipo" : "Hábito adicionado ao protótipo");
+      }
+
+      function openComposer(type){
+        var overlay = document.createElement("div");
+        overlay.className = "prototype-modal-overlay";
+        var isTask = type === "task";
+
+        overlay.innerHTML =
+          '<div class="prototype-modal" role="dialog" aria-modal="true">' +
+            '<h3>' + (isTask ? 'Nova tarefa' : 'Novo hábito') + '</h3>' +
+            '<p>' + (isTask ? 'Adicione uma tarefa demonstrativa ao protótipo.' : 'Adicione um hábito demonstrativo ao protótipo.') + '</p>' +
+            '<label>Nome<input type="text" data-composer-input maxlength="50" placeholder="' + (isTask ? 'Ex: Revisar documentação' : 'Ex: Ler 10 minutos') + '"></label>' +
+            '<div class="prototype-modal-actions">' +
+              '<button class="mini-btn" type="button" data-composer-cancel>Cancelar</button>' +
+              '<button class="mini-btn primary" type="button" data-composer-save>Adicionar</button>' +
+            '</div>' +
+          '</div>';
+
+        document.body.appendChild(overlay);
+
+        var input = overlay.querySelector("[data-composer-input]");
+        input.focus();
+
+        function close(){overlay.remove();}
+
+        overlay.querySelector("[data-composer-cancel]").addEventListener("click",close);
+        overlay.addEventListener("click",function(event){
+          if(event.target === overlay){close();}
+        });
+
+        overlay.querySelector("[data-composer-save]").addEventListener("click",function(){
+          var value = input.value.trim();
+          if(!value){input.focus();return;}
+          addPrototypeItem(type,value);
+          close();
+        });
+
+        input.addEventListener("keydown",function(event){
+          if(event.key === "Enter"){
+            event.preventDefault();
+            overlay.querySelector("[data-composer-save]").click();
+          }
+          if(event.key === "Escape"){close();}
+        });
+      }
+
+      function enablePhoneDragScroll(){
+        document.querySelectorAll(".phone-canvas").forEach(function(canvas){
+          var dragging = false;
+          var startY = 0;
+          var startScroll = 0;
+
+          canvas.addEventListener("pointerdown",function(event){
+            if(event.pointerType === "touch"){return;}
+            if(event.target.closest("button,[data-check],[data-choice],input")){return;}
+
+            dragging = true;
+            startY = event.clientY;
+            startScroll = canvas.scrollTop;
+            canvas.classList.add("dragging");
+
+            if(canvas.setPointerCapture){
+              canvas.setPointerCapture(event.pointerId);
+            }
+          });
+
+          canvas.addEventListener("pointermove",function(event){
+            if(!dragging){return;}
+            canvas.scrollTop = startScroll - (event.clientY - startY);
+          });
+
+          function stop(event){
+            if(!dragging){return;}
+            dragging = false;
+            canvas.classList.remove("dragging");
+
+            if(
+              event &&
+              canvas.hasPointerCapture &&
+              canvas.hasPointerCapture(event.pointerId)
+            ){
+              canvas.releasePointerCapture(event.pointerId);
+            }
+          }
+
+          canvas.addEventListener("pointerup",stop);
+          canvas.addEventListener("pointercancel",stop);
+        });
+      }
+
+      function attachInteractions(){
+        bindCheckRows();
 
         document.querySelectorAll("[data-choice]").forEach(function(card){
           card.addEventListener("click",function(){card.classList.toggle("selected");});
@@ -1123,9 +1307,26 @@
           });
         });
 
+        document.querySelectorAll("[data-new-task]").forEach(function(btn){
+          btn.addEventListener("click",function(){openComposer("task");});
+        });
+
+        document.querySelectorAll("[data-new-habit]").forEach(function(btn){
+          btn.addEventListener("click",function(){openComposer("habit");});
+        });
+
+        document.querySelectorAll("[data-setup-next]").forEach(function(btn){
+          btn.addEventListener("click",function(){
+            btn.textContent = "Preferências salvas ✓";
+            showToast("Configuração demonstrativa salva");
+          });
+        });
+
         document.querySelectorAll("[data-theme-demo]").forEach(function(btn){
           btn.addEventListener("click",toggleTheme);
         });
+
+        enablePhoneDragScroll();
       }
 
       function updateWater(feedback){
