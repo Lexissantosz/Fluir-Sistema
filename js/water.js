@@ -81,7 +81,8 @@ const waterRegistrationMessage = document.getElementById("waterRegistrationMessa
 // =====================================================
 
 const MIN_WATER_PER_REGISTRATION_ML = 1;
-const MAX_WATER_PER_REGISTRATION_ML = 10000;
+const MAX_WATER_PER_REGISTRATION_ML = 1000;
+const MAX_DAILY_WATER_ML = 10000;
 
 const defaultSetup = {
   user: {
@@ -653,12 +654,25 @@ function validateWaterRegistrationAmount(amount) {
 }
 
 function showWaterRegistrationMessage(message, type = "error") {
+  const customMessage = document.getElementById("customWaterMessage");
+  if (document.getElementById("customWaterModal")?.classList.contains("active") && customMessage) {
+    customMessage.textContent = message;
+    customMessage.className = `water-form-message show ${type}`;
+    customWaterAmountInput.setAttribute("aria-invalid", "true");
+    return;
+  }
   if (!waterRegistrationMessage) return;
   waterRegistrationMessage.textContent = message;
   waterRegistrationMessage.className = `water-form-message water-registration-message show ${type}`;
 }
 
 function clearWaterRegistrationMessage() {
+  const customMessage = document.getElementById("customWaterMessage");
+  if (customMessage) {
+    customMessage.textContent = "";
+    customMessage.className = "water-form-message";
+  }
+  customWaterAmountInput?.removeAttribute("aria-invalid");
   if (!waterRegistrationMessage) return;
   waterRegistrationMessage.textContent = "";
   waterRegistrationMessage.className = "water-form-message water-registration-message";
@@ -682,6 +696,10 @@ function addWaterAmount(amount) {
 
   const currentAmount = Number(waterData.logs[todayKey]) || 0;
   const newAmount = currentAmount + validation.amount;
+  if (newAmount > MAX_DAILY_WATER_ML) {
+    showWaterRegistrationMessage("O limite diário é de 10.000 ml. Retire um registro incorreto antes de adicionar mais água.");
+    return false;
+  }
 
   waterData.logs[todayKey] = newAmount;
 
@@ -696,36 +714,29 @@ function addWaterAmount(amount) {
   return true;
 }
 
-function removeCup() {
-  /*
-    Mantemos o nome removeCup por compatibilidade,
-    mas agora remove 250ml em vez de 1 copo.
-  */
-
+function removeWaterAmount(amount) {
+  const validation = validateWaterRegistrationAmount(amount);
+  if (!validation.valid) {
+    showWaterRegistrationMessage(validation.message);
+    return false;
+  }
   const todayKey = getTodayKey();
-
-  if (!waterData.logs) {
-    waterData.logs = {};
+  const currentAmount = Number(waterData.logs?.[todayKey]) || 0;
+  if (validation.amount > currentAmount) {
+    showWaterRegistrationMessage(`Você só tem ${currentAmount} ml registrados hoje.`);
+    return false;
   }
-
-  const currentAmount = Number(waterData.logs[todayKey]) || 0;
-
-  if (currentAmount <= 0) {
-    return;
-  }
-
-  const newAmount = Math.max(currentAmount - 250, 0);
-
+  clearWaterRegistrationMessage();
+  const newAmount = currentAmount - validation.amount;
   waterData.logs[todayKey] = newAmount;
-
   saveWaterData();
-
-  createWaterTimelineEvent(
-    "Água removida",
-    `250ml removidos · total de ${newAmount}ml hoje.`
-  );
-
+  createWaterTimelineEvent("Água removida", `${validation.amount}ml removidos · total de ${newAmount}ml hoje.`);
   renderWaterPage();
+  return true;
+}
+
+function removeCup() {
+  removeWaterAmount(Math.min(250, getTodayCups()) || 250);
 }
 
 function resetTodayWater() {
@@ -878,6 +889,51 @@ function saveWaterGoal() {
 // =====================================================
 // 20. EVENTOS
 // =====================================================
+function setupCustomWaterModal() {
+  const overlay = document.getElementById("customWaterModal");
+  const openButton = document.getElementById("openCustomWaterBtn");
+  const closeButton = document.getElementById("closeCustomWaterBtn");
+  const removeButton = document.getElementById("removeCustomWaterBtn");
+  if (!overlay || !openButton || !customWaterAmountInput) return;
+  let previousOverflow;
+  function close() {
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.inert = true;
+    document.body.style.overflow = previousOverflow;
+    openButton.focus();
+  }
+  openButton.addEventListener("click", () => {
+    clearWaterRegistrationMessage();
+    customWaterAmountInput.value = "";
+    previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    overlay.inert = false;
+    overlay.setAttribute("aria-hidden", "false");
+    overlay.classList.add("active");
+    customWaterAmountInput.focus();
+  });
+  closeButton.addEventListener("click", close);
+  overlay.addEventListener("click", event => { if (event.target === overlay) close(); });
+  function register(remove = false) {
+    const amount = customWaterAmountInput.value;
+    if ((remove ? removeWaterAmount : addWaterAmount)(amount)) close();
+  }
+  addCustomWaterBtn.addEventListener("click", () => register());
+  removeButton.addEventListener("click", () => register(true));
+  customWaterAmountInput.addEventListener("input", clearWaterRegistrationMessage);
+  overlay.addEventListener("keydown", event => {
+    if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(); }
+    if (event.key === "Enter" && event.target === customWaterAmountInput) { event.preventDefault(); register(); }
+    if (event.key === "Tab") {
+      const fields = [customWaterAmountInput, closeButton, removeButton, addCustomWaterBtn];
+      const first = fields[0], last = fields[fields.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+}
+
 function setupWaterEvents() {
   /*
     Botão antigo principal.
@@ -914,26 +970,7 @@ function setupWaterEvents() {
     });
   });
 
-  if (addCustomWaterBtn && customWaterAmountInput) {
-    const registerCustomAmount = () => {
-      const amount = Number(customWaterAmountInput.value);
-
-      if (addWaterAmount(amount)) {
-        customWaterAmountInput.value = "";
-      }
-    };
-
-    addCustomWaterBtn.addEventListener("click", registerCustomAmount);
-
-    customWaterAmountInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        registerCustomAmount();
-      }
-    });
-
-    customWaterAmountInput.addEventListener("input", clearWaterRegistrationMessage);
-  }
+  setupCustomWaterModal();
 
   /*
     Por enquanto o botão de remover pode continuar usando a lógica antiga.

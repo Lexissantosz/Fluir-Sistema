@@ -1572,3 +1572,26 @@ body.dark .water-form-message.success {
     width: 100%;
   }
 }
+/* Preenchimento acompanha a meta, tanto no tema claro quanto no escuro. */
+.water-circle {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--card-bg);
+}
+body.dark .water-circle { background: var(--card-bg); }
+.water-circle::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: var(--water-percent, 0%);
+  background: var(--text);
+  opacity: 0.14;
+  z-index: -1;
+  transition: height 0.3s ease;
+}
+.custom-water-actions { flex-wrap: wrap; }
+#customWaterModal .water-modal { max-height: calc(100dvh - 48px); overflow-y: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .water-circle::before { transition: none; }
+}
