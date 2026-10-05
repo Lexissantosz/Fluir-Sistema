@@ -56,9 +56,9 @@
     }
 
     .topbar{
-      width:min(1500px,100%);
+      width:min(1820px,100%);
       margin:0 auto;
-      padding:22px 34px 12px;
+      padding:14px 22px 7px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -113,19 +113,19 @@
     }
 
     .slide{
-      width:min(1500px,100%);
+      width:min(1820px,100%);
       margin:0 auto;
-      padding:8px 34px 16px;
+      padding:4px 22px 9px;
       min-height:0;
       display:grid;
       grid-template-rows:auto 1fr;
-      gap:18px;
+      gap:11px;
     }
 
     .slide-heading{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(260px,.42fr);
-      gap:30px;
+      grid-template-columns:minmax(0,1fr) minmax(320px,420px);
+      gap:22px;
       align-items:end;
     }
 
@@ -142,7 +142,7 @@
     .slide-heading h1{
       margin:0;
       max-width:850px;
-      font-size:clamp(30px,3.1vw,48px);
+      font-size:clamp(28px,2.55vw,42px);
       line-height:1.02;
       letter-spacing:-.055em;
     }
@@ -150,24 +150,24 @@
     .slide-heading p{
       margin:0;
       color:var(--muted);
-      font-size:12px;
-      line-height:1.65;
-      max-width:450px;
+      font-size:11px;
+      line-height:1.55;
+      max-width:420px;
     }
 
     .showcase{
       min-height:0;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 242px;
-      gap:22px;
+      grid-template-columns:minmax(0,1fr) 210px;
+      gap:14px;
     }
 
     .devices{
       min-width:0;
       min-height:0;
       display:grid;
-      grid-template-columns:minmax(0,1fr) 250px;
-      gap:20px;
+      grid-template-columns:minmax(0,1fr) 300px;
+      gap:15px;
       align-items:stretch;
     }
 
@@ -285,7 +285,7 @@
       min-height:0;
       overflow:auto;
       background:var(--bg);
-      padding:28px 20px 22px;
+      padding:22px 17px 18px;
     }
 
     .desktop-canvas::-webkit-scrollbar{width:5px}
@@ -374,38 +374,38 @@
       min-height:0;
       display:grid;
       align-content:start;
-      gap:10px;
+      gap:8px;
     }
 
     .note-card{
       background:var(--surface);
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
+      border-radius:16px;
+      padding:13px;
       box-shadow:var(--soft);
     }
 
     .note-index{
       display:grid;
       place-items:center;
-      width:24px;height:24px;
-      border-radius:8px;
+      width:21px;height:21px;
+      border-radius:7px;
       background:var(--strong);color:var(--inverse);
       font-size:8px;font-weight:800;
-      margin-bottom:12px;
+      margin-bottom:9px;
     }
 
     .note-card h3{
       margin:0 0 6px;
-      font-size:11px;
+      font-size:10px;
       letter-spacing:-.025em;
     }
 
     .note-card p{
       margin:0;
       color:var(--muted);
-      font-size:8px;
-      line-height:1.55;
+      font-size:7.5px;
+      line-height:1.5;
     }
 
     .hint-card{
@@ -419,9 +419,9 @@
     }
 
     .controls{
-      width:min(1500px,100%);
+      width:min(1820px,100%);
       margin:0 auto;
-      padding:4px 34px 18px;
+      padding:3px 22px 11px;
       display:grid;
       grid-template-columns:120px 1fr 120px;
       align-items:center;
@@ -464,6 +464,8 @@
 
     /* Conteúdo do sistema dentro dos dispositivos */
     .mock-page{display:grid;gap:11px;color:var(--text)}
+    .desktop-canvas .mock-page{zoom:1.16}
+    .phone-canvas .mock-page{zoom:1.06}
     .mock-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
     .mock-head h2{margin:0;font-size:22px;letter-spacing:-.05em;line-height:1}
     .mock-head p{margin:5px 0 0;color:var(--muted);font-size:8px;line-height:1.45}
@@ -549,17 +551,36 @@
     .bar{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden}
     .bar i{display:block;height:100%;background:var(--strong);border-radius:99px}
 
-    .water-card{text-align:center;padding:16px}
-    .water-ring{
-      width:125px;height:125px;border-radius:50%;
-      border:14px solid var(--surface-2);
-      border-top-color:var(--strong);
-      margin:6px auto 11px;
-      display:grid;place-items:center;align-content:center;
+    .water-card{
+      text-align:center;
+      padding:17px;
+      background:linear-gradient(145deg,var(--surface),var(--paper));
     }
-    .water-ring strong{font-size:24px;letter-spacing:-.05em}
+    .water-ring{
+      --water-progress:70%;
+      position:relative;
+      width:138px;height:138px;border-radius:50%;
+      border:0;
+      background:conic-gradient(var(--strong) var(--water-progress),var(--surface-2) 0);
+      margin:8px auto 12px;
+      display:grid;place-items:center;align-content:center;
+      isolation:isolate;
+      box-shadow:inset 0 0 0 1px var(--line);
+    }
+    .water-ring::before{
+      content:"";
+      position:absolute;
+      inset:13px;
+      border-radius:50%;
+      background:var(--surface);
+      border:1px solid var(--line);
+      z-index:-1;
+    }
+    .water-ring strong{font-size:26px;letter-spacing:-.05em}
     .water-ring span{font-size:6px;color:var(--muted)}
+    .water-percent{font-size:6px!important;font-weight:800;color:var(--text)!important;margin-top:3px}
     .water-buttons{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+    .water-feedback{display:block;margin-top:8px;color:var(--muted);font-size:5.5px;min-height:9px}
     .mini-btn{
       border:1px solid var(--line);
       background:var(--surface);
@@ -623,15 +644,16 @@
     .phone-device .panel-mini{padding:9px}
     .phone-device .task-mini,.phone-device .habit-mini{grid-template-columns:auto 1fr}
     .phone-device .task-mini .pill,.phone-device .habit-mini .pill{display:none}
-    .phone-device .water-ring{width:105px;height:105px;border-width:11px}
-    .phone-device .water-ring strong{font-size:20px}
+    .phone-device .water-ring{width:116px;height:116px}
+    .phone-device .water-ring::before{inset:11px}
+    .phone-device .water-ring strong{font-size:21px}
     .phone-device .setup-box{align-content:start;padding-top:4px}
     .phone-device .setup-box h2{font-size:18px}
     .phone-device .choices{grid-template-columns:1fr}
     .phone-device .settings-list{grid-template-columns:1fr}
     .phone-device .module-grid{grid-template-columns:1fr 1fr}
 
-    @media(max-width:1050px){
+    @media(max-width:1120px){
       body{overflow:auto}
       .deck{height:auto;min-height:100vh}
       .slide-heading{grid-template-columns:1fr}
@@ -862,15 +884,19 @@
       <section class="two-col">
         <article class="panel-mini water-card">
           <span class="micro-label">Meta diária</span>
-          <div class="water-ring">
+          <div class="water-ring" data-water-ring>
             <strong data-water-value>1400</strong>
             <span>ml de 2000</span>
+            <span class="water-percent" data-water-percent>70% da meta</span>
           </div>
           <div class="water-buttons">
+            <button class="mini-btn" type="button" data-water-remove="300">− 300 ml</button>
+            <button class="mini-btn" type="button" data-water-remove="200">− 200 ml</button>
             <button class="mini-btn" type="button" data-water-add="200">+ 200 ml</button>
             <button class="mini-btn" type="button" data-water-add="300">+ 300 ml</button>
             <button class="mini-btn primary" type="button" data-water-add="500">+ 500 ml</button>
           </div>
+          <small class="water-feedback" data-water-feedback>Clique para adicionar ou corrigir um registro.</small>
         </article>
 
         <article class="panel-mini">
@@ -1008,8 +1034,8 @@
           description:"A tela concentra meta, progresso e botões rápidos. O comportamento demonstra como pequenas ações podem ser registradas sem atrito.",
           notes:[
             ["01","Meta clara","O volume atual e a meta aparecem juntos, sem exigir interpretação de gráficos complexos."],
-            ["02","Registro rápido","Botões de 200, 300 e 500 ml evitam formulários para uma ação repetitiva."],
-            ["03","Interação","Use os botões dentro dos dispositivos e veja o valor restante mudar em tempo real."]
+            ["02","Registro rápido","Botões rápidos permitem adicionar água e também corrigir um registro feito por engano."],
+            ["03","Interação","Adicione ou remova água e acompanhe o círculo preencher, a porcentagem e o valor restante em tempo real."]
           ]
         },
         {
@@ -1083,8 +1109,17 @@
 
         document.querySelectorAll("[data-water-add]").forEach(function(btn){
           btn.addEventListener("click",function(){
-            water = Math.min(3000, water + Number(btn.getAttribute("data-water-add") || 0));
-            updateWater();
+            var amount = Number(btn.getAttribute("data-water-add") || 0);
+            water = Math.min(3000, water + amount);
+            updateWater("+" + amount + " ml registrados");
+          });
+        });
+
+        document.querySelectorAll("[data-water-remove]").forEach(function(btn){
+          btn.addEventListener("click",function(){
+            var amount = Number(btn.getAttribute("data-water-remove") || 0);
+            water = Math.max(0, water - amount);
+            updateWater("−" + amount + " ml corrigidos");
           });
         });
 
@@ -1093,11 +1128,34 @@
         });
       }
 
-      function updateWater(){
-        document.querySelectorAll("[data-water-value]").forEach(function(el){el.textContent = water;});
-        document.querySelectorAll("[data-water-left]").forEach(function(el){
-          el.textContent = Math.max(0,2000-water) + " ml restantes";
+      function updateWater(feedback){
+        var percent = Math.min(100,Math.round((water/2000)*100));
+
+        document.querySelectorAll("[data-water-value]").forEach(function(el){
+          el.textContent = water;
         });
+
+        document.querySelectorAll("[data-water-ring]").forEach(function(el){
+          el.style.setProperty("--water-progress",percent + "%");
+        });
+
+        document.querySelectorAll("[data-water-percent]").forEach(function(el){
+          el.textContent = percent + "% da meta";
+        });
+
+        document.querySelectorAll("[data-water-left]").forEach(function(el){
+          if(water >= 2000){
+            el.textContent = water === 2000 ? "Meta concluída" : "+" + (water-2000) + " ml acima da meta";
+          }else{
+            el.textContent = (2000-water) + " ml restantes";
+          }
+        });
+
+        if(feedback){
+          document.querySelectorAll("[data-water-feedback]").forEach(function(el){
+            el.textContent = feedback;
+          });
+        }
       }
 
       function renderDots(){
