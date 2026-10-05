@@ -855,15 +855,15 @@ function saveWaterGoal() {
   /*
     Agora a meta é em ml.
     Limite mínimo: 300ml
-    Limite máximo: 6000ml
+    Limite máximo: 10000ml
   */
-  if (!goal || goal < 300 || goal > 6000) {
+  if (!Number.isInteger(goal) || goal < 300 || goal > MAX_DAILY_WATER_ML) {
     if (waterGoalInput) {
       waterGoalInput.classList.add("invalid");
       waterGoalInput.focus();
     }
 
-    showWaterFormMessage("Informe uma meta entre 300ml e 6000ml.");
+    showWaterFormMessage("Informe uma meta em ml inteiros entre 300 ml e 10.000 ml (10 L).");
     return;
   }
 
