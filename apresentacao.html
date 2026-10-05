@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111111">
+  <title>Fluir · Mockup interativo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root{
+      --bg:#f1f1ee;
+      --paper:#fbfbf9;
+      --surface:#ffffff;
+      --surface-2:#ededE9;
+      --surface-3:#e4e4df;
+      --text:#141414;
+      --muted:#73736f;
+      --line:#d9d9d4;
+      --strong:#111111;
+      --inverse:#ffffff;
+      --shadow:0 22px 55px rgba(18,18,18,.10);
+      --soft:0 8px 24px rgba(18,18,18,.06);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+    body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);overflow:hidden}
+    button,input{font:inherit}
+    button{color:inherit}
+    body.dark{
+      --bg:#0f1010;
+      --paper:#121313;
+      --surface:#181919;
+      --surface-2:#222323;
+      --surface-3:#2b2c2c;
+      --text:#f2f2ef;
+      --muted:#9a9b97;
+      --line:#303232;
+      --strong:#f2f2ef;
+      --inverse:#111212;
+      --shadow:0 22px 60px rgba(0,0,0,.34);
+      --soft:0 8px 24px rgba(0,0,0,.22);
+    }
+
+    .deck{
+      width:100vw;
+      height:100vh;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 82% 4%,rgba(100,100,100,.07),transparent 27rem),
+        var(--bg);
+    }
+
+    .topbar{
+      width:min(1500px,100%);
+      margin:0 auto;
+      padding:22px 34px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:11px;
+      font-weight:800;
+      letter-spacing:-.035em;
+    }
+
+    .brand-mark{
+      width:34px;
+      height:34px;
+      border-radius:11px;
+      background:var(--strong);
+      color:var(--inverse);
+      display:grid;
+      place-items:center;
+      font-size:14px;
+    }
+
+    .top-meta{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      color:var(--muted);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .chip{
+      border:1px solid var(--line);
+      background:var(--surface);
+      border-radius:999px;
+      padding:8px 11px;
+      box-shadow:var(--soft);
+    }
+
+    .theme-btn{
+      width:34px;
+      height:34px;
+      border:1px solid var(--line);
+      background:var(--surface);
+      border-radius:11px;
+      cursor:pointer;
+    }
+
+    .slide{
+      width:min(1500px,100%);
+      margin:0 auto;
+      padding:8px 34px 16px;
+      min-height:0;
+      display:grid;
+      grid-template-rows:auto 1fr;
+      gap:18px;
+    }
+
+    .slide-heading{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(260px,.42fr);
+      gap:30px;
+      align-items:end;
+    }
+
+    .eyebrow{
+      display:block;
+      margin-bottom:7px;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .slide-heading h1{
+      margin:0;
+      max-width:850px;
+      font-size:clamp(30px,3.1vw,48px);
+      line-height:1.02;
+      letter-spacing:-.055em;
+    }
+
+    .slide-heading p{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.65;
+      max-width:450px;
+    }
+
+    .showcase{
+      min-height:0;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 242px;
+      gap:22px;
+    }
+
+    .devices{
+      min-width:0;
+      min-height:0;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 250px;
+      gap:20px;
+      align-items:stretch;
+    }
+
+    .desktop-device,
+    .phone-device{
+      background:var(--surface);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .desktop-device{
+      position:relative;
+      border-radius:25px;
+      min-height:0;
+      display:grid;
+      grid-template-columns:150px 1fr;
+    }
+
+    .desktop-device::before{
+      content:"";
+      position:absolute;
+      top:9px;
+      left:11px;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#c9c9c4;
+      box-shadow:14px 0 #d6d6d1,28px 0 #dfdfda;
+      z-index:4;
+    }
+
+    .device-sidebar{
+      padding:28px 12px 15px;
+      border-right:1px solid var(--line);
+      background:var(--paper);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-height:0;
+    }
+
+    .device-brand{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 8px 15px;
+    }
+
+    .device-brand b{
+      width:27px;
+      height:27px;
+      border-radius:9px;
+      display:grid;
+      place-items:center;
+      background:var(--strong);
+      color:var(--inverse);
+      font-size:10px;
+    }
+
+    .device-brand strong{
+      font-size:14px;
+      letter-spacing:-.04em;
+    }
+
+    .nav-demo{
+      width:100%;
+      border:0;
+      background:transparent;
+      min-height:35px;
+      border-radius:10px;
+      padding:0 9px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-align:left;
+      color:var(--muted);
+      font-size:9px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .nav-demo i{
+      width:20px;
+      height:20px;
+      border-radius:7px;
+      display:grid;
+      place-items:center;
+      background:var(--surface-2);
+      font-style:normal;
+      font-size:9px;
+    }
+
+    .nav-demo.active{
+      background:var(--strong);
+      color:var(--inverse);
+    }
+
+    .nav-demo.active i{background:rgba(255,255,255,.14)}
+
+    .side-note{
+      margin-top:auto;
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:11px;
+      background:var(--surface);
+    }
+
+    .side-note strong{display:block;font-size:8px;margin-bottom:4px}
+    .side-note span{display:block;color:var(--muted);font-size:7px;line-height:1.45}
+
+    .desktop-canvas{
+      position:relative;
+      min-width:0;
+      min-height:0;
+      overflow:auto;
+      background:var(--bg);
+      padding:28px 20px 22px;
+    }
+
+    .desktop-canvas::-webkit-scrollbar{width:5px}
+    .desktop-canvas::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+
+    .phone-device{
+      position:relative;
+      border:7px solid var(--strong);
+      border-radius:36px;
+      padding:29px 8px 8px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      min-height:0;
+      background:var(--surface);
+    }
+
+    .phone-notch{
+      position:absolute;
+      top:7px;
+      left:50%;
+      transform:translateX(-50%);
+      width:72px;
+      height:15px;
+      border-radius:99px;
+      background:var(--strong);
+    }
+
+    .phone-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:7px 8px 9px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .phone-top strong{font-size:11px}
+    .phone-avatar{
+      width:23px;height:23px;border-radius:50%;
+      display:grid;place-items:center;
+      background:var(--strong);color:var(--inverse);
+      font-size:7px;font-weight:800;
+    }
+
+    .phone-canvas{
+      min-height:0;
+      overflow:auto;
+      background:var(--bg);
+      padding:11px 9px 74px;
+    }
+
+    .phone-canvas::-webkit-scrollbar{width:0}
+
+    .phone-nav{
+      position:absolute;
+      left:8px;
+      right:8px;
+      bottom:8px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:3px;
+      padding:5px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:color-mix(in srgb,var(--surface) 94%,transparent);
+      backdrop-filter:blur(10px);
+    }
+
+    .phone-nav button{
+      border:0;
+      background:transparent;
+      border-radius:11px;
+      padding:6px 2px;
+      display:grid;
+      justify-items:center;
+      gap:2px;
+      color:var(--muted);
+      font-size:6px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .phone-nav button i{font-style:normal;font-size:10px}
+    .phone-nav button.active{background:var(--strong);color:var(--inverse)}
+
+    .notes{
+      min-height:0;
+      display:grid;
+      align-content:start;
+      gap:10px;
+    }
+
+    .note-card{
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--soft);
+    }
+
+    .note-index{
+      display:grid;
+      place-items:center;
+      width:24px;height:24px;
+      border-radius:8px;
+      background:var(--strong);color:var(--inverse);
+      font-size:8px;font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .note-card h3{
+      margin:0 0 6px;
+      font-size:11px;
+      letter-spacing:-.025em;
+    }
+
+    .note-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:8px;
+      line-height:1.55;
+    }
+
+    .hint-card{
+      margin-top:2px;
+      border:1px dashed var(--line);
+      border-radius:15px;
+      padding:12px;
+      color:var(--muted);
+      font-size:7px;
+      line-height:1.55;
+    }
+
+    .controls{
+      width:min(1500px,100%);
+      margin:0 auto;
+      padding:4px 34px 18px;
+      display:grid;
+      grid-template-columns:120px 1fr 120px;
+      align-items:center;
+      gap:18px;
+    }
+
+    .deck-btn{
+      border:1px solid var(--line);
+      background:var(--surface);
+      min-height:38px;
+      border-radius:12px;
+      padding:0 13px;
+      cursor:pointer;
+      font-size:9px;
+      font-weight:800;
+      box-shadow:var(--soft);
+    }
+
+    .deck-btn:disabled{opacity:.35;cursor:default}
+
+    .dots{
+      display:flex;
+      justify-content:center;
+      gap:6px;
+    }
+
+    .dot{
+      width:7px;height:7px;border:0;border-radius:50%;
+      background:#c7c7c2;
+      padding:0;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .dot.active{
+      width:24px;
+      border-radius:99px;
+      background:var(--strong);
+    }
+
+    /* Conteúdo do sistema dentro dos dispositivos */
+    .mock-page{display:grid;gap:11px;color:var(--text)}
+    .mock-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .mock-head h2{margin:0;font-size:22px;letter-spacing:-.05em;line-height:1}
+    .mock-head p{margin:5px 0 0;color:var(--muted);font-size:8px;line-height:1.45}
+    .mock-head .avatar-mini{width:28px;height:28px;border-radius:50%;background:var(--strong);color:var(--inverse);display:grid;place-items:center;font-size:7px;font-weight:800}
+    .micro-label{display:block;color:var(--muted);font-size:6.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:4px}
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      background:var(--strong);
+      color:var(--inverse);
+      border-radius:16px;
+      padding:16px;
+      min-height:98px;
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      align-items:center;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      width:150px;height:150px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:50%;
+      right:-55px;top:-75px;
+    }
+
+    .hero-card h3{margin:0 0 5px;font-size:16px;letter-spacing:-.04em}
+    .hero-card p{margin:0;color:rgba(255,255,255,.62);font-size:7px;line-height:1.5;max-width:300px}
+    .score{
+      position:relative;z-index:1;
+      width:56px;height:56px;border-radius:50%;
+      border:6px solid rgba(255,255,255,.18);
+      border-top-color:var(--inverse);
+      display:grid;place-items:center;
+      font-size:10px;font-weight:800;
+      flex:0 0 56px;
+    }
+
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .stat,.panel-mini,.setting-mini,.choice{
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:13px;
+    }
+
+    .stat{padding:10px}
+    .stat span{display:block;color:var(--muted);font-size:6.5px;margin-bottom:6px}
+    .stat strong{display:block;font-size:13px;letter-spacing:-.04em}
+    .stat small{display:block;color:var(--muted);font-size:5.5px;margin-top:3px}
+
+    .two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:8px}
+    .panel-mini{padding:11px}
+    .panel-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+    .panel-title strong{font-size:9px}
+    .panel-title span{font-size:6px;color:var(--muted)}
+
+    .task-mini,.habit-mini{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      align-items:center;
+      gap:7px;
+      padding:7px 0;
+      border-bottom:1px solid var(--line);
+      cursor:pointer;
+    }
+
+    .task-mini:last-child,.habit-mini:last-child{border-bottom:0}
+    .check{
+      width:13px;height:13px;border:1px solid var(--line);border-radius:4px;
+      display:grid;place-items:center;font-size:7px;font-weight:800;
+    }
+    .task-mini.done .check,.habit-mini.done .check{background:var(--strong);color:var(--inverse);border-color:var(--strong)}
+    .task-mini.done strong{text-decoration:line-through;color:var(--muted)}
+    .task-mini strong,.habit-mini strong{display:block;font-size:7px}
+    .task-mini small,.habit-mini small{display:block;font-size:5.5px;color:var(--muted);margin-top:2px}
+    .pill{border:1px solid var(--line);border-radius:99px;padding:3px 5px;font-size:5px;color:var(--muted)}
+
+    .progress-row{margin:7px 0}
+    .progress-meta{display:flex;justify-content:space-between;font-size:6.5px;font-weight:700;margin-bottom:4px}
+    .bar{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+    .bar i{display:block;height:100%;background:var(--strong);border-radius:99px}
+
+    .water-card{text-align:center;padding:16px}
+    .water-ring{
+      width:125px;height:125px;border-radius:50%;
+      border:14px solid var(--surface-2);
+      border-top-color:var(--strong);
+      margin:6px auto 11px;
+      display:grid;place-items:center;align-content:center;
+    }
+    .water-ring strong{font-size:24px;letter-spacing:-.05em}
+    .water-ring span{font-size:6px;color:var(--muted)}
+    .water-buttons{display:flex;justify-content:center;gap:5px;flex-wrap:wrap}
+    .mini-btn{
+      border:1px solid var(--line);
+      background:var(--surface);
+      border-radius:8px;
+      min-height:25px;
+      padding:0 8px;
+      cursor:pointer;
+      font-size:6px;
+      font-weight:800;
+    }
+    .mini-btn.primary{background:var(--strong);color:var(--inverse);border-color:var(--strong)}
+
+    .setup-box{
+      min-height:100%;
+      display:grid;
+      align-content:center;
+      max-width:560px;
+      margin:auto;
+      gap:13px;
+    }
+    .setup-box h2{font-size:24px;margin:0;letter-spacing:-.05em}
+    .setup-box>p{font-size:8px;color:var(--muted);line-height:1.55;margin:0}
+    .progress-top{height:4px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+    .progress-top i{display:block;width:66%;height:100%;background:var(--strong)}
+    .choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+    .choice{padding:10px;cursor:pointer}
+    .choice.selected{background:var(--strong);color:var(--inverse);border-color:var(--strong)}
+    .choice strong{display:block;font-size:8px}
+    .choice small{display:block;font-size:5.5px;color:var(--muted);margin-top:3px}
+    .choice.selected small{color:rgba(255,255,255,.62)}
+
+    .settings-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .setting-mini{padding:12px}
+    .setting-mini h3{font-size:9px;margin:0 0 4px}
+    .setting-mini p{font-size:6px;line-height:1.45;color:var(--muted);margin:0 0 10px}
+    .switch-row{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;font-size:6px}
+    .switch{width:25px;height:14px;border-radius:99px;background:var(--surface-2);padding:2px;cursor:pointer}
+    .switch::after{content:"";display:block;width:10px;height:10px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    body.dark .switch{background:var(--strong)}
+    body.dark .switch::after{margin-left:11px;background:var(--inverse)}
+
+    .module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .module-tile{padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+    .module-tile b{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--surface-2);font-size:8px;margin-bottom:8px}
+    .module-tile strong{font-size:7px}
+    .module-tile span{display:block;font-size:5px;color:var(--muted);margin-top:2px}
+
+    /* Modo celular para os mesmos conteúdos */
+    .phone-device .mock-page{gap:8px}
+    .phone-device .mock-head h2{font-size:17px}
+    .phone-device .mock-head p{font-size:6.5px}
+    .phone-device .mock-head .avatar-mini{display:none}
+    .phone-device .hero-card{padding:12px;min-height:88px;border-radius:14px}
+    .phone-device .hero-card h3{font-size:13px}
+    .phone-device .hero-card p{font-size:5.8px}
+    .phone-device .score{width:44px;height:44px;flex-basis:44px;border-width:5px;font-size:8px}
+    .phone-device .stats{grid-template-columns:1fr 1fr}
+    .phone-device .stat{padding:8px}
+    .phone-device .stat strong{font-size:11px}
+    .phone-device .two-col{grid-template-columns:1fr}
+    .phone-device .panel-mini{padding:9px}
+    .phone-device .task-mini,.phone-device .habit-mini{grid-template-columns:auto 1fr}
+    .phone-device .task-mini .pill,.phone-device .habit-mini .pill{display:none}
+    .phone-device .water-ring{width:105px;height:105px;border-width:11px}
+    .phone-device .water-ring strong{font-size:20px}
+    .phone-device .setup-box{align-content:start;padding-top:4px}
+    .phone-device .setup-box h2{font-size:18px}
+    .phone-device .choices{grid-template-columns:1fr}
+    .phone-device .settings-list{grid-template-columns:1fr}
+    .phone-device .module-grid{grid-template-columns:1fr 1fr}
+
+    @media(max-width:1050px){
+      body{overflow:auto}
+      .deck{height:auto;min-height:100vh}
+      .slide-heading{grid-template-columns:1fr}
+      .showcase{grid-template-columns:1fr}
+      .notes{grid-template-columns:repeat(3,1fr)}
+      .devices{min-height:600px}
+    }
+
+    @media(max-width:760px){
+      .topbar,.slide,.controls{padding-left:16px;padding-right:16px}
+      .top-meta .chip{display:none}
+      .devices{grid-template-columns:1fr;min-height:auto}
+      .desktop-device{min-height:560px}
+      .phone-device{display:none}
+      .notes{grid-template-columns:1fr}
+      .controls{grid-template-columns:90px 1fr 90px}
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">F</span>
+        <span>Fluir</span>
+      </div>
+      <div class="top-meta">
+        <span class="chip">Mockup interativo</span>
+        <span id="counter">01 / 07</span>
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="Alternar tema">◐</button>
+      </div>
+    </header>
+
+    <main class="slide">
+      <header class="slide-heading">
+        <div>
+          <span class="eyebrow" id="kicker">Visão do produto</span>
+          <h1 id="slideTitle">Organizar a vida sem transformar rotina em cobrança.</h1>
+        </div>
+        <p id="slideDescription">
+          Um protótipo navegável do Fluir para visualizar a experiência em computador e celular antes da implementação completa.
+        </p>
+      </header>
+
+      <section class="showcase">
+        <div class="devices">
+          <div class="desktop-device">
+            <aside class="device-sidebar">
+              <div class="device-brand"><b>F</b><strong>Fluir</strong></div>
+
+              <button class="nav-demo active" data-nav-target="dashboard" type="button"><i>⌂</i>Dashboard</button>
+              <button class="nav-demo" data-nav-target="tasks" type="button"><i>✓</i>Tarefas</button>
+              <button class="nav-demo" data-nav-target="habits" type="button"><i>↻</i>Hábitos</button>
+              <button class="nav-demo" data-nav-target="water" type="button"><i>◌</i>Água</button>
+              <button class="nav-demo" data-nav-target="settings" type="button"><i>⚙</i>Configurações</button>
+
+              <div class="side-note">
+                <strong>Um dia de cada vez.</strong>
+                <span>Organize sem transformar sua rotina em cobrança.</span>
+              </div>
+            </aside>
+
+            <div class="desktop-canvas" id="desktopCanvas"></div>
+          </div>
+
+          <div class="phone-device">
+            <div class="phone-notch"></div>
+            <div class="phone-top">
+              <strong>Fluir</strong>
+              <span class="phone-avatar">AS</span>
+            </div>
+            <div class="phone-canvas" id="phoneCanvas"></div>
+            <nav class="phone-nav" aria-label="Navegação mobile da demonstração">
+              <button class="active" data-nav-target="dashboard" type="button"><i>⌂</i>Hoje</button>
+              <button data-nav-target="tasks" type="button"><i>✓</i>Tarefas</button>
+              <button data-nav-target="habits" type="button"><i>↻</i>Hábitos</button>
+              <button data-nav-target="water" type="button"><i>◌</i>Água</button>
+            </nav>
+          </div>
+        </div>
+
+        <aside class="notes" id="notes"></aside>
+      </section>
+    </main>
+
+    <footer class="controls">
+      <button class="deck-btn" id="prevBtn" type="button">← Anterior</button>
+      <div class="dots" id="dots" aria-label="Slides"></div>
+      <button class="deck-btn" id="nextBtn" type="button">Próximo →</button>
+    </footer>
+  </div>
+
+  <template id="tpl-dashboard">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Visão geral</span>
+          <h2>Seu dia</h2>
+          <p>O essencial em um só lugar, com contexto e sem excesso de informação.</p>
+        </div>
+        <div class="avatar-mini">AS</div>
+      </header>
+
+      <section class="hero-card">
+        <div>
+          <span class="micro-label" style="color:rgba(255,255,255,.55)">Hoje · 5 de outubro</span>
+          <h3>Bom dia, Alex.</h3>
+          <p>Você não precisa fazer tudo. Só precisa saber o que importa agora.</p>
+        </div>
+        <div class="score">72%</div>
+      </section>
+
+      <section class="stats">
+        <article class="stat"><span>Tarefas</span><strong>3/5</strong><small>2 pendentes</small></article>
+        <article class="stat"><span>Hábitos</span><strong>4/6</strong><small>bom ritmo</small></article>
+        <article class="stat"><span>Água</span><strong>1,4 L</strong><small>de 2 L</small></article>
+        <article class="stat"><span>Bem-estar</span><strong>Calmo</strong><small>09:40</small></article>
+      </section>
+
+      <section class="two-col">
+        <article class="panel-mini">
+          <div class="panel-title"><strong>Prioridades de hoje</strong><span>Ver tarefas</span></div>
+          <div class="task-mini done" data-check><span class="check">✓</span><span><strong>Revisar apresentação</strong><small>Estudos · concluída</small></span><span class="pill">Alta</span></div>
+          <div class="task-mini" data-check><span class="check"></span><span><strong>Finalizar tela do Fluir</strong><small>Projeto · 14:00</small></span><span class="pill">Média</span></div>
+          <div class="task-mini" data-check><span class="check"></span><span><strong>Preparar material do curso</strong><small>Rotina · 18:20</small></span><span class="pill">Normal</span></div>
+        </article>
+
+        <article class="panel-mini">
+          <div class="panel-title"><strong>Hábitos de hoje</strong><span>4/6</span></div>
+          <div class="progress-row"><div class="progress-meta"><span>Beber água</span><b>5/7</b></div><div class="bar"><i style="width:72%"></i></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Estudar inglês</span><b>1/1</b></div><div class="bar"><i style="width:100%"></i></div></div>
+          <div class="progress-row"><div class="progress-meta"><span>Ler</span><b>0/1</b></div><div class="bar"><i style="width:8%"></i></div></div>
+        </article>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-setup">
+    <div class="mock-page">
+      <section class="setup-box">
+        <div class="progress-top"><i></i></div>
+        <span class="micro-label">Etapa 2 de 3 · Personalização</span>
+        <h2>O que faz sentido para você agora?</h2>
+        <p>Escolha as áreas que deseja acompanhar. O Fluir se adapta ao momento da pessoa em vez de obrigar todo mundo a usar a mesma rotina.</p>
+
+        <div class="choices">
+          <article class="choice selected" data-choice><strong>Tarefas</strong><small>Planejamento e prioridades</small></article>
+          <article class="choice selected" data-choice><strong>Hábitos</strong><small>Constância e rotina</small></article>
+          <article class="choice selected" data-choice><strong>Água</strong><small>Hidratação diária</small></article>
+          <article class="choice" data-choice><strong>Diário</strong><small>Reflexões e emoções</small></article>
+          <article class="choice" data-choice><strong>Finanças</strong><small>Entradas, saídas e visão geral</small></article>
+          <article class="choice" data-choice><strong>Saúde</strong><small>Registros pessoais</small></article>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end">
+          <button class="mini-btn primary" type="button">Continuar →</button>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-tasks">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Organização prática</span>
+          <h2>Tarefas</h2>
+          <p>Prioridades visíveis, sem transformar o dia em uma lista infinita.</p>
+        </div>
+        <button class="mini-btn primary" type="button">+ Nova tarefa</button>
+      </header>
+
+      <section class="stats">
+        <article class="stat"><span>Total</span><strong>5</strong><small>hoje</small></article>
+        <article class="stat"><span>Concluídas</span><strong>2</strong><small>40%</small></article>
+        <article class="stat"><span>Pendentes</span><strong>3</strong><small>em aberto</small></article>
+        <article class="stat"><span>Alta prioridade</span><strong>1</strong><small>atenção</small></article>
+      </section>
+
+      <section class="panel-mini">
+        <div class="panel-title"><strong>Hoje</strong><span>Clique nas tarefas</span></div>
+        <div class="task-mini done" data-check><span class="check">✓</span><span><strong>Revisar apresentação do PI</strong><small>Estudos · 10:30</small></span><span class="pill">Alta</span></div>
+        <div class="task-mini" data-check><span class="check"></span><span><strong>Finalizar tela do mockup</strong><small>Fluir · 14:00</small></span><span class="pill">Média</span></div>
+        <div class="task-mini" data-check><span class="check"></span><span><strong>Preparar material do curso</strong><small>Curso · 18:20</small></span><span class="pill">Normal</span></div>
+        <div class="task-mini done" data-check><span class="check">✓</span><span><strong>Responder atividade</strong><small>Escola · concluída</small></span><span class="pill">Normal</span></div>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-habits">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Constância sem culpa</span>
+          <h2>Hábitos</h2>
+          <p>O foco é acompanhar ritmo e frequência, não criar uma cobrança perfeita.</p>
+        </div>
+        <button class="mini-btn" type="button">+ Hábito</button>
+      </header>
+
+      <section class="stats">
+        <article class="stat"><span>Sequência</span><strong>8 dias</strong><small>melhor marca</small></article>
+        <article class="stat"><span>Hoje</span><strong>4/6</strong><small>concluídos</small></article>
+        <article class="stat"><span>Consistência</span><strong>76%</strong><small>30 dias</small></article>
+        <article class="stat"><span>Ritmo</span><strong>Bom</strong><small>sem pressão</small></article>
+      </section>
+
+      <section class="panel-mini">
+        <div class="panel-title"><strong>Seu ritmo de hoje</strong><span>Clique para marcar</span></div>
+        <div class="habit-mini done" data-check><span class="check">✓</span><span><strong>Beber água ao acordar</strong><small>Saúde · diário</small></span><span class="pill">8 dias</span></div>
+        <div class="habit-mini done" data-check><span class="check">✓</span><span><strong>Estudar inglês</strong><small>Estudos · 20 min</small></span><span class="pill">5 dias</span></div>
+        <div class="habit-mini" data-check><span class="check"></span><span><strong>Ler algumas páginas</strong><small>Pessoal · sem meta rígida</small></span><span class="pill">2 dias</span></div>
+        <div class="habit-mini" data-check><span class="check"></span><span><strong>Preparar o dia seguinte</strong><small>Rotina · noite</small></span><span class="pill">6 dias</span></div>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-water">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Autocuidado simples</span>
+          <h2>Água</h2>
+          <p>Registrar deve levar segundos. Clique nos botões para testar.</p>
+        </div>
+      </header>
+
+      <section class="two-col">
+        <article class="panel-mini water-card">
+          <span class="micro-label">Meta diária</span>
+          <div class="water-ring">
+            <strong data-water-value>1400</strong>
+            <span>ml de 2000</span>
+          </div>
+          <div class="water-buttons">
+            <button class="mini-btn" type="button" data-water-add="200">+ 200 ml</button>
+            <button class="mini-btn" type="button" data-water-add="300">+ 300 ml</button>
+            <button class="mini-btn primary" type="button" data-water-add="500">+ 500 ml</button>
+          </div>
+        </article>
+
+        <article class="panel-mini">
+          <div class="panel-title"><strong>Registros de hoje</strong><span data-water-left>600 ml restantes</span></div>
+          <div class="task-mini"><span class="check">◌</span><span><strong>400 ml</strong><small>08:10 · ao acordar</small></span></div>
+          <div class="task-mini"><span class="check">◌</span><span><strong>300 ml</strong><small>10:05 · estudos</small></span></div>
+          <div class="task-mini"><span class="check">◌</span><span><strong>400 ml</strong><small>12:40 · almoço</small></span></div>
+          <div class="task-mini"><span class="check">◌</span><span><strong>300 ml</strong><small>14:20 · curso</small></span></div>
+        </article>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-settings">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Seu Fluir, do seu jeito</span>
+          <h2>Configurações</h2>
+          <p>A experiência acompanha preferências, módulos ativos e contexto.</p>
+        </div>
+      </header>
+
+      <section class="settings-list">
+        <article class="setting-mini">
+          <h3>Aparência</h3>
+          <p>Alterne o tema para ver a mesma interface em claro e escuro.</p>
+          <div class="switch-row"><span>Tema escuro</span><button class="switch" data-theme-demo type="button" aria-label="Alternar tema"></button></div>
+        </article>
+
+        <article class="setting-mini">
+          <h3>Tom da interface</h3>
+          <p>Mensagens breves e diretas, sem transformar organização em punição.</p>
+          <div class="switch-row"><span>Calmo e direto</span><span class="pill">Ativo</span></div>
+        </article>
+      </section>
+
+      <section class="panel-mini">
+        <div class="panel-title"><strong>Áreas ativas</strong><span>Personalização</span></div>
+        <div class="module-grid">
+          <div class="module-tile"><b>✓</b><strong>Tarefas</strong><span>Planejamento</span></div>
+          <div class="module-tile"><b>↻</b><strong>Hábitos</strong><span>Constância</span></div>
+          <div class="module-tile"><b>◌</b><strong>Água</strong><span>Hidratação</span></div>
+          <div class="module-tile"><b>□</b><strong>Diário</strong><span>Registros</span></div>
+          <div class="module-tile"><b>$</b><strong>Finanças</strong><span>Visão financeira</span></div>
+          <div class="module-tile"><b>+</b><strong>Outras áreas</strong><span>Evolução futura</span></div>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <template id="tpl-summary">
+    <div class="mock-page">
+      <header class="mock-head">
+        <div>
+          <span class="micro-label">Sistema responsivo</span>
+          <h2>Uma experiência, dois formatos.</h2>
+          <p>A arquitetura visual preserva hierarquia e identidade em computador e celular.</p>
+        </div>
+      </header>
+
+      <section class="module-grid">
+        <div class="module-tile"><b>⌂</b><strong>Dashboard</strong><span>Visão do dia</span></div>
+        <div class="module-tile"><b>✓</b><strong>Tarefas</strong><span>Prioridades</span></div>
+        <div class="module-tile"><b>↻</b><strong>Hábitos</strong><span>Constância</span></div>
+        <div class="module-tile"><b>◌</b><strong>Água</strong><span>Hidratação</span></div>
+        <div class="module-tile"><b>□</b><strong>Diário</strong><span>Bem-estar</span></div>
+        <div class="module-tile"><b>⚙</b><strong>Configurações</strong><span>Personalização</span></div>
+      </section>
+
+      <section class="hero-card">
+        <div>
+          <span class="micro-label" style="color:rgba(255,255,255,.55)">Direção do produto</span>
+          <h3>Menos controle. Mais clareza.</h3>
+          <p>O mockup valida a linguagem visual e a navegação antes da expansão do sistema completo.</p>
+        </div>
+        <div class="score">V1</div>
+      </section>
+    </div>
+  </template>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var slides = [
+        {
+          key:"dashboard",
+          kicker:"Visão do produto",
+          title:"Organizar a vida sem transformar rotina em cobrança.",
+          description:"O Fluir reúne áreas do cotidiano em uma experiência simples, modular e responsiva. Nesta apresentação, computador e celular mostram a mesma lógica visual.",
+          notes:[
+            ["01","Visão unificada","O Dashboard reúne prioridades, hábitos, hidratação e bem-estar sem exigir que a pessoa abra vários lugares."],
+            ["02","Mesma identidade","A hierarquia, os cards e a navegação se adaptam ao espaço disponível sem virar um desktop espremido."],
+            ["03","Protótipo clicável","Use a navegação dos dispositivos e os controles para explorar os fluxos demonstrativos."]
+          ]
+        },
+        {
+          key:"setup",
+          kicker:"Personalização inicial",
+          title:"O sistema começa perguntando o que realmente importa.",
+          description:"O onboarding seleciona áreas e preferências antes de montar a experiência. O objetivo é evitar uma interface cheia de módulos irrelevantes.",
+          notes:[
+            ["01","Escolha de módulos","A pessoa ativa somente as áreas que fazem sentido para o momento atual."],
+            ["02","Menos sobrecarga","A configuração inicial reduz ruído visual e ajuda o Dashboard a nascer mais relevante."],
+            ["03","Interação","Clique nos cartões do onboarding para simular a seleção e remoção de módulos."]
+          ]
+        },
+        {
+          key:"tasks",
+          kicker:"Planejamento",
+          title:"Tarefas com prioridade, contexto e espaço para respirar.",
+          description:"A tela mostra o que precisa de atenção agora, sem transformar produtividade em uma lista interminável de obrigações.",
+          notes:[
+            ["01","Prioridades visíveis","Resumo, status e prioridade aparecem antes da lista detalhada."],
+            ["02","Ação direta","Concluir uma tarefa acontece no próprio item, sem abrir uma sequência desnecessária de telas."],
+            ["03","Interação","Clique em qualquer tarefa para alternar entre pendente e concluída."]
+          ]
+        },
+        {
+          key:"habits",
+          kicker:"Constância",
+          title:"Hábitos acompanham ritmo, não perfeição.",
+          description:"O usuário enxerga consistência, sequência e progresso de forma leve. Falhar um dia não transforma a interface em um painel de culpa digital.",
+          notes:[
+            ["01","Ritmo do dia","O resumo indica quantos hábitos avançaram sem esconder o contexto."],
+            ["02","Sequências úteis","A sequência aparece como informação, não como punição quando é interrompida."],
+            ["03","Interação","Marque e desmarque hábitos diretamente na lista para demonstrar o fluxo."]
+          ]
+        },
+        {
+          key:"water",
+          kicker:"Autocuidado",
+          title:"Registrar água precisa levar menos tempo do que beber água.",
+          description:"A tela concentra meta, progresso e botões rápidos. O comportamento demonstra como pequenas ações podem ser registradas sem atrito.",
+          notes:[
+            ["01","Meta clara","O volume atual e a meta aparecem juntos, sem exigir interpretação de gráficos complexos."],
+            ["02","Registro rápido","Botões de 200, 300 e 500 ml evitam formulários para uma ação repetitiva."],
+            ["03","Interação","Use os botões dentro dos dispositivos e veja o valor restante mudar em tempo real."]
+          ]
+        },
+        {
+          key:"settings",
+          kicker:"Preferências",
+          title:"O Fluir se adapta sem perder consistência.",
+          description:"Tema e áreas ativas mudam, mas a linguagem visual permanece. A personalização acontece dentro de limites claros para proteger a experiência.",
+          notes:[
+            ["01","Tema claro e escuro","As duas aparências usam a mesma hierarquia, contraste e estrutura."],
+            ["02","Módulos ativos","A configuração controla quais áreas fazem parte da experiência diária."],
+            ["03","Interação","Clique no switch de aparência ou no botão ◐ do topo para alternar o tema da apresentação inteira."]
+          ]
+        },
+        {
+          key:"summary",
+          kicker:"Responsividade",
+          title:"PC e celular fazem parte da mesma experiência.",
+          description:"O mockup não propõe duas aplicações desconectadas. Ele mostra uma única linguagem responsiva que pode evoluir para o sistema completo.",
+          notes:[
+            ["01","Desktop","Mais espaço permite contexto, painéis lado a lado e navegação persistente."],
+            ["02","Celular","A prioridade muda para ações rápidas, leitura vertical e navegação inferior."],
+            ["03","Próximo passo","Validar o mockup, consolidar os componentes e levar as decisões aprovadas para a implementação funcional."]
+          ]
+        }
+      ];
+
+      var slideIndex = 0;
+      var water = 1400;
+      var screenToSlide = {dashboard:0,tasks:2,habits:3,water:4,settings:5};
+
+      var desktopCanvas = document.getElementById("desktopCanvas");
+      var phoneCanvas = document.getElementById("phoneCanvas");
+      var title = document.getElementById("slideTitle");
+      var description = document.getElementById("slideDescription");
+      var kicker = document.getElementById("kicker");
+      var notes = document.getElementById("notes");
+      var dots = document.getElementById("dots");
+      var counter = document.getElementById("counter");
+      var prevBtn = document.getElementById("prevBtn");
+      var nextBtn = document.getElementById("nextBtn");
+
+      function cloneTemplate(key,target){
+        var tpl = document.getElementById("tpl-" + key);
+        target.innerHTML = tpl ? tpl.innerHTML : "";
+      }
+
+      function renderNotes(items){
+        notes.innerHTML = items.map(function(item){
+          return '<article class="note-card"><span class="note-index">' + item[0] + '</span><h3>' + item[1] + '</h3><p>' + item[2] + '</p></article>';
+        }).join("") + '<div class="hint-card">Dica: use ← → no teclado, clique nos pontos abaixo ou navegue pelos botões dentro dos dispositivos.</div>';
+      }
+
+      function syncActiveNav(key){
+        document.querySelectorAll("[data-nav-target]").forEach(function(btn){
+          btn.classList.toggle("active", btn.getAttribute("data-nav-target") === key);
+        });
+      }
+
+      function attachInteractions(){
+        document.querySelectorAll("[data-check]").forEach(function(row){
+          row.addEventListener("click",function(){
+            row.classList.toggle("done");
+            var check = row.querySelector(".check");
+            if(check){check.textContent = row.classList.contains("done") ? "✓" : "";}
+          });
+        });
+
+        document.querySelectorAll("[data-choice]").forEach(function(card){
+          card.addEventListener("click",function(){card.classList.toggle("selected");});
+        });
+
+        document.querySelectorAll("[data-water-add]").forEach(function(btn){
+          btn.addEventListener("click",function(){
+            water = Math.min(3000, water + Number(btn.getAttribute("data-water-add") || 0));
+            updateWater();
+          });
+        });
+
+        document.querySelectorAll("[data-theme-demo]").forEach(function(btn){
+          btn.addEventListener("click",toggleTheme);
+        });
+      }
+
+      function updateWater(){
+        document.querySelectorAll("[data-water-value]").forEach(function(el){el.textContent = water;});
+        document.querySelectorAll("[data-water-left]").forEach(function(el){
+          el.textContent = Math.max(0,2000-water) + " ml restantes";
+        });
+      }
+
+      function renderDots(){
+        dots.innerHTML = "";
+        slides.forEach(function(_,i){
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "dot" + (i === slideIndex ? " active" : "");
+          btn.setAttribute("aria-label","Ir para slide " + (i+1));
+          btn.addEventListener("click",function(){goTo(i);});
+          dots.appendChild(btn);
+        });
+      }
+
+      function render(){
+        var slide = slides[slideIndex];
+        kicker.textContent = slide.kicker;
+        title.textContent = slide.title;
+        description.textContent = slide.description;
+        cloneTemplate(slide.key,desktopCanvas);
+        cloneTemplate(slide.key,phoneCanvas);
+        renderNotes(slide.notes);
+        syncActiveNav(slide.key);
+        renderDots();
+        counter.textContent = String(slideIndex+1).padStart(2,"0") + " / " + String(slides.length).padStart(2,"0");
+        prevBtn.disabled = slideIndex === 0;
+        nextBtn.disabled = slideIndex === slides.length-1;
+        updateWater();
+        attachInteractions();
+      }
+
+      function goTo(index){
+        slideIndex = Math.max(0,Math.min(slides.length-1,index));
+        render();
+      }
+
+      function goToKey(key){
+        if(Object.prototype.hasOwnProperty.call(screenToSlide,key)){
+          goTo(screenToSlide[key]);
+        }
+      }
+
+      function toggleTheme(){
+        document.body.classList.toggle("dark");
+      }
+
+      document.querySelectorAll("[data-nav-target]").forEach(function(btn){
+        btn.addEventListener("click",function(){goToKey(btn.getAttribute("data-nav-target"));});
+      });
+
+      prevBtn.addEventListener("click",function(){goTo(slideIndex-1);});
+      nextBtn.addEventListener("click",function(){goTo(slideIndex+1);});
+      document.getElementById("themeBtn").addEventListener("click",toggleTheme);
+
+      document.addEventListener("keydown",function(event){
+        if(event.key === "ArrowRight"){goTo(slideIndex+1);}
+        if(event.key === "ArrowLeft"){goTo(slideIndex-1);}
+        if(event.key === "Home"){goTo(0);}
+        if(event.key === "End"){goTo(slides.length-1);}
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
