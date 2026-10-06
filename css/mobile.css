@@ -144,9 +144,16 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     background: var(--card-bg);
   }
 
-  .mobile-brand-icon svg {
-    width: 19px;
-    height: 19px;
+  .mobile-brand-icon svg,
+  .mobile-brand-icon img {
+    width: 24px;
+    height: 24px;
+    display: block;
+    object-fit: contain;
+  }
+
+  body.dark .mobile-brand-icon img {
+    filter: invert(1) brightness(1.35);
   }
 
   .mobile-brand strong {

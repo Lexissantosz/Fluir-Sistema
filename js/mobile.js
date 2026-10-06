@@ -53,11 +53,12 @@
 
   function createBrandIcon() {
     return `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-        <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"></path>
-        <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"></path>
-        <path d="M9.7 15c1.5.5 3.1.5 4.6 0"></path>
-      </svg>
+      <img
+        src="../Assets/brand/fluir-symbol.svg"
+        alt=""
+        class="mobile-brand-symbol"
+        aria-hidden="true"
+      />
     `;
   }
 
