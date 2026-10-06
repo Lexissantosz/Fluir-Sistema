@@ -50,8 +50,8 @@ const focusPercent = document.getElementById("focusPercent");
 
 const defaultSetup = {
   user: {
-    name: "Deibson",
-    nickname: "Deibson",
+    name: "Você",
+    nickname: "Você",
     sexAtBirth: "",
     pronouns: "",
     customPronouns: "",
@@ -343,7 +343,7 @@ function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
 
-  const displayName = nickname || name || "Deibson";
+  const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
     welcomeTitle.textContent = `Olá, ${displayName} `;
@@ -1311,7 +1311,7 @@ function saveHeaderProfile(profile) {
 function renderHeaderProfileDropdown() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Deibson";
+  const displayName = nickname || name || "Você";
 
   const profile = getHeaderProfile();
 
