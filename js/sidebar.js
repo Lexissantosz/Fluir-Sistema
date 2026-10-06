@@ -44,13 +44,71 @@
     `;
   }
 
+  function getActiveModuleKeys() {
+    const savedSetup = localStorage.getItem("fluir-setup");
+
+    if (!savedSetup) {
+      return null;
+    }
+
+    try {
+      const setupData = JSON.parse(savedSetup);
+
+      const savedModules =
+        setupData.modules ||
+        setupData.activeModules ||
+        null;
+
+      if (!savedModules) {
+        return null;
+      }
+
+      if (Array.isArray(savedModules)) {
+        return new Set(savedModules);
+      }
+
+      return new Set(
+        Object.keys(savedModules).filter(
+          (moduleKey) => savedModules[moduleKey] === true
+        )
+      );
+    } catch (error) {
+      console.warn(
+        "Não foi possível ler os módulos ativos do setup.",
+        error
+      );
+
+      return null;
+    }
+  }
+
+  function getNavigationItems() {
+    const allSections = window.FluirSections.getAll();
+    const activeModules = getActiveModuleKeys();
+
+    if (activeModules === null) {
+      return allSections;
+    }
+
+    return allSections.filter((section) => {
+      if (section.type === window.FluirSections.TYPES.CORE) {
+        return true;
+      }
+
+      return activeModules.has(section.key);
+    });
+  }
+
   function renderNavigation() {
     const currentPage = getCurrentPage();
-    const navigationItems = window.FluirSections.getAll();
+    const navigationItems = getNavigationItems();
 
     const links = navigationItems.map((item) => {
         const isActive = item.href === currentPage;
         const classes = ["nav-item"];
+        if (item.type === window.FluirSections.TYPES.MODULE) {
+          classes.push("module-link");
+        }
 
         if (isActive) {
         classes.push("active");
@@ -60,11 +118,17 @@
         ? ' aria-current="page"'
         : "";
 
+        const moduleAttribute =
+          item.type === window.FluirSections.TYPES.MODULE
+            ? ` data-module="${item.key}"`
+            : "";
+
         return `
         <a
             href="${item.href}"
             class="${classes.join(" ")}"
             data-section="${item.key}"
+            ${moduleAttribute}
             ${ariaCurrent}
         >
             <span aria-hidden="true"></span>
