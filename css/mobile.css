@@ -1061,3 +1061,59 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     max-width: 100%;
   }
 }
+/* Habits, plans and water history: mobile-only layout refinements. */
+@media (max-width: 760px) {
+  body.mobile-ui-ready .habits-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  body.mobile-ui-ready .habits-panel { min-width: 0; padding: 16px; }
+  body.mobile-ui-ready .habit-card {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    gap: 10px;
+    padding: 14px;
+  }
+  body.mobile-ui-ready .habit-check { width: 44px; height: 44px; font-size: 20px; }
+  body.mobile-ui-ready .habit-info { min-width: 0; overflow-wrap: anywhere; }
+  body.mobile-ui-ready .habit-actions { grid-column: 2; justify-self: end; }
+  body.mobile-ui-ready .habit-action-btn { width: 44px; height: 44px; }
+  body.mobile-ui-ready .habit-meta span { max-width: 100%; line-height: 1.4; }
+  body.mobile-ui-ready .habit-today-status { font-weight: 900; border-color: var(--text); }
+  body.mobile-ui-ready .completed-today .habit-today-status { background: var(--button-bg); color: var(--button-text); }
+  body.mobile-ui-ready .not-scheduled-today { border-style: dashed; }
+  body.mobile-ui-ready .habit-week { flex-wrap: wrap; gap: 5px; }
+  body.mobile-ui-ready .habit-week span { width: 26px; height: 26px; flex: 0 0 26px; font-size: 12px; }
+  body.mobile-ui-ready .habits-actions { flex-wrap: wrap; overflow: visible !important; }
+  body.mobile-ui-ready .habit-modal { padding: 22px 16px; }
+  body.mobile-ui-ready .habit-days-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+  body.mobile-ui-ready .habit-day-btn { min-width: 44px; min-height: 44px; }
+
+  body.mobile-ui-ready .plans-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 18px !important; }
+  body.mobile-ui-ready .plan-card { min-width: 0; min-height: 0; padding: 20px; overflow-wrap: anywhere; }
+  body.mobile-ui-ready .plan-card.featured { transform: none; }
+  body.mobile-ui-ready .plan-card.active-plan { padding-top: 54px; }
+  body.mobile-ui-ready .plan-top { min-height: 0; }
+  body.mobile-ui-ready .plan-top > div { min-width: 0; }
+  body.mobile-ui-ready .plan-icon { flex-shrink: 0; }
+  body.mobile-ui-ready .price-area { flex-wrap: wrap; margin: 20px 0 16px; }
+  body.mobile-ui-ready .billing-toggle { display: flex; flex-wrap: wrap; }
+  body.mobile-ui-ready .billing-btn { min-height: 44px; white-space: normal; }
+  body.mobile-ui-ready .comparison-card { min-width: 0; padding: 16px; }
+  body.mobile-ui-ready .comparison-row { grid-template-columns: minmax(0, 1fr); }
+  body.mobile-ui-ready .comparison-row > * { min-width: 0; padding: 10px 12px; overflow-wrap: anywhere; }
+  body.mobile-ui-ready .comparison-row:not(.table-head) strong { justify-content: space-between; gap: 12px; }
+  body.mobile-ui-ready .comparison-row:not(.table-head) strong::before { color: var(--muted); font-weight: 600; }
+  body.mobile-ui-ready .comparison-row:not(.table-head) strong:nth-child(2)::before { content: "Gratuito"; }
+  body.mobile-ui-ready .comparison-row:not(.table-head) strong:nth-child(3)::before { content: "Pessoal"; }
+  body.mobile-ui-ready .comparison-row:not(.table-head) strong:nth-child(4)::before { content: "Completo"; }
+  body.mobile-ui-ready .comparison-row.table-head { display: none; }
+  body.mobile-ui-ready .plan-modal { z-index: 5000; padding: 12px; }
+  body.mobile-ui-ready .plan-modal-content { padding: 24px 18px; }
+  body.mobile-ui-ready .modal-actions { flex-wrap: wrap; }
+
+  body.mobile-ui-ready .water-sidebar { min-width: 0; }
+  body.mobile-ui-ready #waterMiniTimeline .mini-timeline-item { grid-template-columns: minmax(0, 1fr) !important; gap: 5px; }
+  body.mobile-ui-ready #waterMiniTimeline :where(time, p, strong) { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+  body.mobile-ui-ready .mobile-drawer-link { min-height: 44px; }
+}

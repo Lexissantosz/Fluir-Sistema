@@ -477,13 +477,15 @@ function renderHabits() {
 
 function createHabitCard(habit) {
   const completedToday = isHabitCompletedToday(habit);
+  const scheduledToday = !Array.isArray(habit.weekDays) || habit.weekDays.map(Number).includes(new Date().getDay());
+  const todayStatus = completedToday ? "Concluído hoje" : scheduledToday ? "Pendente hoje" : "Não previsto para hoje";
   const weeklyCount = getHabitWeeklyCount(habit);
   const weeklyGoal = Number(habit.weeklyGoal || 7);
   const weekKeys = getCurrentWeekKeys();
 
   const card = document.createElement("article");
 
-  card.className = `habit-card ${completedToday ? "completed-today" : ""}`;
+  card.className = `habit-card ${completedToday ? "completed-today" : scheduledToday ? "pending-today" : "not-scheduled-today"}`;
   card.dataset.id = habit.id;
 
   const weekDots = weekKeys.map((dateKey) => {
@@ -493,7 +495,7 @@ function createHabitCard(habit) {
   }).join("");
 
   card.innerHTML = `
-    <button class="habit-check" type="button" title="Marcar hábito de hoje">
+    <button class="habit-check" type="button" title="${todayStatus}" aria-pressed="${completedToday}" aria-label="${completedToday ? "Desmarcar" : "Marcar"} hábito: ${escapeHTML(habit.title)}">
       ${completedToday ? "✓" : "○"}
     </button>
 
@@ -502,6 +504,7 @@ function createHabitCard(habit) {
       <p>${escapeHTML(habit.description || "Sem observação.")}</p>
 
       <div class="habit-meta">
+        <span class="habit-today-status">${todayStatus}</span>
         <span>${escapeHTML(habit.category || "Pessoal")}</span>
         <span>${weeklyCount}/${weeklyGoal} na semana</span>
         <span>${Number(habit.streak || 0)} dia${Number(habit.streak || 0) === 1 ? "" : "s"} de sequência</span>

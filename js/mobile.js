@@ -51,6 +51,18 @@
     return currentFileName() === href;
   }
 
+  function isModuleEnabled(href) {
+    const moduleByPage = {
+      "tasks.html": "tasks", "habits.html": "habits", "sleep.html": "sleep",
+      "water.html": "water", "finances.html": "finances", "diary.html": "diary",
+      "nutrition.html": "nutrition", "physical-health.html": "physicalHealth",
+      "menstrual-cycle.html": "menstrualCycle", "attachments.html": "attachments"
+    };
+    const key = moduleByPage[href];
+    const modules = getStorageJSON("fluir-setup", {}).modules || {};
+    return !key || modules[key] !== false;
+  }
+
   function createBrandIcon() {
     return `
       <img
@@ -98,6 +110,8 @@ function getMobileUserData() {
 
   let mobileMenuButton = null;
   let mobileDrawerOverlay = null;
+  let drawerTrigger = null;
+  let mobileMoreButton = null;
 
   function setDrawerState(isOpen) {
     document.body.classList.toggle("mobile-drawer-open", isOpen);
@@ -108,15 +122,21 @@ function getMobileUserData() {
 
     if (mobileDrawerOverlay) {
       mobileDrawerOverlay.setAttribute("aria-hidden", String(!isOpen));
+      mobileDrawerOverlay.inert = !isOpen;
     }
+    if (mobileMoreButton) mobileMoreButton.setAttribute("aria-expanded", String(isOpen));
   }
 
   function openDrawer() {
+    drawerTrigger = document.activeElement;
     setDrawerState(true);
+    mobileDrawerOverlay?.querySelector(".mobile-drawer-close")?.focus();
   }
 
   function closeDrawer() {
+    const wasOpen = document.body.classList.contains("mobile-drawer-open");
     setDrawerState(false);
+    if (wasOpen && drawerTrigger?.isConnected) drawerTrigger.focus();
   }
 
   function buildTopbar() {
@@ -162,6 +182,7 @@ function getMobileUserData() {
     const overlay = document.createElement("div");
     overlay.className = "mobile-drawer-overlay";
     overlay.setAttribute("aria-hidden", "true");
+    overlay.inert = true;
     overlay.innerHTML = `
       <aside
         class="mobile-drawer"
@@ -184,9 +205,11 @@ function getMobileUserData() {
     const drawerNav = overlay.querySelector(".mobile-drawer-nav");
 
     navItems.forEach((item) => {
+      if (!isModuleEnabled(item.href)) return;
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-drawer-link${isCurrent(item.href) ? " active" : ""}`;
+      if (isCurrent(item.href)) link.setAttribute("aria-current", "page");
       link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
       drawerNav.appendChild(link);
     });
@@ -212,22 +235,27 @@ function getMobileUserData() {
   function buildBottomNav() {
     if (document.querySelector(".mobile-bottom-nav")) return;
 
-    const bottomItems = navItems.slice(0, 4);
+    const bottomItems = navItems.slice(0, 4).filter((item) => isModuleEnabled(item.href));
     const extraItems = navItems.slice(4).map((item) => item.href);
     const bottomNav = document.createElement("nav");
     bottomNav.className = "mobile-bottom-nav";
     bottomNav.setAttribute("aria-label", "Navegação principal mobile");
+    bottomNav.style.gridTemplateColumns = `repeat(${bottomItems.length + 1}, minmax(0, 1fr))`;
 
     bottomItems.forEach((item) => {
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-nav-link${isCurrent(item.href) ? " active" : ""}`;
+      if (isCurrent(item.href)) link.setAttribute("aria-current", "page");
       link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
       bottomNav.appendChild(link);
     });
 
     const moreButton = document.createElement("button");
     moreButton.type = "button";
+    moreButton.setAttribute("aria-controls", "mobileDrawer");
+    moreButton.setAttribute("aria-expanded", "false");
+    mobileMoreButton = moreButton;
     moreButton.className = `mobile-more-btn${extraItems.includes(currentFileName()) ? " active" : ""}`;
     moreButton.innerHTML = `<i></i><span>Mais</span>`;
     moreButton.addEventListener("click", openDrawer);
@@ -245,6 +273,13 @@ function getMobileUserData() {
     buildBottomNav();
 
     document.addEventListener("keydown", (event) => {
+      if (event.key === "Tab" && document.body.classList.contains("mobile-drawer-open")) {
+        const focusable = mobileDrawerOverlay.querySelectorAll("button, a[href]");
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
       if (
         event.key === "Escape" &&
         document.body.classList.contains("mobile-drawer-open")
