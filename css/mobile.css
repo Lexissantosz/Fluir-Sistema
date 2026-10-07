@@ -1142,3 +1142,18 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   }
   body.mobile-ui-ready .water-registration-hint { overflow-wrap: anywhere; }
 }
+
+@media (max-width: 760px) {
+  body.mobile-ui-ready .mobile-water-quick-grid #addCupBtn {
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    box-shadow: none;
+  }
+  body.mobile-ui-ready .water-controls #removeCupBtn {
+    border: none;
+    background: #111;
+    color: #fff;
+    box-shadow: var(--shadow-soft);
+  }
+}
