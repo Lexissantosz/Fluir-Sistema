@@ -1488,3 +1488,81 @@ body.dark .form-message.success {
     width: 100%;
   }
 }
+/* Stacked onboarding must not inherit the desktop percentage heights. */
+@media (max-width: 1100px) {
+  .setup-content,
+  .setup-info {
+    height: auto;
+    min-height: 0;
+  }
+
+  .setup-content {
+    align-items: start;
+  }
+
+  .setup-card {
+    height: min(720px, calc(100dvh - 32px));
+    min-height: 0;
+    max-height: none;
+    min-width: 0;
+  }
+
+  .progress-area,
+  .setup-actions,
+  .form-message {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .setup-page {
+    overflow: visible;
+  }
+
+  .setup-info {
+    justify-content: flex-start;
+    padding-right: 0;
+  }
+
+  .setup-card {
+    height: calc(100dvh - 24px);
+    padding: 20px 16px;
+  }
+
+  .setup-step {
+    overscroll-behavior-y: contain;
+    scroll-padding-block: 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .setup-actions {
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+
+  .setup-actions :where(.primary-btn, .secondary-btn) {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    min-height: 44px;
+    padding-inline: 10px;
+  }
+
+  .field :where(input, select, textarea) {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  .progress-text {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .progress-area {
+    margin-bottom: 16px;
+  }
+}
