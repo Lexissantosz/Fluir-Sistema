@@ -289,6 +289,34 @@ function getMobileUserData() {
     });
 
     const mobileBreakpoint = window.matchMedia("(max-width: 760px)");
+    // Reuse existing water buttons and their listeners; restore desktop positions.
+    const waterControls = document.querySelector(".water-controls");
+    const waterShortcuts = [...document.querySelectorAll(".water-actions [data-water-amount]")];
+    let waterQuickGrid;
+    const waterShortcutOrigins = waterShortcuts.map((button) => {
+      const marker = document.createComment("water shortcut desktop position");
+      button.before(marker);
+      return { button, marker };
+    });
+    const arrangeWaterShortcuts = () => {
+      if (!waterControls || waterShortcuts.length !== 4) return;
+      if (mobileBreakpoint.matches) {
+        if (!waterQuickGrid) {
+          waterQuickGrid = document.createElement("div");
+          waterQuickGrid.className = "mobile-water-quick-grid";
+          waterQuickGrid.setAttribute("role", "group");
+          waterQuickGrid.setAttribute("aria-label", "Adicionar água");
+        }
+        waterControls.prepend(waterQuickGrid);
+        [...waterShortcuts].sort((a, b) => Number(a.dataset.waterAmount) - Number(b.dataset.waterAmount))
+          .forEach((button) => waterQuickGrid.appendChild(button));
+      } else {
+        waterShortcutOrigins.forEach(({ button, marker }) => marker.after(button));
+        if (waterQuickGrid) waterQuickGrid.remove();
+      }
+    };
+    arrangeWaterShortcuts();
+
     // Mantém a opção escolhida visível dentro das abas roláveis.
     document.addEventListener("click", (event) => {
       if (!mobileBreakpoint.matches) return;
@@ -302,6 +330,7 @@ function getMobileUserData() {
 
 
     const handleBreakpointChange = (event) => {
+      arrangeWaterShortcuts();
       if (!event.matches) {
         closeDrawer();
       }
