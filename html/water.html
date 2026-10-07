@@ -251,6 +251,16 @@
               <button class="secondary-btn" type="button" id="openGoalModalBtn">
                 Alterar meta
               </button>
+
+              <button class="secondary-btn" type="button" id="openCustomWaterBtn">Personalizar copo</button>
+              <small class="water-registration-hint">Até 1.000 ml por registro · limite diário de 10.000 ml.</small>
+
+              <div
+                class="water-form-message water-registration-message"
+                id="waterRegistrationMessage"
+                role="status"
+                aria-live="polite"
+              ></div>
             </div>
           </section>
 
@@ -334,7 +344,7 @@
       <h3>Alterar meta</h3>
 
       <p>
-        Defina sua meta diária de água em ml.
+        Defina sua meta diária entre 300 ml e 10.000 ml (10 L).
       </p>
 
       <div class="water-form-message" id="waterFormMessage"></div>
@@ -344,9 +354,10 @@
         <input 
           type="number" 
           id="waterGoalInput"
-          min="1"
-          max="30"
-          placeholder="Ex: 8"
+          min="300"
+          max="10000"
+          step="1"
+          placeholder="Ex: 2000"
         />
       </label>
 
@@ -395,6 +406,22 @@
       </div>
 
     </div>
+  </div>
+
+  <div class="water-modal-overlay" id="customWaterModal" aria-hidden="true" inert>
+    <section class="water-modal" role="dialog" aria-modal="true" aria-labelledby="customWaterTitle" aria-describedby="customWaterDescription">
+      <h3 id="customWaterTitle">Personalizar copo</h3>
+      <p id="customWaterDescription">Informe quanto você quer adicionar ou retirar do registro de hoje. Use um valor entre 1 e 1.000 ml.</p>
+      <label for="customWaterAmountInput"><span>Quantidade em ml</span>
+        <input type="number" id="customWaterAmountInput" min="1" max="1000" step="1" inputmode="numeric" placeholder="Ex.: 123" aria-describedby="customWaterMessage" />
+      </label>
+      <div class="water-form-message" id="customWaterMessage" role="status" aria-live="polite"></div>
+      <div class="water-modal-actions custom-water-actions">
+        <button class="secondary-btn" type="button" id="closeCustomWaterBtn">Cancelar</button>
+        <button class="secondary-btn" type="button" id="removeCustomWaterBtn">Retirar água</button>
+        <button class="primary-btn" type="button" id="addCustomWaterBtn">Adicionar água</button>
+      </div>
+    </section>
   </div>
 
   <script src="../js/fluirApi.js"></script>

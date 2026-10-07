@@ -81,7 +81,7 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     grid-template-columns: 1fr !important;
   }
 
-  body.mobile-ui-ready .sidebar {
+  .sidebar {
     display: none !important;
   }
 
@@ -271,18 +271,24 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     top: 0;
     right: 0;
     width: min(88vw, 360px);
+    max-width: calc(100vw - 44px);
+    height: 100vh;
     height: 100dvh;
+    box-sizing: border-box;
     padding: 18px;
     border-left: 1px solid var(--border);
     background: var(--bg);
     box-shadow: var(--shadow);
-    transform: translateX(104%);
+    transform: translate3d(104%, 0, 0);
     transition: transform 0.24s ease;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    will-change: transform;
   }
 
   body.mobile-drawer-open .mobile-drawer {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   .mobile-drawer-head {
@@ -864,4 +870,118 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   .mobile-profile-brand .mobile-brand-subtitle {
     max-width: 150px;
   }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .mobile-drawer-overlay,
+  .mobile-drawer {
+    transition: none !important;
+  }
+}
+
+/* Revisão mobile: controles, cards e estados vazios. */
+@media (max-width: 760px) {
+  body.mobile-ui-ready :where(.filters-area, .achievement-filters, .settings-tabs, .segmented-control) {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 4px 2px 8px !important;
+    scroll-padding-inline: 2px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  body.mobile-ui-ready :where(.filter-btn, .tab-btn, .segmented-control button) {
+    flex: 0 0 auto !important;
+    min-height: 44px !important;
+    white-space: nowrap;
+  }
+  body.mobile-ui-ready :where(.filter-btn, .tab-btn):focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: -3px;
+  }
+  body.mobile-ui-ready .period-wrapper { position: relative; min-width: 0; max-width: 100%; }
+  body.mobile-ui-ready .period-dropdown {
+    left: 0 !important;
+    right: auto !important;
+    width: min(220px, calc(100vw - 28px));
+    min-width: 0 !important;
+    max-width: calc(100vw - 28px);
+    z-index: 30;
+  }
+  body.mobile-ui-ready .period-option { min-height: 44px; width: 100%; }
+  body.mobile-ui-ready .billing-toggle { width: 100%; min-width: 0; flex-wrap: wrap; }
+  body.mobile-ui-ready .billing-btn { flex: 1 1 120px; min-height: 44px; padding-inline: 10px; }
+
+  body.mobile-ui-ready :where(.summary-card, .stat-card) {
+    min-height: 0 !important;
+    padding: 14px !important;
+    overflow-wrap: anywhere;
+  }
+  body.mobile-ui-ready :where(.summary-card small, .summary-card p) { font-size: 12px !important; line-height: 1.45; }
+  body.mobile-ui-ready :where(.panel, .main-card, .side-card, .water-card, .timeline-card) {
+    min-width: 0;
+    max-width: 100%;
+    padding: 16px !important;
+    overflow-wrap: anywhere;
+  }
+  body.mobile-ui-ready .panel-header { flex-wrap: wrap; }
+  body.mobile-ui-ready :where(.empty-state, .empty-message, .timeline-empty) {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 24px 12px !important;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  body.mobile-ui-ready .empty-state :where(strong, h3, p) { max-width: 32ch; margin-inline: auto; }
+  body.mobile-ui-ready .empty-state :where(strong, h3) { font-size: 18px; line-height: 1.3; }
+  body.mobile-ui-ready .empty-state p { font-size: 14px; line-height: 1.55; }
+  body.mobile-ui-ready .empty-state button { max-width: 100%; min-height: 44px; white-space: normal; margin-inline: auto; }
+
+  body.mobile-ui-ready .timeline-main .event-item {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 6px 10px !important;
+    padding-block: 14px !important;
+  }
+  body.mobile-ui-ready .timeline-main .event-item time { grid-column: 1; grid-row: 1; font-size: 12px !important; }
+  body.mobile-ui-ready .timeline-main .event-icon { display: none !important; }
+  body.mobile-ui-ready .timeline-main .event-content { grid-column: 2; grid-row: 1; overflow-wrap: anywhere; }
+  body.mobile-ui-ready .timeline-main :where(.event-tag, .event-value) {
+    grid-column: 2 !important;
+    margin: 0 !important;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  body.mobile-ui-ready .timeline-main .event-list::before { display: none; }
+  body.mobile-ui-ready .timeline-sidebar { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  body.mobile-ui-ready :where(.load-more-btn, #newEventBtn) { min-height: 44px; max-width: 100%; white-space: normal; }
+
+  body.mobile-ui-ready .water-shortcuts { flex-wrap: wrap !important; overflow: visible !important; }
+  body.mobile-ui-ready .water-quick-btn { flex: 1 1 110px !important; min-height: 44px; }
+  body.mobile-ui-ready .water-circle { width: min(230px, 100%); height: auto; aspect-ratio: 1; }
+  body.mobile-ui-ready .water-circle span { overflow-wrap: anywhere; padding-inline: 12px; }
+  body.mobile-ui-ready .water-controls { min-width: 0; width: 100%; }
+  body.mobile-ui-ready .water-controls button { min-height: 44px; white-space: normal; }
+  body.mobile-ui-ready .mini-timeline-item { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  body.mobile-ui-ready .mini-timeline-item :where(time, p) { min-width: 0; overflow-wrap: anywhere; }
+  body.mobile-ui-ready :where(.water-modal-overlay, .event-modal-overlay, .task-modal-overlay, .habit-modal-overlay) {
+    z-index: 5000;
+    padding: 12px;
+  }
+  body.mobile-ui-ready :where(.water-modal, .event-modal) { padding: 22px 18px !important; box-sizing: border-box; }
+}
+
+@media (max-width: 760px) {
+  /* O menu de período não pode ser recortado pelo scroll das ações. */
+  body.mobile-ui-ready :where(.tasks-actions, .water-actions, .timeline-actions) {
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+  }
+  body.mobile-ui-ready .water-panel { min-width: 0; padding: 16px !important; }
+  body.mobile-ui-ready .tasks-actions .date-btn { min-height: 44px; }
 }

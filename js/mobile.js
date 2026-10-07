@@ -96,12 +96,27 @@ function getMobileUserData() {
   };
 }
 
+  let mobileMenuButton = null;
+  let mobileDrawerOverlay = null;
+
+  function setDrawerState(isOpen) {
+    document.body.classList.toggle("mobile-drawer-open", isOpen);
+
+    if (mobileMenuButton) {
+      mobileMenuButton.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    if (mobileDrawerOverlay) {
+      mobileDrawerOverlay.setAttribute("aria-hidden", String(!isOpen));
+    }
+  }
+
   function openDrawer() {
-    document.body.classList.add("mobile-drawer-open");
+    setDrawerState(true);
   }
 
   function closeDrawer() {
-    document.body.classList.remove("mobile-drawer-open");
+    setDrawerState(false);
   }
 
   function buildTopbar() {
@@ -121,18 +136,23 @@ function getMobileUserData() {
       </span>
     </a>
 
-    <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
+    <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileDrawer">
 
     </button>
   `;
 
   document.body.prepend(topbar);
 
-  const menuButton = topbar.querySelector(".mobile-menu-btn");
+  mobileMenuButton = topbar.querySelector(".mobile-menu-btn");
 
-  menuButton.addEventListener("click", () => {
-    const isOpen = document.body.classList.toggle("mobile-drawer-open");
-    menuButton.setAttribute("aria-expanded", String(isOpen));
+  mobileMenuButton.addEventListener("click", () => {
+    const isOpen = document.body.classList.contains("mobile-drawer-open");
+
+    if (isOpen) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
   });
 }
 
@@ -141,8 +161,15 @@ function getMobileUserData() {
 
     const overlay = document.createElement("div");
     overlay.className = "mobile-drawer-overlay";
+    overlay.setAttribute("aria-hidden", "true");
     overlay.innerHTML = `
-      <aside class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu do sistema">
+      <aside
+        class="mobile-drawer"
+        id="mobileDrawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu do sistema"
+      >
         <div class="mobile-drawer-head">
           <div>
             <strong>Menu</strong>
@@ -165,12 +192,21 @@ function getMobileUserData() {
     });
 
     overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) closeDrawer();
+      if (event.target === overlay) {
+        closeDrawer();
+      }
     });
 
     overlay.querySelector(".mobile-drawer-close").addEventListener("click", closeDrawer);
 
+    drawerNav.addEventListener("click", (event) => {
+      if (event.target.closest(".mobile-drawer-link")) {
+        closeDrawer();
+      }
+    });
+
     document.body.appendChild(overlay);
+    mobileDrawerOverlay = overlay;
   }
 
   function buildBottomNav() {
@@ -209,7 +245,41 @@ function getMobileUserData() {
     buildBottomNav();
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") closeDrawer();
+      if (
+        event.key === "Escape" &&
+        document.body.classList.contains("mobile-drawer-open")
+      ) {
+        closeDrawer();
+      }
+    });
+
+    const mobileBreakpoint = window.matchMedia("(max-width: 760px)");
+    // Mantém a opção escolhida visível dentro das abas roláveis.
+    document.addEventListener("click", (event) => {
+      if (!mobileBreakpoint.matches) return;
+      const selected = event.target.closest(".filter-btn, .tab-btn, .segmented-control button");
+      if (!selected) return;
+      const rail = selected.closest(".filters-area, .achievement-filters, .settings-tabs, .segmented-control");
+      if (rail && rail.scrollWidth > rail.clientWidth) {
+        selected.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "auto" });
+      }
+    });
+
+
+    const handleBreakpointChange = (event) => {
+      if (!event.matches) {
+        closeDrawer();
+      }
+    };
+
+    if (typeof mobileBreakpoint.addEventListener === "function") {
+      mobileBreakpoint.addEventListener("change", handleBreakpointChange);
+    } else if (typeof mobileBreakpoint.addListener === "function") {
+      mobileBreakpoint.addListener(handleBreakpointChange);
+    }
+
+    window.addEventListener("pageshow", () => {
+      closeDrawer();
     });
   }
 
