@@ -985,3 +985,79 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   body.mobile-ui-ready .water-panel { min-width: 0; padding: 16px !important; }
   body.mobile-ui-ready .tasks-actions .date-btn { min-height: 44px; }
 }
+/* Dashboard: preserve room for content and actions on narrow screens. */
+@media (max-width: 760px) {
+  body.mobile-ui-ready .dashboard-main :where(.panel, .recent-events, .summary-card) {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  body.mobile-ui-ready .dashboard-main :where(.panel-large, .habits-panel, .small-panel) {
+    min-height: 0 !important;
+  }
+
+  body.mobile-ui-ready .dashboard-main .panel-header {
+    flex-wrap: wrap;
+    align-items: center !important;
+  }
+
+  body.mobile-ui-ready .dashboard-main .panel-header > :first-child {
+    min-width: 0;
+    flex: 1 1 140px;
+  }
+
+  body.mobile-ui-ready .dashboard-main .panel-header .small-btn {
+    min-height: 44px !important;
+    max-width: 100%;
+    white-space: normal;
+    padding: 8px 12px;
+  }
+
+  body.mobile-ui-ready .dashboard-main .task-item > :where(span, div) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  body.mobile-ui-ready .dashboard-main .timeline-item {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+  }
+
+  body.mobile-ui-ready .dashboard-main .timeline-item > div {
+    min-width: 0;
+  }
+
+  body.mobile-ui-ready .dashboard-main .habit-row {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 8px !important;
+    padding: 10px 0;
+  }
+
+  body.mobile-ui-ready .dashboard-main .habit-row span {
+    grid-column: 1 / -1;
+    overflow-wrap: anywhere;
+  }
+
+  body.mobile-ui-ready .dashboard-main .habit-row strong {
+    text-align: right;
+  }
+
+  body.mobile-ui-ready .dashboard-main .event-list {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px;
+  }
+
+  body.mobile-ui-ready .dashboard-main .recent-events {
+    padding: 16px !important;
+  }
+
+  body.mobile-ui-ready .dashboard-main .water-dots {
+    flex-wrap: wrap;
+  }
+
+  body.mobile-ui-ready .dashboard-main .panel-link {
+    min-height: 44px;
+    line-height: 1.4;
+    max-width: 100%;
+  }
+}
