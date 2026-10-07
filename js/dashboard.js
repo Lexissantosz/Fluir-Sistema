@@ -448,6 +448,11 @@ function updateDashboardLayoutAfterHiddenModules() {
   const activeModulesCount = Object.values(modules).filter((value) => value === true).length;
 
   const existingNote = document.querySelector(".empty-dashboard-note");
+  const noteDismissalKey = "fluir-dashboard-note:" + Object.keys(modules)
+    .filter((key) => modules[key] === true).sort().join(",");
+  let noteDismissed = false;
+  try { noteDismissed = sessionStorage.getItem(noteDismissalKey) === "dismissed"; } catch (_) {}
+
 
   if (summaryGrid) {
     summaryGrid.classList.remove(
@@ -506,19 +511,22 @@ function updateDashboardLayoutAfterHiddenModules() {
     }
   }
 
-  if (activeModulesCount <= 1 && dashboardMain && !existingNote) {
+  if (activeModulesCount <= 1 && dashboardMain && !existingNote && !noteDismissed) {
     const note = document.createElement("section");
 
     note.className = "empty-dashboard-note";
 
     note.innerHTML = `
+      <button class="dashboard-note-close" type="button" aria-label="Fechar aviso">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
       <strong>Seu dashboard está mais leve por enquanto.</strong>
-      <p>
-        Você escolheu poucas funcionalidades, então o Fluir deixou a tela mais simples.
-        Quando quiser, vá em Configurações para ativar novas áreas como tarefas,
-        sono, água, finanças, diário, alimentação ou saúde.
-      </p>
+      <p>Ative outras áreas em <a href="settings.html">Configurações</a> quando quiser.</p>
     `;
+    note.querySelector(".dashboard-note-close").addEventListener("click", () => {
+      try { sessionStorage.setItem(noteDismissalKey, "dismissed"); } catch (_) {}
+      note.remove();
+    });
 
     const recentEvents = document.querySelector(".recent-events");
 
@@ -529,7 +537,7 @@ function updateDashboardLayoutAfterHiddenModules() {
     }
   }
 
-  if (activeModulesCount > 1 && existingNote) {
+  if ((activeModulesCount > 1 || noteDismissed) && existingNote) {
     existingNote.remove();
   }
 }
