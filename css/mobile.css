@@ -1157,3 +1157,12 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     box-shadow: var(--shadow-soft);
   }
 }
+
+@media (max-width: 760px) {
+  body.mobile-ui-ready .habit-card { position: relative; }
+  body.mobile-ui-ready .habit-actions { position: absolute; top: 14px; right: 14px; }
+  body.mobile-ui-ready .habit-info > strong { display: block; padding-right: 54px; min-height: 44px; }
+  body.mobile-ui-ready .delete-habit-btn { padding: 0; border-radius: 12px; line-height: 1; }
+  body.mobile-ui-ready .delete-habit-btn svg { display: block; pointer-events: none; }
+  body.mobile-ui-ready .delete-habit-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+}
