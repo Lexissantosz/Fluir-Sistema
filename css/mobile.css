@@ -1166,3 +1166,50 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   body.mobile-ui-ready .delete-habit-btn svg { display: block; pointer-events: none; }
   body.mobile-ui-ready .delete-habit-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 }
+
+/* Keep habit geometry stable when completion labels change. */
+@media (max-width: 760px) {
+  body.mobile-ui-ready .habit-card {
+    width: 100%;
+    box-sizing: border-box;
+    margin-inline: auto;
+    transform: none;
+  }
+  body.mobile-ui-ready .habit-check { position: absolute; top: 14px; left: 14px; }
+  body.mobile-ui-ready .habit-check:hover { transform: none; }
+  body.mobile-ui-ready .habit-info { grid-column: 1 / -1; width: 100%; }
+  body.mobile-ui-ready .habit-info > strong {
+    padding: 0 54px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.35;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+  }
+  body.mobile-ui-ready .habit-info > p { text-align: center; }
+  body.mobile-ui-ready .habit-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  body.mobile-ui-ready .habit-meta span {
+    min-width: 0;
+    min-height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px;
+  }
+  body.mobile-ui-ready .habit-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    justify-items: center;
+    gap: 3px;
+  }
+}
