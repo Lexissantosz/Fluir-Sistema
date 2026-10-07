@@ -579,14 +579,14 @@ function renderMiniTimeline() {
         <time>--:--</time>
         <p>
           <strong>Nenhum registro ainda</strong>
-          Adicione seu primeiro copo.
+          Registre a primeira quantidade de água em ml.
         </p>
       </div>
     `;
     return;
   }
 
-  entries.forEach(([date, cups]) => {
+  entries.forEach(([date, amountMl]) => {
     const item = document.createElement("div");
 
     item.className = "mini-timeline-item";
@@ -595,7 +595,7 @@ function renderMiniTimeline() {
       <time>${date}</time>
       <p>
         <strong>Água registrada</strong>
-        ${cups} copo${Number(cups) === 1 ? "" : "s"} no dia.
+        ${Number(amountMl).toLocaleString("pt-BR")} ml no dia.
       </p>
     `;
 

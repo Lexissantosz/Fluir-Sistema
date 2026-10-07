@@ -865,3 +865,54 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     max-width: 150px;
   }
 }
+
+/* Timeline mobile validada em 320px, 375px e 430px */
+@media (max-width: 760px) {
+  body.mobile-ui-ready .timeline-page .event-item {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 6px 10px !important;
+    padding-block: 14px !important;
+  }
+
+  body.mobile-ui-ready .timeline-page .event-item time {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 12px !important;
+  }
+
+  body.mobile-ui-ready .timeline-page .event-icon {
+    display: none !important;
+  }
+
+  body.mobile-ui-ready .timeline-page .event-content {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  body.mobile-ui-ready .timeline-page :where(.event-tag, .event-value) {
+    grid-column: 2 !important;
+    margin: 0 !important;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  body.mobile-ui-ready .timeline-page .event-list::before {
+    display: none;
+  }
+
+  body.mobile-ui-ready .timeline-page .timeline-sidebar {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  body.mobile-ui-ready .timeline-page :where(.load-more-btn, #newEventBtn) {
+    min-height: 44px;
+    max-width: 100%;
+    white-space: normal;
+  }
+}
