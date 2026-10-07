@@ -1,0 +1,178 @@
+/* =====================================================
+   FLUIR — SIDEBAR DESKTOP COMPARTILHADA
+   Fonte única de estilo para marca e navegação lateral.
+   ===================================================== */
+
+    @media (min-width: 761px) {
+    :root {
+        --fluir-sidebar-nav-item-height: 42px;
+        --fluir-sidebar-nav-gap: 7px;
+        --fluir-sidebar-illustration-height: 160px;
+        --fluir-sidebar-section-gap: 14px;
+    }
+
+  /* =====================================================
+     ESTRUTURA DA SIDEBAR
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] {
+    height: 100%;
+    min-height: 0;
+
+    padding: 30px 20px 22px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+  }
+
+  /* =====================================================
+     MARCA
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] .brand {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 0 8px 28px;
+  }
+
+  .sidebar[data-shared-sidebar] .brand-icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: grid;
+    place-items: center;
+
+    color: var(--text);
+  }
+
+  .sidebar[data-shared-sidebar] .brand-icon svg,
+  .sidebar[data-shared-sidebar] .brand-icon img {
+    width: 35px;
+    height: 35px;
+    display: block;
+    object-fit: contain;
+  }
+
+  body.dark .sidebar[data-shared-sidebar] .brand-icon img {
+    filter: invert(1) brightness(1.35);
+  }
+
+  .sidebar[data-shared-sidebar] .brand h1 {
+    margin: 0;
+
+    color: var(--text);
+    font-size: 31px;
+    line-height: 1;
+    font-weight: 650;
+    letter-spacing: -0.055em;
+  }
+
+  .sidebar[data-shared-sidebar] .brand p {
+    margin: 8px 0 0;
+
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+
+  /* =====================================================
+     NAVEGAÇÃO
+     A navegação é a única região flexível da sidebar.
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] .sidebar-nav {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--fluir-sidebar-nav-gap);
+
+    padding: 4px 4px 4px 0;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    scrollbar-gutter: stable;
+  }
+
+  .sidebar[data-shared-sidebar] .sidebar-nav::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .sidebar[data-shared-sidebar] .sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .sidebar[data-shared-sidebar] .sidebar-nav::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
+  }
+
+  .sidebar[data-shared-sidebar] .nav-item {
+    width: 100%;
+    height: var(--fluir-sidebar-nav-item-height);
+    min-height: var(--fluir-sidebar-nav-item-height);
+    flex: 0 0 var(--fluir-sidebar-nav-item-height);
+
+    padding: 0 12px;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1;
+
+    text-decoration: none;
+  }
+
+  .sidebar[data-shared-sidebar] .nav-item > span:first-child {
+    width: 22px;
+    height: 22px;
+
+    flex: 0 0 22px;
+
+    display: grid;
+    place-items: center;
+  }
+
+    /* =====================================================
+     ILUSTRAÇÃO COMPARTILHADA
+     Mantém a região visual fora da área rolável.
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] .sidebar-illustration {
+    flex: 0 0 var(--fluir-sidebar-illustration-height);
+
+    width: 100%;
+    min-height: var(--fluir-sidebar-illustration-height);
+    height: var(--fluir-sidebar-illustration-height);
+
+    margin: var(--fluir-sidebar-section-gap) 0;
+  }
+
+  /* =====================================================
+     ÁREA CONTEXTUAL
+     Cada página controla o conteúdo, não a geometria.
+     ===================================================== */
+
+  .sidebar[data-shared-sidebar] [data-sidebar-context] {
+    flex: 0 0 auto;
+    margin-top: 0;
+  }
+}

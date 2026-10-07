@@ -24,22 +24,22 @@
   ]);
 
   const navItems = [
-    { href: "dashboard.html", icon: "⌘", label: "Início" },
-    { href: "timeline.html", icon: "☷", label: "Linha" },
-    { href: "tasks.html", icon: "☑", label: "Tarefas" },
-    { href: "habits.html", icon: "◌", label: "Hábitos" },
-    { href: "sleep.html", icon: "☾", label: "Sono" },
-    { href: "water.html", icon: "♢", label: "Água" },
-    { href: "finances.html", icon: "$", label: "Finanças" },
-    { href: "diary.html", icon: "▤", label: "Diário" },
-    { href: "nutrition.html", icon: "◒", label: "Alimentação" },
-    { href: "physical-health.html", icon: "✦", label: "Saúde física" },
-    { href: "menstrual-cycle.html", icon: "◍", label: "Ciclo menstrual" },
-    { href: "attachments.html", icon: "⌁", label: "Anexos" },
-    { href: "achievements.html", icon: "✧", label: "Conquistas" },
-    { href: "settings.html", icon: "⚙", label: "Configurações" },
-    { href: "profile.html", icon: "♙", label: "Perfil" },
-    { href: "plans.html", icon: "♕", label: "Planos" }
+    { href: "dashboard.html", icon: "", label: "Início" },
+    { href: "timeline.html", icon: "", label: "Linha" },
+    { href: "tasks.html", icon: "", label: "Tarefas" },
+    { href: "habits.html", icon: "", label: "Hábitos" },
+    { href: "sleep.html", icon: "", label: "Sono" },
+    { href: "water.html", icon: "", label: "Água" },
+    { href: "finances.html", icon: "", label: "Finanças" },
+    { href: "diary.html", icon: "", label: "Diário" },
+    { href: "nutrition.html", icon: "", label: "Alimentação" },
+    { href: "physical-health.html", icon: "", label: "Saúde física" },
+    { href: "menstrual-cycle.html", icon: "", label: "Ciclo menstrual" },
+    { href: "attachments.html", icon: "", label: "Anexos" },
+    { href: "achievements.html", icon: "", label: "Conquistas" },
+    { href: "settings.html", icon: "", label: "Configurações" },
+    { href: "profile.html", icon: "", label: "Perfil" },
+    { href: "plans.html", icon: "", label: "Planos" }
   ];
 
   function currentFileName() {
@@ -53,11 +53,12 @@
 
   function createBrandIcon() {
     return `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-        <path d="M12 3C9 6.5 7.5 9.6 7.5 12.7a4.5 4.5 0 0 0 9 0C16.5 9.6 15 6.5 12 3Z"></path>
-        <path d="M9.2 11.5c1.8.7 3.8.7 5.6 0"></path>
-        <path d="M9.7 15c1.5.5 3.1.5 4.6 0"></path>
-      </svg>
+      <img
+        src="../Assets/brand/fluir-symbol.svg"
+        alt=""
+        class="mobile-brand-symbol"
+        aria-hidden="true"
+      />
     `;
   }
 
@@ -121,7 +122,7 @@ function getMobileUserData() {
     </a>
 
     <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false">
-      ☰
+
     </button>
   `;
 
@@ -147,7 +148,7 @@ function getMobileUserData() {
             <strong>Menu</strong>
             <span>Escolha uma área do Fluir</span>
           </div>
-          <button class="mobile-drawer-close" type="button" aria-label="Fechar menu">×</button>
+          <button class="mobile-drawer-close" type="button" aria-label="Fechar menu"></button>
         </div>
         <nav class="mobile-drawer-nav"></nav>
       </aside>
@@ -192,7 +193,7 @@ function getMobileUserData() {
     const moreButton = document.createElement("button");
     moreButton.type = "button";
     moreButton.className = `mobile-more-btn${extraItems.includes(currentFileName()) ? " active" : ""}`;
-    moreButton.innerHTML = `<i>⋯</i><span>Mais</span>`;
+    moreButton.innerHTML = `<i></i><span>Mais</span>`;
     moreButton.addEventListener("click", openDrawer);
     bottomNav.appendChild(moreButton);
 

@@ -37,7 +37,6 @@ const headerProfileEmail = document.getElementById("headerProfileEmail");
 const headerPhotoInput = document.getElementById("headerPhotoInput");
 
 const navItems = document.querySelectorAll(".nav-item");
-const moduleLinks = document.querySelectorAll(".module-link");
 const moduleCards = document.querySelectorAll(".module-card");
 const modulePanels = document.querySelectorAll(".module-panel");
 
@@ -51,8 +50,8 @@ const focusPercent = document.getElementById("focusPercent");
 
 const defaultSetup = {
   user: {
-    name: "Deibson",
-    nickname: "Deibson",
+    name: "Você",
+    nickname: "Você",
     sexAtBirth: "",
     pronouns: "",
     customPronouns: "",
@@ -344,7 +343,7 @@ function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
 
-  const displayName = nickname || name || "Deibson";
+  const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
     welcomeTitle.textContent = `Olá, ${displayName} `;
@@ -390,20 +389,6 @@ function getSubtitleByTone(tone) {
 
 function applySelectedModules() {
   const modules = setupData.modules || defaultSetup.modules;
-
-  moduleLinks.forEach((link) => {
-    const moduleName = link.dataset.module;
-
-    if (!moduleName) {
-      return;
-    }
-
-    if (modules[moduleName]) {
-      link.classList.remove("module-hidden");
-    } else {
-      link.classList.add("module-hidden");
-    }
-  });
 
   moduleCards.forEach((card) => {
     const moduleName = card.dataset.moduleCard;
@@ -1326,7 +1311,7 @@ function saveHeaderProfile(profile) {
 function renderHeaderProfileDropdown() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Deibson";
+  const displayName = nickname || name || "Você";
 
   const profile = getHeaderProfile();
 

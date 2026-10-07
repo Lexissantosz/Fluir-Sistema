@@ -175,13 +175,13 @@ body {
 
 .brand {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
 }
 
 .brand-icon {
-  width: 30px;
-  height: 30px;
+  width: 38px;
+  height: 38px;
 
   display: grid;
   place-items: center;
@@ -190,10 +190,16 @@ body {
   flex-shrink: 0;
 }
 
-.brand-icon svg {
-  width: 27px;
-  height: 27px;
+.brand-icon svg,
+.brand-icon img {
+  width: 35px;
+  height: 35px;
   display: block;
+  object-fit: contain;
+}
+
+body.dark .brand-icon img {
+  filter: invert(1) brightness(1.35);
 }
 
 .brand h1 {
@@ -1795,13 +1801,14 @@ body.dark .preview {
   }
 
   .brand-icon {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
   }
 
-  .brand-icon svg {
-    width: 24px;
-    height: 24px;
+  .brand-icon svg,
+  .brand-icon img {
+    width: 30px;
+    height: 30px;
   }
 
   .brand h1 {

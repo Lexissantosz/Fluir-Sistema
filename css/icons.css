@@ -1,0 +1,686 @@
+/* ===================================================== */
+/* FLUIR — SISTEMA COMPARTILHADO DE ÍCONES */
+/* ===================================================== */
+
+.sidebar-nav .nav-item > span:first-child,
+.mobile-drawer-link i,
+.mobile-nav-link i {
+  width: 20px;
+  height: 20px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  font-size: 0 !important;
+  line-height: 1;
+
+  background-color: currentColor;
+
+  -webkit-mask-image: var(--icon);
+  mask-image: var(--icon);
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Dashboard */
+.sidebar-nav .nav-item[href="dashboard.html"] > span:first-child,
+.sidebar-nav .nav-item[data-module="dashboard"] > span:first-child,
+.mobile-drawer-link[href="dashboard.html"] i,
+.mobile-nav-link[href="dashboard.html"] i {
+  --icon: url("../Assets/icons/navigation/layout-dashboard.svg");
+}
+
+/* Timeline */
+.sidebar-nav .nav-item[href="timeline.html"] > span:first-child,
+.mobile-drawer-link[href="timeline.html"] i,
+.mobile-nav-link[href="timeline.html"] i {
+  --icon: url("../Assets/icons/navigation/history.svg");
+}
+
+/* Tarefas */
+.sidebar-nav .nav-item[href="tasks.html"] > span:first-child,
+.mobile-drawer-link[href="tasks.html"] i,
+.mobile-nav-link[href="tasks.html"] i {
+  --icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+/* Hábitos */
+.sidebar-nav .nav-item[href="habits.html"] > span:first-child,
+.mobile-drawer-link[href="habits.html"] i,
+.mobile-nav-link[href="habits.html"] i {
+  --icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+/* Sono */
+.sidebar-nav .nav-item[href="sleep.html"] > span:first-child,
+.mobile-drawer-link[href="sleep.html"] i,
+.mobile-nav-link[href="sleep.html"] i {
+  --icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+/* Água */
+.sidebar-nav .nav-item[href="water.html"] > span:first-child,
+.mobile-drawer-link[href="water.html"] i,
+.mobile-nav-link[href="water.html"] i {
+  --icon: url("../Assets/icons/navigation/droplets.svg");
+}
+
+/* Finanças */
+.sidebar-nav .nav-item[href="finances.html"] > span:first-child,
+.mobile-drawer-link[href="finances.html"] i,
+.mobile-nav-link[href="finances.html"] i {
+  --icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+/* Diário */
+.sidebar-nav .nav-item[href="diary.html"] > span:first-child,
+.mobile-drawer-link[href="diary.html"] i,
+.mobile-nav-link[href="diary.html"] i {
+  --icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+/* Alimentação */
+.sidebar-nav .nav-item[href="nutrition.html"] > span:first-child,
+.mobile-drawer-link[href="nutrition.html"] i,
+.mobile-nav-link[href="nutrition.html"] i {
+  --icon: url("../Assets/icons/navigation/apple.svg");
+}
+
+/* Saúde física */
+.sidebar-nav .nav-item[href="physical-health.html"] > span:first-child,
+.mobile-drawer-link[href="physical-health.html"] i,
+.mobile-nav-link[href="physical-health.html"] i {
+  --icon: url("../Assets/icons/navigation/dumbbell.svg");
+}
+
+/* Ciclo menstrual */
+.sidebar-nav .nav-item[href="menstrual-cycle.html"] > span:first-child,
+.mobile-drawer-link[href="menstrual-cycle.html"] i,
+.mobile-nav-link[href="menstrual-cycle.html"] i {
+  --icon: url("../Assets/icons/navigation/calendar-heart.svg");
+}
+
+/* Anexos */
+.sidebar-nav .nav-item[href="attachments.html"] > span:first-child,
+.mobile-drawer-link[href="attachments.html"] i,
+.mobile-nav-link[href="attachments.html"] i {
+  --icon: url("../Assets/icons/navigation/paperclip.svg");
+}
+
+/* Conquistas */
+.sidebar-nav .nav-item[href="achievements.html"] > span:first-child,
+.mobile-drawer-link[href="achievements.html"] i,
+.mobile-nav-link[href="achievements.html"] i {
+  --icon: url("../Assets/icons/navigation/trophy.svg");
+}
+
+/* Configurações */
+.sidebar-nav .nav-item[href="settings.html"] > span:first-child,
+.mobile-drawer-link[href="settings.html"] i,
+.mobile-nav-link[href="settings.html"] i {
+  --icon: url("../Assets/icons/navigation/settings.svg");
+}
+
+/* Perfil */
+.sidebar-nav .nav-item[href="profile.html"] > span:first-child,
+.mobile-drawer-link[href="profile.html"] i,
+.mobile-nav-link[href="profile.html"] i {
+  --icon: url("../Assets/icons/navigation/circle-user-round.svg");
+}
+
+/* Planos */
+.sidebar-nav .nav-item[href="plans.html"] > span:first-child,
+.mobile-drawer-link[href="plans.html"] i,
+.mobile-nav-link[href="plans.html"] i {
+  --icon: url("../Assets/icons/navigation/crown.svg");
+}
+
+/* ===================================================== */
+/* ICONES DE INTERFACE COMPARTILHADOS */
+/* ===================================================== */
+
+/* Mais — navegacao inferior mobile */
+.mobile-more-btn i {
+  width: 20px;
+  height: 20px;
+
+  display: inline-block;
+
+  font-size: 0 !important;
+
+  background-color: currentColor;
+
+  -webkit-mask: url("../Assets/icons/ui/ellipsis.svg") center / contain no-repeat;
+  mask: url("../Assets/icons/ui/ellipsis.svg") center / contain no-repeat;
+}
+
+/* Botao de menu mobile */
+.mobile-menu-btn {
+  font-size: 0 !important;
+}
+
+.mobile-menu-btn::before {
+  content: "";
+
+  width: 21px;
+  height: 21px;
+
+  display: block;
+
+  background-color: currentColor;
+
+  -webkit-mask: url("../Assets/icons/ui/menu.svg") center / contain no-repeat;
+  mask: url("../Assets/icons/ui/menu.svg") center / contain no-repeat;
+}
+
+/* Fechar drawer mobile */
+.mobile-drawer-close {
+  font-size: 0 !important;
+}
+
+.mobile-drawer-close::before {
+  content: "";
+
+  width: 20px;
+  height: 20px;
+
+  display: block;
+
+  background-color: currentColor;
+
+  -webkit-mask: url("../Assets/icons/ui/x.svg") center / contain no-repeat;
+  mask: url("../Assets/icons/ui/x.svg") center / contain no-repeat;
+}
+
+/* Tema claro / escuro */
+#themeBtn span {
+  width: 17px;
+  height: 17px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  font-size: 0 !important;
+
+  background-color: currentColor;
+
+  -webkit-mask: url("../Assets/icons/ui/moon.svg") center / contain no-repeat;
+  mask: url("../Assets/icons/ui/moon.svg") center / contain no-repeat;
+}
+
+body.dark #themeBtn span {
+  -webkit-mask-image: url("../Assets/icons/ui/sun.svg");
+  mask-image: url("../Assets/icons/ui/sun.svg");
+}
+
+/* ===================================================== */
+/* ÍCONES PRINCIPAIS DAS TELAS */
+/* ===================================================== */
+
+.page-icon,
+.title-icon,
+.heading-icon {
+  font-size: 0 !important;
+}
+
+.page-icon::before,
+.title-icon::before,
+.heading-icon::before {
+  content: "";
+
+  width: 22px;
+  height: 22px;
+
+  display: block;
+
+  background-color: currentColor;
+
+  -webkit-mask: var(--page-icon) center / contain no-repeat;
+  mask: var(--page-icon) center / contain no-repeat;
+}
+
+/* Timeline */
+.timeline-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/history.svg");
+}
+
+/* Tarefas */
+.tasks-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+/* Hábitos */
+.habits-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+/* Sono */
+.sleep-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+/* Água */
+.water-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/droplets.svg");
+}
+
+/* Finanças */
+.finances-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+/* Diário */
+.diary-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+/* Alimentação */
+.nutrition-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/apple.svg");
+}
+
+/* Saúde física */
+.health-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/dumbbell.svg");
+}
+
+/* Ciclo menstrual */
+.cycle-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/calendar-heart.svg");
+}
+
+/* Anexos */
+.attachments-page .page-icon {
+  --page-icon: url("../Assets/icons/navigation/paperclip.svg");
+}
+
+/* Conquistas */
+.achievements-page .title-icon {
+  --page-icon: url("../Assets/icons/navigation/trophy.svg");
+}
+
+/* Configurações */
+.settings-page .heading-icon {
+  --page-icon: url("../Assets/icons/navigation/settings.svg");
+}
+
+/* Perfil */
+.profile-page .title-icon {
+  --page-icon: url("../Assets/icons/navigation/circle-user-round.svg");
+}
+
+/* Planos */
+.plans-page .title-icon {
+  --page-icon: url("../Assets/icons/navigation/crown.svg");
+}
+
+/* ===================================================== */
+/* ÍCONES DE AÇÕES */
+/* ===================================================== */
+
+.ui-icon {
+  width: 17px;
+  height: 17px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  vertical-align: middle;
+
+  background-color: currentColor;
+
+  -webkit-mask: var(--ui-icon) center / contain no-repeat;
+  mask: var(--ui-icon) center / contain no-repeat;
+}
+
+.ui-icon-plus {
+  --ui-icon: url("../Assets/icons/ui/plus.svg");
+}
+
+.ui-icon-edit {
+  --ui-icon: url("../Assets/icons/ui/pencil.svg");
+}
+
+.ui-icon-close {
+  --ui-icon: url("../Assets/icons/ui/x.svg");
+}
+
+.ui-icon-check {
+  --ui-icon: url("../Assets/icons/ui/check.svg");
+}
+
+.primary-btn:has(.ui-icon),
+.edit-profile-btn:has(.ui-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.modal-close:has(.ui-icon),
+.attachment-details-close:has(.ui-icon) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===================================================== */
+/* ÍCONES CONTEXTUAIS — CARDS E CONTEÚDO */
+/* ===================================================== */
+
+.ui-icon-calendar {
+  --ui-icon: url("../Assets/icons/ui/calendar-days.svg");
+}
+
+.ui-icon-heart {
+  --ui-icon: url("../Assets/icons/ui/heart.svg");
+}
+
+.ui-icon-sparkles {
+  --ui-icon: url("../Assets/icons/ui/sparkles.svg");
+}
+
+.ui-icon-shield {
+  --ui-icon: url("../Assets/icons/ui/shield-check.svg");
+}
+
+.ui-icon-database {
+  --ui-icon: url("../Assets/icons/ui/database.svg");
+}
+
+.ui-icon-plug {
+  --ui-icon: url("../Assets/icons/ui/plug.svg");
+}
+
+.ui-icon-cloud {
+  --ui-icon: url("../Assets/icons/ui/cloud.svg");
+}
+
+
+/* Ícone reutilizável de módulo */
+
+.module-icon {
+  width: 18px;
+  height: 18px;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  vertical-align: -3px;
+
+  background-color: currentColor;
+
+  -webkit-mask: var(--module-icon) center / contain no-repeat;
+  mask: var(--module-icon) center / contain no-repeat;
+}
+
+.module-icon.icon-tasks {
+  --module-icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+.module-icon.icon-timeline {
+  --module-icon: url("../Assets/icons/navigation/history.svg");
+}
+
+.module-icon.icon-habits {
+  --module-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+.module-icon.icon-sleep {
+  --module-icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+.module-icon.icon-water {
+  --module-icon: url("../Assets/icons/navigation/droplets.svg");
+}
+
+.module-icon.icon-finances {
+  --module-icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+.module-icon.icon-diary {
+  --module-icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+.module-icon.icon-nutrition {
+  --module-icon: url("../Assets/icons/navigation/apple.svg");
+}
+
+.module-icon.icon-health {
+  --module-icon: url("../Assets/icons/navigation/dumbbell.svg");
+}
+
+.module-icon.icon-cycle {
+  --module-icon: url("../Assets/icons/navigation/calendar-heart.svg");
+}
+
+.module-icon.icon-attachments {
+  --module-icon: url("../Assets/icons/navigation/paperclip.svg");
+}
+
+.module-icon.icon-achievements {
+  --module-icon: url("../Assets/icons/navigation/trophy.svg");
+}
+
+.module-icon.icon-settings {
+  --module-icon: url("../Assets/icons/navigation/settings.svg");
+}
+
+.module-icon.icon-profile {
+  --module-icon: url("../Assets/icons/navigation/circle-user-round.svg");
+}
+
+.module-icon.icon-plans {
+  --module-icon: url("../Assets/icons/navigation/crown.svg");
+}
+
+
+/* Elementos que já possuem um span com símbolo antigo */
+
+.dashboard-page .summary-card .card-title > span:first-child,
+.settings-card .card-title > span:first-child,
+.profile-metrics .metric-card > span:first-child,
+.profile-grid .profile-card h3 > span:first-child,
+.achievement-summary article > span:first-child,
+.featured-achievement .featured-icon,
+.achievements-page .modal-symbol,
+.plans-page .plan-icon,
+.plans-page .modal-symbol,
+.timeline-page .event-icon {
+  font-size: 0 !important;
+}
+
+.dashboard-page .summary-card .card-title > span:first-child::before,
+.settings-card .card-title > span:first-child::before,
+.profile-metrics .metric-card > span:first-child::before,
+.profile-grid .profile-card h3 > span:first-child::before,
+.achievement-summary article > span:first-child::before,
+.featured-achievement .featured-icon::before,
+.achievements-page .modal-symbol::before,
+.plans-page .plan-icon::before,
+.plans-page .modal-symbol::before,
+.timeline-page .event-icon::before {
+  content: "";
+
+  width: 18px;
+  height: 18px;
+
+  display: block;
+
+  background-color: currentColor;
+
+  -webkit-mask: var(--context-icon) center / contain no-repeat;
+  mask: var(--context-icon) center / contain no-repeat;
+}
+
+
+/* Dashboard */
+
+.summary-card[data-module-card="tasks"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+.summary-card[data-module-card="habits"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+.summary-card[data-module-card="sleep"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+.summary-card[data-module-card="water"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/droplets.svg");
+}
+
+.summary-card[data-module-card="finances"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+.summary-card[data-module-card="diary"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+
+/* Configurações */
+
+.settings-card[data-card="setup"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/sparkles.svg");
+}
+
+.settings-card[data-card="appearance"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/sun.svg");
+}
+
+.settings-card[data-card="notifications"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/bell.svg");
+}
+
+.settings-card[data-card="privacy"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/shield-check.svg");
+}
+
+.settings-card[data-card="integrations"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/plug.svg");
+}
+
+.settings-card[data-card="data"] .card-title > span:first-child {
+  --context-icon: url("../Assets/icons/ui/database.svg");
+}
+
+
+/* Perfil */
+
+.profile-metrics .metric-card:nth-child(1) > span:first-child {
+  --context-icon: url("../Assets/icons/ui/calendar-days.svg");
+}
+
+.profile-metrics .metric-card:nth-child(2) > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+.profile-metrics .metric-card:nth-child(3) > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+.profile-metrics .metric-card:nth-child(4) > span:first-child {
+  --context-icon: url("../Assets/icons/ui/heart.svg");
+}
+
+.profile-grid > .profile-card:nth-of-type(1) h3 > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/circle-user-round.svg");
+}
+
+.profile-grid > .profile-card:nth-of-type(2) h3 > span:first-child {
+  --context-icon: url("../Assets/icons/ui/heart.svg");
+}
+
+.profile-grid > .profile-card:nth-of-type(3) h3 > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/settings.svg");
+}
+
+.profile-grid > .profile-card:nth-of-type(4) h3 > span:first-child {
+  --context-icon: url("../Assets/icons/ui/shield-check.svg");
+}
+
+.profile-grid > .profile-card:nth-of-type(6) h3 > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/history.svg");
+}
+
+
+/* Conquistas */
+
+.achievement-summary article:nth-child(1) > span:first-child,
+.featured-achievement .featured-icon,
+.achievements-page .modal-symbol {
+  --context-icon: url("../Assets/icons/navigation/trophy.svg");
+}
+
+.achievement-summary article:nth-child(2) > span:first-child {
+  --context-icon: url("../Assets/icons/ui/circle-check.svg");
+}
+
+.achievement-summary article:nth-child(3) > span:first-child {
+  --context-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+.achievement-summary article:nth-child(4) > span:first-child {
+  --context-icon: url("../Assets/icons/ui/sparkles.svg");
+}
+
+
+/* Planos */
+
+.plan-card[data-plan-card="Gratuito"] .plan-icon {
+  --context-icon: url("../Assets/icons/ui/circle-check.svg");
+}
+
+.plan-card[data-plan-card="Pessoal"] .plan-icon,
+.plans-page .modal-symbol {
+  --context-icon: url("../Assets/icons/ui/heart.svg");
+}
+
+.plan-card[data-plan-card="Completo"] .plan-icon {
+  --context-icon: url("../Assets/icons/navigation/crown.svg");
+}
+
+
+/* Timeline */
+
+.event-item[data-type="tasks"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/list-check.svg");
+}
+
+.event-item[data-type="habits"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/repeat-2.svg");
+}
+
+.event-item[data-type="health"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/dumbbell.svg");
+}
+
+.event-item[data-type="finances"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/wallet.svg");
+}
+
+.event-item[data-type="diary"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/notebook-pen.svg");
+}
+
+.event-item[data-type="attachments"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/paperclip.svg");
+}
+
+.event-item[data-type="sleep"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/moon-star.svg");
+}
+
+.event-item[data-type="water"] .event-icon {
+  --context-icon: url("../Assets/icons/navigation/droplets.svg");
+}
