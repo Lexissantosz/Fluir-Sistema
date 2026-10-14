@@ -200,6 +200,20 @@
       ].join("")
     );
 
+    const nav = sidebar.querySelector(".sidebar-nav");
+    const scrollKey = "fluir-sidebar-scroll";
+    if (nav) {
+      const saveScroll = () => {
+        try { sessionStorage.setItem(scrollKey, String(nav.scrollTop)); } catch (_) {}
+      };
+      let savedScroll = 0;
+      try { savedScroll = Number(sessionStorage.getItem(scrollKey)) || 0; } catch (_) {}
+      requestAnimationFrame(() => { nav.scrollTop = savedScroll; });
+      nav.addEventListener("scroll", saveScroll, { passive: true });
+      nav.addEventListener("click", saveScroll);
+      window.addEventListener("pagehide", saveScroll);
+    }
+
     sidebar.dataset.sidebarReady = "true";
   }
 

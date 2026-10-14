@@ -211,3 +211,37 @@
   text-align: center;
   overflow-wrap: anywhere;
 }
+
+/* Geometria e seleção compartilhadas da navegação desktop. */
+@media (min-width: 901px) {
+  main:has(> .sidebar[data-shared-sidebar]) {
+    grid-template-columns: 280px minmax(0, 1fr) !important;
+  }
+  .sidebar[data-shared-sidebar] {
+    box-sizing: border-box;
+    height: calc(100dvh - 24px);
+    max-height: calc(100dvh - 24px);
+    width: 100%;
+  }
+  .sidebar[data-shared-sidebar] .sidebar-illustration {
+    flex: 0 0 180px;
+    height: 180px;
+    min-height: 180px;
+    box-sizing: border-box;
+  }
+}
+@media (min-width: 901px) and (max-width: 1250px) {
+  main:has(> .sidebar[data-shared-sidebar]) {
+    grid-template-columns: 250px minmax(0, 1fr) !important;
+  }
+}
+.sidebar[data-shared-sidebar] .nav-item.active {
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-weight: 800;
+}
+.settings-page .sidebar[data-shared-sidebar] .sidebar-illustration {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
