@@ -2334,3 +2334,36 @@ body .attachment-modal #attachmentNoteInput {
   color: var(--muted);
   opacity: 1;
 }
+
+/* Dica centralizada sem deslocar o cursor da observação. */
+body .attachment-modal #attachmentNoteInput { text-align: left; }
+.attachment-modal label:has(> #attachmentNoteInput) { position: relative; }
+.attachment-modal label:has(> #attachmentNoteInput)::after {
+  content: "Ex: onde está salvo, por que é importante, data relacionada...";
+  position: absolute;
+  inset: 28px 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  pointer-events: none;
+}
+.attachment-modal #attachmentNoteInput::placeholder { color: transparent; }
+.attachment-modal label:has(> #attachmentNoteInput:focus)::after,
+.attachment-modal label:has(> #attachmentNoteInput:not(:placeholder-shown))::after {
+  display: none;
+}
+@media (max-width: 760px) {
+  .attachment-modal { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+  .attachment-modal-actions {
+    position: static;
+    background: transparent;
+    padding: 0;
+    margin-top: 18px;
+  }
+}
