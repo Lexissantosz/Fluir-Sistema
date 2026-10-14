@@ -270,3 +270,10 @@
     margin: 0;
   }
 }
+
+/* Ícones por máscara usam a mesma cor do texto do link, inclusive ativo. */
+.sidebar[data-shared-sidebar] .sidebar-nav .nav-item > span:first-child {
+  color: inherit !important;
+  background-color: currentColor !important;
+  opacity: 1 !important;
+}
