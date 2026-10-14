@@ -646,7 +646,7 @@ function setupFeedbackCenter() {
 
   if (translationButton && supportTab) {
     translationButton.addEventListener("click", () => {
-      feedbackType.value = "translation";
+      feedbackType.value = "system";
       supportTab.click();
 
       setTimeout(() => {
