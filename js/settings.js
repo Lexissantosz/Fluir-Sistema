@@ -638,7 +638,7 @@ function setupFeedbackCenter() {
 
   githubButton.addEventListener("click", () => {
     window.open(
-      "https://github.com/Lexissantosz/Fluir-Sistema/issues/new",
+      "https://github.com/Lexissantosz/Fluir-Sistema/issues/new/choose",
       "_blank",
       "noopener,noreferrer"
     );
