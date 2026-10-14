@@ -14,6 +14,12 @@
 (() => {
   "use strict";
 
+  function sidebarT(key, fallback) {
+    return window.FluirI18n
+      ? window.FluirI18n.t(key, fallback)
+      : fallback;
+  }
+
   function getCurrentPage() {
     const fileName = window.location.pathname.split("/").pop();
 
@@ -33,7 +39,7 @@
 
         <div>
           <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
+          <p data-i18n="sidebar.tagline">${sidebarT("sidebar.tagline", "Sistema de Organização da Vida")}</p>
         </div>
       </div>
     `;
@@ -127,19 +133,37 @@
             ${ariaCurrent}
         >
             <span aria-hidden="true"></span>
-            ${item.label}
+
+            <span data-i18n="nav.${item.key}">
+              ${
+                window.FluirI18n
+                  ? window.FluirI18n.t(`nav.${item.key}`, item.label)
+                  : item.label
+              }
+            </span>
         </a>
         `;
     }).join("");
 
     return `
-        <nav class="sidebar-nav" aria-label="Navegação principal">
+        <nav
+          class="sidebar-nav"
+          aria-label="${sidebarT("sidebar.mainNavigation", "Navegação principal")}"
+          data-i18n-aria-label="sidebar.mainNavigation"
+        >
         ${links}
         </nav>
     `;
     }
 
-  function renderIllustration(quote) {
+  function renderIllustration(quote, quoteKey = "") {
+    const translatedQuote = quoteKey
+      ? sidebarT(quoteKey, quote)
+      : quote;
+
+    const quoteAttribute = quoteKey
+      ? ` data-i18n="${quoteKey}"`
+      : "";
     return `
       <div class="sidebar-illustration" aria-hidden="true">
         <div class="rain rain-1"></div>
@@ -158,7 +182,7 @@
         </div>
 
         <p>
-        “${quote}”
+          “<span${quoteAttribute}>${translatedQuote}</span>”
         </p>
       </div>
     `;
@@ -193,6 +217,10 @@
         sidebar.dataset.sidebarQuote ||
         "Pequenas ações constantes constroem mudanças profundas.";
 
+    const quoteKey =
+        sidebar.dataset.sidebarQuoteKey ||
+        "";
+
     if (!contextualArea) {
       console.warn(
         "Sidebar compartilhada encontrada sem área contextual."
@@ -206,7 +234,7 @@
       [
         renderBrand(),
         renderNavigation(),
-        renderIllustration(quote)
+        renderIllustration(quote, quoteKey)
       ].join("")
     );
 

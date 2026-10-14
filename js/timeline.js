@@ -53,6 +53,26 @@ const eventCategorySelect = document.getElementById("eventCategorySelect");
 const eventDescriptionInput = document.getElementById("eventDescriptionInput");
 const eventFormMessage = document.getElementById("eventFormMessage");
 
+function timelineT(key, fallback = "", variables = {}) {
+  if (window.FluirI18n) {
+    return window.FluirI18n.t(key, fallback, variables);
+  }
+
+  return String(fallback).replace(/\{(\w+)\}/g, (match, variableName) => {
+    if (Object.prototype.hasOwnProperty.call(variables, variableName)) {
+      return String(variables[variableName]);
+    }
+
+    return match;
+  });
+}
+
+function timelineLocale() {
+  return window.FluirI18n
+    ? window.FluirI18n.getLocale()
+    : "pt-BR";
+}
+
 
 // =====================================================
 // 2. CONFIGURAÇÃO PADRÃO
@@ -121,13 +141,13 @@ function applySavedTheme() {
     body.classList.add("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☼</span> Claro";
+      themeBtn.innerHTML = `<span>☼</span> ${timelineT("common.light", "Claro")}`;
     }
   } else {
     body.classList.remove("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☾</span> Escuro";
+      themeBtn.innerHTML = `<span>☾</span> ${timelineT("common.dark", "Escuro")}`;
     }
   }
 }
@@ -139,8 +159,8 @@ if (themeBtn) {
     const isDarkMode = body.classList.contains("dark");
 
     themeBtn.innerHTML = isDarkMode
-      ? "<span>☼</span> Claro"
-      : "<span>☾</span> Escuro";
+      ? `<span>☼</span> ${timelineT("common.light", "Claro")}`
+      : `<span>☾</span> ${timelineT("common.dark", "Escuro")}`;
 
     localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
@@ -155,10 +175,18 @@ function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
 
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    rawDisplayName && rawDisplayName !== "Você"
+      ? rawDisplayName
+      : timelineT("common.you", "Você");
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = timelineT(
+      "timeline.welcome",
+      "Olá, {name}",
+      { name: displayName }
+    );
   }
 
   if (avatarBtn) {
@@ -183,14 +211,30 @@ function getInitial(name) {
 
 function getSubtitleByTone(tone) {
   const subtitles = {
-    calmo: "Respire fundo. Tudo que importa pode ser acompanhado com calma.",
-    direto: "Veja seus eventos, filtre informações e siga para o próximo passo.",
-    motivador: "Cada registro mostra sua constância. Continue avançando.",
-    delicado: "Com leveza, sua rotina vai ganhando forma.",
-    neutro: "Acompanhe seus registros, eventos e mudanças ao longo do tempo."
+    calmo: [
+      "timeline.subtitle.calm",
+      "Respire fundo. Tudo que importa pode ser acompanhado com calma."
+    ],
+    direto: [
+      "timeline.subtitle.direct",
+      "Veja seus eventos, filtre informações e siga para o próximo passo."
+    ],
+    motivador: [
+      "timeline.subtitle.motivating",
+      "Cada registro mostra sua constância. Continue avançando."
+    ],
+    delicado: [
+      "timeline.subtitle.gentle",
+      "Com leveza, sua rotina vai ganhando forma."
+    ],
+    neutro: [
+      "timeline.subtitle.neutral",
+      "Acompanhe seus registros, eventos e mudanças ao longo do tempo."
+    ]
   };
 
-  return subtitles[tone] || subtitles.calmo;
+  const [key, fallback] = subtitles[tone] || subtitles.calmo;
+  return timelineT(key, fallback);
 }
 
 
@@ -219,17 +263,21 @@ function applySelectedModulesToMenu() {
 
 function getCategoryLabel(category) {
   const labels = {
-    tasks: "Tarefas",
-    habits: "Hábitos",
-    health: "Saúde",
-    finances: "Finanças",
-    diary: "Diário",
-    attachments: "Anexos",
-    sleep: "Sono",
-    water: "Água"
+    tasks: ["timeline.category.tasks", "Tarefas"],
+    habits: ["timeline.category.habits", "Hábitos"],
+    health: ["timeline.category.health", "Saúde"],
+    finances: ["timeline.category.finances", "Finanças"],
+    diary: ["timeline.category.diary", "Diário"],
+    attachments: ["timeline.category.attachments", "Anexos"],
+    sleep: ["timeline.category.sleep", "Sono"],
+    water: ["timeline.category.water", "Água"]
   };
 
-  return labels[category] || "Evento";
+  const [key, fallback] =
+    labels[category] ||
+    ["timeline.category.event", "Evento"];
+
+  return timelineT(key, fallback);
 }
 
 function getCategoryIcon(category) {
@@ -373,13 +421,17 @@ function updateLoadMoreButton(totalEligibleEvents, visibleEligibleEvents) {
   if (remainingEvents > 0) {
     loadMoreEventsBtn.dataset.mode = "load-more";
     loadMoreEventsBtn.disabled = false;
-    loadMoreEventsBtn.textContent = `Carregar mais eventos (${remainingEvents}) ↓`;
+    loadMoreEventsBtn.textContent = timelineT(
+      "timeline.loadMoreCount",
+      "Carregar mais eventos ({count}) ↓",
+      { count: remainingEvents }
+    );
     return;
   }
 
   loadMoreEventsBtn.dataset.mode = "refresh";
   loadMoreEventsBtn.disabled = false;
-  loadMoreEventsBtn.textContent = "Atualizar eventos ↻";
+  loadMoreEventsBtn.textContent = timelineT("timeline.refreshEvents", "Atualizar eventos ↻");
 }
 
 function applyTimelineVisibility() {
@@ -442,7 +494,13 @@ function updateDayCounters() {
     counter.className = "day-counter";
 
     const total = visibleEvents.length;
-    counter.textContent = `${total} evento${total === 1 ? "" : "s"}`;
+    counter.textContent = timelineT(
+      total === 1
+        ? "timeline.eventCount.one"
+        : "timeline.eventCount.other",
+      total === 1 ? "{count} evento" : "{count} eventos",
+      { count: total }
+    );
 
     title.appendChild(counter);
 
@@ -491,7 +549,7 @@ function clearEventInvalidFields() {
 function getCurrentTimeLabel() {
   const now = new Date();
 
-  return now.toLocaleTimeString("pt-BR", {
+  return now.toLocaleTimeString(timelineLocale(), {
     hour: "2-digit",
     minute: "2-digit"
   });
@@ -513,23 +571,23 @@ function getYesterdayKey() {
 function formatTimelineDayLabel(dateKey) {
   const date = new Date(`${dateKey}T00:00:00`);
 
-  const formattedDate = date.toLocaleDateString("pt-BR", {
+  const formattedDate = date.toLocaleDateString(timelineLocale(), {
     day: "numeric",
     month: "long"
   });
 
   if (dateKey === getTodayKey()) {
-    return `Hoje, ${formattedDate}`;
+    return `${timelineT("timeline.today", "Hoje")}, ${formattedDate}`;
   }
 
   if (dateKey === getYesterdayKey()) {
-    return `Ontem, ${formattedDate}`;
+    return `${timelineT("timeline.yesterday", "Ontem")}, ${formattedDate}`;
   }
 
   const currentYear = new Date().getFullYear();
 
   if (date.getFullYear() !== currentYear) {
-    return date.toLocaleDateString("pt-BR", {
+    return date.toLocaleDateString(timelineLocale(), {
       day: "numeric",
       month: "long",
       year: "numeric"
@@ -548,16 +606,16 @@ function getTomorrowKey() {
 
 function formatReminderDateLabel(dateKey) {
   if (dateKey === getTodayKey()) {
-    return "Hoje";
+    return timelineT("timeline.today", "Hoje");
   }
 
   if (dateKey === getTomorrowKey()) {
-    return "Amanhã";
+    return timelineT("timeline.tomorrow", "Amanhã");
   }
 
   const date = new Date(`${dateKey}T00:00:00`);
 
-  return date.toLocaleDateString("pt-BR", { day: "numeric", month: "long" });
+  return date.toLocaleDateString(timelineLocale(), { day: "numeric", month: "long" });
 }
 
 function getUpcomingReminders(limit = 3) {
@@ -586,7 +644,7 @@ function renderUpcomingReminders() {
   const reminders = getUpcomingReminders();
 
   if (reminders.length === 0) {
-    reminderList.innerHTML = `<p class="reminder-empty">Nenhum lembrete próximo.</p>`;
+    reminderList.innerHTML = `<p class="reminder-empty">${timelineT("timeline.noUpcomingReminders", "Nenhum lembrete próximo.")}</p>`;
     return;
   }
 
@@ -609,10 +667,14 @@ function formatOverdueLabel(dateKey) {
   const diffDays = Math.round((today - taskDate) / (1000 * 60 * 60 * 24));
 
   if (diffDays <= 1) {
-    return "Atrasada há 1 dia";
+    return timelineT("timeline.overdueOneDay", "Atrasada há 1 dia");
   }
 
-  return `Atrasada há ${diffDays} dias`;
+  return timelineT(
+    "timeline.overdueDays",
+    "Atrasada há {days} dias",
+    { days: diffDays }
+  );
 }
 
 function getOverdueReminders(limit = 3) {
@@ -635,7 +697,7 @@ function renderOverdueReminders() {
   const overdueTasks = getOverdueReminders();
 
   if (overdueTasks.length === 0) {
-    overdueList.innerHTML = `<p class="reminder-empty">Nenhuma tarefa atrasada.</p>`;
+    overdueList.innerHTML = `<p class="reminder-empty">${timelineT("timeline.noOverdueTasks", "Nenhuma tarefa atrasada.")}</p>`;
     return;
   }
 
@@ -684,7 +746,7 @@ function createEventElement(eventData) {
 
     <div class="event-content">
       <strong>${escapeHTML(eventData.title)}</strong>
-      <p>${escapeHTML(eventData.description || "Evento registrado manualmente.")}</p>
+      <p>${escapeHTML(eventData.description || timelineT("timeline.manualEvent", "Evento registrado manualmente."))}</p>
     </div>
 
     <span class="event-tag">${getCategoryLabel(eventData.category)}</span>
@@ -928,7 +990,7 @@ function saveNewEvent() {
       eventTitleInput.focus();
     }
 
-    showEventFormMessage("Digite um título válido para o evento.");
+    showEventFormMessage(timelineT("timeline.invalidTitle", "Digite um título válido para o evento."));
     return;
   }
 
@@ -938,7 +1000,7 @@ function saveNewEvent() {
       eventCategorySelect.focus();
     }
 
-    showEventFormMessage("Escolha uma categoria para o evento.");
+    showEventFormMessage(timelineT("timeline.chooseCategory", "Escolha uma categoria para o evento."));
     return;
   }
 
@@ -959,7 +1021,7 @@ function saveNewEvent() {
   // depois de criar o evento, reaplica filtro e módulos
   applyTimelineVisibility();
 
-  showEventFormMessage("Evento salvo com sucesso.", "success");
+  showEventFormMessage(timelineT("timeline.savedSuccess", "Evento salvo com sucesso."), "success");
 
   setTimeout(() => {
     closeEventModal();
@@ -1049,7 +1111,7 @@ function setupLoadMoreEventsButton() {
     applyTimelineVisibility();
 
     loadMoreEventsBtn.disabled = true;
-    loadMoreEventsBtn.textContent = "Eventos atualizados ✓";
+    loadMoreEventsBtn.textContent = timelineT("timeline.eventsUpdated", "Eventos atualizados ✓");
 
     setTimeout(() => {
       loadMoreEventsBtn.disabled = false;
@@ -1164,7 +1226,11 @@ function saveHeaderProfile(profile) {
 function renderHeaderProfileDropdown() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    rawDisplayName && rawDisplayName !== "Você"
+      ? rawDisplayName
+      : timelineT("common.you", "Você");
 
   const profile = getHeaderProfile();
 
@@ -1217,5 +1283,20 @@ if (headerPhotoInput) {
     reader.readAsDataURL(file);
   });
 }
+
+
+function refreshTimelineLanguage() {
+  updateWelcomeArea();
+  reloadTimelineEvents();
+  applyTimelineVisibility();
+  renderUpcomingReminders();
+  renderOverdueReminders();
+  renderHeaderProfileDropdown();
+}
+
+window.addEventListener(
+  "fluir:languagechange",
+  refreshTimelineLanguage
+);
 
 renderHeaderProfileDropdown();

@@ -358,12 +358,29 @@ function setupResetButtons() {
 /* ===================================================== */
 
 function setupPreferenceSaves() {
-  setupSelectSave("languageSelect", "fluir-language");
+  setupLanguagePreference();
   setupSelectSave("summaryTime", "fluir-summary-time");
 
   setupCheckboxSaves();
 }
 
+function setupLanguagePreference() {
+  const select = document.getElementById("languageSelect");
+
+  if (!select || !window.FluirI18n) {
+    return;
+  }
+
+  const currentLanguage = window.FluirI18n.getLanguage();
+
+  select.value = currentLanguage;
+
+  window.FluirI18n.translateDocument();
+
+  select.addEventListener("change", () => {
+    window.FluirI18n.setLanguage(select.value);
+  });
+}
 
 function setupSelectSave(selectId, storageKey) {
   const select = document.getElementById(selectId);
