@@ -602,6 +602,26 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Idioma",
       "settings.appearance": "Aparência",
       "settings.support": "Ajuda e feedback",
+      "settings.feedback.translationLink": "Questionar uma tradução",
+      "settings.feedback.intro": "Encontraste uma tradução estranha, um erro do sistema ou tens uma sugestão? Podes preparar um relatório aqui sem enviar os teus dados automaticamente.",
+      "settings.feedback.type": "Tipo de feedback",
+      "settings.feedback.message": "Descreve o que aconteceu",
+      "settings.feedback.placeholder": "Explica o problema, onde apareceu e o que esperavas ver.",
+      "settings.feedback.diagnostics": "Incluir dados técnicos básicos no texto copiado: página, idioma e tamanho do ecrã",
+      "settings.feedback.copy": "Copiar relatório",
+      "settings.feedback.github": "Abrir página de pedidos",
+      "settings.feedback.copied": "Relatório copiado.",
+      "settings.feedback.empty": "Descreve o problema antes de continuar.",
+      "settings.feedback.translationLink": "Questionar uma tradução",
+      "settings.feedback.intro": "Encontrou uma tradução estranha, um erro do sistema ou tem uma sugestão? Você pode montar um relatório aqui sem enviar seus dados automaticamente.",
+      "settings.feedback.type": "Tipo de feedback",
+      "settings.feedback.message": "Descreva o que aconteceu",
+      "settings.feedback.placeholder": "Explique o problema, onde ele apareceu e o que você esperava ver.",
+      "settings.feedback.diagnostics": "Incluir dados técnicos básicos no texto copiado: página, idioma e tamanho da tela",
+      "settings.feedback.copy": "Copiar relatório",
+      "settings.feedback.github": "Abrir página de chamados",
+      "settings.feedback.copied": "Relatório copiado.",
+      "settings.feedback.empty": "Descreva o problema antes de continuar.",
       "feedback.translation": "Problema de tradução",
       "feedback.system": "Erro do sistema",
       "feedback.accessibility": "Acessibilidade",
@@ -624,6 +644,16 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Language",
       "settings.appearance": "Appearance",
       "settings.support": "Help & feedback",
+      "settings.feedback.translationLink": "Question a translation",
+      "settings.feedback.intro": "Found an odd translation, a system error, or have a suggestion? You can prepare a report here without sending your data automatically.",
+      "settings.feedback.type": "Feedback type",
+      "settings.feedback.message": "Describe what happened",
+      "settings.feedback.placeholder": "Explain the problem, where it appeared, and what you expected to see.",
+      "settings.feedback.diagnostics": "Include basic technical details in the copied text: page, language, and screen size",
+      "settings.feedback.copy": "Copy report",
+      "settings.feedback.github": "Open issue page",
+      "settings.feedback.copied": "Report copied.",
+      "settings.feedback.empty": "Describe the problem before continuing.",
       "feedback.translation": "Translation issue",
       "feedback.system": "System error",
       "feedback.accessibility": "Accessibility",
@@ -635,6 +665,16 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Idioma",
       "settings.appearance": "Apariencia",
       "settings.support": "Ayuda y comentarios",
+      "settings.feedback.translationLink": "Cuestionar una traducción",
+      "settings.feedback.intro": "¿Encontraste una traducción extraña, un error del sistema o tienes una sugerencia? Puedes preparar un informe aquí sin enviar tus datos automáticamente.",
+      "settings.feedback.type": "Tipo de comentario",
+      "settings.feedback.message": "Describe lo que ocurrió",
+      "settings.feedback.placeholder": "Explica el problema, dónde apareció y qué esperabas ver.",
+      "settings.feedback.diagnostics": "Incluir datos técnicos básicos en el texto copiado: página, idioma y tamaño de pantalla",
+      "settings.feedback.copy": "Copiar informe",
+      "settings.feedback.github": "Abrir página de incidencias",
+      "settings.feedback.copied": "Informe copiado.",
+      "settings.feedback.empty": "Describe el problema antes de continuar.",
       "feedback.translation": "Problema de traducción",
       "feedback.system": "Error del sistema",
       "feedback.accessibility": "Accesibilidad",
@@ -661,11 +701,38 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Langue",
       "settings.appearance": "Apparence",
       "settings.support": "Aide et retours",
+      "settings.feedback.translationLink": "Signaler une traduction",
+      "settings.feedback.intro": "Vous avez trouvé une traduction étrange, une erreur du système ou vous avez une suggestion ? Vous pouvez préparer un rapport ici sans envoyer automatiquement vos données.",
+      "settings.feedback.type": "Type de retour",
+      "settings.feedback.message": "Décrivez ce qui s'est passé",
+      "settings.feedback.placeholder": "Expliquez le problème, où il apparaît et ce que vous pensiez voir.",
+      "settings.feedback.diagnostics": "Inclure les informations techniques de base dans le texte copié : page, langue et taille de l'écran",
+      "settings.feedback.copy": "Copier le rapport",
+      "settings.feedback.github": "Ouvrir la page des tickets",
+      "settings.feedback.copied": "Rapport copié.",
+      "settings.feedback.empty": "Décrivez le problème avant de continuer.",
       "feedback.translation": "Problème de traduction",
       "feedback.system": "Erreur du système",
       "feedback.accessibility": "Accessibilité",
       "feedback.suggestion": "Suggestion",
-      "feedback.other": "Autre"
+      "feedback.other": "Autre",
+      "common.you": "Vous",
+      "common.light": "Clair",
+      "common.dark": "Sombre",
+      "sidebar.tagline": "Système d'organisation de la vie",
+      "sidebar.mainNavigation": "Navigation principale",
+      "dashboard.sidebarQuote": "De petites actions régulières créent de vrais changements.",
+      "mobile.goToProfile": "Aller au profil",
+      "mobile.openMenu": "Ouvrir le menu",
+      "mobile.systemMenu": "Menu du système",
+      "mobile.menu": "Menu",
+      "mobile.chooseArea": "Choisissez une section de Fluir",
+      "mobile.closeMenu": "Fermer le menu",
+      "mobile.mainNavigation": "Navigation mobile principale",
+      "mobile.more": "Plus",
+      "mobile.defaultUser": "Utilisateur",
+      "mobile.userProfile": "Profil utilisateur",
+      "mobile.timelineShort": "Chronologie"
     },
     de: {
       "nav.dashboard": "Start",
@@ -687,11 +754,38 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Sprache",
       "settings.appearance": "Darstellung",
       "settings.support": "Hilfe & Feedback",
+      "settings.feedback.translationLink": "Übersetzung melden",
+      "settings.feedback.intro": "Eine seltsame Übersetzung, einen Systemfehler oder eine Idee gefunden? Du kannst hier einen Bericht vorbereiten, ohne deine Daten automatisch zu senden.",
+      "settings.feedback.type": "Feedback-Typ",
+      "settings.feedback.message": "Beschreibe, was passiert ist",
+      "settings.feedback.placeholder": "Erkläre das Problem, wo es auftrat und was du erwartet hast.",
+      "settings.feedback.diagnostics": "Grundlegende technische Daten in den kopierten Text aufnehmen: Seite, Sprache und Bildschirmgröße",
+      "settings.feedback.copy": "Bericht kopieren",
+      "settings.feedback.github": "Issue-Seite öffnen",
+      "settings.feedback.copied": "Bericht kopiert.",
+      "settings.feedback.empty": "Beschreibe das Problem, bevor du fortfährst.",
       "feedback.translation": "Übersetzungsproblem",
       "feedback.system": "Systemfehler",
       "feedback.accessibility": "Barrierefreiheit",
       "feedback.suggestion": "Vorschlag",
-      "feedback.other": "Sonstiges"
+      "feedback.other": "Sonstiges",
+      "common.you": "Du",
+      "common.light": "Hell",
+      "common.dark": "Dunkel",
+      "sidebar.tagline": "System zur Lebensorganisation",
+      "sidebar.mainNavigation": "Hauptnavigation",
+      "dashboard.sidebarQuote": "Kleine, beständige Schritte schaffen echte Veränderung.",
+      "mobile.goToProfile": "Zum Profil",
+      "mobile.openMenu": "Menü öffnen",
+      "mobile.systemMenu": "Systemmenü",
+      "mobile.menu": "Menü",
+      "mobile.chooseArea": "Wähle einen Fluir-Bereich",
+      "mobile.closeMenu": "Menü schließen",
+      "mobile.mainNavigation": "Mobile Hauptnavigation",
+      "mobile.more": "Mehr",
+      "mobile.defaultUser": "Benutzer",
+      "mobile.userProfile": "Benutzerprofil",
+      "mobile.timelineShort": "Zeitleiste"
     },
     it: {
       "nav.dashboard": "Home",
@@ -713,11 +807,38 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
       "settings.language": "Lingua",
       "settings.appearance": "Aspetto",
       "settings.support": "Aiuto e feedback",
+      "settings.feedback.translationLink": "Segnala una traduzione",
+      "settings.feedback.intro": "Hai trovato una traduzione strana, un errore di sistema o hai un suggerimento? Puoi preparare una segnalazione qui senza inviare automaticamente i tuoi dati.",
+      "settings.feedback.type": "Tipo di feedback",
+      "settings.feedback.message": "Descrivi cosa è successo",
+      "settings.feedback.placeholder": "Spiega il problema, dove è comparso e cosa ti aspettavi di vedere.",
+      "settings.feedback.diagnostics": "Includi dati tecnici di base nel testo copiato: pagina, lingua e dimensioni dello schermo",
+      "settings.feedback.copy": "Copia segnalazione",
+      "settings.feedback.github": "Apri pagina segnalazioni",
+      "settings.feedback.copied": "Segnalazione copiata.",
+      "settings.feedback.empty": "Descrivi il problema prima di continuare.",
       "feedback.translation": "Problema di traduzione",
       "feedback.system": "Errore di sistema",
       "feedback.accessibility": "Accessibilità",
       "feedback.suggestion": "Suggerimento",
-      "feedback.other": "Altro"
+      "feedback.other": "Altro",
+      "common.you": "Tu",
+      "common.light": "Chiaro",
+      "common.dark": "Scuro",
+      "sidebar.tagline": "Sistema di organizzazione della vita",
+      "sidebar.mainNavigation": "Navigazione principale",
+      "dashboard.sidebarQuote": "Piccole azioni costanti creano cambiamenti reali.",
+      "mobile.goToProfile": "Vai al profilo",
+      "mobile.openMenu": "Apri menu",
+      "mobile.systemMenu": "Menu di sistema",
+      "mobile.menu": "Menu",
+      "mobile.chooseArea": "Scegli un'area di Fluir",
+      "mobile.closeMenu": "Chiudi menu",
+      "mobile.mainNavigation": "Navigazione mobile principale",
+      "mobile.more": "Altro",
+      "mobile.defaultUser": "Utente",
+      "mobile.userProfile": "Profilo utente",
+      "mobile.timelineShort": "Cronologia"
     }
   };
 
@@ -1400,16 +1521,21 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
   function t(key, fallback = "", variables = {}) {
     const language = getLanguage();
 
+    const defaultValue =
+      translations[DEFAULT_LANGUAGE]?.[key] ??
+      fallback ??
+      key;
+
     const translatedValue =
-        translations[language]?.[key] ??
-        translations[DEFAULT_LANGUAGE]?.[key] ??
-        fallback;
+      translations[language]?.[key] ??
+      translateLegacyString(defaultValue, language) ??
+      defaultValue;
 
     return interpolate(
-        translatedValue || key,
-        variables
+      translatedValue || key,
+      variables
     );
-    }
+  }
 
   function translateDocument(root = document) {
     /*
