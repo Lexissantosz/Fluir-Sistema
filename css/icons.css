@@ -698,3 +698,11 @@ body.dark #themeBtn span {
 .event-item[data-type="water"] .event-icon {
   --context-icon: url("../Assets/icons/navigation/droplets.svg");
 }
+
+/* Fechar menu: manter o X no centro geométrico do botão. */
+.mobile-drawer-close { position: relative; line-height: 0; }
+.mobile-drawer-close::before {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
