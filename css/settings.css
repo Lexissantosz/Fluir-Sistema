@@ -1641,3 +1641,23 @@ body.dark .setup-action-button {
     grid-template-columns: 1fr;
   }
 }
+/* Citação da sidebar: composição centralizada no card padrão. */
+.settings-page .sidebar[data-shared-sidebar] .sidebar-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+.settings-page .sidebar[data-shared-sidebar] .sidebar-illustration > :not(p) {
+  display: none;
+}
+.settings-page .sidebar[data-shared-sidebar] .sidebar-illustration p {
+  margin: 0;
+  max-width: 24ch;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
