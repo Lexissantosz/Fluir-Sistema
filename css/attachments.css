@@ -2317,3 +2317,20 @@ body.dark .attachment-details-modal {
     white-space: normal;
   }
 }
+
+/* Observação: texto leve e alinhamento central no campo. */
+.attachment-modal label > span { font-weight: 600; }
+body .attachment-modal #attachmentNoteInput {
+  font-family: inherit;
+  font-weight: 400 !important;
+  text-align: center;
+  min-height: 96px !important;
+  padding: 14px;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+.attachment-modal #attachmentNoteInput::placeholder {
+  font-weight: 400;
+  color: var(--muted);
+  opacity: 1;
+}
