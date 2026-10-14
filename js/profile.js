@@ -40,6 +40,7 @@ const infoTone = document.getElementById("infoTone");
 
 const aboutText = document.getElementById("aboutText");
 const themePreference = document.getElementById("themePreference");
+const profileLanguage = document.getElementById("profileLanguage");
 
 const habitCount = document.getElementById("habitCount");
 const diaryCount = document.getElementById("diaryCount");
@@ -230,6 +231,12 @@ function renderProfile() {
 
   if (aboutText) {
     aboutText.textContent = profile.about;
+  }
+
+  if (profileLanguage && window.FluirI18n) {
+    const language = window.FluirI18n.getLanguage();
+    const languages = window.FluirI18n.getLanguages();
+    profileLanguage.textContent = languages[language]?.label || language;
   }
 }
 
