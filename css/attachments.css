@@ -2367,3 +2367,26 @@ body .attachment-modal #attachmentNoteInput { text-align: left; }
     margin-top: 18px;
   }
 }
+
+/* Centralizar pela caixa real do campo, sem incluir o rótulo. */
+.attachment-modal .attachment-note-field { position: relative; }
+.attachment-modal .attachment-note-field textarea { display: block; }
+.attachment-modal .attachment-note-field::after {
+  content: "Ex: onde está salvo, por que é importante, data relacionada...";
+  position: absolute;
+  inset: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  pointer-events: none;
+}
+.attachment-modal .attachment-note-field:has(textarea:focus)::after,
+.attachment-modal .attachment-note-field:has(textarea:not(:placeholder-shown))::after {
+  display: none;
+}
