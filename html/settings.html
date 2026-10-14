@@ -89,6 +89,7 @@
         <button class="tab-btn" data-tab="privacy" type="button">Privacidade</button>
         <button class="tab-btn" data-tab="integrations" type="button">Integrações</button>
         <button class="tab-btn" data-tab="data" type="button">Dados</button>
+        <button class="tab-btn" data-tab="support" type="button" data-i18n="settings.support">Ajuda e feedback</button>
       </section>
 
       <!-- =====================================================
@@ -174,8 +175,16 @@
               <option value="pt-PT">Português (Portugal)</option>
               <option value="en">English</option>
               <option value="es">Español</option>
+              <option value="fr">Français · Beta</option>
+              <option value="de">Deutsch · Beta</option>
+              <option value="it">Italiano · Beta</option>
             </select>
           </label>
+
+          <button class="translation-feedback-link" id="reportTranslationBtn" type="button">
+            <span aria-hidden="true">?</span>
+            <span>Questionar uma tradução</span>
+          </button>
         </article>
 
         <!-- =====================================================
@@ -312,6 +321,63 @@
             <span>Sincronizado ✓</span>
           </div>
         </article>
+
+        <!-- =====================================================
+             CARD: AJUDA E FEEDBACK
+        ====================================================== -->
+        <article class="settings-card support-card" data-card="support" id="supportCard">
+          <div class="card-title">
+            <span>?</span>
+            <h3 data-i18n="settings.support">Ajuda e feedback</h3>
+          </div>
+
+          <p class="support-intro">
+            Encontrou uma tradução estranha, um erro do sistema ou tem uma sugestão?
+            Você pode montar um relatório aqui sem enviar seus dados automaticamente.
+          </p>
+
+          <div class="feedback-form">
+            <label class="feedback-field">
+              <span>Tipo de feedback</span>
+              <select id="feedbackType">
+                <option value="translation" data-i18n="feedback.translation">Problema de tradução</option>
+                <option value="system" data-i18n="feedback.system">Erro do sistema</option>
+                <option value="accessibility" data-i18n="feedback.accessibility">Acessibilidade</option>
+                <option value="suggestion" data-i18n="feedback.suggestion">Sugestão</option>
+                <option value="other" data-i18n="feedback.other">Outro</option>
+              </select>
+            </label>
+
+            <label class="feedback-field">
+              <span>Descreva o que aconteceu</span>
+              <textarea
+                id="feedbackMessage"
+                rows="5"
+                placeholder="Explique o problema, onde ele apareceu e o que você esperava ver."
+              ></textarea>
+            </label>
+
+            <label class="feedback-diagnostics">
+              <input type="checkbox" id="feedbackDiagnostics" checked />
+              <span>
+                Incluir dados técnicos básicos no texto copiado: página, idioma e tamanho da tela
+              </span>
+            </label>
+
+            <div class="feedback-actions">
+              <button class="secondary-feedback-btn" id="copyFeedbackBtn" type="button">
+                Copiar relatório
+              </button>
+
+              <button class="primary-feedback-btn" id="openGithubFeedbackBtn" type="button">
+                Abrir página de chamados
+              </button>
+            </div>
+
+            <p class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></p>
+          </div>
+        </article>
+
       </section>
 
       <!-- =====================================================
