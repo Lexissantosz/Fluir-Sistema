@@ -1237,6 +1237,148 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     }
   };
 
+
+  const LEGACY_PAGE_PHRASES = [
+    ["Fluir | Tarefas", "Fluir | Tarefas", "Fluir | Tasks", "Fluir | Tareas", "Fluir | Tâches", "Fluir | Aufgaben", "Fluir | Attività"],
+    ["Fluir | Hábitos", "Fluir | Hábitos", "Fluir | Habits", "Fluir | Hábitos", "Fluir | Habitudes", "Fluir | Gewohnheiten", "Fluir | Abitudini"],
+    ["Fluir | Sono", "Fluir | Sono", "Fluir | Sleep", "Fluir | Sueño", "Fluir | Sommeil", "Fluir | Schlaf", "Fluir | Sonno"],
+    ["Fluir | Água", "Fluir | Água", "Fluir | Water", "Fluir | Agua", "Fluir | Eau", "Fluir | Wasser", "Fluir | Acqua"],
+    ["Fluir | Finanças", "Fluir | Finanças", "Fluir | Finances", "Fluir | Finanzas", "Fluir | Finances", "Fluir | Finanzen", "Fluir | Finanze"],
+    ["Fluir | Diário emocional", "Fluir | Diário emocional", "Fluir | Emotional diary", "Fluir | Diario emocional", "Fluir | Journal émotionnel", "Fluir | Emotionstagebuch", "Fluir | Diario emotivo"],
+    ["Fluir | Alimentação", "Fluir | Alimentação", "Fluir | Nutrition", "Fluir | Alimentación", "Fluir | Alimentation", "Fluir | Ernährung", "Fluir | Alimentazione"],
+    ["Fluir | Saúde física", "Fluir | Saúde física", "Fluir | Physical health", "Fluir | Salud física", "Fluir | Santé physique", "Fluir | Körperliche Gesundheit", "Fluir | Salute fisica"],
+    ["Fluir | Ciclo menstrual", "Fluir | Ciclo menstrual", "Fluir | Menstrual cycle", "Fluir | Ciclo menstrual", "Fluir | Cycle menstruel", "Fluir | Menstruationszyklus", "Fluir | Ciclo mestruale"],
+    ["Fluir | Anexos", "Fluir | Anexos", "Fluir | Attachments", "Fluir | Archivos", "Fluir | Pièces jointes", "Fluir | Anhänge", "Fluir | Allegati"],
+    ["Conquistas | Fluir", "Conquistas | Fluir", "Achievements | Fluir", "Logros | Fluir", "Réussites | Fluir", "Erfolge | Fluir", "Traguardi | Fluir"],
+    ["Perfil | Fluir", "Perfil | Fluir", "Profile | Fluir", "Perfil | Fluir", "Profil | Fluir", "Profil | Fluir", "Profilo | Fluir"],
+    ["Configurações | Fluir", "Definições | Fluir", "Settings | Fluir", "Configuración | Fluir", "Paramètres | Fluir", "Einstellungen | Fluir", "Impostazioni | Fluir"],
+    ["Planos e Preços | Fluir", "Planos e Preços | Fluir", "Plans and Pricing | Fluir", "Planes y precios | Fluir", "Offres et tarifs | Fluir", "Tarife und Preise | Fluir", "Piani e prezzi | Fluir"],
+    ["Fluir | Login e Cadastro", "Fluir | Início de sessão e registo", "Fluir | Sign in and Sign up", "Fluir | Inicio de sesión y registro", "Fluir | Connexion et inscription", "Fluir | Anmeldung und Registrierung", "Fluir | Accesso e registrazione"],
+    ["Fluir | Configuração Inicial", "Fluir | Configuração Inicial", "Fluir | Initial Setup", "Fluir | Configuración inicial", "Fluir | Configuration initiale", "Fluir | Ersteinrichtung", "Fluir | Configurazione iniziale"],
+
+    ["Planeje, priorize e acompanhe suas pendências do dia.", "Planeia, define prioridades e acompanha as tuas pendências do dia.", "Plan, prioritize, and track today's tasks.", "Planifica, prioriza y sigue tus pendientes del día.", "Planifiez, priorisez et suivez les tâches du jour.", "Plane, priorisiere und verfolge deine heutigen Aufgaben.", "Pianifica, dai priorità e segui le attività di oggi."],
+    ["Acompanhe sua constância, sequência e evolução semanal.", "Acompanha a tua consistência, sequência e evolução semanal.", "Track your consistency, streak, and weekly progress.", "Sigue tu constancia, racha y progreso semanal.", "Suivez votre régularité, votre série et vos progrès hebdomadaires.", "Verfolge deine Beständigkeit, Serie und deinen Wochenfortschritt.", "Segui costanza, serie e progresso settimanale."],
+    ["Registre suas noites, acompanhe qualidade e veja seu descanso ao longo da semana.", "Regista as tuas noites, acompanha a qualidade e vê o teu descanso ao longo da semana.", "Log your nights, track sleep quality, and review your rest throughout the week.", "Registra tus noches, sigue la calidad y revisa tu descanso durante la semana.", "Enregistrez vos nuits, suivez leur qualité et votre repos au fil de la semaine.", "Erfasse deine Nächte, Schlafqualität und Erholung im Wochenverlauf.", "Registra le notti, monitora la qualità e il riposo durante la settimana."],
+    ["Registre sua água em ml e acompanhe sua meta diária.", "Regista a tua água em ml e acompanha a tua meta diária.", "Log your water in ml and track your daily goal.", "Registra tu agua en ml y sigue tu meta diaria.", "Enregistrez votre eau en ml et suivez votre objectif quotidien.", "Erfasse dein Wasser in ml und verfolge dein Tagesziel.", "Registra l'acqua in ml e monitora l'obiettivo giornaliero."],
+    ["Registre receitas, despesas e acompanhe sua organização financeira.", "Regista receitas, despesas e acompanha a tua organização financeira.", "Record income and expenses and keep track of your finances.", "Registra ingresos y gastos y sigue tu organización financiera.", "Enregistrez revenus et dépenses et suivez votre organisation financière.", "Erfasse Einnahmen und Ausgaben und behalte deine Finanzen im Blick.", "Registra entrate e uscite e monitora la tua organizzazione finanziaria."],
+    ["Escreva com calma, registre humor e acompanhe seus padrões emocionais.", "Escreve com calma, regista o humor e acompanha os teus padrões emocionais.", "Write calmly, log your mood, and track emotional patterns.", "Escribe con calma, registra tu estado de ánimo y sigue tus patrones emocionales.", "Écrivez calmement, notez votre humeur et suivez vos tendances émotionnelles.", "Schreibe in Ruhe, erfasse deine Stimmung und beobachte emotionale Muster.", "Scrivi con calma, registra l'umore e segui i tuoi schemi emotivi."],
+    ["Registre refeições, acompanhe padrões e organize sua rotina alimentar.", "Regista refeições, acompanha padrões e organiza a tua rotina alimentar.", "Log meals, track patterns, and organize your eating routine.", "Registra comidas, sigue patrones y organiza tu rutina alimentaria.", "Enregistrez vos repas, suivez vos habitudes et organisez votre routine alimentaire.", "Erfasse Mahlzeiten, erkenne Muster und organisiere deine Ernährung.", "Registra i pasti, segui gli schemi e organizza la tua routine alimentare."],
+    ["Registre treinos, sintomas, medidas e percepções do corpo.", "Regista treinos, sintomas, medidas e perceções do corpo.", "Log workouts, symptoms, measurements, and body observations.", "Registra entrenamientos, síntomas, medidas y sensaciones corporales.", "Enregistrez entraînements, symptômes, mesures et sensations corporelles.", "Erfasse Training, Symptome, Messwerte und Körperwahrnehmungen.", "Registra allenamenti, sintomi, misure e percezioni del corpo."],
+    ["Registre menstruação, sintomas, fluxo e observações importantes.", "Regista menstruação, sintomas, fluxo e observações importantes.", "Log menstruation, symptoms, flow, and important notes.", "Registra menstruación, síntomas, flujo y observaciones importantes.", "Enregistrez les règles, symptômes, flux et observations importantes.", "Erfasse Menstruation, Symptome, Blutungsstärke und wichtige Beobachtungen.", "Registra mestruazioni, sintomi, flusso e osservazioni importanti."],
+    ["Guarde links, documentos, imagens e referências associadas à sua rotina.", "Guarda ligações, documentos, imagens e referências associadas à tua rotina.", "Keep links, documents, images, and references connected to your routine.", "Guarda enlaces, documentos, imágenes y referencias relacionadas con tu rutina.", "Conservez liens, documents, images et références liés à votre routine.", "Speichere Links, Dokumente, Bilder und Referenzen zu deiner Routine.", "Conserva link, documenti, immagini e riferimenti legati alla tua routine."],
+    ["Acompanhe marcos importantes da sua rotina, saúde, hábitos e organização.", "Acompanha marcos importantes da tua rotina, saúde, hábitos e organização.", "Track important milestones in your routine, health, habits, and organization.", "Sigue hitos importantes de tu rutina, salud, hábitos y organización.", "Suivez les étapes importantes de votre routine, santé, habitudes et organisation.", "Verfolge wichtige Meilensteine deiner Routine, Gesundheit und Gewohnheiten.", "Segui i traguardi importanti della routine, salute, abitudini e organizzazione."],
+
+    ["Nova tarefa", "Nova tarefa", "New task", "Nueva tarea", "Nouvelle tâche", "Neue Aufgabe", "Nuova attività"],
+    ["Novo hábito", "Novo hábito", "New habit", "Nuevo hábito", "Nouvelle habitude", "Neue Gewohnheit", "Nuova abitudine"],
+    ["Registrar sono", "Registar sono", "Log sleep", "Registrar sueño", "Enregistrer le sommeil", "Schlaf erfassen", "Registra sonno"],
+    ["Alterar meta", "Alterar meta", "Change goal", "Cambiar meta", "Modifier l'objectif", "Ziel ändern", "Modifica obiettivo"],
+    ["Novo lançamento", "Novo lançamento", "New transaction", "Nuevo movimiento", "Nouvelle opération", "Neue Buchung", "Nuovo movimento"],
+    ["Nova entrada", "Nova entrada", "New entry", "Nueva entrada", "Nouvelle entrée", "Neuer Eintrag", "Nuova voce"],
+    ["Nova refeição", "Nova refeição", "New meal", "Nueva comida", "Nouveau repas", "Neue Mahlzeit", "Nuovo pasto"],
+    ["Novo registro físico", "Novo registo físico", "New physical record", "Nuevo registro físico", "Nouvel enregistrement physique", "Neuer Körpereintrag", "Nuovo registro fisico"],
+    ["Novo registro do ciclo", "Novo registo do ciclo", "New cycle record", "Nuevo registro del ciclo", "Nouvel enregistrement du cycle", "Neuer Zykluseintrag", "Nuovo registro del ciclo"],
+    ["Novo anexo", "Novo anexo", "New attachment", "Nuevo archivo", "Nouvelle pièce jointe", "Neuer Anhang", "Nuovo allegato"],
+
+    ["Lista de tarefas", "Lista de tarefas", "Task list", "Lista de tareas", "Liste des tâches", "Aufgabenliste", "Elenco attività"],
+    ["Seus hábitos aparecem aqui.", "Os teus hábitos aparecem aqui.", "Your habits appear here.", "Tus hábitos aparecen aquí.", "Vos habitudes apparaissent ici.", "Deine Gewohnheiten erscheinen hier.", "Le tue abitudini appaiono qui."],
+    ["Histórico de sono", "Histórico de sono", "Sleep history", "Historial de sueño", "Historique du sommeil", "Schlafverlauf", "Cronologia del sonno"],
+    ["Controle de hoje", "Controlo de hoje", "Today's tracking", "Control de hoy", "Suivi du jour", "Heutige Übersicht", "Controllo di oggi"],
+    ["Lançamentos", "Lançamentos", "Transactions", "Movimientos", "Opérations", "Buchungen", "Movimenti"],
+    ["Entradas do diário", "Entradas do diário", "Diary entries", "Entradas del diario", "Entrées du journal", "Tagebucheinträge", "Voci del diario"],
+    ["Refeições registradas", "Refeições registadas", "Logged meals", "Comidas registradas", "Repas enregistrés", "Erfasste Mahlzeiten", "Pasti registrati"],
+    ["Registros físicos", "Registos físicos", "Physical records", "Registros físicos", "Enregistrements physiques", "Körpereinträge", "Registri fisici"],
+    ["Registros do ciclo", "Registos do ciclo", "Cycle records", "Registros del ciclo", "Enregistrements du cycle", "Zykluseinträge", "Registri del ciclo"],
+    ["Biblioteca de anexos", "Biblioteca de anexos", "Attachment library", "Biblioteca de archivos", "Bibliothèque de pièces jointes", "Anhangsbibliothek", "Raccolta allegati"],
+
+    ["Nenhuma tarefa encontrada", "Nenhuma tarefa encontrada", "No tasks found", "No se encontraron tareas", "Aucune tâche trouvée", "Keine Aufgaben gefunden", "Nessuna attività trovata"],
+    ["Nenhum hábito encontrado", "Nenhum hábito encontrado", "No habits found", "No se encontraron hábitos", "Aucune habitude trouvée", "Keine Gewohnheiten gefunden", "Nessuna abitudine trovata"],
+    ["Nenhuma refeição encontrada", "Nenhuma refeição encontrada", "No meals found", "No se encontraron comidas", "Aucun repas trouvé", "Keine Mahlzeiten gefunden", "Nessun pasto trovato"],
+    ["Nenhuma entrada encontrada", "Nenhuma entrada encontrada", "No entries found", "No se encontraron entradas", "Aucune entrée trouvée", "Keine Einträge gefunden", "Nessuna voce trovata"],
+    ["Nenhum lançamento encontrado", "Nenhum lançamento encontrado", "No transactions found", "No se encontraron movimientos", "Aucune opération trouvée", "Keine Buchungen gefunden", "Nessun movimento trovato"],
+    ["Nenhum registro encontrado", "Nenhum registo encontrado", "No records found", "No se encontraron registros", "Aucun enregistrement trouvé", "Keine Einträge gefunden", "Nessun registro trovato"],
+
+    ["Configuração rápida", "Configuração rápida", "Quick setup", "Configuración rápida", "Configuration rapide", "Schnelleinrichtung", "Configurazione rapida"],
+    ["Nome ou apelido", "Nome ou alcunha", "Name or nickname", "Nombre o apodo", "Nom ou surnom", "Name oder Spitzname", "Nome o soprannome"],
+    ["Como quer ser chamado?", "Como queres ser chamado?", "How would you like to be called?", "¿Cómo quieres que te llamen?", "Comment souhaitez-vous être appelé ?", "Wie möchtest du genannt werden?", "Come vuoi essere chiamato?"],
+    ["Meta de água diária", "Meta diária de água", "Daily water goal", "Meta diaria de agua", "Objectif d'eau quotidien", "Tägliches Wasserziel", "Obiettivo acqua giornaliero"],
+    ["Módulos ativos", "Módulos ativos", "Active modules", "Módulos activos", "Modules actifs", "Aktive Module", "Moduli attivi"],
+    ["Salvar alterações", "Guardar alterações", "Save changes", "Guardar cambios", "Enregistrer les modifications", "Änderungen speichern", "Salva modifiche"],
+    ["Tamanho da fonte", "Tamanho da letra", "Font size", "Tamaño de fuente", "Taille de police", "Schriftgröße", "Dimensione carattere"],
+    ["Pequena", "Pequena", "Small", "Pequeña", "Petite", "Klein", "Piccola"],
+    ["Grande", "Grande", "Large", "Grande", "Grande", "Groß", "Grande"],
+    ["Densidade do layout", "Densidade do layout", "Layout density", "Densidad del diseño", "Densité de mise en page", "Layout-Dichte", "Densità layout"],
+    ["Compacta", "Compacta", "Compact", "Compacta", "Compacte", "Kompakt", "Compatta"],
+    ["Confortável", "Confortável", "Comfortable", "Cómoda", "Confortable", "Komfortabel", "Confortevole"],
+    ["Lembretes de hábitos", "Lembretes de hábitos", "Habit reminders", "Recordatorios de hábitos", "Rappels d'habitudes", "Gewohnheitserinnerungen", "Promemoria abitudini"],
+    ["Resumo diário", "Resumo diário", "Daily summary", "Resumen diario", "Résumé quotidien", "Tageszusammenfassung", "Riepilogo giornaliero"],
+    ["Alertas de sono", "Alertas de sono", "Sleep alerts", "Alertas de sueño", "Alertes de sommeil", "Schlafhinweise", "Avvisi sonno"],
+    ["Lembretes de hidratação", "Lembretes de hidratação", "Hydration reminders", "Recordatorios de hidratación", "Rappels d'hydratation", "Trinkerinnerungen", "Promemoria idratazione"],
+    ["Horário do resumo", "Hora do resumo", "Summary time", "Hora del resumen", "Heure du résumé", "Zeit der Zusammenfassung", "Ora del riepilogo"],
+    ["Bloquear com senha", "Bloquear com palavra-passe", "Lock with password", "Bloquear con contraseña", "Verrouiller par mot de passe", "Mit Passwort sperren", "Blocca con password"],
+    ["Ocultar valores financeiros", "Ocultar valores financeiros", "Hide financial values", "Ocultar valores financieros", "Masquer les montants financiers", "Finanzwerte ausblenden", "Nascondi valori finanziari"],
+    ["Perfil visível apenas para mim", "Perfil visível apenas para mim", "Profile visible only to me", "Perfil visible solo para mí", "Profil visible uniquement par moi", "Profil nur für mich sichtbar", "Profilo visibile solo a me"],
+
+    ["Seu espaço pessoal dentro do Fluir.", "O teu espaço pessoal dentro do Fluir.", "Your personal space inside Fluir.", "Tu espacio personal dentro de Fluir.", "Votre espace personnel dans Fluir.", "Dein persönlicher Bereich in Fluir.", "Il tuo spazio personale in Fluir."],
+    ["Membro desde", "Membro desde", "Member since", "Miembro desde", "Membre depuis", "Mitglied seit", "Membro dal"],
+    ["Hábitos ativos", "Hábitos ativos", "Active habits", "Hábitos activos", "Habitudes actives", "Aktive Gewohnheiten", "Abitudini attive"],
+    ["Registros no diário", "Registos no diário", "Diary entries", "Registros en el diario", "Entrées du journal", "Tagebucheinträge", "Voci del diario"],
+    ["Nível de foco", "Nível de foco", "Focus level", "Nivel de enfoque", "Niveau de concentration", "Fokusniveau", "Livello di concentrazione"],
+    ["Tema preferido", "Tema preferido", "Preferred theme", "Tema preferido", "Thème préféré", "Bevorzugtes Design", "Tema preferito"],
+    ["Lembretes", "Lembretes", "Reminders", "Recordatorios", "Rappels", "Erinnerungen", "Promemoria"],
+    ["Visualização inicial", "Visualização inicial", "Start view", "Vista inicial", "Vue de départ", "Startansicht", "Vista iniziale"],
+
+    ["Planos e preços", "Planos e preços", "Plans and pricing", "Planes y precios", "Offres et tarifs", "Tarife und Preise", "Piani e prezzi"],
+    ["Escolha um plano que acompanhe sua rotina.", "Escolhe um plano que acompanhe a tua rotina.", "Choose a plan that fits your routine.", "Elige un plan que acompañe tu rutina.", "Choisissez une offre adaptée à votre routine.", "Wähle einen Tarif, der zu deiner Routine passt.", "Scegli un piano adatto alla tua routine."],
+    ["Plano atual", "Plano atual", "Current plan", "Plan actual", "Offre actuelle", "Aktueller Tarif", "Piano attuale"],
+    ["Gratuito", "Gratuito", "Free", "Gratuito", "Gratuit", "Kostenlos", "Gratuito"],
+    ["Pessoal", "Pessoal", "Personal", "Personal", "Personnel", "Persönlich", "Personale"],
+    ["Completo", "Completo", "Complete", "Completo", "Complet", "Komplett", "Completo"],
+    ["Comparação de recursos", "Comparação de recursos", "Feature comparison", "Comparación de funciones", "Comparaison des fonctionnalités", "Funktionsvergleich", "Confronto funzionalità"],
+
+    ["Bem-vindo de volta", "Bem-vindo de volta", "Welcome back", "Bienvenido de nuevo", "Bon retour", "Willkommen zurück", "Bentornato"],
+    ["Criar conta", "Criar conta", "Create account", "Crear cuenta", "Créer un compte", "Konto erstellen", "Crea account"],
+    ["Lembrar de mim", "Lembrar-me", "Remember me", "Recordarme", "Se souvenir de moi", "Angemeldet bleiben", "Ricordami"],
+    ["Esqueci minha senha", "Esqueci-me da palavra-passe", "Forgot my password", "Olvidé mi contraseña", "Mot de passe oublié", "Passwort vergessen", "Password dimenticata"],
+    ["Entrar", "Entrar", "Sign in", "Entrar", "Se connecter", "Anmelden", "Accedi"],
+    ["Cadastrar", "Registar", "Sign up", "Registrarse", "S'inscrire", "Registrieren", "Registrati"],
+    ["Confirmar senha", "Confirmar palavra-passe", "Confirm password", "Confirmar contraseña", "Confirmer le mot de passe", "Passwort bestätigen", "Conferma password"],
+    ["Mostrar senha", "Mostrar palavra-passe", "Show password", "Mostrar contraseña", "Afficher le mot de passe", "Passwort anzeigen", "Mostra password"],
+
+    ["Configuração inicial", "Configuração inicial", "Initial setup", "Configuración inicial", "Configuration initiale", "Ersteinrichtung", "Configurazione iniziale"],
+    ["Sobre você", "Sobre ti", "About you", "Sobre ti", "À propos de vous", "Über dich", "Su di te"],
+    ["Funcionalidades", "Funcionalidades", "Features", "Funciones", "Fonctionnalités", "Funktionen", "Funzionalità"],
+    ["Preferências", "Preferências", "Preferences", "Preferencias", "Préférences", "Präferenzen", "Preferenze"],
+    ["Quais funcionalidades você quer ativar?", "Que funcionalidades queres ativar?", "Which features do you want to enable?", "¿Qué funciones quieres activar?", "Quelles fonctionnalités souhaitez-vous activer ?", "Welche Funktionen möchtest du aktivieren?", "Quali funzionalità vuoi attivare?"],
+    ["Revise sua configuração.", "Revê a tua configuração.", "Review your setup.", "Revisa tu configuración.", "Vérifiez votre configuration.", "Überprüfe deine Einrichtung.", "Controlla la configurazione."],
+    ["Configuração inicial salva", "Configuração inicial guardada", "Initial setup saved", "Configuración inicial guardada", "Configuration initiale enregistrée", "Ersteinrichtung gespeichert", "Configurazione iniziale salvata"]
+  ];
+
+  const LEGACY_PAGE_LANGUAGE_INDEX = {
+    "pt-BR": 0,
+    "pt-PT": 1,
+    en: 2,
+    es: 3,
+    fr: 4,
+    de: 5,
+    it: 6
+  };
+
+  Object.entries(LEGACY_PAGE_LANGUAGE_INDEX).forEach(([language, index]) => {
+    if (language === DEFAULT_LANGUAGE) {
+      return;
+    }
+
+    LEGACY_TEXT_TRANSLATIONS[language] =
+      LEGACY_TEXT_TRANSLATIONS[language] || {};
+
+    LEGACY_PAGE_PHRASES.forEach((entry) => {
+      if (!LEGACY_TEXT_TRANSLATIONS[language][entry[0]]) {
+        LEGACY_TEXT_TRANSLATIONS[language][entry[0]] =
+          entry[index] || entry[0];
+      }
+    });
+  });
+
   const LEGACY_USER_CONTENT = /(task-item|habit-item|diary-entry|attachment-item|transaction-item|finance-item|meal-item|nutrition-item|health-item|cycle-item|sleep-item|user-created-event)/i;
   let legacyObserver = null;
   let applyingLegacyTranslation = false;
@@ -1308,33 +1450,50 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     }
 
     const textTargets =
-      element.children.length === 0 &&
-      (
-        /^(TITLE|H1|H2|H3|H4|H5|H6|BUTTON|A|LABEL|SMALL|OPTION|TH|TD|FOOTER)$/.test(element.tagName) ||
-        element.matches(
-          ".section-kicker, .notif-row-title, .notif-row-desc, .notif-row-time, .event-tag, .filter-btn, .tab-btn, .date-btn, .side-link, .mood-question, .week-text, .summary-card > p, .summary-card > small, .side-card h4, .focus-card > p, .focus-card > small"
-        )
+      /^(TITLE|H1|H2|H3|H4|H5|H6|BUTTON|A|LABEL|SMALL|OPTION|TH|TD|FOOTER)$/.test(element.tagName) ||
+      element.matches(
+        ".section-kicker, .notif-row-title, .notif-row-desc, .notif-row-time, .event-tag, .filter-btn, .tab-btn, .date-btn, .side-link, .mood-question, .week-text, .summary-card > p, .summary-card > small, .side-card h4, .focus-card > p, .focus-card > small"
       );
 
     if (textTargets) {
-      const currentText = element.textContent || "";
-      const previous = element.dataset.i18nLegacyLast || "";
+      if (element.children.length === 0) {
+        const currentText = element.textContent || "";
+        const previous = element.dataset.i18nLegacyLast || "";
 
-      if (!element.dataset.i18nLegacySource || currentText !== previous) {
-        element.dataset.i18nLegacySource = currentText;
+        if (!element.dataset.i18nLegacySource || currentText !== previous) {
+          element.dataset.i18nLegacySource = currentText;
+        }
+
+        const translated = translateLegacyString(
+          element.dataset.i18nLegacySource
+        );
+
+        if (translated !== currentText) {
+          applyingLegacyTranslation = true;
+          element.textContent = translated;
+          applyingLegacyTranslation = false;
+        }
+
+        element.dataset.i18nLegacyLast = translated;
+      } else {
+        [...element.childNodes]
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .forEach((node) => {
+            if (!Object.prototype.hasOwnProperty.call(node, "__fluirI18nSource")) {
+              node.__fluirI18nSource = node.nodeValue || "";
+            }
+
+            const translated = translateLegacyString(
+              node.__fluirI18nSource
+            );
+
+            if (translated !== node.nodeValue) {
+              applyingLegacyTranslation = true;
+              node.nodeValue = translated;
+              applyingLegacyTranslation = false;
+            }
+          });
       }
-
-      const translated = translateLegacyString(
-        element.dataset.i18nLegacySource
-      );
-
-      if (translated !== currentText) {
-        applyingLegacyTranslation = true;
-        element.textContent = translated;
-        applyingLegacyTranslation = false;
-      }
-
-      element.dataset.i18nLegacyLast = translated;
     }
 
     ["placeholder", "title", "aria-label"].forEach((attribute) => {
