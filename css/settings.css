@@ -1648,27 +1648,39 @@ body.dark .setup-action-button {
 
 .translation-feedback-link {
   width: 100%;
-  min-height: 38px;
-  margin-top: 4px;
-  border: 1px dashed var(--border-strong);
+  min-height: 40px;
+  margin-top: 6px;
+  padding: 0 12px 0 14px;
+  border: 1px solid rgba(212, 82, 82, 0.32);
   border-radius: 9px;
-  background: transparent;
-  color: var(--muted);
+  background: rgba(212, 82, 82, 0.045);
+  color: var(--danger);
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 10px;
   font-size: 12px;
-  font-weight: 750;
+  font-weight: 800;
+  text-align: left;
+}
+
+.translation-feedback-icon {
+  flex: 0 0 auto;
+  font-size: 15px;
+  line-height: 1;
 }
 
 .translation-feedback-link:hover {
-  color: var(--text);
-  background: rgba(0, 0, 0, 0.035);
+  border-color: rgba(212, 82, 82, 0.58);
+  background: rgba(212, 82, 82, 0.085);
+}
+
+body.dark .translation-feedback-link {
+  background: rgba(212, 82, 82, 0.07);
 }
 
 body.dark .translation-feedback-link:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(212, 82, 82, 0.12);
 }
 
 .support-card {
