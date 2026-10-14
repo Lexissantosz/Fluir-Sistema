@@ -249,6 +249,14 @@ body.dark #themeBtn span {
 /* Timeline */
 .timeline-page .page-icon {
   --page-icon: url("../Assets/icons/navigation/history.svg");
+  position: relative;
+  line-height: 0;
+}
+
+.timeline-page .page-icon::before {
+  position: absolute;
+  inset: 0;
+  margin: auto;
 }
 
 /* Tarefas */
