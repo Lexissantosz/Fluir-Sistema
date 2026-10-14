@@ -141,25 +141,15 @@
 
   function renderIllustration(quote) {
     return `
-      <div class="sidebar-illustration" aria-hidden="true">
-        <div class="rain rain-1"></div>
-        <div class="rain rain-2"></div>
-        <div class="rain rain-3"></div>
-
-        <div class="small-character">
-          <div class="small-umbrella"></div>
-
-          <div class="small-head">
-            <span></span>
-            <span></span>
-          </div>
-
-          <div class="small-body"></div>
-        </div>
-
-        <p>
-        “${quote}”
-        </p>
+      <div class="sidebar-illustration">
+        <svg class="sidebar-character" width="100" height="92" viewBox="0 0 120 110" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 35a50 32 0 0 1 100 0M60 4v31" />
+          <path d="M15 43l-4 8M103 43l-4 8" opacity=".3" />
+          <rect x="43" y="38" width="34" height="38" rx="17" fill="var(--card-bg)" />
+          <path d="M55 55v3M65 55v3" stroke-width="3" />
+          <rect x="41" y="76" width="38" height="30" rx="12" fill="var(--card-bg)" />
+        </svg>
+        <p>“${quote}”</p>
       </div>
     `;
   }
