@@ -2285,3 +2285,35 @@ body.dark .attachment-details-modal {
   border-color: var(--danger);
   color: var(--danger);
 }
+/* Modal de anexos acima da navegação, com ações sempre acessíveis. */
+.attachment-modal-overlay { z-index: 5000; }
+.attachment-modal :is(input, select, textarea) { font-family: inherit; }
+@media (max-width: 760px) {
+  .attachment-modal-overlay { padding: 12px; }
+  .attachment-modal {
+    max-height: calc(100dvh - 24px);
+    padding: 20px 16px 0;
+    overscroll-behavior: contain;
+  }
+  body.mobile-ui-ready .attachment-modal :is(input, select, textarea) {
+    font-size: 16px !important;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .attachment-modal-actions {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
+    background: var(--card-bg);
+    z-index: 1;
+  }
+  .attachment-modal-actions button {
+    min-height: 44px;
+    width: 100%;
+    padding-inline: 10px;
+    white-space: normal;
+  }
+}
