@@ -215,7 +215,11 @@ function getSavedSetup() {
     dados?.usuarioId != null &&
     String(dados.usuarioId) === String(usuario.id);
 
-  const local = pertenceAoUsuario(salvo) ? salvo : {};
+  const local =
+    pertenceAoUsuario(salvo) ||
+    (salvo && salvo.usuarioId == null)
+      ? salvo
+      : {};
   const backend = pertenceAoUsuario(onboarding) ? onboarding : null;
 
   const preferences = { ...(local.preferences || {}) };
