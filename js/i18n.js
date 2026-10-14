@@ -34,6 +34,24 @@
     es: {
       label: "Español",
       locale: "es-ES"
+    },
+
+    fr: {
+      label: "Français",
+      locale: "fr-FR",
+      beta: true
+    },
+
+    de: {
+      label: "Deutsch",
+      locale: "de-DE",
+      beta: true
+    },
+
+    it: {
+      label: "Italiano",
+      locale: "it-IT",
+      beta: true
     }
   });
 
@@ -570,6 +588,753 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     };
   });
 
+
+  /* =====================================================
+     FLUIR — I18N V2
+     Amplia cobertura sem obrigar cada tela antiga a ser
+     migrada de uma vez. Textos reconhecidos continuam
+     traduzíveis, inclusive conteúdo renderizado depois.
+     ===================================================== */
+
+  const I18N_V2_TRANSLATIONS = {
+    "pt-BR": {
+      "nav.plans": "Planos e preços",
+      "settings.language": "Idioma",
+      "settings.appearance": "Aparência",
+      "settings.support": "Ajuda e feedback",
+      "feedback.translation": "Problema de tradução",
+      "feedback.system": "Erro do sistema",
+      "feedback.accessibility": "Acessibilidade",
+      "feedback.suggestion": "Sugestão",
+      "feedback.other": "Outro"
+    },
+    "pt-PT": {
+      "nav.plans": "Planos e preços",
+      "settings.language": "Idioma",
+      "settings.appearance": "Aparência",
+      "settings.support": "Ajuda e feedback",
+      "feedback.translation": "Problema de tradução",
+      "feedback.system": "Erro do sistema",
+      "feedback.accessibility": "Acessibilidade",
+      "feedback.suggestion": "Sugestão",
+      "feedback.other": "Outro"
+    },
+    en: {
+      "nav.plans": "Plans and pricing",
+      "settings.language": "Language",
+      "settings.appearance": "Appearance",
+      "settings.support": "Help & feedback",
+      "feedback.translation": "Translation issue",
+      "feedback.system": "System error",
+      "feedback.accessibility": "Accessibility",
+      "feedback.suggestion": "Suggestion",
+      "feedback.other": "Other"
+    },
+    es: {
+      "nav.plans": "Planes y precios",
+      "settings.language": "Idioma",
+      "settings.appearance": "Apariencia",
+      "settings.support": "Ayuda y comentarios",
+      "feedback.translation": "Problema de traducción",
+      "feedback.system": "Error del sistema",
+      "feedback.accessibility": "Accesibilidad",
+      "feedback.suggestion": "Sugerencia",
+      "feedback.other": "Otro"
+    },
+    fr: {
+      "nav.dashboard": "Accueil",
+      "nav.timeline": "Chronologie",
+      "nav.tasks": "Tâches",
+      "nav.habits": "Habitudes",
+      "nav.sleep": "Sommeil",
+      "nav.water": "Eau",
+      "nav.finances": "Finances",
+      "nav.diary": "Journal émotionnel",
+      "nav.nutrition": "Alimentation",
+      "nav.physicalHealth": "Santé physique",
+      "nav.menstrualCycle": "Cycle menstruel",
+      "nav.attachments": "Pièces jointes",
+      "nav.achievements": "Réussites",
+      "nav.settings": "Paramètres",
+      "nav.profile": "Profil",
+      "nav.plans": "Offres et tarifs",
+      "settings.language": "Langue",
+      "settings.appearance": "Apparence",
+      "settings.support": "Aide et retours",
+      "feedback.translation": "Problème de traduction",
+      "feedback.system": "Erreur du système",
+      "feedback.accessibility": "Accessibilité",
+      "feedback.suggestion": "Suggestion",
+      "feedback.other": "Autre"
+    },
+    de: {
+      "nav.dashboard": "Start",
+      "nav.timeline": "Zeitleiste",
+      "nav.tasks": "Aufgaben",
+      "nav.habits": "Gewohnheiten",
+      "nav.sleep": "Schlaf",
+      "nav.water": "Wasser",
+      "nav.finances": "Finanzen",
+      "nav.diary": "Emotionstagebuch",
+      "nav.nutrition": "Ernährung",
+      "nav.physicalHealth": "Körperliche Gesundheit",
+      "nav.menstrualCycle": "Menstruationszyklus",
+      "nav.attachments": "Anhänge",
+      "nav.achievements": "Erfolge",
+      "nav.settings": "Einstellungen",
+      "nav.profile": "Profil",
+      "nav.plans": "Tarife und Preise",
+      "settings.language": "Sprache",
+      "settings.appearance": "Darstellung",
+      "settings.support": "Hilfe & Feedback",
+      "feedback.translation": "Übersetzungsproblem",
+      "feedback.system": "Systemfehler",
+      "feedback.accessibility": "Barrierefreiheit",
+      "feedback.suggestion": "Vorschlag",
+      "feedback.other": "Sonstiges"
+    },
+    it: {
+      "nav.dashboard": "Home",
+      "nav.timeline": "Cronologia",
+      "nav.tasks": "Attività",
+      "nav.habits": "Abitudini",
+      "nav.sleep": "Sonno",
+      "nav.water": "Acqua",
+      "nav.finances": "Finanze",
+      "nav.diary": "Diario emotivo",
+      "nav.nutrition": "Alimentazione",
+      "nav.physicalHealth": "Salute fisica",
+      "nav.menstrualCycle": "Ciclo mestruale",
+      "nav.attachments": "Allegati",
+      "nav.achievements": "Traguardi",
+      "nav.settings": "Impostazioni",
+      "nav.profile": "Profilo",
+      "nav.plans": "Piani e prezzi",
+      "settings.language": "Lingua",
+      "settings.appearance": "Aspetto",
+      "settings.support": "Aiuto e feedback",
+      "feedback.translation": "Problema di traduzione",
+      "feedback.system": "Errore di sistema",
+      "feedback.accessibility": "Accessibilità",
+      "feedback.suggestion": "Suggerimento",
+      "feedback.other": "Altro"
+    }
+  };
+
+  Object.entries(I18N_V2_TRANSLATIONS).forEach(([language, entries]) => {
+    translations[language] = {
+      ...(translations[language] || {}),
+      ...entries
+    };
+  });
+
+  const LEGACY_TEXT_TRANSLATIONS = {
+    "pt-PT": {
+      "Configurações": "Definições",
+      "Ir para configurações": "Ir para definições",
+      "Usuário": "Utilizador",
+      "Linha do tempo": "Linha temporal",
+      "Novo registro": "Novo registo",
+      "Últimos registros": "Últimos registos",
+      "Registros": "Registos",
+      "Registros de hoje": "Registos de hoje",
+      "Registros na semana": "Registos na semana"
+    },
+    en: {
+      "Configurações": "Settings",
+      "Ir para configurações": "Go to settings",
+      "Trocar foto": "Change photo",
+      "Notificações": "Notifications",
+      "Configurar notificações": "Notification settings",
+      "Bem-vindo ao Fluir!": "Welcome to Fluir!",
+      "Explore seus módulos na barra lateral.": "Explore your modules in the sidebar.",
+      "Hoje": "Today",
+      "Ontem": "Yesterday",
+      "Amanhã": "Tomorrow",
+      "Esta semana": "This week",
+      "Este mês": "This month",
+      "Todas": "All",
+      "Todos": "All",
+      "Tudo": "All",
+      "Total": "Total",
+      "Semana": "Week",
+      "Meta": "Goal",
+      "Tarefas": "Tasks",
+      "Hábitos": "Habits",
+      "Sono": "Sleep",
+      "Água": "Water",
+      "Finanças": "Finances",
+      "Diário emocional": "Emotional diary",
+      "Diário": "Diary",
+      "Alimentação": "Nutrition",
+      "Saúde física": "Physical health",
+      "Ciclo menstrual": "Menstrual cycle",
+      "Anexos": "Attachments",
+      "Conquistas": "Achievements",
+      "Perfil": "Profile",
+      "Planos e preços": "Plans and pricing",
+      "Categoria": "Category",
+      "Categorias": "Categories",
+      "Tipo": "Type",
+      "Título": "Title",
+      "Descrição": "Description",
+      "Observação opcional": "Optional note",
+      "Registro rápido": "Quick entry",
+      "Resumo semanal": "Weekly summary",
+      "Resumo do dia": "Day summary",
+      "Últimos registros": "Latest records",
+      "Últimas ações": "Recent actions",
+      "Nenhum registro encontrado": "No records found",
+      "Nenhuma tarefa encontrada": "No tasks found",
+      "Nenhum hábito encontrado": "No habits found",
+      "Nenhuma entrada encontrada": "No entries found",
+      "Nenhuma refeição encontrada": "No meals found",
+      "Nenhum lançamento encontrado": "No transactions found",
+      "Pendentes": "Pending",
+      "Concluídas": "Completed",
+      "Atrasadas": "Overdue",
+      "Alta prioridade": "High priority",
+      "Prioridade": "Priority",
+      "Baixa": "Low",
+      "Média": "Medium",
+      "Alta": "High",
+      "Boa": "Good",
+      "Ruim": "Poor",
+      "Leve": "Light",
+      "Neutro": "Neutral",
+      "Pesado": "Heavy",
+      "Pessoal": "Personal",
+      "Trabalho": "Work",
+      "Estudos": "Study",
+      "Casa": "Home",
+      "Saúde": "Health",
+      "Projetos": "Projects",
+      "Autocuidado": "Self-care",
+      "Produtividade": "Productivity",
+      "Cancelar": "Cancel",
+      "Fechar": "Close",
+      "Conectar": "Connect",
+      "Claro": "Light",
+      "Escuro": "Dark",
+      "Idioma": "Language",
+      "Aparência": "Appearance",
+      "Privacidade": "Privacy",
+      "Integrações": "Integrations",
+      "Dados": "Data",
+      "Bem-vindo de volta": "Welcome back",
+      "Criar conta": "Create account",
+      "Entrar": "Sign in",
+      "Cadastrar": "Sign up",
+      "E-mail": "Email",
+      "Senha": "Password",
+      "Confirmar senha": "Confirm password",
+      "Mostrar senha": "Show password",
+      "Lembrar de mim": "Remember me",
+      "Esqueci minha senha": "Forgot my password",
+      "Seu nome": "Your name",
+      "Configuração inicial": "Initial setup",
+      "Sobre você": "About you",
+      "Funcionalidades": "Features",
+      "Preferências": "Preferences",
+      "Selecione uma opção": "Select an option",
+      "Prefiro não informar": "Prefer not to say",
+      "Personalizado": "Custom",
+      "Idade": "Age",
+      "Pronomes": "Pronouns",
+      "Informações pessoais": "Personal information",
+      "Sobre mim": "About me",
+      "Segurança da conta": "Account security",
+      "Alterar senha": "Change password",
+      "Verificação em duas etapas": "Two-step verification",
+      "Atividade recente": "Recent activity",
+      "Editar perfil": "Edit profile",
+      "Resumo pessoal": "Personal summary"
+    },
+    es: {
+      "Configurações": "Configuración",
+      "Ir para configurações": "Ir a configuración",
+      "Trocar foto": "Cambiar foto",
+      "Notificações": "Notificaciones",
+      "Configurar notificações": "Configurar notificaciones",
+      "Bem-vindo ao Fluir!": "¡Bienvenido a Fluir!",
+      "Explore seus módulos na barra lateral.": "Explora tus módulos en la barra lateral.",
+      "Hoje": "Hoy",
+      "Ontem": "Ayer",
+      "Amanhã": "Mañana",
+      "Todas": "Todas",
+      "Todos": "Todos",
+      "Tudo": "Todo",
+      "Semana": "Semana",
+      "Meta": "Meta",
+      "Tarefas": "Tareas",
+      "Hábitos": "Hábitos",
+      "Sono": "Sueño",
+      "Água": "Agua",
+      "Finanças": "Finanzas",
+      "Diário emocional": "Diario emocional",
+      "Diário": "Diario",
+      "Alimentação": "Alimentación",
+      "Saúde física": "Salud física",
+      "Ciclo menstrual": "Ciclo menstrual",
+      "Anexos": "Archivos",
+      "Conquistas": "Logros",
+      "Perfil": "Perfil",
+      "Planos e preços": "Planes y precios",
+      "Categoria": "Categoría",
+      "Tipo": "Tipo",
+      "Descrição": "Descripción",
+      "Observação opcional": "Observación opcional",
+      "Registro rápido": "Registro rápido",
+      "Resumo semanal": "Resumen semanal",
+      "Resumo do dia": "Resumen del día",
+      "Últimos registros": "Últimos registros",
+      "Últimas ações": "Últimas acciones",
+      "Nenhum registro encontrado": "No se encontraron registros",
+      "Nenhuma tarefa encontrada": "No se encontraron tareas",
+      "Nenhum hábito encontrado": "No se encontraron hábitos",
+      "Nenhuma entrada encontrada": "No se encontraron entradas",
+      "Nenhuma refeição encontrada": "No se encontraron comidas",
+      "Pendentes": "Pendientes",
+      "Concluídas": "Completadas",
+      "Atrasadas": "Atrasadas",
+      "Alta prioridade": "Alta prioridad",
+      "Prioridade": "Prioridad",
+      "Cancelar": "Cancelar",
+      "Fechar": "Cerrar",
+      "Conectar": "Conectar",
+      "Claro": "Claro",
+      "Escuro": "Oscuro",
+      "Idioma": "Idioma",
+      "Aparência": "Apariencia",
+      "Privacidade": "Privacidad",
+      "Integrações": "Integraciones",
+      "Dados": "Datos",
+      "Bem-vindo de volta": "Bienvenido de nuevo",
+      "Criar conta": "Crear cuenta",
+      "Entrar": "Entrar",
+      "Cadastrar": "Registrarse",
+      "Senha": "Contraseña",
+      "Confirmar senha": "Confirmar contraseña",
+      "Mostrar senha": "Mostrar contraseña",
+      "Lembrar de mim": "Recordarme",
+      "Esqueci minha senha": "Olvidé mi contraseña",
+      "Seu nome": "Tu nombre",
+      "Configuração inicial": "Configuración inicial",
+      "Sobre você": "Sobre ti",
+      "Funcionalidades": "Funciones",
+      "Preferências": "Preferencias",
+      "Selecione uma opção": "Selecciona una opción",
+      "Prefiro não informar": "Prefiero no indicarlo",
+      "Personalizado": "Personalizado",
+      "Idade": "Edad",
+      "Pronomes": "Pronombres",
+      "Informações pessoais": "Información personal",
+      "Sobre mim": "Sobre mí",
+      "Segurança da conta": "Seguridad de la cuenta",
+      "Alterar senha": "Cambiar contraseña",
+      "Verificação em duas etapas": "Verificación en dos pasos",
+      "Atividade recente": "Actividad reciente",
+      "Editar perfil": "Editar perfil",
+      "Resumo pessoal": "Resumen personal"
+    },
+    fr: {
+      "Configurações": "Paramètres",
+      "Ir para configurações": "Aller aux paramètres",
+      "Trocar foto": "Changer la photo",
+      "Notificações": "Notifications",
+      "Hoje": "Aujourd'hui",
+      "Ontem": "Hier",
+      "Amanhã": "Demain",
+      "Todas": "Toutes",
+      "Todos": "Tous",
+      "Tudo": "Tout",
+      "Semana": "Semaine",
+      "Meta": "Objectif",
+      "Tarefas": "Tâches",
+      "Hábitos": "Habitudes",
+      "Sono": "Sommeil",
+      "Água": "Eau",
+      "Finanças": "Finances",
+      "Diário emocional": "Journal émotionnel",
+      "Diário": "Journal",
+      "Alimentação": "Alimentation",
+      "Saúde física": "Santé physique",
+      "Ciclo menstrual": "Cycle menstruel",
+      "Anexos": "Pièces jointes",
+      "Conquistas": "Réussites",
+      "Perfil": "Profil",
+      "Categoria": "Catégorie",
+      "Tipo": "Type",
+      "Título": "Titre",
+      "Descrição": "Description",
+      "Observação opcional": "Note facultative",
+      "Registro rápido": "Saisie rapide",
+      "Resumo semanal": "Résumé hebdomadaire",
+      "Últimos registros": "Derniers enregistrements",
+      "Últimas ações": "Actions récentes",
+      "Nenhum registro encontrado": "Aucun enregistrement trouvé",
+      "Cancelar": "Annuler",
+      "Fechar": "Fermer",
+      "Claro": "Clair",
+      "Escuro": "Sombre",
+      "Idioma": "Langue",
+      "Aparência": "Apparence",
+      "Privacidade": "Confidentialité",
+      "Integrações": "Intégrations",
+      "Dados": "Données",
+      "Bem-vindo de volta": "Bon retour",
+      "Criar conta": "Créer un compte",
+      "Entrar": "Se connecter",
+      "Cadastrar": "S'inscrire",
+      "Senha": "Mot de passe",
+      "Confirmar senha": "Confirmer le mot de passe",
+      "Mostrar senha": "Afficher le mot de passe",
+      "Lembrar de mim": "Se souvenir de moi",
+      "Seu nome": "Votre nom",
+      "Configuração inicial": "Configuration initiale",
+      "Sobre você": "À propos de vous",
+      "Funcionalidades": "Fonctionnalités",
+      "Preferências": "Préférences"
+    },
+    de: {
+      "Configurações": "Einstellungen",
+      "Ir para configurações": "Zu den Einstellungen",
+      "Trocar foto": "Foto ändern",
+      "Notificações": "Benachrichtigungen",
+      "Hoje": "Heute",
+      "Ontem": "Gestern",
+      "Amanhã": "Morgen",
+      "Todas": "Alle",
+      "Todos": "Alle",
+      "Tudo": "Alle",
+      "Semana": "Woche",
+      "Meta": "Ziel",
+      "Tarefas": "Aufgaben",
+      "Hábitos": "Gewohnheiten",
+      "Sono": "Schlaf",
+      "Água": "Wasser",
+      "Finanças": "Finanzen",
+      "Diário emocional": "Emotionstagebuch",
+      "Diário": "Tagebuch",
+      "Alimentação": "Ernährung",
+      "Saúde física": "Körperliche Gesundheit",
+      "Ciclo menstrual": "Menstruationszyklus",
+      "Anexos": "Anhänge",
+      "Conquistas": "Erfolge",
+      "Perfil": "Profil",
+      "Categoria": "Kategorie",
+      "Tipo": "Typ",
+      "Título": "Titel",
+      "Descrição": "Beschreibung",
+      "Observação opcional": "Optionale Notiz",
+      "Registro rápido": "Schnelleingabe",
+      "Resumo semanal": "Wochenübersicht",
+      "Últimos registros": "Letzte Einträge",
+      "Últimas ações": "Letzte Aktionen",
+      "Nenhum registro encontrado": "Keine Einträge gefunden",
+      "Cancelar": "Abbrechen",
+      "Fechar": "Schließen",
+      "Claro": "Hell",
+      "Escuro": "Dunkel",
+      "Idioma": "Sprache",
+      "Aparência": "Darstellung",
+      "Privacidade": "Datenschutz",
+      "Integrações": "Integrationen",
+      "Dados": "Daten",
+      "Bem-vindo de volta": "Willkommen zurück",
+      "Criar conta": "Konto erstellen",
+      "Entrar": "Anmelden",
+      "Cadastrar": "Registrieren",
+      "Senha": "Passwort",
+      "Confirmar senha": "Passwort bestätigen",
+      "Mostrar senha": "Passwort anzeigen",
+      "Lembrar de mim": "Angemeldet bleiben",
+      "Seu nome": "Dein Name",
+      "Configuração inicial": "Ersteinrichtung",
+      "Sobre você": "Über dich",
+      "Funcionalidades": "Funktionen",
+      "Preferências": "Präferenzen"
+    },
+    it: {
+      "Configurações": "Impostazioni",
+      "Ir para configurações": "Vai alle impostazioni",
+      "Trocar foto": "Cambia foto",
+      "Notificações": "Notifiche",
+      "Hoje": "Oggi",
+      "Ontem": "Ieri",
+      "Amanhã": "Domani",
+      "Todas": "Tutte",
+      "Todos": "Tutti",
+      "Tudo": "Tutto",
+      "Semana": "Settimana",
+      "Meta": "Obiettivo",
+      "Tarefas": "Attività",
+      "Hábitos": "Abitudini",
+      "Sono": "Sonno",
+      "Água": "Acqua",
+      "Finanças": "Finanze",
+      "Diário emocional": "Diario emotivo",
+      "Diário": "Diario",
+      "Alimentação": "Alimentazione",
+      "Saúde física": "Salute fisica",
+      "Ciclo menstrual": "Ciclo mestruale",
+      "Anexos": "Allegati",
+      "Conquistas": "Traguardi",
+      "Perfil": "Profilo",
+      "Categoria": "Categoria",
+      "Tipo": "Tipo",
+      "Título": "Titolo",
+      "Descrição": "Descrizione",
+      "Observação opcional": "Nota facoltativa",
+      "Registro rápido": "Registrazione rapida",
+      "Resumo semanal": "Riepilogo settimanale",
+      "Últimos registros": "Ultimi registri",
+      "Últimas ações": "Azioni recenti",
+      "Nenhum registro encontrado": "Nessun registro trovato",
+      "Cancelar": "Annulla",
+      "Fechar": "Chiudi",
+      "Claro": "Chiaro",
+      "Escuro": "Scuro",
+      "Idioma": "Lingua",
+      "Aparência": "Aspetto",
+      "Privacidade": "Privacy",
+      "Integrações": "Integrazioni",
+      "Dados": "Dati",
+      "Bem-vindo de volta": "Bentornato",
+      "Criar conta": "Crea account",
+      "Entrar": "Accedi",
+      "Cadastrar": "Registrati",
+      "Senha": "Password",
+      "Confirmar senha": "Conferma password",
+      "Mostrar senha": "Mostra password",
+      "Lembrar de mim": "Ricordami",
+      "Seu nome": "Il tuo nome",
+      "Configuração inicial": "Configurazione iniziale",
+      "Sobre você": "Su di te",
+      "Funcionalidades": "Funzionalità",
+      "Preferências": "Preferenze"
+    }
+  };
+
+  const LEGACY_USER_CONTENT = /(task-item|habit-item|diary-entry|attachment-item|transaction-item|finance-item|meal-item|nutrition-item|health-item|cycle-item|sleep-item|user-created-event)/i;
+  let legacyObserver = null;
+  let applyingLegacyTranslation = false;
+
+  function translateLegacyString(value, language = getLanguage()) {
+    const source = String(value || "");
+    const trimmed = source.trim();
+
+    if (!trimmed || language === DEFAULT_LANGUAGE) {
+      return source;
+    }
+
+    const exact = LEGACY_TEXT_TRANSLATIONS[language]?.[trimmed];
+    let translated = exact || trimmed;
+
+    const greeting = trimmed.match(/^Olá,\s*(.+)$/);
+    if (!exact && greeting) {
+      const prefix = {
+        "pt-PT": "Olá",
+        en: "Hello",
+        es: "Hola",
+        fr: "Bonjour",
+        de: "Hallo",
+        it: "Ciao"
+      }[language];
+
+      if (prefix) {
+        translated = prefix + ", " + greeting[1];
+      }
+    }
+
+    if (translated === trimmed) {
+      return source;
+    }
+
+    const leading = source.match(/^\s*/)?.[0] || "";
+    const trailing = source.match(/\s*$/)?.[0] || "";
+    return leading + translated + trailing;
+  }
+
+  function isLegacyUserContent(element) {
+    let current = element;
+
+    while (current && current !== document.body) {
+      if (
+        current.dataset?.i18nIgnore !== undefined ||
+        LEGACY_USER_CONTENT.test(
+          typeof current.className === "string"
+            ? current.className
+            : ""
+        )
+      ) {
+        return true;
+      }
+
+      current = current.parentElement;
+    }
+
+    return false;
+  }
+
+  function translateLegacyElement(element) {
+    if (
+      !(element instanceof Element) ||
+      element.matches("[data-i18n], [data-i18n-ignore]") ||
+      isLegacyUserContent(element)
+    ) {
+      return;
+    }
+
+    const textTargets =
+      element.children.length === 0 &&
+      (
+        /^(TITLE|H1|H2|H3|H4|H5|H6|BUTTON|A|LABEL|SMALL|OPTION|TH|TD|FOOTER)$/.test(element.tagName) ||
+        element.matches(
+          ".section-kicker, .notif-row-title, .notif-row-desc, .notif-row-time, .event-tag, .filter-btn, .tab-btn, .date-btn, .side-link, .mood-question, .week-text, .summary-card > p, .summary-card > small, .side-card h4, .focus-card > p, .focus-card > small"
+        )
+      );
+
+    if (textTargets) {
+      const currentText = element.textContent || "";
+      const previous = element.dataset.i18nLegacyLast || "";
+
+      if (!element.dataset.i18nLegacySource || currentText !== previous) {
+        element.dataset.i18nLegacySource = currentText;
+      }
+
+      const translated = translateLegacyString(
+        element.dataset.i18nLegacySource
+      );
+
+      if (translated !== currentText) {
+        applyingLegacyTranslation = true;
+        element.textContent = translated;
+        applyingLegacyTranslation = false;
+      }
+
+      element.dataset.i18nLegacyLast = translated;
+    }
+
+    ["placeholder", "title", "aria-label"].forEach((attribute) => {
+      if (!element.hasAttribute(attribute)) {
+        return;
+      }
+
+      const dataKey =
+        "i18nLegacy" +
+        attribute
+          .split("-")
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join("");
+
+      const currentValue = element.getAttribute(attribute) || "";
+
+      if (!element.dataset[dataKey]) {
+        element.dataset[dataKey] = currentValue;
+      }
+
+      const translated = translateLegacyString(
+        element.dataset[dataKey]
+      );
+
+      if (translated !== currentValue) {
+        applyingLegacyTranslation = true;
+        element.setAttribute(attribute, translated);
+        applyingLegacyTranslation = false;
+      }
+    });
+  }
+
+  function translateLegacyDocument(root = document) {
+    const elements =
+      root instanceof Element
+        ? [root, ...root.querySelectorAll("*")]
+        : [...root.querySelectorAll("*")];
+
+    elements.forEach(translateLegacyElement);
+  }
+
+  function startLegacyObserver() {
+    if (legacyObserver || !document.body) {
+      return;
+    }
+
+    legacyObserver = new MutationObserver((mutations) => {
+      if (applyingLegacyTranslation) {
+        return;
+      }
+
+      mutations.forEach((mutation) => {
+        if (
+          mutation.type === "characterData" &&
+          mutation.target.parentElement
+        ) {
+          translateLegacyElement(mutation.target.parentElement);
+        }
+
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            translateLegacyDocument(node);
+          }
+        });
+      });
+    });
+
+    legacyObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+  }
+
+  function ensureStandaloneLanguageSwitcher() {
+    const page = window.location.pathname.split("/").pop() || "";
+
+    if (
+      !["login.html", "setup.html"].includes(page) ||
+      document.getElementById("fluirStandaloneLanguage")
+    ) {
+      return;
+    }
+
+    const wrapper = document.createElement("label");
+    wrapper.className = "fluir-language-switcher";
+    wrapper.setAttribute(
+      "aria-label",
+      t("settings.language", "Idioma")
+    );
+
+    const select = document.createElement("select");
+    select.id = "fluirStandaloneLanguage";
+
+    Object.entries(LANGUAGES).forEach(([code, language]) => {
+      const option = document.createElement("option");
+      option.value = code;
+      option.textContent =
+        language.label +
+        (language.beta ? " · Beta" : "");
+      select.appendChild(option);
+    });
+
+    select.value = getLanguage();
+
+    select.addEventListener("change", () => {
+      setLanguage(select.value);
+    });
+
+    wrapper.appendChild(select);
+    document.body.appendChild(wrapper);
+
+    const style = document.createElement("style");
+    style.textContent =
+      ".fluir-language-switcher{position:fixed;top:14px;right:14px;z-index:9999}" +
+      ".fluir-language-switcher select{min-height:38px;padding:0 12px;border:1px solid rgba(128,128,128,.3);border-radius:10px;background:#fff;color:#202020;font:600 12px Manrope,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.08)}" +
+      "body.dark .fluir-language-switcher select{background:#202020;color:#f5f5f5}" +
+      "@media(max-width:560px){.fluir-language-switcher{top:9px;right:9px}.fluir-language-switcher select{max-width:170px}}";
+    document.head.appendChild(style);
+  }
+
   function normalizeLanguage(language) {
     if (!language) {
       return DEFAULT_LANGUAGE;
@@ -585,6 +1350,18 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
 
     if (language === "es-ES") {
       return "es";
+    }
+
+    if (language === "fr-FR") {
+      return "fr";
+    }
+
+    if (language === "de-DE") {
+      return "de";
+    }
+
+    if (language === "it-IT") {
+      return "it";
     }
 
     return LANGUAGES[language]
@@ -701,8 +1478,9 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
         );
     });
 
+    translateLegacyDocument(root);
     document.documentElement.lang = getLanguage();
-    }
+  }
 
   function setLanguage(language) {
     const normalized = normalizeLanguage(language);
@@ -733,7 +1511,9 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
   function initialize() {
     document.documentElement.lang = getLanguage();
     translateDocument();
-    }
+    ensureStandaloneLanguageSwitcher();
+    startLegacyObserver();
+  }
 
     if (document.readyState === "loading") {
     document.addEventListener(
@@ -751,6 +1531,7 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     getLanguages,
     setLanguage,
     translateDocument,
+    translateLegacyString,
     t
   });
 })();
