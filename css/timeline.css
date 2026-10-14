@@ -1080,8 +1080,8 @@ body.dark .focus-bar {
   content: "";
 
   position: absolute;
-  left: 69px;
-  top: 8px;
+  left: 74px;
+  top: 10px;
 
   width: 1px;
   height: calc(100% - 20px);
@@ -1121,6 +1121,8 @@ body.dark .focus-bar {
   width: 12px;
   height: 12px;
   margin-top: 4px;
+  justify-self: center;
+  box-sizing: border-box;
 
   border: 1px solid var(--text);
   border-radius: 50%;

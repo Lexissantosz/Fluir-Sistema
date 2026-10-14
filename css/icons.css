@@ -228,6 +228,9 @@ body.dark #themeBtn span {
 .title-icon,
 .heading-icon {
   font-size: 0 !important;
+  position: relative;
+  line-height: 0;
+  flex-shrink: 0;
 }
 
 .page-icon::before,
@@ -239,6 +242,9 @@ body.dark #themeBtn span {
   height: 22px;
 
   display: block;
+  position: absolute;
+  inset: 0;
+  margin: auto;
 
   background-color: currentColor;
 
