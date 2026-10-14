@@ -1766,12 +1766,23 @@ body.dark .event-form-message.success {
   }
 
   .timeline-sidebar {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
   }
 
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1250px) {
+  .timeline-sidebar > .side-card:first-child {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .timeline-sidebar > .side-card:nth-child(n + 2) {
+    grid-column: 2;
   }
 }
 
