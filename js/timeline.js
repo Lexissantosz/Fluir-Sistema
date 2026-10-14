@@ -727,12 +727,125 @@ function saveEventToLocalStorage(eventData) {
 }
 
 
+
+function localizeSystemTimelineEvent(eventData) {
+  const category = eventData.category || "";
+  const title = String(eventData.title || "");
+  const description = String(eventData.description || "");
+
+  const titleKeys = {
+    water: {
+      "Água registrada": ["timeline.system.waterLogged", "Água registrada"],
+      "Água removida": ["timeline.system.waterRemoved", "Água removida"],
+      "Água ajustada": ["timeline.system.waterAdjusted", "Água ajustada"],
+      "Água reiniciada": ["timeline.system.waterReset", "Água reiniciada"],
+      "Meta de água alterada": ["timeline.system.waterGoalChanged", "Meta de água alterada"]
+    },
+    tasks: {
+      "Tarefa criada": ["timeline.system.taskCreated", "Tarefa criada"],
+      "Tarefa concluída": ["timeline.system.taskCompleted", "Tarefa concluída"],
+      "Tarefa reaberta": ["timeline.system.taskReopened", "Tarefa reaberta"],
+      "Tarefa removida": ["timeline.system.taskRemoved", "Tarefa removida"],
+      "Tarefas concluídas limpas": ["timeline.system.completedTasksCleared", "Tarefas concluídas limpas"]
+    },
+    finances: {
+      "Status financeiro atualizado": ["timeline.system.financeStatusUpdated", "Status financeiro atualizado"],
+      "Status da dívida atualizado": ["timeline.system.debtStatusUpdated", "Status da dívida atualizado"],
+      "Entrada registrada": ["timeline.system.incomeRegistered", "Entrada registrada"],
+      "Dívida registrada": ["timeline.system.debtRegistered", "Dívida registrada"],
+      "Saída registrada": ["timeline.system.expenseRegistered", "Saída registrada"],
+      "Lançamento removido": ["timeline.system.transactionRemoved", "Lançamento removido"],
+      "Finanças limpas": ["timeline.system.financesCleared", "Finanças limpas"]
+    },
+    diary: {
+      "Entrada no diário": ["timeline.system.diaryEntry", "Entrada no diário"],
+      "Entrada removida": ["timeline.system.diaryEntryRemoved", "Entrada removida"],
+      "Diário limpo": ["timeline.system.diaryCleared", "Diário limpo"]
+    },
+    attachments: {
+      "Anexo salvo": ["timeline.system.attachmentSaved", "Anexo salvo"],
+      "Anexo atualizado": ["timeline.system.attachmentUpdated", "Anexo atualizado"],
+      "Anexo removido": ["timeline.system.attachmentRemoved", "Anexo removido"],
+      "Anexos limpos": ["timeline.system.attachmentsCleared", "Anexos limpos"]
+    }
+  };
+
+  const titleEntry = titleKeys[category]?.[title];
+  const localizedTitle = titleEntry
+    ? timelineT(titleEntry[0], titleEntry[1])
+    : title;
+
+  let localizedDescription = description;
+
+  if (category === "water") {
+    let match = description.match(
+      /^(\d+)\s*ml adicionados · total de (\d+)\s*ml hoje\.$/i
+    );
+
+    if (match) {
+      localizedDescription = timelineT(
+        "timeline.system.waterAddedDesc",
+        "{amount} ml adicionados · total de {total} ml hoje.",
+        { amount: match[1], total: match[2] }
+      );
+    }
+
+    match = description.match(
+      /^(\d+)\s*ml removidos · total de (\d+)\s*ml hoje\.$/i
+    );
+
+    if (match) {
+      localizedDescription = timelineT(
+        "timeline.system.waterRemovedDesc",
+        "{amount} ml removidos · total de {total} ml hoje.",
+        { amount: match[1], total: match[2] }
+      );
+    }
+
+    match = description.match(
+      /^Total de água ajustado para (\d+)\s*ml hoje\.$/i
+    );
+
+    if (match) {
+      localizedDescription = timelineT(
+        "timeline.system.waterAdjustedDesc",
+        "Total de água ajustado para {total} ml hoje.",
+        { total: match[1] }
+      );
+    }
+
+    if (description === "A água de hoje foi reiniciada.") {
+      localizedDescription = timelineT(
+        "timeline.system.waterResetDesc",
+        "A água de hoje foi reiniciada."
+      );
+    }
+
+    match = description.match(/^Nova meta diária: (\d+)\s*ml\.$/i);
+
+    if (match) {
+      localizedDescription = timelineT(
+        "timeline.system.waterGoalChangedDesc",
+        "Nova meta diária: {goal} ml.",
+        { goal: match[1] }
+      );
+    }
+  }
+
+  return {
+    ...eventData,
+    title: localizedTitle,
+    description: localizedDescription
+  };
+}
+
 // =====================================================
 // 18. CRIAR HTML DO EVENTO
 // =====================================================
 
 function createEventElement(eventData) {
   const eventItem = document.createElement("div");
+  const localizedEvent = localizeSystemTimelineEvent(eventData);
 
   eventItem.className = "event-item user-created-event";
   eventItem.dataset.type = eventData.category;
@@ -745,8 +858,8 @@ function createEventElement(eventData) {
     <div class="event-icon">${getCategoryIcon(eventData.category)}</div>
 
     <div class="event-content">
-      <strong>${escapeHTML(eventData.title)}</strong>
-      <p>${escapeHTML(eventData.description || timelineT("timeline.manualEvent", "Evento registrado manualmente."))}</p>
+      <strong>${escapeHTML(localizedEvent.title)}</strong>
+      <p>${escapeHTML(localizedEvent.description || timelineT("timeline.manualEvent", "Evento registrado manualmente."))}</p>
     </div>
 
     <span class="event-tag">${getCategoryLabel(eventData.category)}</span>
