@@ -10,6 +10,12 @@
 /* Quando a página carregar, chamamos todas as funções */
 /* ===================================================== */
 
+function settingsT(key, fallback, variables = {}) {
+  return window.FluirI18n
+    ? window.FluirI18n.t(key, fallback, variables)
+    : fallback;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   applySavedTheme();
   loadUserProfile();
@@ -23,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupResetButtons();
   setupPreferenceSaves();
   setupQuickSetupEditor();
+  setupFeedbackCenter();
 });
 
 
@@ -125,7 +132,7 @@ function loadUserProfile() {
   const profileAvatar = document.getElementById("profileAvatar");
 
   if (topGreeting) {
-    topGreeting.textContent = `Olá, ${name}`;
+    topGreeting.textContent = settingsT("dashboard.welcome", "Olá, {name}", { name });
   }
 
   if (profileName) {
@@ -358,12 +365,29 @@ function setupResetButtons() {
 /* ===================================================== */
 
 function setupPreferenceSaves() {
-  setupSelectSave("languageSelect", "fluir-language");
+  setupLanguagePreference();
   setupSelectSave("summaryTime", "fluir-summary-time");
 
   setupCheckboxSaves();
 }
 
+function setupLanguagePreference() {
+  const select = document.getElementById("languageSelect");
+
+  if (!select || !window.FluirI18n) {
+    return;
+  }
+
+  const currentLanguage = window.FluirI18n.getLanguage();
+
+  select.value = currentLanguage;
+
+  window.FluirI18n.translateDocument();
+
+  select.addEventListener("change", () => {
+    window.FluirI18n.setLanguage(select.value);
+  });
+}
 
 function setupSelectSave(selectId, storageKey) {
   const select = document.getElementById(selectId);
@@ -426,9 +450,14 @@ function setupQuickSetupEditor() {
     checkbox.type = "checkbox";
     checkbox.dataset.quickModule = module.key;
 
+    const translatedModuleLabel =
+      window.FluirI18n
+        ? window.FluirI18n.t("nav." + module.key, module.label)
+        : module.label;
+
     label.append(
       checkbox,
-      document.createTextNode(module.label)
+      document.createTextNode(translatedModuleLabel)
     );
 
     modulesList.appendChild(label);
@@ -501,4 +530,128 @@ function setupQuickSetupEditor() {
     loadUserProfile();
     hideDisabledModules();
   });
+}
+
+/* ===================================================== */
+/* AJUDA E FEEDBACK */
+/* Gera um texto localmente. Nada é enviado automaticamente. */
+/* ===================================================== */
+
+function setupFeedbackCenter() {
+  const feedbackType = document.getElementById("feedbackType");
+  const feedbackMessage = document.getElementById("feedbackMessage");
+  const feedbackDiagnostics = document.getElementById("feedbackDiagnostics");
+  const copyButton = document.getElementById("copyFeedbackBtn");
+  const githubButton = document.getElementById("openGithubFeedbackBtn");
+  const translationButton = document.getElementById("reportTranslationBtn");
+  const supportTab = document.querySelector('[data-tab="support"]');
+  const status = document.getElementById("feedbackStatus");
+
+  if (!feedbackType || !feedbackMessage || !copyButton || !githubButton) {
+    return;
+  }
+
+  function showStatus(message, type = "") {
+    if (!status) return;
+
+    status.textContent = message;
+    status.className = "feedback-status" + (type ? " " + type : "");
+  }
+
+  function getTypeLabel() {
+    return (
+      feedbackType.options[feedbackType.selectedIndex]?.textContent?.trim() ||
+      feedbackType.value
+    );
+  }
+
+  function buildReport() {
+    const description = feedbackMessage.value.trim();
+
+    if (!description) {
+      showStatus(
+        settingsT(
+          "settings.feedback.empty",
+          "Descreva o problema antes de continuar."
+        ),
+        "error"
+      );
+      return "";
+    }
+
+    const lines = [
+      "Fluir - " + getTypeLabel(),
+      "",
+      description
+    ];
+
+    if (feedbackDiagnostics?.checked) {
+      const language = window.FluirI18n
+        ? window.FluirI18n.getLanguage()
+        : document.documentElement.lang || "pt-BR";
+
+      lines.push(
+        "",
+        "Dados técnicos:",
+        "- Página: " + window.location.pathname,
+        "- Idioma: " + language,
+        "- Tela: " + window.innerWidth + "x" + window.innerHeight
+      );
+    }
+
+    return lines.join("\n");
+  }
+
+  async function copyReport() {
+    const report = buildReport();
+
+    if (!report) return;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(report);
+      } else {
+        const temporary = document.createElement("textarea");
+        temporary.value = report;
+        temporary.style.position = "fixed";
+        temporary.style.opacity = "0";
+        document.body.appendChild(temporary);
+        temporary.select();
+        document.execCommand("copy");
+        temporary.remove();
+      }
+
+      showStatus(
+        settingsT(
+          "settings.feedback.copied",
+          "Relatório copiado."
+        ),
+        "success"
+      );
+    } catch (error) {
+      console.error("Erro ao copiar relatório:", error);
+      showStatus("Não foi possível copiar o relatório.", "error");
+    }
+  }
+
+  copyButton.addEventListener("click", copyReport);
+
+  githubButton.addEventListener("click", () => {
+    window.open(
+      "https://github.com/Lexissantosz/Fluir-Sistema/issues/new/choose",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  });
+
+  if (translationButton && supportTab) {
+    translationButton.addEventListener("click", () => {
+      feedbackType.value = "translation";
+      supportTab.click();
+
+      setTimeout(() => {
+        feedbackMessage.focus();
+      }, 250);
+    });
+  }
 }

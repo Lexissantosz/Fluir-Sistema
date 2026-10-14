@@ -1,0 +1,51 @@
+name: Problema de tradução
+description: Reporte uma tradução incorreta, estranha, incompleta ou fora de contexto.
+title: "[i18n] "
+labels:
+  - i18n
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: Idioma
+      options:
+        - Português (Brasil)
+        - Português (Portugal)
+        - English
+        - Español
+        - Français
+        - Deutsch
+        - Italiano
+        - Outro
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Tela ou página
+      placeholder: Ex.: Configurações, Tarefas, Timeline
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Texto atual
+      description: Copie o texto que parece incorreto ou estranho.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Como deveria ficar
+      description: Sugira uma tradução ou explique o significado esperado.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Explique onde o texto aparece ou por que a tradução causa dúvida.

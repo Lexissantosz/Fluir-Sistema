@@ -42,6 +42,26 @@ const modulePanels = document.querySelectorAll(".module-panel");
 
 const focusPercent = document.getElementById("focusPercent");
 
+function dashboardT(key, fallback = "", variables = {}) {
+  if (window.FluirI18n) {
+    return window.FluirI18n.t(key, fallback, variables);
+  }
+
+  return String(fallback).replace(/\{(\w+)\}/g, (match, variableName) => {
+    if (Object.prototype.hasOwnProperty.call(variables, variableName)) {
+      return String(variables[variableName]);
+    }
+
+    return match;
+  });
+}
+
+function dashboardLocale() {
+  return window.FluirI18n
+    ? window.FluirI18n.getLocale()
+    : "pt-BR";
+}
+
 
 /* =====================================================
    2. CONFIGURAÇÕES PADRÃO
@@ -155,12 +175,9 @@ function escapeAttribute(value) {
 
 function formatCurrency(value) {
   const numberValue = Number(value);
+  const safeValue = Number.isNaN(numberValue) ? 0 : numberValue;
 
-  if (!numberValue || Number.isNaN(numberValue)) {
-    return "R$ 0";
-  }
-
-  return numberValue.toLocaleString("pt-BR", {
+  return safeValue.toLocaleString(dashboardLocale(), {
     style: "currency",
     currency: "BRL",
     maximumFractionDigits: 0
@@ -198,7 +215,11 @@ function getSavedSetup() {
     dados?.usuarioId != null &&
     String(dados.usuarioId) === String(usuario.id);
 
-  const local = pertenceAoUsuario(salvo) ? salvo : {};
+  const local =
+    pertenceAoUsuario(salvo) ||
+    (salvo && salvo.usuarioId == null)
+      ? salvo
+      : {};
   const backend = pertenceAoUsuario(onboarding) ? onboarding : null;
 
   const preferences = { ...(local.preferences || {}) };
@@ -309,13 +330,13 @@ function applySavedTheme() {
     body.classList.add("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☼</span> Claro";
+      themeBtn.innerHTML = `<span>☼</span> ${dashboardT("common.light", "Claro")}`;
     }
   } else {
     body.classList.remove("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☾</span> Escuro";
+      themeBtn.innerHTML = `<span>☾</span> ${dashboardT("common.dark", "Escuro")}`;
     }
   }
 }
@@ -327,8 +348,8 @@ if (themeBtn) {
     const isDarkMode = body.classList.contains("dark");
 
     themeBtn.innerHTML = isDarkMode
-      ? "<span>☼</span> Claro"
-      : "<span>☾</span> Escuro";
+      ? `<span>☼</span> ${dashboardT("common.light", "Claro")}`
+      : `<span>☾</span> ${dashboardT("common.dark", "Escuro")}`;
 
     localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
@@ -343,10 +364,20 @@ function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
 
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    !rawDisplayName || rawDisplayName === "Você"
+      ? dashboardT("common.you", "Você")
+      : rawDisplayName;
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName} `;
+    welcomeTitle.textContent = window.FluirI18n
+      ? window.FluirI18n.t(
+          "dashboard.welcome",
+          "Olá, {name}",
+          { name: displayName }
+        )
+      : `Olá, ${displayName}`;
   }
 
   if (avatarBtn) {
@@ -371,14 +402,30 @@ function getInitial(name) {
 
 function getSubtitleByTone(tone) {
   const subtitles = {
-    calmo: "Respire fundo. Um dia de cada vez, no seu ritmo.",
-    direto: "Veja suas prioridades e siga para o próximo passo.",
-    motivador: "Você está construindo constância. Continue avançando.",
-    delicado: "Com calma e leveza, hoje também pode fluir.",
-    neutro: "Acompanhe sua rotina, seus registros e seus próximos passos."
+    calmo: [
+      "dashboard.subtitle.calm",
+      "Respire fundo. Um dia de cada vez, no seu ritmo."
+    ],
+    direto: [
+      "dashboard.subtitle.direct",
+      "Veja suas prioridades e siga para o próximo passo."
+    ],
+    motivador: [
+      "dashboard.subtitle.motivating",
+      "Você está construindo constância. Continue avançando."
+    ],
+    delicado: [
+      "dashboard.subtitle.gentle",
+      "Com calma e leveza, hoje também pode fluir."
+    ],
+    neutro: [
+      "dashboard.subtitle.neutral",
+      "Acompanhe sua rotina, seus registros e seus próximos passos."
+    ]
   };
 
-  return subtitles[tone] || subtitles.calmo;
+  const [key, fallback] = subtitles[tone] || subtitles.calmo;
+  return dashboardT(key, fallback);
 }
 
 
@@ -517,11 +564,17 @@ function updateDashboardLayoutAfterHiddenModules() {
     note.className = "empty-dashboard-note";
 
     note.innerHTML = `
-      <button class="dashboard-note-close" type="button" aria-label="Fechar aviso">
+<button class="dashboard-note-close" type="button" aria-label="Fechar aviso">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
       </button>
-      <strong>Seu dashboard está mais leve por enquanto.</strong>
-      <p>Ative outras áreas em <a href="settings.html">Configurações</a> quando quiser.</p>
+      <strong>${dashboardT(
+        "dashboard.empty.title",
+        "Seu início está mais leve por enquanto."
+      )}</strong>
+      <p>${dashboardT(
+        "dashboard.empty.description",
+        "Você escolheu poucas funcionalidades, então o Fluir deixou a tela mais simples. Quando quiser, vá em Configurações para ativar novas áreas como tarefas, sono, água, finanças, diário, alimentação ou saúde."
+      )}</p>
     `;
     note.querySelector(".dashboard-note-close").addEventListener("click", () => {
       try { sessionStorage.setItem(noteDismissalKey, "dismissed"); } catch (_) {}
@@ -633,36 +686,36 @@ function getDefaultDashboardTasks() {
   return [
     {
       id: "demo-task-1",
-      title: "Revisar proposta do projeto",
-      category: "Trabalho",
+      title: dashboardT("dashboard.demoTask.project", "Revisar proposta do projeto"),
+      category: dashboardT("dashboard.category.work", "Trabalho"),
       time: "09:00",
       completed: false
     },
     {
       id: "demo-task-2",
-      title: "Responder e-mails importantes",
-      category: "Trabalho",
+      title: dashboardT("dashboard.demoTask.emails", "Responder e-mails importantes"),
+      category: dashboardT("dashboard.category.work", "Trabalho"),
       time: "11:00",
       completed: false
     },
     {
       id: "demo-task-3",
-      title: "Estudar capítulo 4",
-      category: "Estudos",
+      title: dashboardT("dashboard.demoTask.chapter", "Estudar capítulo 4"),
+      category: dashboardT("dashboard.category.study", "Estudos"),
       time: "14:00",
       completed: false
     },
     {
       id: "demo-task-4",
-      title: "Treino de força",
-      category: "Saúde",
+      title: dashboardT("dashboard.demoTask.workout", "Treino de força"),
+      category: dashboardT("dashboard.category.health", "Saúde"),
       time: "18:00",
       completed: true
     },
     {
       id: "demo-task-5",
-      title: "Ler 20 páginas",
-      category: "Pessoal",
+      title: dashboardT("dashboard.demoTask.read", "Ler 20 páginas"),
+      category: dashboardT("dashboard.category.personal", "Pessoal"),
       time: "20:30",
       completed: true
     }
@@ -678,8 +731,8 @@ function getDashboardTasks() {
       tasks: realTasks.slice(0, 5).map((task, index) => {
         return {
           id: task.id || `real-task-${index}`,
-          title: task.title || "Tarefa sem título",
-          category: task.category || task.type || "Tarefa",
+          title: task.title || dashboardT("dashboard.untitledTask", "Tarefa sem título"),
+          category: task.category || task.type || dashboardT("dashboard.task", "Tarefa"),
           time: task.time || task.hour || "",
           completed: Boolean(task.completed)
         };
@@ -691,9 +744,25 @@ function getDashboardTasks() {
 
   return {
     source: "demo",
-    tasks: Array.isArray(savedDemoTasks) && savedDemoTasks.length
-      ? savedDemoTasks
-      : getDefaultDashboardTasks()
+    tasks: (() => {
+      const defaults = getDefaultDashboardTasks();
+
+      if (!Array.isArray(savedDemoTasks) || !savedDemoTasks.length) {
+        return defaults;
+      }
+
+      const savedById = new Map(
+        savedDemoTasks.map((task) => [String(task.id), task])
+      );
+
+      return defaults.map((task) => {
+        const saved = savedById.get(String(task.id));
+
+        return saved
+          ? { ...task, completed: Boolean(saved.completed) }
+          : task;
+      });
+    })()
   };
 }
 
@@ -709,8 +778,11 @@ function updateTasksDashboardData() {
   if (!dashboardTasks.tasks.length) {
     tasksPanel.innerHTML = `
       <div class="empty-dashboard-mini">
-        <strong>Nenhuma tarefa ainda</strong>
-        <p>Crie uma tarefa para começar a organizar o dia.</p>
+        <strong>${dashboardT("dashboard.noTasks.title", "Nenhuma tarefa ainda")}</strong>
+        <p>${dashboardT(
+          "dashboard.noTasks.description",
+          "Crie uma tarefa para começar a organizar o dia."
+        )}</p>
       </div>
     `;
 
@@ -731,7 +803,7 @@ function updateTasksDashboardData() {
       >
         <input type="checkbox" ${checked}>
         <span>${escapeHTML(task.title)}</span>
-        <small>${escapeHTML(task.category || "Tarefa")}</small>
+        <small>${escapeHTML(task.category || dashboardT("dashboard.task", "Tarefa"))}</small>
         <time>${escapeHTML(task.time || "")}</time>
       </div>
     `;
@@ -865,7 +937,11 @@ function updateTasksSummary() {
   }
 
   if (textElement) {
-    textElement.textContent = `${completed} de ${total} concluídas`;
+    textElement.textContent = dashboardT(
+      "dashboard.tasksCompleted",
+      "{completed} de {total} concluídas",
+      { completed, total }
+    );
   }
 
   if (progressElement) {
@@ -942,7 +1018,13 @@ function updateHabitsDashboardData() {
     const progress = card.querySelector(".mini-progress span");
 
     if (strong) strong.textContent = String(completedToday);
-    if (small) small.textContent = `${completedToday} de ${total} concluídos`;
+    if (small) {
+      small.textContent = dashboardT(
+        "dashboard.habitsCompleted",
+        "{completed} de {total} concluídos",
+        { completed: completedToday, total }
+      );
+    }
     if (progress) progress.style.width = `${percent}%`;
   }
 }
@@ -962,7 +1044,9 @@ function updateSleepDashboardData() {
     : null;
 
   const sleepText = lastEntry?.duration || lastEntry?.hours || "0h";
-  const sleepSmall = lastEntry ? "último registro" : "sem registro";
+  const sleepSmall = lastEntry
+    ? dashboardT("dashboard.lastRecord", "último registro")
+    : dashboardT("dashboard.noRecord", "sem registro");
 
   if (card) {
     const strong = card.querySelector("strong");
@@ -991,7 +1075,11 @@ function applySleepPreferences() {
   const sleepCards = document.querySelectorAll('[data-module-card="sleep"] small');
 
   sleepCards.forEach((item) => {
-    item.textContent = `meta ${sleepGoal}`;
+    item.textContent = dashboardT(
+      "dashboard.goal",
+      "meta {goal}",
+      { goal: sleepGoal }
+    );
   });
 }
 
@@ -1019,7 +1107,13 @@ function updateWaterDashboardData() {
     const dots = card.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (small) small.textContent = `de ${waterGoal}ml`;
+    if (small) {
+      small.textContent = dashboardT(
+        "dashboard.ofGoalMl",
+        "de {goal} ml",
+        { goal: Number(waterGoal).toLocaleString(dashboardLocale()) }
+      );
+    }
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -1030,7 +1124,13 @@ function updateWaterDashboardData() {
     const dots = panel.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (p) p.textContent = `de ${waterGoal}ml`;
+    if (p) {
+      p.textContent = dashboardT(
+        "dashboard.ofGoalMl",
+        "de {goal} ml",
+        { goal: Number(waterGoal).toLocaleString(dashboardLocale()) }
+      );
+    }
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -1063,7 +1163,11 @@ function applyWaterPreferences() {
   const waterCards = document.querySelectorAll('[data-module-card="water"] small');
 
   waterCards.forEach((item) => {
-    item.textContent = `meta ${waterGoal}`;
+    item.textContent = dashboardT(
+      "dashboard.goal",
+      "meta {goal}",
+      { goal: Number(waterGoal).toLocaleString(dashboardLocale()) }
+    );
   });
 }
 
@@ -1095,7 +1199,7 @@ function updateFinancesDashboardData() {
     const small = card.querySelector("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (small) small.textContent = "saldo atual";
+    if (small) small.textContent = dashboardT("dashboard.currentBalance", "saldo atual");
   }
 
   if (panel) {
@@ -1104,10 +1208,22 @@ function updateFinancesDashboardData() {
     const smallItems = panel.querySelectorAll("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (p) p.textContent = "Saldo atual";
+    if (p) p.textContent = dashboardT("dashboard.currentBalance", "saldo atual");
 
-    if (smallItems[0]) smallItems[0].textContent = `Entrada ${formatCurrency(income)}`;
-    if (smallItems[1]) smallItems[1].textContent = `Saída - ${formatCurrency(expense)}`;
+    if (smallItems[0]) {
+      smallItems[0].textContent = dashboardT(
+        "dashboard.income",
+        "Entrada {value}",
+        { value: formatCurrency(income) }
+      );
+    }
+    if (smallItems[1]) {
+      smallItems[1].textContent = dashboardT(
+        "dashboard.expense",
+        "Saída - {value}",
+        { value: formatCurrency(expense) }
+      );
+    }
   }
 }
 
@@ -1150,8 +1266,8 @@ function updateDiaryDashboardData() {
     if (strong) strong.textContent = String(todayEntries.length);
     if (small) {
       small.textContent = todayEntries.length === 1
-        ? "entrada hoje"
-        : "entradas hoje";
+        ? dashboardT("dashboard.entryToday", "entrada hoje")
+        : dashboardT("dashboard.entriesToday", "entradas hoje");
     }
   }
 
@@ -1160,8 +1276,10 @@ function updateDiaryDashboardData() {
 
     if (p) {
       p.textContent = entries.length
-        ? entries[entries.length - 1].text || entries[entries.length - 1].content || "Última entrada registrada."
-        : "Nenhuma entrada no diário ainda.";
+        ? entries[entries.length - 1].text ||
+          entries[entries.length - 1].content ||
+          dashboardT("dashboard.lastDiaryEntry", "Última entrada registrada.")
+        : dashboardT("dashboard.noDiaryEntries", "Nenhuma entrada no diário ainda.");
     }
   }
 }
@@ -1192,9 +1310,12 @@ function updateRecentEventsDashboardData() {
   if (!Array.isArray(events) || !events.length) {
     eventList.innerHTML = `
       <article>
-        <span>Hoje</span>
-        <strong>Nenhum evento recente</strong>
-        <p>Os registros dos módulos aparecerão aqui.</p>
+        <span>${dashboardT("dashboard.today", "Hoje")}</span>
+        <strong>${dashboardT("dashboard.noRecentEvents", "Nenhum evento recente")}</strong>
+        <p>${dashboardT(
+          "dashboard.moduleRecordsHere",
+          "Os registros dos módulos aparecerão aqui."
+        )}</p>
       </article>
     `;
 
@@ -1204,8 +1325,8 @@ function updateRecentEventsDashboardData() {
   eventList.innerHTML = events.slice(0, 4).map((event) => {
     return `
       <article>
-        <span>${escapeHTML(event.date || "Hoje")}</span>
-        <strong>${escapeHTML(event.title || "Evento")}</strong>
+        <span>${escapeHTML(event.date || dashboardT("dashboard.today", "Hoje"))}</span>
+        <strong>${escapeHTML(event.title || dashboardT("dashboard.event", "Evento"))}</strong>
         <p>${escapeHTML(event.description || "")}</p>
       </article>
     `;
@@ -1319,7 +1440,11 @@ function saveHeaderProfile(profile) {
 function renderHeaderProfileDropdown() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    !rawDisplayName || rawDisplayName === "Você"
+      ? dashboardT("common.you", "Você")
+      : rawDisplayName;
 
   const profile = getHeaderProfile();
 

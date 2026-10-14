@@ -4,6 +4,30 @@
    ===================================================== */
 
 (function () {
+  function mobileT(key, fallback) {
+    return window.FluirI18n
+      ? window.FluirI18n.t(key, fallback)
+      : fallback;
+  }
+
+  const mobileNavKeys = {
+    "dashboard.html": "nav.dashboard",
+    "timeline.html": "nav.timeline",
+    "tasks.html": "nav.tasks",
+    "habits.html": "nav.habits",
+    "sleep.html": "nav.sleep",
+    "water.html": "nav.water",
+    "finances.html": "nav.finances",
+    "diary.html": "nav.diary",
+    "nutrition.html": "nav.nutrition",
+    "physical-health.html": "nav.physicalHealth",
+    "menstrual-cycle.html": "nav.menstrualCycle",
+    "attachments.html": "nav.attachments",
+    "achievements.html": "nav.achievements",
+    "settings.html": "nav.settings",
+    "profile.html": "nav.profile",
+    "plans.html": "nav.plans"
+  };
   const appPages = new Set([
     "dashboard.html",
     "timeline.html",
@@ -92,12 +116,12 @@ function getMobileUserData() {
     userData.name ||
     setupData.nickname ||
     setupData.name ||
-    "Usuário";
+    mobileT("mobile.defaultUser", "Usuário");
 
   const email =
     userData.email ||
     setupData.email ||
-    "Perfil do usuário";
+    mobileT("mobile.userProfile", "Perfil do usuário");
 
   const initial = name.trim().charAt(0).toUpperCase() || "F";
 
@@ -147,7 +171,12 @@ function getMobileUserData() {
   const topbar = document.createElement("header");
   topbar.className = "mobile-topbar";
   topbar.innerHTML = `
-    <a class="mobile-brand mobile-profile-brand" href="profile.html" aria-label="Ir para o perfil">
+    <a
+      class="mobile-brand mobile-profile-brand"
+      href="profile.html"
+      aria-label="${mobileT("mobile.goToProfile", "Ir para o perfil")}"
+      data-i18n-aria-label="mobile.goToProfile"
+    >
       <span class="mobile-profile-avatar">${user.initial}</span>
 
       <span class="mobile-brand-meta">
@@ -156,7 +185,13 @@ function getMobileUserData() {
       </span>
     </a>
 
-    <button class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileDrawer">
+    <button
+      class="mobile-menu-btn"
+      type="button"
+      aria-label="${mobileT("mobile.openMenu", "Abrir menu")}"
+      data-i18n-aria-label="mobile.openMenu"
+      aria-expanded="false" aria-controls="mobileDrawer"
+    >
 
     </button>
   `;
@@ -189,14 +224,20 @@ function getMobileUserData() {
         id="mobileDrawer"
         role="dialog"
         aria-modal="true"
-        aria-label="Menu do sistema"
+        aria-label="${mobileT("mobile.systemMenu", "Menu do sistema")}"
+        data-i18n-aria-label="mobile.systemMenu"
       >
         <div class="mobile-drawer-head">
           <div>
-            <strong>Menu</strong>
-            <span>Escolha uma área do Fluir</span>
+            <strong data-i18n="mobile.menu">${mobileT("mobile.menu", "Menu")}</strong>
+            <span data-i18n="mobile.chooseArea">${mobileT("mobile.chooseArea", "Escolha uma área do Fluir")}</span>
           </div>
-          <button class="mobile-drawer-close" type="button" aria-label="Fechar menu"></button>
+          <button
+            class="mobile-drawer-close"
+            type="button"
+            aria-label="${mobileT("mobile.closeMenu", "Fechar menu")}"
+            data-i18n-aria-label="mobile.closeMenu"
+          ></button>
         </div>
         <nav class="mobile-drawer-nav"></nav>
       </aside>
@@ -210,7 +251,8 @@ function getMobileUserData() {
       link.href = item.href;
       link.className = `mobile-drawer-link${isCurrent(item.href) ? " active" : ""}`;
       if (isCurrent(item.href)) link.setAttribute("aria-current", "page");
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      const translationKey = mobileNavKeys[item.href];
+      link.innerHTML = `<i>${item.icon}</i><span data-i18n="${translationKey}">${mobileT(translationKey, item.label)}</span>`;
       drawerNav.appendChild(link);
     });
 
@@ -239,7 +281,11 @@ function getMobileUserData() {
     const extraItems = navItems.slice(4).map((item) => item.href);
     const bottomNav = document.createElement("nav");
     bottomNav.className = "mobile-bottom-nav";
-    bottomNav.setAttribute("aria-label", "Navegação principal mobile");
+    bottomNav.setAttribute(
+      "aria-label",
+      mobileT("mobile.mainNavigation", "Navegação principal mobile")
+    );
+    bottomNav.dataset.i18nAriaLabel = "mobile.mainNavigation";
     bottomNav.style.gridTemplateColumns = `repeat(${bottomItems.length + 1}, minmax(0, 1fr))`;
 
     bottomItems.forEach((item) => {
@@ -247,7 +293,12 @@ function getMobileUserData() {
       link.href = item.href;
       link.className = `mobile-nav-link${isCurrent(item.href) ? " active" : ""}`;
       if (isCurrent(item.href)) link.setAttribute("aria-current", "page");
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      const translationKey =
+        item.href === "timeline.html"
+          ? "mobile.timelineShort"
+          : mobileNavKeys[item.href];
+
+      link.innerHTML = `<i>${item.icon}</i><span data-i18n="${translationKey}">${mobileT(translationKey, item.label)}</span>`;
       bottomNav.appendChild(link);
     });
 
@@ -257,7 +308,7 @@ function getMobileUserData() {
     moreButton.setAttribute("aria-expanded", "false");
     mobileMoreButton = moreButton;
     moreButton.className = `mobile-more-btn${extraItems.includes(currentFileName()) ? " active" : ""}`;
-    moreButton.innerHTML = `<i></i><span>Mais</span>`;
+    moreButton.innerHTML = `<i></i><span data-i18n="mobile.more">${mobileT("mobile.more", "Mais")}</span>`;
     moreButton.addEventListener("click", openDrawer);
     bottomNav.appendChild(moreButton);
 

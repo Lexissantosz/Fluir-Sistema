@@ -14,6 +14,12 @@
 (() => {
   "use strict";
 
+  function sidebarT(key, fallback) {
+    return window.FluirI18n
+      ? window.FluirI18n.t(key, fallback)
+      : fallback;
+  }
+
   function getCurrentPage() {
     const fileName = window.location.pathname.split("/").pop();
 
@@ -33,7 +39,7 @@
 
         <div>
           <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
+          <p data-i18n="sidebar.tagline">${sidebarT("sidebar.tagline", "Sistema de Organização da Vida")}</p>
         </div>
       </div>
     `;
@@ -127,19 +133,37 @@
             ${ariaCurrent}
         >
             <span aria-hidden="true"></span>
-            ${item.label}
+
+            <span data-i18n="nav.${item.key}">
+              ${
+                window.FluirI18n
+                  ? window.FluirI18n.t(`nav.${item.key}`, item.label)
+                  : item.label
+              }
+            </span>
         </a>
         `;
     }).join("");
 
     return `
-        <nav class="sidebar-nav" aria-label="Navegação principal">
+        <nav
+          class="sidebar-nav"
+          aria-label="${sidebarT("sidebar.mainNavigation", "Navegação principal")}"
+          data-i18n-aria-label="sidebar.mainNavigation"
+        >
         ${links}
         </nav>
     `;
     }
 
-  function renderIllustration(quote) {
+  function renderIllustration(quote, quoteKey = "") {
+    const translatedQuote = quoteKey
+      ? sidebarT(quoteKey, quote)
+      : quote;
+
+    const quoteAttribute = quoteKey
+      ? ` data-i18n="${quoteKey}"`
+      : "";
     return `
       <div class="sidebar-illustration">
         <svg class="sidebar-character" width="100" height="92" viewBox="0 0 120 110" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -149,7 +173,7 @@
           <path d="M55 55v3M65 55v3" stroke-width="3" />
           <rect x="41" y="76" width="38" height="30" rx="12" fill="var(--card-bg)" />
         </svg>
-        <p>“${quote}”</p>
+        <p>“<span${quoteAttribute}>${translatedQuote}</span>”</p>
       </div>
     `;
   }
@@ -183,6 +207,10 @@
         sidebar.dataset.sidebarQuote ||
         "Pequenas ações constantes constroem mudanças profundas.";
 
+    const quoteKey =
+        sidebar.dataset.sidebarQuoteKey ||
+        "";
+
     if (!contextualArea) {
       console.warn(
         "Sidebar compartilhada encontrada sem área contextual."
@@ -196,7 +224,7 @@
       [
         renderBrand(),
         renderNavigation(),
-        renderIllustration(quote)
+        renderIllustration(quote, quoteKey)
       ].join("")
     );
 

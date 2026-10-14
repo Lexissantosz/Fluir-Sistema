@@ -578,7 +578,7 @@ body.dark .account-button {
   background: rgba(255, 255, 255, 0.42);
 
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 4px;
 }
 
@@ -1639,5 +1639,164 @@ body.dark .setup-action-button {
 @media (max-width: 520px) {
   .quick-modules {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ===================================================== */
+/* AJUDA E FEEDBACK */
+/* ===================================================== */
+
+.translation-feedback-link {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 4px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.translation-feedback-link:hover {
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.035);
+}
+
+body.dark .translation-feedback-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.support-card {
+  grid-column: 1 / -1;
+}
+
+.support-intro {
+  margin: -6px 0 18px;
+  max-width: 780px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.feedback-form {
+  display: grid;
+  gap: 14px;
+}
+
+.feedback-field {
+  display: grid;
+  gap: 8px;
+}
+
+.feedback-field > span,
+.feedback-diagnostics span {
+  font-size: 13px;
+  font-weight: 750;
+  color: var(--text);
+}
+
+.feedback-field select,
+.feedback-field textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  font: 600 13px "Manrope", Arial, sans-serif;
+  outline: none;
+}
+
+.feedback-field select {
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.feedback-field textarea {
+  min-height: 120px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.feedback-field select:focus,
+.feedback-field textarea:focus {
+  border-color: var(--border-strong);
+}
+
+.feedback-diagnostics {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.feedback-diagnostics input {
+  width: 17px;
+  height: 17px;
+  margin-top: 1px;
+  accent-color: var(--text);
+}
+
+.feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary-feedback-btn,
+.secondary-feedback-btn {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.primary-feedback-btn {
+  border: 1px solid var(--text);
+  background: var(--text);
+  color: var(--bg);
+}
+
+.secondary-feedback-btn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.feedback-status {
+  min-height: 18px;
+  font-size: 12px;
+  font-weight: 750;
+  color: var(--muted);
+}
+
+.feedback-status.success {
+  color: var(--success);
+}
+
+.feedback-status.error {
+  color: var(--danger);
+}
+
+@media (max-width: 850px) {
+  .settings-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .feedback-actions {
+    flex-direction: column;
+  }
+
+  .primary-feedback-btn,
+  .secondary-feedback-btn {
+    width: 100%;
   }
 }

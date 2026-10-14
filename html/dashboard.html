@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Fluir | Dashboard</title>
+  <title data-i18n="dashboard.pageTitle">Fluir | Início</title>
 
   <!-- Fonte principal usada no sistema -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,11 +30,12 @@
       class="sidebar"
       data-shared-sidebar
       data-sidebar-quote="Pequenas ações constantes constroem mudanças profundas."
+      data-sidebar-quote-key="dashboard.sidebarQuote"
     >
 
     <!-- Conteúdo contextual específico do Dashboard -->
     <div class="focus-card" data-sidebar-context>
-      <p>Foco de hoje</p>
+      <p data-i18n="dashboard.focusToday">Foco de hoje</p>
 
       <strong id="focusPercent">0%</strong>
 
@@ -42,7 +43,7 @@
         <span></span>
       </div>
 
-      <small>Continue assim.</small>
+      <small data-i18n="dashboard.keepGoing">Continue assim.</small>
     </div>
 
   </aside>
@@ -53,7 +54,7 @@
       <!-- Cabeçalho do dashboard -->
       <header class="dashboard-header">
         <div class="dashboard-welcome">
-          <span class="dashboard-eyebrow">Painel principal</span>
+          <span class="dashboard-eyebrow" data-i18n="dashboard.mainPanel">Painel principal</span>
 
           <h2 id="welcomeTitle">Olá, Você </h2>
 
@@ -65,7 +66,7 @@
         <div class="header-actions">
 
   <div class="notif-wrapper">
-    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações">
+    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações" data-i18n-aria-label="dashboard.notifications">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -74,8 +75,8 @@
 
     <div class="notif-dropdown" id="notifDropdown">
       <div class="notif-dropdown-header">
-        <span>Notificações</span>
-        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações">
+        <span data-i18n="dashboard.notifications">Notificações</span>
+        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações" data-i18n-aria-label="dashboard.configureNotifications">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
@@ -87,9 +88,9 @@
         <div class="notif-row">
           <span class="notif-row-icon notif-row-icon-info">i</span>
           <div class="notif-row-content">
-            <p class="notif-row-title">Bem-vindo ao Fluir!</p>
-            <p class="notif-row-desc">Explore seus módulos na barra lateral.</p>
-            <span class="notif-row-time">há 2 horas</span>
+            <p class="notif-row-title" data-i18n="dashboard.welcomeNotification">Bem-vindo ao Fluir!</p>
+            <p class="notif-row-desc" data-i18n="dashboard.exploreModules">Explore seus módulos na barra lateral.</p>
+            <span class="notif-row-time" data-i18n="dashboard.twoHoursAgo">há 2 horas</span>
           </div>
         </div>
       </div>
@@ -99,14 +100,14 @@
   <div class="profile-wrapper">
     <button class="avatar-btn" type="button" id="avatarBtn">
   <span id="avatarBtnInitial">D</span>
-  <img id="avatarBtnImage" alt="Foto de perfil">
+  <img id="avatarBtnImage" alt="Foto de perfil" data-i18n-alt="dashboard.profilePhoto">
 </button>
 
     <div class="profile-dropdown" id="profileDropdown">
       <div class="profile-dropdown-top">
         <div class="profile-dropdown-photo" id="headerProfilePhoto">
           <span id="headerProfileInitial">D</span>
-          <img id="headerProfileImage" alt="Foto de perfil">
+          <img id="headerProfileImage" alt="Foto de perfil" data-i18n-alt="dashboard.profilePhoto">
         </div>
         <div class="profile-dropdown-top-text">
           <strong id="headerProfileName">Você</strong>
@@ -124,7 +125,7 @@
               <circle cx="12" cy="13" r="4"/>
             </svg>
           </span>
-          <span>Trocar foto</span>
+          <span data-i18n="dashboard.changePhoto">Trocar foto</span>
         </label>
         <input type="file" id="headerPhotoInput" accept="image/*" hidden>
 
@@ -135,7 +136,7 @@
               <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
             </svg>
           </span>
-          <span>Ir para configurações</span>
+          <span data-i18n="dashboard.goToSettings">Ir para configurações</span>
         </a>
       </div>
     </div>
@@ -150,7 +151,7 @@
         <article class="summary-card module-card" data-module-card="tasks">
           <div class="card-title">
             <span>☑</span>
-            <p>Tarefas</p>
+            <p data-i18n="nav.tasks">Tarefas</p>
           </div>
 
           <strong>0</strong>
@@ -164,7 +165,7 @@
         <article class="summary-card module-card" data-module-card="habits">
           <div class="card-title">
             <span>◌</span>
-            <p>Hábitos</p>
+            <p data-i18n="nav.habits">Hábitos</p>
           </div>
 
           <strong>0</strong>
@@ -178,7 +179,7 @@
         <article class="summary-card module-card" data-module-card="sleep">
           <div class="card-title">
             <span>☾</span>
-            <p>Sono</p>
+            <p data-i18n="nav.sleep">Sono</p>
           </div>
 
           <strong>0h</strong>
@@ -190,7 +191,7 @@
         <article class="summary-card module-card" data-module-card="water">
           <div class="card-title">
             <span>𓏑</span>
-            <p>Água</p>
+            <p data-i18n="nav.water">Água</p>
           </div>
 
           <strong>0ml</strong>
@@ -211,7 +212,7 @@
         <article class="summary-card module-card" data-module-card="finances">
           <div class="card-title">
             <span>$</span>
-            <p>Finanças</p>
+            <p data-i18n="nav.finances">Finanças</p>
           </div>
 
           <strong>R$ 0</strong>
@@ -223,7 +224,7 @@
         <article class="summary-card module-card" data-module-card="diary">
           <div class="card-title">
             <span>▤</span>
-            <p>Diário</p>
+            <p data-i18n="nav.diary">Diário</p>
           </div>
 
           <strong>0</strong>
@@ -240,11 +241,11 @@
         <article class="panel panel-large module-panel" data-module-panel="tasks">
           <div class="panel-header">
             <div>
-              <h3><span class="module-icon icon-tasks" aria-hidden="true"></span> Tarefas de hoje</h3>
+              <h3><span class="module-icon icon-tasks" aria-hidden="true"></span> <span data-i18n="dashboard.tasksToday">Tarefas de hoje</span></h3>
             </div>
 
             <button class="small-btn" type="button">
-              <span class="ui-icon ui-icon-plus" aria-hidden="true"></span> Nova tarefa
+              <span class="ui-icon ui-icon-plus" aria-hidden="true"></span> <span data-i18n="dashboard.newTask">Nova tarefa</span>
             </button>
           </div>
 
@@ -255,14 +256,14 @@
           <div class="task-list" id="dashboardTaskList"></div>
 
           <a class="panel-link" href="tasks.html">
-            Ver todas as tarefas →
+            <span data-i18n="dashboard.viewAllTasks">Ver todas as tarefas →</span>
           </a>
         </article>
 
         <!-- Timeline -->
         <article class="panel panel-large">
           <div class="panel-header">
-            <h3><span class="module-icon icon-timeline" aria-hidden="true"></span> Timeline</h3>
+            <h3><span class="module-icon icon-timeline" aria-hidden="true"></span> <span data-i18n="nav.timeline">Linha do tempo</span></h3>
           </div>
 
           <div class="timeline-list">
@@ -270,8 +271,8 @@
               <time>08:00</time>
 
               <div>
-                <strong>Acordei</strong>
-                <p>Dormi bem e me sinto disposto.</p>
+                <strong data-i18n="dashboard.timeline.wokeUp">Acordei</strong>
+                <p data-i18n="dashboard.timeline.wokeUpDesc">Dormi bem e me sinto disposto.</p>
               </div>
             </div>
 
@@ -279,8 +280,8 @@
               <time>09:15</time>
 
               <div>
-                <strong>Café da manhã</strong>
-                <p>Aveia com frutas e café.</p>
+                <strong data-i18n="dashboard.timeline.breakfast">Café da manhã</strong>
+                <p data-i18n="dashboard.timeline.breakfastDesc">Aveia com frutas e café.</p>
               </div>
             </div>
 
@@ -288,8 +289,8 @@
               <time>11:30</time>
 
               <div>
-                <strong>Reunião de alinhamento</strong>
-                <p>Projeto Fluir — sprint semanal.</p>
+                <strong data-i18n="dashboard.timeline.meeting">Reunião de alinhamento</strong>
+                <p data-i18n="dashboard.timeline.meetingDesc">Projeto Fluir — sprint semanal.</p>
               </div>
             </div>
 
@@ -297,8 +298,8 @@
               <time>15:45</time>
 
               <div>
-                <strong>Caminhada</strong>
-                <p>20 minutos ao ar livre.</p>
+                <strong data-i18n="dashboard.timeline.walk">Caminhada</strong>
+                <p data-i18n="dashboard.timeline.walkDesc">20 minutos ao ar livre.</p>
               </div>
             </div>
 
@@ -306,14 +307,14 @@
               <time>21:30</time>
 
               <div>
-                <strong>Diário emocional</strong>
-                <p>Reflexão sobre o dia.</p>
+                <strong data-i18n="dashboard.timeline.diary">Diário emocional</strong>
+                <p data-i18n="dashboard.timeline.diaryDesc">Reflexão sobre o dia.</p>
               </div>
             </div>
           </div>
 
           <a class="panel-link" href="timeline.html">
-            Ver linha do tempo completa →
+            <span data-i18n="dashboard.viewFullTimeline">Ver linha do tempo completa →</span>
           </a>
         </article>
       </section>
@@ -324,34 +325,34 @@
         <!-- Hábitos -->
         <article class="panel habits-panel module-panel" data-module-panel="habits">
           <div class="panel-header">
-            <h3><span class="module-icon icon-habits" aria-hidden="true"></span> Hábitos ativos</h3>
+            <h3><span class="module-icon icon-habits" aria-hidden="true"></span> <span data-i18n="dashboard.activeHabits">Hábitos ativos</span></h3>
 
             <button class="small-btn" type="button">
-              Ver todos
+              <span data-i18n="dashboard.viewAll">Ver todos</span>
             </button>
           </div>
 
           <div class="habit-table">
             <div class="habit-row">
-              <span>Meditar 10 min</span>
+              <span data-i18n="dashboard.habit.meditate">Meditar 10 min</span>
               <p>● ● ● ● ○ ○ ●</p>
               <strong>5/7</strong>
             </div>
 
             <div class="habit-row">
-              <span>Ler diariamente</span>
+              <span data-i18n="dashboard.habit.read">Ler diariamente</span>
               <p>● ● ● ● ● ○ ●</p>
               <strong>6/7</strong>
             </div>
 
             <div class="habit-row">
-              <span>Treinar</span>
+              <span data-i18n="dashboard.habit.workout">Treinar</span>
               <p>● ● ● ○ ○ ○ ●</p>
               <strong>3/7</strong>
             </div>
 
             <div class="habit-row">
-              <span>Beber 2L de água</span>
+              <span data-i18n="dashboard.habit.water">Beber 2L de água</span>
               <p>● ● ● ● ○ ● ●</p>
               <strong>5/7</strong>
             </div>
@@ -362,7 +363,7 @@
         <div class="side-panels">
 
           <article class="panel small-panel module-panel" data-module-panel="sleep">
-            <h3><span class="module-icon icon-sleep" aria-hidden="true"></span> Sono</h3>
+            <h3><span class="module-icon icon-sleep" aria-hidden="true"></span> <span data-i18n="nav.sleep">Sono</span></h3>
 
             <strong>0h</strong>
             <p>Nenhum registro</p>
@@ -371,7 +372,7 @@
           </article>
 
           <article class="panel small-panel module-panel" data-module-panel="water">
-            <h3><span class="module-icon icon-water" aria-hidden="true"></span> Água</h3>
+            <h3><span class="module-icon icon-water" aria-hidden="true"></span> <span data-i18n="nav.water">Água</span></h3>
 
             <strong>0ml</strong>
             <p>de 2000ml</p>
@@ -389,7 +390,7 @@
           </article>
 
           <article class="panel small-panel module-panel" data-module-panel="finances">
-            <h3><span class="module-icon icon-finances" aria-hidden="true"></span> Finanças</h3>
+            <h3><span class="module-icon icon-finances" aria-hidden="true"></span> <span data-i18n="nav.finances">Finanças</span></h3>
 
             <strong>R$ 0</strong>
             <p>Saldo atual</p>
@@ -398,14 +399,14 @@
           </article>
 
           <article class="panel small-panel module-panel" data-module-panel="diary">
-            <h3><span class="module-icon icon-diary" aria-hidden="true"></span> Diário emocional</h3>
+            <h3><span class="module-icon icon-diary" aria-hidden="true"></span> <span data-i18n="nav.diary">Diário emocional</span></h3>
 
             <p>
               Nenhuma entrada no diário ainda.
             </p>
 
             <a href="diary.html">
-              Ver entradas →
+              <span data-i18n="dashboard.viewEntries">Ver entradas →</span>
             </a>
           </article>
         </div>
@@ -415,12 +416,12 @@
       <section class="recent-events">
         <div class="panel-header">
           <div>
-            <h3>▣ Eventos recentes</h3>
-            <p>O que aconteceu nos últimos dias.</p>
+            <h3>▣ <span data-i18n="dashboard.recentEvents">Eventos recentes</span></h3>
+            <p data-i18n="dashboard.recentEventsSubtitle">O que aconteceu nos últimos dias.</p>
           </div>
 
           <button class="small-btn" type="button">
-            Ver todos
+            <span data-i18n="dashboard.viewAll">Ver todos</span>
           </button>
         </div>
 
@@ -436,6 +437,7 @@
   </main>
 
   <!-- Catálogo compartilhado das áreas do Fluir -->
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
 
   <!-- Sidebar compartilhada -->
