@@ -183,7 +183,7 @@
 
           <button class="translation-feedback-link" id="reportTranslationBtn" type="button">
             <span aria-hidden="true">?</span>
-            <span>Questionar uma tradução</span>
+            <span data-i18n="settings.feedback.translationLink">Questionar uma tradução</span>
           </button>
         </article>
 
@@ -331,14 +331,13 @@
             <h3 data-i18n="settings.support">Ajuda e feedback</h3>
           </div>
 
-          <p class="support-intro">
-            Encontrou uma tradução estranha, um erro do sistema ou tem uma sugestão?
-            Você pode montar um relatório aqui sem enviar seus dados automaticamente.
+          <p class="support-intro" data-i18n="settings.feedback.intro">
+            Encontrou uma tradução estranha, um erro do sistema ou tem uma sugestão? Você pode montar um relatório aqui sem enviar seus dados automaticamente.
           </p>
 
           <div class="feedback-form">
             <label class="feedback-field">
-              <span>Tipo de feedback</span>
+              <span data-i18n="settings.feedback.type">Tipo de feedback</span>
               <select id="feedbackType">
                 <option value="translation" data-i18n="feedback.translation">Problema de tradução</option>
                 <option value="system" data-i18n="feedback.system">Erro do sistema</option>
@@ -349,27 +348,27 @@
             </label>
 
             <label class="feedback-field">
-              <span>Descreva o que aconteceu</span>
+              <span data-i18n="settings.feedback.message">Descreva o que aconteceu</span>
               <textarea
                 id="feedbackMessage"
                 rows="5"
-                placeholder="Explique o problema, onde ele apareceu e o que você esperava ver."
+                placeholder="Explique o problema, onde ele apareceu e o que você esperava ver." data-i18n-placeholder="settings.feedback.placeholder"
               ></textarea>
             </label>
 
             <label class="feedback-diagnostics">
               <input type="checkbox" id="feedbackDiagnostics" checked />
-              <span>
+              <span data-i18n="settings.feedback.diagnostics">
                 Incluir dados técnicos básicos no texto copiado: página, idioma e tamanho da tela
               </span>
             </label>
 
             <div class="feedback-actions">
-              <button class="secondary-feedback-btn" id="copyFeedbackBtn" type="button">
+              <button class="secondary-feedback-btn" id="copyFeedbackBtn" type="button" data-i18n="settings.feedback.copy">
                 Copiar relatório
               </button>
 
-              <button class="primary-feedback-btn" id="openGithubFeedbackBtn" type="button">
+              <button class="primary-feedback-btn" id="openGithubFeedbackBtn" type="button" data-i18n="settings.feedback.github">
                 Abrir página de chamados
               </button>
             </div>
