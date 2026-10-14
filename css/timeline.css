@@ -1070,6 +1070,9 @@ body.dark .focus-bar {
 /* ===================================================== */
 
 .event-list {
+  --event-time-width: 54px;
+  --event-marker-width: 16px;
+  --event-column-gap: 12px;
   position: relative;
 
   display: grid;
@@ -1080,7 +1083,7 @@ body.dark .focus-bar {
   content: "";
 
   position: absolute;
-  left: 73.5px;
+  left: calc(var(--event-time-width) + var(--event-column-gap) + var(--event-marker-width) / 2 - 0.5px);
   top: 10px;
 
   width: 1px;
@@ -1094,9 +1097,9 @@ body.dark .focus-bar {
   position: relative;
 
   display: grid;
-  grid-template-columns: 54px 16px 28px minmax(0, 1fr) auto auto;
+  grid-template-columns: var(--event-time-width) var(--event-marker-width) 28px minmax(0, 1fr) auto auto;
   align-items: start;
-  gap: 12px;
+  gap: var(--event-column-gap);
 
   min-height: 42px;
 }
@@ -1852,12 +1855,14 @@ body.dark .event-form-message.success {
   }
 
   .event-item {
-    grid-template-columns: 48px 14px minmax(0, 1fr);
-    gap: 10px;
+    grid-template-columns: var(--event-time-width) var(--event-marker-width) minmax(0, 1fr);
+    gap: var(--event-column-gap);
   }
 
-  .event-list::before {
-    left: 61px;
+  .event-list {
+    --event-time-width: 48px;
+    --event-marker-width: 14px;
+    --event-column-gap: 10px;
   }
 
   .event-icon {
