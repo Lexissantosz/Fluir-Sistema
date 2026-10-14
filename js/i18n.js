@@ -1379,6 +1379,52 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     });
   });
 
+
+  const LEGACY_LANDING_PHRASES = [
+    ["Fluir | Organização da Vida", "Fluir | Organização da Vida", "Fluir | Life Organization", "Fluir | Organización de la Vida", "Fluir | Organisation de la vie", "Fluir | Lebensorganisation", "Fluir | Organizzazione della vita"],
+    ["Organização da Vida", "Organização da Vida", "Life Organization", "Organización de la Vida", "Organisation de la vie", "Lebensorganisation", "Organizzazione della vita"],
+    ["Sobre", "Sobre", "About", "Sobre", "À propos", "Über", "Informazioni"],
+    ["Funcionalidades", "Funcionalidades", "Features", "Funciones", "Fonctionnalités", "Funktionen", "Funzionalità"],
+    ["Versões", "Versões", "Versions", "Versiones", "Versions", "Versionen", "Versioni"],
+    ["Web, mobile e desktop planejados", "Web, mobile e desktop planeados", "Web, mobile, and desktop planned", "Web, móvil y escritorio planificados", "Web, mobile et bureau prévus", "Web, Mobil und Desktop geplant", "Web, mobile e desktop pianificati"],
+    ["Organize sua rotina, seus hábitos e seu bem-estar em um só lugar.", "Organiza a tua rotina, os teus hábitos e o teu bem-estar num só lugar.", "Organize your routine, habits, and well-being in one place.", "Organiza tu rutina, tus hábitos y tu bienestar en un solo lugar.", "Organisez votre routine, vos habitudes et votre bien-être au même endroit.", "Organisiere Routine, Gewohnheiten und Wohlbefinden an einem Ort.", "Organizza routine, abitudini e benessere in un unico posto."],
+    ["Acessar sistema", "Aceder ao sistema", "Open system", "Acceder al sistema", "Accéder au système", "System öffnen", "Accedi al sistema"],
+    ["Ver funcionalidades", "Ver funcionalidades", "View features", "Ver funciones", "Voir les fonctionnalités", "Funktionen ansehen", "Vedi funzionalità"],
+    ["Sobre o projeto", "Sobre o projeto", "About the project", "Sobre el proyecto", "À propos du projet", "Über das Projekt", "Sul progetto"],
+    ["Um sistema para acompanhar a vida com mais clareza.", "Um sistema para acompanhar a vida com mais clareza.", "A system for following life with greater clarity.", "Un sistema para seguir la vida con más claridad.", "Un système pour suivre la vie avec plus de clarté.", "Ein System, um das Leben klarer zu begleiten.", "Un sistema per seguire la vita con più chiarezza."],
+    ["O que o sistema oferece", "O que o sistema oferece", "What the system offers", "Lo que ofrece el sistema", "Ce que propose le système", "Was das System bietet", "Cosa offre il sistema"],
+    ["Criação e acompanhamento de atividades importantes da rotina.", "Criação e acompanhamento de atividades importantes da rotina.", "Create and track important routine activities.", "Crea y sigue actividades importantes de la rutina.", "Créez et suivez les activités importantes de votre routine.", "Erstelle und verfolge wichtige Aufgaben deiner Routine.", "Crea e segui attività importanti della routine."],
+    ["Controle de hábitos pessoais com foco em constância e progresso.", "Controlo de hábitos pessoais com foco em consistência e progresso.", "Track personal habits with a focus on consistency and progress.", "Controla hábitos personales con enfoque en constancia y progreso.", "Suivez vos habitudes personnelles en mettant l'accent sur la régularité et les progrès.", "Verfolge persönliche Gewohnheiten mit Fokus auf Beständigkeit und Fortschritt.", "Monitora le abitudini personali con attenzione a costanza e progresso."],
+    ["Hidratação", "Hidratação", "Hydration", "Hidratación", "Hydratation", "Hydration", "Idratazione"],
+    ["Registro de consumo de água e acompanhamento diário.", "Registo do consumo de água e acompanhamento diário.", "Log water intake and track it daily.", "Registra el consumo de agua y haz seguimiento diario.", "Enregistrez votre consommation d'eau et suivez-la chaque jour.", "Erfasse deine Wasseraufnahme und verfolge sie täglich.", "Registra il consumo d'acqua e monitoralo ogni giorno."],
+    ["Organização de entradas, saídas e metas financeiras.", "Organização de entradas, saídas e metas financeiras.", "Organize income, expenses, and financial goals.", "Organiza ingresos, gastos y metas financieras.", "Organisez revenus, dépenses et objectifs financiers.", "Organisiere Einnahmen, Ausgaben und finanzielle Ziele.", "Organizza entrate, uscite e obiettivi finanziari."],
+    ["Acompanhamento da rotina de descanso e qualidade do sono.", "Acompanhamento da rotina de descanso e qualidade do sono.", "Track your rest routine and sleep quality.", "Sigue tu rutina de descanso y la calidad del sueño.", "Suivez votre routine de repos et la qualité de votre sommeil.", "Verfolge deine Schlafroutine und Schlafqualität.", "Monitora la routine di riposo e la qualità del sonno."],
+    ["Área de usuário com informações pessoais e preferências.", "Área de utilizador com informações pessoais e preferências.", "User area with personal information and preferences.", "Área de usuario con información personal y preferencias.", "Espace utilisateur avec informations personnelles et préférences.", "Benutzerbereich mit persönlichen Informationen und Einstellungen.", "Area utente con informazioni personali e preferenze."],
+    ["Versões do sistema", "Versões do sistema", "System versions", "Versiones del sistema", "Versions du système", "Systemversionen", "Versioni del sistema"],
+    ["O Fluir foi pensado para funcionar em diferentes plataformas.", "O Fluir foi pensado para funcionar em diferentes plataformas.", "Fluir was designed to work across different platforms.", "Fluir fue pensado para funcionar en diferentes plataformas.", "Fluir a été conçu pour fonctionner sur différentes plateformes.", "Fluir wurde für verschiedene Plattformen entwickelt.", "Fluir è stato progettato per funzionare su diverse piattaforme."],
+    ["Sistema Web", "Sistema Web", "Web system", "Sistema web", "Système web", "Web-System", "Sistema web"],
+    ["App Android", "App Android", "Android app", "App Android", "Application Android", "Android-App", "App Android"],
+    ["App iOS", "App iOS", "iOS app", "App iOS", "Application iOS", "iOS-App", "App iOS"],
+    ["Desktop Futuro", "Desktop futuro", "Future desktop app", "Escritorio futuro", "Application de bureau à venir", "Zukünftige Desktop-App", "Desktop futuro"],
+    ["Comece a explorar o Fluir", "Começa a explorar o Fluir", "Start exploring Fluir", "Empieza a explorar Fluir", "Commencez à explorer Fluir", "Entdecke Fluir", "Inizia a esplorare Fluir"],
+    ["Acesse a tela de login e veja as áreas principais do sistema.", "Acede ao ecrã de início de sessão e vê as principais áreas do sistema.", "Open the sign-in screen and explore the system's main areas.", "Accede a la pantalla de inicio de sesión y explora las áreas principales del sistema.", "Accédez à l'écran de connexion et découvrez les principales sections du système.", "Öffne die Anmeldung und entdecke die wichtigsten Bereiche des Systems.", "Apri la schermata di accesso ed esplora le aree principali del sistema."],
+    ["Entrar no sistema", "Entrar no sistema", "Enter system", "Entrar al sistema", "Accéder au système", "System öffnen", "Entra nel sistema"],
+    ["Fluir — Sistema de Organização da Vida", "Fluir — Sistema de Organização da Vida", "Fluir — Life Organization System", "Fluir — Sistema de Organización de la Vida", "Fluir — Système d'organisation de la vie", "Fluir — System zur Lebensorganisation", "Fluir — Sistema di organizzazione della vita"]
+  ];
+
+  Object.entries(LEGACY_PAGE_LANGUAGE_INDEX).forEach(([language, index]) => {
+    if (language === DEFAULT_LANGUAGE) {
+      return;
+    }
+
+    LEGACY_LANDING_PHRASES.forEach((entry) => {
+      if (!LEGACY_TEXT_TRANSLATIONS[language][entry[0]]) {
+        LEGACY_TEXT_TRANSLATIONS[language][entry[0]] =
+          entry[index] || entry[0];
+      }
+    });
+  });
+
   const LEGACY_USER_CONTENT = /(task-item|habit-item|diary-entry|attachment-item|transaction-item|finance-item|meal-item|nutrition-item|health-item|cycle-item|sleep-item|user-created-event)/i;
   let legacyObserver = null;
   let applyingLegacyTranslation = false;
@@ -1571,8 +1617,10 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
   function ensureStandaloneLanguageSwitcher() {
     const page = window.location.pathname.split("/").pop() || "";
 
+    const standalonePages = ["", "index.html", "login.html", "setup.html"];
+
     if (
-      !["login.html", "setup.html"].includes(page) ||
+      !standalonePages.includes(page) ||
       document.getElementById("fluirStandaloneLanguage")
     ) {
       return;
