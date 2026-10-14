@@ -1295,6 +1295,7 @@ body.dark .focus-bar {
 .timeline-sidebar {
   display: grid;
   gap: 16px;
+  align-items: start;
 }
 
 .side-card {
@@ -1766,7 +1767,7 @@ body.dark .event-form-message.success {
 
   .timeline-sidebar {
     grid-template-columns: repeat(3, 1fr);
-    align-items: stretch;
+    align-items: start;
   }
 
   .stats-grid {
