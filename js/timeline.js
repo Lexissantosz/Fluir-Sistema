@@ -748,6 +748,13 @@ function localizeSystemTimelineEvent(eventData) {
       "Tarefa removida": ["timeline.system.taskRemoved", "Tarefa removida"],
       "Tarefas concluídas limpas": ["timeline.system.completedTasksCleared", "Tarefas concluídas limpas"]
     },
+    habits: {
+      "Hábito criado": ["timeline.system.habitCreated", "Hábito criado"],
+      "Hábito desmarcado": ["timeline.system.habitUnchecked", "Hábito desmarcado"],
+      "Hábito concluído": ["timeline.system.habitCompleted", "Hábito concluído"],
+      "Hábito removido": ["timeline.system.habitRemoved", "Hábito removido"],
+      "Hábitos de hoje reiniciados": ["timeline.system.habitsTodayReset", "Hábitos de hoje reiniciados"]
+    },
     finances: {
       "Status financeiro atualizado": ["timeline.system.financeStatusUpdated", "Status financeiro atualizado"],
       "Status da dívida atualizado": ["timeline.system.debtStatusUpdated", "Status da dívida atualizado"],
@@ -776,6 +783,16 @@ function localizeSystemTimelineEvent(eventData) {
     : title;
 
   let localizedDescription = description;
+
+  if (
+    category === "habits" &&
+    description === "As conclusões de hoje foram removidas."
+  ) {
+    localizedDescription = timelineT(
+      "timeline.system.habitsTodayResetDesc",
+      "As conclusões de hoje foram removidas."
+    );
+  }
 
   if (category === "water") {
     let match = description.match(
