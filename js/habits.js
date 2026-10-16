@@ -74,6 +74,91 @@ let selectedHabitDays = [];
 const habitDescriptionInput = document.getElementById("habitDescriptionInput");
 const habitFormMessage = document.getElementById("habitFormMessage");
 
+function habitsT(key, fallback = "", variables = {}) {
+  if (window.FluirI18n) {
+    return window.FluirI18n.t(key, fallback, variables);
+  }
+
+  return String(fallback).replace(/\{(\w+)\}/g, (match, variableName) => {
+    if (Object.prototype.hasOwnProperty.call(variables, variableName)) {
+      return String(variables[variableName]);
+    }
+
+    return match;
+  });
+}
+
+function habitsLocale() {
+  return window.FluirI18n
+    ? window.FluirI18n.getLocale()
+    : "pt-BR";
+}
+
+function getHabitCategoryLabel(category) {
+  const categories = {
+    "Saúde": ["habits.category.health", "Saúde"],
+    "Estudos": ["habits.category.study", "Estudos"],
+    "Casa": ["habits.category.home", "Casa"],
+    "Pessoal": ["habits.category.personal", "Pessoal"],
+    "Produtividade": ["habits.category.productivity", "Produtividade"],
+    "Autocuidado": ["habits.category.selfCare", "Autocuidado"]
+  };
+
+  const entry = categories[category];
+
+  if (!entry) {
+    return category || habitsT("habits.category.personal", "Pessoal");
+  }
+
+  return habitsT(entry[0], entry[1]);
+}
+
+function getHabitDisplayData(habit) {
+  const demoHabits = {
+    1: {
+      title: "Beber água",
+      titleKey: "habits.demo.water.title",
+      description: "Manter hidratação ao longo do dia.",
+      descriptionKey: "habits.demo.water.description"
+    },
+    2: {
+      title: "Ler 20 páginas",
+      titleKey: "habits.demo.read.title",
+      description: "Leitura leve para manter constância.",
+      descriptionKey: "habits.demo.read.description"
+    },
+    3: {
+      title: "Meditar 10 minutos",
+      titleKey: "habits.demo.meditate.title",
+      description: "Pausar, respirar e desacelerar.",
+      descriptionKey: "habits.demo.meditate.description"
+    },
+    4: {
+      title: "Estudar",
+      titleKey: "habits.demo.study.title",
+      description: "Estudar pelo menos 40 minutos.",
+      descriptionKey: "habits.demo.study.description"
+    }
+  };
+
+  const demo = demoHabits[Number(habit.id)];
+  const title =
+    demo && habit.title === demo.title
+      ? habitsT(demo.titleKey, demo.title)
+      : habit.title;
+
+  const description =
+    demo && habit.description === demo.description
+      ? habitsT(demo.descriptionKey, demo.description)
+      : habit.description;
+
+  return {
+    title,
+    description,
+    category: getHabitCategoryLabel(habit.category)
+  };
+}
+
 const resetTodayBtn = document.getElementById("resetTodayBtn");
 
 
@@ -189,7 +274,7 @@ function getTodayKey() {
 function getCurrentTimeLabel() {
   const now = new Date();
 
-  return now.toLocaleTimeString("pt-BR", {
+  return now.toLocaleTimeString(habitsLocale(), {
     hour: "2-digit",
     minute: "2-digit"
   });
@@ -231,13 +316,13 @@ function applySavedTheme() {
     body.classList.add("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☼</span> Claro";
+      themeBtn.innerHTML = `<span>☼</span> ${habitsT("common.light", "Claro")}`;
     }
   } else {
     body.classList.remove("dark");
 
     if (themeBtn) {
-      themeBtn.innerHTML = "<span>☾</span> Escuro";
+      themeBtn.innerHTML = `<span>☾</span> ${habitsT("common.dark", "Escuro")}`;
     }
   }
 }
@@ -249,8 +334,8 @@ if (themeBtn) {
     const isDarkMode = body.classList.contains("dark");
 
     themeBtn.innerHTML = isDarkMode
-      ? "<span>☼</span> Claro"
-      : "<span>☾</span> Escuro";
+      ? `<span>☼</span> ${habitsT("common.light", "Claro")}`
+      : `<span>☾</span> ${habitsT("common.dark", "Escuro")}`;
 
     FluirAPI.saveTheme(isDarkMode ? "dark" : "light");
   });
@@ -265,10 +350,18 @@ function updateWelcomeArea() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
 
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    rawDisplayName && rawDisplayName !== "Você"
+      ? rawDisplayName
+      : habitsT("common.you", "Você");
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = habitsT(
+      "habits.welcome",
+      "Olá, {name}",
+      { name: displayName }
+    );
   }
 
   if (avatarBtn) {
@@ -293,14 +386,15 @@ function getInitial(name) {
 
 function getSubtitleByTone(tone) {
   const subtitles = {
-    calmo: "Pequenos passos repetidos também transformam.",
-    direto: "Veja seus hábitos, marque o que concluiu e siga.",
-    motivador: "Constância cresce quando você aparece todos os dias.",
-    delicado: "Com leveza, seus hábitos vão criando raízes.",
-    neutro: "Acompanhe seus hábitos, sequência e progresso semanal."
+    calmo: ["habits.subtitle.calm", "Pequenos passos repetidos também transformam."],
+    direto: ["habits.subtitle.direct", "Veja seus hábitos, marque o que concluiu e siga."],
+    motivador: ["habits.subtitle.motivating", "Constância cresce quando você aparece todos os dias."],
+    delicado: ["habits.subtitle.gentle", "Com leveza, seus hábitos vão criando raízes."],
+    neutro: ["habits.subtitle.neutral", "Acompanhe seus hábitos, sequência e progresso semanal."]
   };
 
-  return subtitles[tone] || subtitles.calmo;
+  const [key, fallback] = subtitles[tone] || subtitles.calmo;
+  return habitsT(key, fallback);
 }
 
 
@@ -480,6 +574,8 @@ function createHabitCard(habit) {
   const weeklyCount = getHabitWeeklyCount(habit);
   const weeklyGoal = Number(habit.weeklyGoal || 7);
   const weekKeys = getCurrentWeekKeys();
+  const displayHabit = getHabitDisplayData(habit);
+  const streak = Number(habit.streak || 0);
 
   const card = document.createElement("article");
 
@@ -493,18 +589,22 @@ function createHabitCard(habit) {
   }).join("");
 
   card.innerHTML = `
-    <button class="habit-check" type="button" title="Marcar hábito de hoje">
+    <button class="habit-check" type="button" title="${escapeHTML(habitsT("habits.markToday", "Marcar hábito de hoje"))}">
       ${completedToday ? "✓" : "○"}
     </button>
 
     <div class="habit-info">
-      <strong>${escapeHTML(habit.title)}</strong>
-      <p>${escapeHTML(habit.description || "Sem observação.")}</p>
+      <strong>${escapeHTML(displayHabit.title)}</strong>
+      <p>${escapeHTML(displayHabit.description || habitsT("habits.noNote", "Sem observação."))}</p>
 
       <div class="habit-meta">
-        <span>${escapeHTML(habit.category || "Pessoal")}</span>
-        <span>${weeklyCount}/${weeklyGoal} na semana</span>
-        <span>${Number(habit.streak || 0)} dia${Number(habit.streak || 0) === 1 ? "" : "s"} de sequência</span>
+        <span>${escapeHTML(displayHabit.category)}</span>
+        <span>${escapeHTML(habitsT("habits.weekMeta", "{done}/{goal} na semana", { done: weeklyCount, goal: weeklyGoal }))}</span>
+        <span>${escapeHTML(habitsT(
+          streak === 1 ? "habits.streakDays.one" : "habits.streakDays.other",
+          streak === 1 ? "{count} dia de sequência" : "{count} dias de sequência",
+          { count: streak }
+        ))}</span>
       </div>
 
       <div class="habit-week">
@@ -513,7 +613,7 @@ function createHabitCard(habit) {
     </div>
 
     <div class="habit-actions">
-      <button class="habit-action-btn delete-habit-btn" type="button" title="Excluir hábito">
+      <button class="habit-action-btn delete-habit-btn" type="button" title="${escapeHTML(habitsT("habits.delete", "Excluir hábito"))}">
         ×
       </button>
     </div>
@@ -555,14 +655,25 @@ function updateHabitListSubtitle(visibleCount) {
     return;
   }
 
-  const subtitles = {
-    all: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} ativo${visibleCount === 1 ? "" : "s"}.`,
-    pending: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"} hoje.`,
-    completed: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} concluído${visibleCount === 1 ? "" : "s"} hoje.`,
-    highStreak: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} com boa sequência.`
+  const suffix = visibleCount === 1 ? "one" : "other";
+  const keys = {
+    all: "habits.listSubtitle.all." + suffix,
+    pending: "habits.listSubtitle.pending." + suffix,
+    completed: "habits.listSubtitle.completed." + suffix,
+    highStreak: "habits.listSubtitle.highStreak." + suffix
+  };
+  const fallbacks = {
+    all: visibleCount === 1 ? "{count} hábito ativo." : "{count} hábitos ativos.",
+    pending: visibleCount === 1 ? "{count} hábito pendente hoje." : "{count} hábitos pendentes hoje.",
+    completed: visibleCount === 1 ? "{count} hábito concluído hoje." : "{count} hábitos concluídos hoje.",
+    highStreak: visibleCount === 1 ? "{count} hábito com boa sequência." : "{count} hábitos com boa sequência."
   };
 
-  habitListSubtitle.textContent = subtitles[activeFilter] || subtitles.all;
+  habitListSubtitle.textContent = habitsT(
+    keys[activeFilter] || keys.all,
+    fallbacks[activeFilter] || fallbacks.all,
+    { count: visibleCount }
+  );
 }
 
 
@@ -628,11 +739,22 @@ function updateSidebarProgress() {
 
   if (sidebarHabitText) {
     if (total === 0) {
-      sidebarHabitText.textContent = "Nenhum hábito registrado ainda.";
+      sidebarHabitText.textContent = habitsT(
+        "habits.sidebarProgress.none",
+        "Nenhum hábito registrado ainda."
+      );
       return;
     }
 
-    sidebarHabitText.textContent = `${completedToday} de ${total} hábito${total === 1 ? "" : "s"} concluído${completedToday === 1 ? "" : "s"} hoje.`;
+    sidebarHabitText.textContent = habitsT(
+      total === 1
+        ? "habits.sidebarProgress.one"
+        : "habits.sidebarProgress.other",
+      total === 1
+        ? "{completed} de {total} hábito concluído hoje."
+        : "{completed} de {total} hábitos concluídos hoje.",
+      { completed: completedToday, total }
+    );
   }
 }
 
@@ -655,13 +777,16 @@ function renderFocusMiniList() {
 
   if (pendingHabits.length === 0) {
     if (focusRecommendation) {
-      focusRecommendation.textContent = "Você concluiu seus hábitos de hoje. Continue com calma.";
+      focusRecommendation.textContent = habitsT(
+        "habits.focus.completed",
+        "Você concluiu seus hábitos de hoje. Continue com calma."
+      );
     }
 
     focusMiniList.innerHTML = `
       <div class="focus-mini-item">
-        <strong>Tudo certo por hoje</strong>
-        <span>Você manteve sua constância.</span>
+        <strong>${escapeHTML(habitsT("habits.focus.allDoneTitle", "Tudo certo por hoje"))}</strong>
+        <span>${escapeHTML(habitsT("habits.focus.allDoneText", "Você manteve sua constância."))}</span>
       </div>
     `;
 
@@ -669,17 +794,28 @@ function renderFocusMiniList() {
   }
 
   if (focusRecommendation) {
-    focusRecommendation.textContent = "Comece pelos hábitos que ajudam a manter sua sequência.";
+    focusRecommendation.textContent = habitsT(
+      "habits.focus.recommendation",
+      "Comece pelos hábitos que ajudam a manter sua sequência."
+    );
   }
 
   pendingHabits.forEach((habit) => {
     const item = document.createElement("div");
+    const displayHabit = getHabitDisplayData(habit);
+    const streak = Number(habit.streak || 0);
 
     item.className = "focus-mini-item";
 
     item.innerHTML = `
-      <strong>${escapeHTML(habit.title)}</strong>
-      <span>${Number(habit.streak || 0)} dia${Number(habit.streak || 0) === 1 ? "" : "s"} de sequência · ${escapeHTML(habit.category)}</span>
+      <strong>${escapeHTML(displayHabit.title)}</strong>
+      <span>${escapeHTML(habitsT(
+        streak === 1 ? "habits.focusMeta.one" : "habits.focusMeta.other",
+        streak === 1
+          ? "{count} dia de sequência · {category}"
+          : "{count} dias de sequência · {category}",
+        { count: streak, category: displayHabit.category }
+      ))}</span>
     `;
 
     focusMiniList.appendChild(item);
@@ -720,11 +856,22 @@ function renderWeekGrid() {
 
   if (weekText) {
     if (total === 0) {
-      weekText.textContent = "Crie seu primeiro hábito para começar a acompanhar sua semana.";
+      weekText.textContent = habitsT(
+        "habits.weekText.empty",
+        "Crie seu primeiro hábito para começar a acompanhar sua semana."
+      );
       return;
     }
 
-    weekText.textContent = `Hoje você concluiu ${completedToday} de ${total} hábito${total === 1 ? "" : "s"}.`;
+    weekText.textContent = habitsT(
+      total === 1
+        ? "habits.weekText.progress.one"
+        : "habits.weekText.progress.other",
+      total === 1
+        ? "Hoje você concluiu {completed} de {total} hábito."
+        : "Hoje você concluiu {completed} de {total} hábitos.",
+      { completed: completedToday, total }
+    );
   }
 }
 
@@ -749,8 +896,8 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma ação ainda</strong>
-          Crie seu primeiro hábito.
+          <strong>${escapeHTML(habitsT("habits.mini.noneTitle", "Nenhuma ação ainda"))}</strong>
+          ${escapeHTML(habitsT("habits.mini.noneText", "Crie seu primeiro hábito."))}
         </p>
       </div>
     `;
@@ -759,14 +906,19 @@ function renderMiniTimeline() {
 
   recentHabits.forEach((habit) => {
     const item = document.createElement("div");
+    const displayHabit = getHabitDisplayData(habit);
 
     item.className = "mini-timeline-item";
 
     item.innerHTML = `
       <time>${getCurrentTimeLabel()}</time>
       <p>
-        <strong>${isHabitCompletedToday(habit) ? "Hábito concluído" : "Hábito ativo"}</strong>
-        ${escapeHTML(habit.title)}
+        <strong>${escapeHTML(
+          isHabitCompletedToday(habit)
+            ? habitsT("habits.mini.completed", "Hábito concluído")
+            : habitsT("habits.mini.active", "Hábito ativo")
+        )}</strong>
+        ${escapeHTML(displayHabit.title)}
       </p>
     `;
 
@@ -915,7 +1067,7 @@ function saveNewHabit() {
       habitTitleInput.focus();
     }
 
-    showHabitFormMessage("Digite um nome válido para o hábito.");
+    showHabitFormMessage(habitsT("habits.validation.invalidName", "Digite um nome válido para o hábito."));
     return;
   }
 
@@ -925,10 +1077,10 @@ function saveNewHabit() {
     }
 
     if (habitDaysFeedback) {
-      habitDaysFeedback.textContent = "Selecione ao menos um dia da semana.";
+      habitDaysFeedback.textContent = habitsT("habits.validation.selectOneDay", "Selecione ao menos um dia da semana.");
     }
 
-    showHabitFormMessage("Selecione os dias em que o hábito vai se repetir.");
+    showHabitFormMessage(habitsT("habits.validation.selectRepeatDays", "Selecione os dias em que o hábito vai se repetir."));
     return;
   }
 
@@ -951,7 +1103,7 @@ function saveNewHabit() {
 
   renderHabits();
 
-  showHabitFormMessage("Hábito salvo com sucesso.", "success");
+  showHabitFormMessage(habitsT("habits.savedSuccess", "Hábito salvo com sucesso."), "success");
 
   setTimeout(() => {
     closeHabitModal();
@@ -1249,7 +1401,11 @@ function saveHeaderProfile(profile) {
 function renderHeaderProfileDropdown() {
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
-  const displayName = nickname || name || "Você";
+  const rawDisplayName = nickname || name || "";
+  const displayName =
+    rawDisplayName && rawDisplayName !== "Você"
+      ? rawDisplayName
+      : habitsT("common.you", "Você");
 
   const profile = getHeaderProfile();
 
@@ -1303,3 +1459,15 @@ if (headerPhotoInput) {
 }
 
 renderHeaderProfileDropdown();
+
+function refreshHabitsLanguage() {
+  applySavedTheme();
+  updateWelcomeArea();
+  renderHabits();
+  renderHeaderProfileDropdown();
+}
+
+window.addEventListener(
+  "fluir:languagechange",
+  refreshHabitsLanguage
+);
