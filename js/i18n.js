@@ -1009,6 +1009,73 @@ Object.entries(DASHBOARD_TRANSLATIONS).forEach(([language, entries]) => {
     };
   });
 
+
+  const TIMELINE_HABIT_TRANSLATIONS = {
+    "pt-BR": {
+      "timeline.system.habitCreated": "Hábito criado",
+      "timeline.system.habitUnchecked": "Hábito desmarcado",
+      "timeline.system.habitCompleted": "Hábito concluído",
+      "timeline.system.habitRemoved": "Hábito removido",
+      "timeline.system.habitsTodayReset": "Hábitos de hoje reiniciados",
+      "timeline.system.habitsTodayResetDesc": "As conclusões de hoje foram removidas."
+    },
+    "pt-PT": {
+      "timeline.system.habitCreated": "Hábito criado",
+      "timeline.system.habitUnchecked": "Hábito desmarcado",
+      "timeline.system.habitCompleted": "Hábito concluído",
+      "timeline.system.habitRemoved": "Hábito removido",
+      "timeline.system.habitsTodayReset": "Hábitos de hoje reiniciados",
+      "timeline.system.habitsTodayResetDesc": "As conclusões de hoje foram removidas."
+    },
+    en: {
+      "timeline.system.habitCreated": "Habit created",
+      "timeline.system.habitUnchecked": "Habit unchecked",
+      "timeline.system.habitCompleted": "Habit completed",
+      "timeline.system.habitRemoved": "Habit removed",
+      "timeline.system.habitsTodayReset": "Today's habits reset",
+      "timeline.system.habitsTodayResetDesc": "Today's completions were removed."
+    },
+    es: {
+      "timeline.system.habitCreated": "Hábito creado",
+      "timeline.system.habitUnchecked": "Hábito desmarcado",
+      "timeline.system.habitCompleted": "Hábito completado",
+      "timeline.system.habitRemoved": "Hábito eliminado",
+      "timeline.system.habitsTodayReset": "Hábitos de hoy reiniciados",
+      "timeline.system.habitsTodayResetDesc": "Se eliminaron las finalizaciones de hoy."
+    },
+    fr: {
+      "timeline.system.habitCreated": "Habitude créée",
+      "timeline.system.habitUnchecked": "Habitude décochée",
+      "timeline.system.habitCompleted": "Habitude terminée",
+      "timeline.system.habitRemoved": "Habitude supprimée",
+      "timeline.system.habitsTodayReset": "Habitudes du jour réinitialisées",
+      "timeline.system.habitsTodayResetDesc": "Les validations d'aujourd'hui ont été supprimées."
+    },
+    de: {
+      "timeline.system.habitCreated": "Gewohnheit erstellt",
+      "timeline.system.habitUnchecked": "Gewohnheit abgewählt",
+      "timeline.system.habitCompleted": "Gewohnheit abgeschlossen",
+      "timeline.system.habitRemoved": "Gewohnheit entfernt",
+      "timeline.system.habitsTodayReset": "Heutige Gewohnheiten zurückgesetzt",
+      "timeline.system.habitsTodayResetDesc": "Die heutigen Abschlüsse wurden entfernt."
+    },
+    it: {
+      "timeline.system.habitCreated": "Abitudine creata",
+      "timeline.system.habitUnchecked": "Abitudine deselezionata",
+      "timeline.system.habitCompleted": "Abitudine completata",
+      "timeline.system.habitRemoved": "Abitudine rimossa",
+      "timeline.system.habitsTodayReset": "Abitudini di oggi reimpostate",
+      "timeline.system.habitsTodayResetDesc": "I completamenti di oggi sono stati rimossi."
+    }
+  };
+
+  Object.entries(TIMELINE_HABIT_TRANSLATIONS).forEach(([language, entries]) => {
+    translations[language] = {
+      ...(translations[language] || {}),
+      ...entries
+    };
+  });
+
   const SHARED_I18N_TRANSLATIONS = {
     "pt-BR": {
       "common.you": "Você",
