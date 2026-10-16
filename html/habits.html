@@ -7,7 +7,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Fluir | Hábitos</title>
+  <title data-i18n="habits.pageTitle">Fluir | Hábitos</title>
 
   <!-- Fonte principal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,16 +38,17 @@
       class="sidebar"
       data-shared-sidebar
       data-sidebar-quote="Constância não precisa ser perfeita. Só precisa continuar."
+      data-sidebar-quote-key="habits.sidebarQuote"
     >
       <div class="focus-card" data-sidebar-context>
-        <p>Hábitos de hoje</p>
+        <p data-i18n="habits.sidebarToday">Hábitos de hoje</p>
         <strong id="sidebarHabitPercent">0%</strong>
 
         <div class="focus-bar">
           <span id="sidebarHabitBar"></span>
         </div>
 
-        <small id="sidebarHabitText">
+        <small id="sidebarHabitText" data-i18n="habits.sidebarNone">
           Nenhum hábito concluído ainda.
         </small>
       </div>
@@ -71,7 +72,7 @@
         <div class="header-actions">
 
   <div class="notif-wrapper">
-    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações">
+    <button class="icon-btn" type="button" id="notifBtn" aria-label="Notificações" data-i18n-aria-label="dashboard.notifications">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
         <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
@@ -80,8 +81,8 @@
 
     <div class="notif-dropdown" id="notifDropdown">
       <div class="notif-dropdown-header">
-        <span>Notificações</span>
-        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações">
+        <span data-i18n="dashboard.notifications">Notificações</span>
+        <a href="settings.html" class="notif-settings-btn" aria-label="Configurar notificações" data-i18n-aria-label="dashboard.configureNotifications">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/>
             <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
@@ -93,9 +94,9 @@
         <div class="notif-row">
           <span class="notif-row-icon notif-row-icon-info">i</span>
           <div class="notif-row-content">
-            <p class="notif-row-title">Bem-vindo ao Fluir!</p>
-            <p class="notif-row-desc">Explore seus módulos na barra lateral.</p>
-            <span class="notif-row-time">há 2 horas</span>
+            <p class="notif-row-title" data-i18n="dashboard.welcomeNotification">Bem-vindo ao Fluir!</p>
+            <p class="notif-row-desc" data-i18n="dashboard.exploreModules">Explore seus módulos na barra lateral.</p>
+            <span class="notif-row-time" data-i18n="dashboard.twoHoursAgo">há 2 horas</span>
           </div>
         </div>
       </div>
@@ -105,14 +106,14 @@
   <div class="profile-wrapper">
     <button class="avatar-btn" type="button" id="avatarBtn">
   <span id="avatarBtnInitial">D</span>
-  <img id="avatarBtnImage" alt="Foto de perfil">
+  <img id="avatarBtnImage" alt="Foto de perfil" data-i18n-alt="dashboard.profilePhoto">
 </button>
 
     <div class="profile-dropdown" id="profileDropdown">
       <div class="profile-dropdown-top">
         <div class="profile-dropdown-photo" id="headerProfilePhoto">
           <span id="headerProfileInitial">D</span>
-          <img id="headerProfileImage" alt="Foto de perfil">
+          <img id="headerProfileImage" alt="Foto de perfil" data-i18n-alt="dashboard.profilePhoto">
         </div>
         <div class="profile-dropdown-top-text">
           <strong id="headerProfileName">Você</strong>
@@ -130,7 +131,7 @@
               <circle cx="12" cy="13" r="4"/>
             </svg>
           </span>
-          <span>Trocar foto</span>
+          <span data-i18n="dashboard.changePhoto">Trocar foto</span>
         </label>
         <input type="file" id="headerPhotoInput" accept="image/*" hidden>
 
@@ -141,7 +142,7 @@
               <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 0 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 0 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 0 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 0 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"/>
             </svg>
           </span>
-          <span>Ir para configurações</span>
+          <span data-i18n="dashboard.goToSettings">Ir para configurações</span>
         </a>
       </div>
     </div>
@@ -160,18 +161,20 @@
           <span class="page-icon">◌</span>
 
           <div>
-            <h3>Hábitos</h3>
-            <p>Acompanhe sua constância, sequência e evolução semanal.</p>
+            <h3 data-i18n="habits.title">Hábitos</h3>
+            <p data-i18n="habits.description">Acompanhe sua constância, sequência e evolução semanal.</p>
           </div>
         </div>
 
         <div class="habits-actions">
           <button class="date-btn" type="button">
-            <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> Esta semana
+            <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span>
+            <span data-i18n="habits.thisWeek">Esta semana</span>
           </button>
 
           <button class="primary-btn" type="button" id="newHabitBtn">
-            <span class="ui-icon ui-icon-plus" aria-hidden="true"></span> Novo hábito
+            <span class="ui-icon ui-icon-plus" aria-hidden="true"></span>
+            <span data-i18n="habits.newHabit">Novo hábito</span>
           </button>
         </div>
 
@@ -184,30 +187,30 @@
 
         <article class="summary-card">
           <span>◌</span>
-          <p>Total</p>
+          <p data-i18n="habits.summary.total">Total</p>
           <strong id="totalHabits">0</strong>
-          <small>Hábitos ativos</small>
+          <small data-i18n="habits.activeHabits">Hábitos ativos</small>
         </article>
 
         <article class="summary-card">
           <span>✓</span>
-          <p>Hoje</p>
+          <p data-i18n="habits.today">Hoje</p>
           <strong id="completedTodayHabits">0</strong>
-          <small>Concluídos hoje</small>
+          <small data-i18n="habits.completedToday">Concluídos hoje</small>
         </article>
 
         <article class="summary-card">
           <span>↗</span>
-          <p>Sequência</p>
+          <p data-i18n="habits.streak">Sequência</p>
           <strong id="bestStreak">0</strong>
-          <small>Melhor sequência</small>
+          <small data-i18n="habits.bestStreak">Melhor sequência</small>
         </article>
 
         <article class="summary-card">
           <span>%</span>
-          <p>Semana</p>
+          <p data-i18n="habits.week">Semana</p>
           <strong id="weeklyProgress">0%</strong>
-          <small>Progresso semanal</small>
+          <small data-i18n="habits.weeklyProgress">Progresso semanal</small>
         </article>
 
       </section>
@@ -216,10 +219,10 @@
       <!-- FILTROS -->
       <!-- ===================================================== -->
       <section class="filters-area">
-        <button class="filter-btn active" type="button" data-filter="all">Todos</button>
-        <button class="filter-btn" type="button" data-filter="pending">Pendentes hoje</button>
-        <button class="filter-btn" type="button" data-filter="completed">Concluídos hoje</button>
-        <button class="filter-btn" type="button" data-filter="highStreak">Maior sequência</button>
+        <button class="filter-btn active" type="button" data-filter="all" data-i18n="habits.filter.all">Todos</button>
+        <button class="filter-btn" type="button" data-filter="pending" data-i18n="habits.filter.pending">Pendentes hoje</button>
+        <button class="filter-btn" type="button" data-filter="completed" data-i18n="habits.filter.completed">Concluídos hoje</button>
+        <button class="filter-btn" type="button" data-filter="highStreak" data-i18n="habits.filter.highStreak">Maior sequência</button>
       </section>
 
       <!-- ===================================================== -->
@@ -234,12 +237,12 @@
 
           <div class="panel-header">
             <div>
-              <h4>Hábitos ativos</h4>
-              <p id="habitListSubtitle">Seus hábitos aparecem aqui.</p>
+              <h4 data-i18n="habits.activeHabits">Hábitos ativos</h4>
+              <p id="habitListSubtitle" data-i18n="habits.listInitial">Seus hábitos aparecem aqui.</p>
             </div>
 
             <button class="small-btn" type="button" id="resetTodayBtn">
-              Reiniciar hoje
+              <span data-i18n="habits.resetToday">Reiniciar hoje</span>
             </button>
           </div>
 
@@ -249,8 +252,8 @@
 
           <div class="empty-state" id="emptyState">
             <span>◌</span>
-            <strong>Nenhum hábito encontrado</strong>
-            <p>Crie um novo hábito ou mude o filtro selecionado.</p>
+            <strong data-i18n="habits.empty.title">Nenhum hábito encontrado</strong>
+            <p data-i18n="habits.empty.description">Crie um novo hábito ou mude o filtro selecionado.</p>
           </div>
 
         </article>
@@ -263,12 +266,12 @@
           <!-- Card de foco -->
           <article class="side-card">
             <div class="side-card-title">
-              <h4>Foco de constância</h4>
+              <h4 data-i18n="habits.focus.title">Foco de constância</h4>
               <span>⌁</span>
             </div>
 
             <p class="focus-text" id="focusRecommendation">
-              Escolha um hábito simples para manter hoje.
+              <span data-i18n="habits.focus.default">Escolha um hábito simples para manter hoje.</span>
             </p>
 
             <div class="focus-mini-list" id="focusMiniList">
@@ -279,7 +282,7 @@
           <!-- Semana -->
           <article class="side-card">
             <div class="side-card-title">
-              <h4>Resumo semanal</h4>
+              <h4 data-i18n="habits.weeklySummary">Resumo semanal</h4>
               <span>▦</span>
             </div>
 
@@ -321,14 +324,14 @@
             </div>
 
             <p class="week-text" id="weekText">
-              A semana começa quando você decide continuar.
+              <span data-i18n="habits.weekText.initial">A semana começa quando você decide continuar.</span>
             </p>
           </article>
 
           <!-- Mini timeline -->
           <article class="side-card">
             <div class="side-card-title">
-              <h4>Últimas ações</h4>
+              <h4 data-i18n="habits.latestActions">Últimas ações</h4>
               <span>☷</span>
             </div>
 
@@ -337,7 +340,7 @@
             </div>
 
             <a href="timeline.html" class="side-link">
-              Ver timeline completa →
+              <span data-i18n="habits.viewTimeline">Ver timeline completa →</span>
             </a>
           </article>
 
@@ -354,73 +357,73 @@
   <div class="habit-modal-overlay" id="habitModal">
     <div class="habit-modal">
 
-      <h3>Novo hábito</h3>
+      <h3 data-i18n="habits.newHabit">Novo hábito</h3>
 
       <p>
-        Crie um hábito simples para acompanhar sua constância ao longo da semana.
+        <span data-i18n="habits.modal.description">Crie um hábito simples para acompanhar sua constância ao longo da semana.</span>
       </p>
 
       <div class="habit-form-message" id="habitFormMessage"></div>
 
       <label>
-        <span>Nome do hábito</span>
+        <span data-i18n="habits.name">Nome do hábito</span>
         <input 
           type="text" 
           id="habitTitleInput"
-          placeholder="Ex: beber água, meditar, ler, treinar..." 
+          placeholder="Ex: beber água, meditar, ler, treinar..." data-i18n-placeholder="habits.namePlaceholder" 
         />
       </label>
 
       <label>
-        <span>Categoria</span>
+        <span data-i18n="habits.category">Categoria</span>
 
         <select id="habitCategorySelect">
-          <option value="Saúde">Saúde</option>
-          <option value="Estudos">Estudos</option>
-          <option value="Casa">Casa</option>
-          <option value="Pessoal">Pessoal</option>
-          <option value="Produtividade">Produtividade</option>
-          <option value="Autocuidado">Autocuidado</option>
+          <option value="Saúde" data-i18n="habits.category.health">Saúde</option>
+          <option value="Estudos" data-i18n="habits.category.study">Estudos</option>
+          <option value="Casa" data-i18n="habits.category.home">Casa</option>
+          <option value="Pessoal" data-i18n="habits.category.personal">Pessoal</option>
+          <option value="Produtividade" data-i18n="habits.category.productivity">Produtividade</option>
+          <option value="Autocuidado" data-i18n="habits.category.selfCare">Autocuidado</option>
         </select>
       </label>
 
       <label>
-        <span>Repetir nos dias</span>
+        <span data-i18n="habits.repeatDays">Repetir nos dias</span>
 
         <div class="habit-days-quick">
-          <button type="button" class="habit-quick-btn" id="selectAllDaysBtn">Todos os dias</button>
-          <button type="button" class="habit-quick-btn" id="selectAlternateDaysBtn">Dia sim, dia não</button>
+          <button type="button" class="habit-quick-btn" id="selectAllDaysBtn" data-i18n="habits.everyDay">Todos os dias</button>
+          <button type="button" class="habit-quick-btn" id="selectAlternateDaysBtn" data-i18n="habits.everyOtherDay">Dia sim, dia não</button>
         </div>
 
         <div class="habit-days-picker" id="habitDaysPicker">
-          <button type="button" class="habit-day-btn" data-day="0">dom</button>
-          <button type="button" class="habit-day-btn" data-day="1">seg</button>
-          <button type="button" class="habit-day-btn" data-day="2">ter</button>
-          <button type="button" class="habit-day-btn" data-day="3">qua</button>
-          <button type="button" class="habit-day-btn" data-day="4">qui</button>
-          <button type="button" class="habit-day-btn" data-day="5">sex</button>
-          <button type="button" class="habit-day-btn" data-day="6">sáb</button>
+          <button type="button" class="habit-day-btn" data-day="0" data-i18n="habits.day.sun">dom</button>
+          <button type="button" class="habit-day-btn" data-day="1" data-i18n="habits.day.mon">seg</button>
+          <button type="button" class="habit-day-btn" data-day="2" data-i18n="habits.day.tue">ter</button>
+          <button type="button" class="habit-day-btn" data-day="3" data-i18n="habits.day.wed">qua</button>
+          <button type="button" class="habit-day-btn" data-day="4" data-i18n="habits.day.thu">qui</button>
+          <button type="button" class="habit-day-btn" data-day="5" data-i18n="habits.day.fri">sex</button>
+          <button type="button" class="habit-day-btn" data-day="6" data-i18n="habits.day.sat">sáb</button>
         </div>
 
         <small class="field-feedback" id="habitDaysFeedback"></small>
       </label>
 
       <label>
-        <span>Observação opcional</span>
+        <span data-i18n="habits.optionalNote">Observação opcional</span>
         <input 
           type="text" 
           id="habitDescriptionInput"
-          placeholder="Ex: fazer de manhã, antes de dormir..." 
+          placeholder="Ex: fazer de manhã, antes de dormir..." data-i18n-placeholder="habits.notePlaceholder" 
         />
       </label>
 
       <div class="habit-modal-actions">
         <button class="secondary-btn" type="button" id="closeHabitModalBtn">
-          Cancelar
+          <span data-i18n="habits.cancel">Cancelar</span>
         </button>
 
         <button class="primary-btn" type="button" id="saveHabitBtn">
-          Salvar hábito
+          <span data-i18n="habits.save">Salvar hábito</span>
         </button>
       </div>
 
