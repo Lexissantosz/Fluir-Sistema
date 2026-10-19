@@ -1718,3 +1718,100 @@ body.dark .form-message.success {
   }
 }
 
+/* ===================================================== */
+/* DESKTOP AMPLO — RETORNA AO LAYOUT LADO A LADO */
+/* Em tela cheia, mantém apresentação à esquerda e       */
+/* formulário à direita. Em telas menores, preserva o    */
+/* layout centralizado definido acima.                   */
+/* ===================================================== */
+@media (min-width: 1400px) {
+  .setup-page {
+    height: calc(100vh - 32px);
+    min-height: 0;
+    overflow: hidden;
+    grid-template-rows: 58px minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .setup-top {
+    height: 58px;
+    justify-content: space-between;
+  }
+
+  .setup-content {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    grid-template-columns: minmax(560px, 0.92fr) minmax(720px, 1.08fr);
+    align-items: center;
+    justify-items: stretch;
+    gap: 56px;
+  }
+
+  .setup-info {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding-left: 28px;
+    padding-right: 8px;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: left;
+  }
+
+  .small-label {
+    margin: 0 0 18px;
+  }
+
+  .setup-info h2 {
+    width: auto;
+    max-width: 680px;
+    margin: 0 0 18px;
+    padding: 0;
+    font-size: clamp(44px, 4.1vw, 64px);
+    line-height: 0.98;
+    letter-spacing: -0.065em;
+    text-align: left;
+  }
+
+  .setup-info .info-description {
+    width: auto;
+    max-width: 640px;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1.7;
+    text-align: left;
+  }
+
+  .info-cards {
+    width: 100%;
+    max-width: 700px;
+    margin: 34px 0 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .mini-card {
+    min-height: 150px;
+    padding: 18px;
+    text-align: left;
+  }
+
+  .quiet-box {
+    margin: 34px 0 0;
+  }
+
+  .setup-card {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    min-height: 700px;
+    max-height: 100%;
+    margin: 0;
+    justify-self: stretch;
+  }
+}
+
