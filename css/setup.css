@@ -430,30 +430,6 @@ body.dark .brand-icon img {
 
 
 /* ===================================================== */
-/* 16. FRASE EMOCIONAL */
-/* ===================================================== */
-
-.quiet-box {
-  width: fit-content;
-
-  margin-top: 34px;
-  padding: 14px 18px;
-
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--input-bg);
-
-  color: var(--text);
-  box-shadow: var(--shadow-soft);
-}
-
-.quiet-box p {
-  font-size: 14px;
-  font-weight: 650;
-}
-
-
-/* ===================================================== */
 /* 17. CARD DIREITO */
 /* ===================================================== */
 
@@ -1064,10 +1040,6 @@ body.dark .progress-bar {
     padding: 14px;
   }
 
-  .quiet-box {
-    margin-top: 22px;
-  }
-
   .setup-card {
   width: 100%;
   max-width: none;
@@ -1598,7 +1570,7 @@ body.dark .form-message.success {
     grid-template-columns: 1fr;
     align-items: start;
     justify-items: center;
-    gap: 24px;
+    gap: 20px;
   }
 
   /* Bloco de apresentação inteiro centralizado na página. */
@@ -1653,11 +1625,6 @@ body.dark .form-message.success {
     text-align: left;
   }
 
-  /* A frase também participa do mesmo eixo central. */
-  .quiet-box {
-    margin: 20px auto 0;
-  }
-
   /* Formulário centralizado e com a mesma escala dos cards. */
   .setup-card {
     width: min(100%, 780px);
@@ -1700,12 +1667,7 @@ body.dark .form-message.success {
 
   .small-label,
   .setup-info h2,
-  .setup-info .info-description,
-  .quiet-box {
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-  }
+  .setup-info .info-description
 
   .info-cards {
     width: 100%;
@@ -1798,10 +1760,6 @@ body.dark .form-message.success {
     min-height: 150px;
     padding: 18px;
     text-align: left;
-  }
-
-  .quiet-box {
-    margin: 34px 0 0;
   }
 
   .setup-card {
