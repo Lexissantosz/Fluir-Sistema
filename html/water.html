@@ -158,29 +158,7 @@
           </div>
         </div>
 
-        <div class="water-actions">
-  <button class="date-btn" type="button">
-    <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> Hoje
-  </button>
 
-  <!-- Botões rápidos de hidratação -->
-  <button class="water-quick-btn secondary-btn" type="button" data-water-amount="200">
-    +200ml
-  </button>
-
-  <button class="water-quick-btn secondary-btn" type="button" data-water-amount="300">
-    +300ml
-  </button>
-
-  <button class="water-quick-btn secondary-btn" type="button" data-water-amount="500">
-    +500ml
-  </button>
-
-  <!-- Mantém o ID antigo por compatibilidade com o JS atual -->
-  <button class="primary-btn" type="button" id="addCupBtn" data-water-amount="250">
-    +250ml
-  </button>
-</div>
       </section>
 
       <!-- Cards resumo -->
@@ -225,9 +203,14 @@
               <p id="waterSubtitle">Adicione a quantidade de água em ml conforme for bebendo.</p>
             </div>
 
-            <button class="small-btn" type="button" id="resetWaterBtn">
-              Reiniciar hoje
-            </button>
+            <div class="water-panel-header-actions">
+              <button class="date-btn" type="button">
+                <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> Hoje
+              </button>
+              <button class="small-btn" type="button" id="resetWaterBtn">
+                Reiniciar hoje
+              </button>
+            </div>
           </div>
 
           <!-- Área principal de progresso -->
@@ -240,9 +223,12 @@
             </div>
 
             <div class="water-controls">
-              <button class="primary-btn" type="button" id="addCupMainBtn">
-                + 250ml
-              </button>
+              <div class="water-actions" role="group" aria-label="Adicionar água">
+                <button class="water-quick-btn secondary-btn" type="button" data-water-amount="200">+200ml</button>
+                <button class="primary-btn" type="button" id="addCupBtn" data-water-amount="250">+250ml</button>
+                <button class="water-quick-btn secondary-btn" type="button" data-water-amount="300">+300ml</button>
+                <button class="water-quick-btn secondary-btn" type="button" data-water-amount="500">+500ml</button>
+              </div>
 
               <button class="secondary-btn" type="button" id="removeCupBtn">
                 - 250ml
