@@ -1569,8 +1569,8 @@ body.dark .form-message.success {
 
 /* ===================================================== */
 /* AJUSTE DE LAYOUT — ONBOARDING CENTRALIZADO */
-/* Cards de etapas centralizados sobre o formulário,     */
-/* mantendo a apresentação principal compacta e legível. */
+/* Todo o conteúdo principal fica proporcional e centrado. */
+/* A marca Fluir permanece no canto superior esquerdo.    */
 /* ===================================================== */
 @media (min-width: 721px) {
   body {
@@ -1582,67 +1582,86 @@ body.dark .form-message.success {
     min-height: calc(100vh - 32px);
     overflow: visible;
     grid-template-rows: auto auto;
+    gap: 18px;
+  }
+
+  /* A logo continua no canto, sem participar do eixo central. */
+  .setup-top {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .setup-content {
+    width: 100%;
     height: auto;
     min-height: 0;
     grid-template-columns: 1fr;
     align-items: start;
+    justify-items: center;
     gap: 24px;
   }
 
+  /* Bloco de apresentação inteiro centralizado na página. */
   .setup-info {
-    width: 100%;
+    width: min(100%, 920px);
     height: auto;
     min-height: 0;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+    margin: 0 auto;
     justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+  }
+
+  .small-label {
+    margin: 0 auto 16px;
   }
 
   .setup-info h2 {
     width: 100%;
-    max-width: 1040px;
-    margin-left: 0;
-    margin-bottom: 14px;
-    padding-left: 0;
-    font-size: clamp(40px, 3.2vw, 54px);
-    line-height: 1.02;
+    max-width: 860px;
+    margin: 0 auto 14px;
+    padding: 0;
+    font-size: clamp(40px, 3vw, 52px);
+    line-height: 1.04;
     letter-spacing: -0.055em;
+    text-align: center;
   }
 
   .setup-info .info-description {
     width: 100%;
-    max-width: 900px;
-    margin-left: 0;
-    padding-left: 0;
-    font-size: 16px;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 15.5px;
     line-height: 1.65;
+    text-align: center;
   }
 
+  /* Os três cards formam um único bloco central e proporcional. */
   .info-cards {
-    width: min(100%, 760px);
-    max-width: 760px;
-    margin: 26px auto 0;
+    width: min(100%, 780px);
+    max-width: 780px;
+    margin: 28px auto 0;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
   }
 
   .mini-card {
-    min-height: 138px;
+    min-height: 142px;
     padding: 16px;
+    text-align: left;
   }
 
+  /* A frase também participa do mesmo eixo central. */
   .quiet-box {
-    margin-top: 20px;
-    margin-left: max(0px, calc((100% - 760px) / 2));
-    margin-right: 0;
+    margin: 20px auto 0;
   }
 
+  /* Formulário centralizado e com a mesma escala dos cards. */
   .setup-card {
-    width: min(100%, 760px);
-    max-width: 760px;
+    width: min(100%, 780px);
+    max-width: 780px;
     height: auto;
     min-height: 700px;
     margin: 0 auto;
@@ -1651,17 +1670,51 @@ body.dark .form-message.success {
 }
 
 @media (min-width: 721px) and (max-width: 1100px) {
+  .setup-page {
+    padding-inline: 24px;
+  }
+
+  .setup-info {
+    width: min(100%, 820px);
+  }
+
   .setup-info h2 {
-    max-width: 860px;
+    max-width: 780px;
     font-size: clamp(38px, 5vw, 48px);
   }
 
-  .info-cards {
+  .setup-info .info-description,
+  .info-cards,
+  .setup-card {
     width: min(100%, 760px);
+    max-width: 760px;
+  }
+}
+
+/* No celular, o conteúdo também permanece no eixo central. */
+@media (max-width: 720px) {
+  .setup-info {
+    align-items: center;
+    text-align: center;
   }
 
+  .small-label,
+  .setup-info h2,
+  .setup-info .info-description,
   .quiet-box {
-    margin-left: max(0px, calc((100% - 760px) / 2));
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .info-cards {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mini-card {
+    text-align: left;
   }
 }
 
