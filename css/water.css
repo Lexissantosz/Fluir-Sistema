@@ -1446,8 +1446,12 @@ body.dark .water-form-message.success {
   }
 
   .water-sidebar {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
     align-items: start;
+  }
+
+  .water-sidebar > .side-card:nth-child(3) {
+    grid-column: 1 / -1;
   }
 }
 
