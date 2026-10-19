@@ -990,6 +990,30 @@ body.dark .focus-bar {
   gap: 16px;
 }
 
+.water-panel-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.water-panel-header-actions .date-btn {
+  height: 34px;
+  padding-inline: 12px;
+}
+
+.water-controls > .water-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.water-controls > .water-actions button {
+  min-width: 0;
+  width: 100%;
+}
+
 .panel-header h4 {
   margin-bottom: 5px;
 
