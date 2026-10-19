@@ -277,3 +277,16 @@
   background-color: currentColor !important;
   opacity: 1 !important;
 }
+
+/* O texto do menu nao pode herdar as dimensoes e cores dos icones antigos. */
+.sidebar[data-shared-sidebar] .sidebar-nav .nav-item > span:last-child {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  flex: 1 1 auto;
+  display: block;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  opacity: 1;
+}
