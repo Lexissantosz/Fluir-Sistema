@@ -19,6 +19,7 @@
 
   <!-- CSS da tela de água -->
   <link rel="stylesheet" href="../css/water.css" />
+  <link rel="stylesheet" href="../css/water-vessels.css" />
   <link rel="stylesheet" href="../css/sidebar.css" />
   <!-- CSS responsivo mobile compartilhado -->
   <link rel="stylesheet" href="../css/mobile.css" />
@@ -271,6 +272,29 @@
 
         </article>
 
+        <!-- Recipientes personalizados: editor visual com capacidade real em ml -->
+        <section class="vessel-section" style="grid-column:1 / -1" aria-label="Meus recipientes">
+          <div class="vessel-section-header"><div><h4>Meus recipientes</h4><p>Crie um copo, caneca ou garrafa e registre sua capacidade com um toque.</p></div><button type="button" id="vesselNewButton">+ Criar recipiente</button></div>
+          <div id="vesselGrid" class="vessel-grid"></div>
+          <div id="vesselEditor" hidden>
+            <h5 id="vesselEditorTitle">Criar recipiente</h5>
+            <form id="vesselForm">
+              <div class="vessel-edit-layout">
+                <div class="vessel-fields">
+                  <label>Nome<input id="vesselName" maxlength="32" required placeholder="Meu copo favorito"></label>
+                  <label>Formato<select id="vesselShape"><option value="glass">Copo</option><option value="mug">Caneca</option><option value="bottle">Garrafa</option></select></label>
+                  <label>Cor<select id="vesselColor"><option value="#b8c5c9">Cinza-azulado</option><option value="#9fb9a7">Sálvia</option><option value="#d2b3a0">Terracota</option><option value="#a9b4d5">Lavanda</option><option value="#e2c68b">Areia</option><option value="#9e9e9e">Grafite</option></select></label>
+                  <label>Detalhes<select id="vesselPattern"><option value="none">Sem estampa</option><option value="dots">Poás</option><option value="lines">Listras</option></select></label>
+                  <label>Capacidade (ml)<input id="vesselCapacity" type="number" min="1" max="1000" step="1" required value="250"></label>
+                </div>
+                <div class="vessel-preview"><div id="vesselPreview"></div><span id="vesselPreviewCapacity">250 ml</span></div>
+              </div>
+              <div class="vessel-form-actions"><button id="vesselCancelButton" type="button">Cancelar</button><button id="vesselSaveButton" type="submit">Salvar recipiente</button></div>
+            </form>
+          </div>
+          <p class="vessel-status" role="status" aria-live="polite" id="vesselEditorStatus"></p>
+        </section>
+
         <!-- Lateral interna -->
         <aside class="water-sidebar">
 
@@ -429,6 +453,7 @@
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
   <script src="../js/water.js"></script>
+  <script src="../js/water-vessels.js"></script>
 
   <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
