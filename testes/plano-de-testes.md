@@ -8,6 +8,10 @@
 - Dados: conta fictícia exclusiva para demonstração, sem informações pessoais.
 - Ferramentas: Chrome DevTools, console do navegador, Cypress (quando configurado), Maven/JUnit, opcional Postman, JMeter e Swagger **somente se configurado**.
 
+## Catálogo completo e registro de execuções
+
+A matriz abaixo é um conjunto inicial de **14 casos prioritários**. O catálogo completo contém **46 casos**, com pré-condições, dados, passos e resultados esperados, em [`casos-de-teste.csv`](casos-de-teste.csv) e [`casos-de-teste.md`](casos-de-teste.md). O registro dos resultados reais fica em [`execucao/registro-de-execucao.csv`](execucao/registro-de-execucao.csv), e os resumos em [`relatorios/relatorio-execucao.md`](relatorios/relatorio-execucao.md).
+
 ## Matriz de casos
 | ID | Área | Passos resumidos | Esperado | Resultado |
 |---|---|---|---|---|
