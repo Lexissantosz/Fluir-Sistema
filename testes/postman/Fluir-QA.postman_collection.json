@@ -2,20 +2,20 @@
   "info": {
     "name": "Fluir - QA API",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Execução local. Não usar credenciais ou dados reais."
+    "description": "Coleção de QA para execução isolada em localhost (Postman/Newman). Não use contra produção. Resultados de cadastro utilizam dados fictícios."
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8080"
+      "value": "http://127.0.0.1:8080"
     },
     {
       "key": "emailTeste",
-      "value": "qa@example.invalid"
+      "value": "qa.postman@example.test"
     },
     {
       "key": "senhaTeste",
-      "value": "SenhaDeTeste123!"
+      "value": "SenhaFicticia123!"
     }
   ],
   "item": [
@@ -23,15 +23,17 @@
       "name": "CT002 - Health",
       "request": {
         "method": "GET",
+        "header": [],
         "url": "{{baseUrl}}/api/usuarios/teste"
       },
       "event": [
         {
           "listen": "test",
           "script": {
+            "type": "text/javascript",
             "exec": [
-              "pm.test('CT002 status 200',()=>pm.response.to.have.status(200));",
-              "pm.test('CT002 corpo',()=>pm.expect(pm.response.text()).to.include('API do Fluir funcionando'));"
+              "pm.test('CT002 HTTP 200', () => pm.response.to.have.status(200));",
+              "pm.test('CT002 API funcionando', () => pm.expect(pm.response.text()).to.include('API do Fluir funcionando'));"
             ]
           }
         }
@@ -57,15 +59,16 @@
         {
           "listen": "test",
           "script": {
+            "type": "text/javascript",
             "exec": [
-              "pm.test('CT007 entrada inválida',()=>pm.expect(pm.response.code).to.be.oneOf([400,401]));"
+              "pm.test('CT007 valida login vazio (400)', () => pm.response.to.have.status(400));"
             ]
           }
         }
       ]
     },
     {
-      "name": "CT006 - Senha inválida (conta de teste)",
+      "name": "CT008 - Cadastro com email invalido",
       "request": {
         "method": "POST",
         "header": [
@@ -76,7 +79,92 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"email\":\"{{emailTeste}}\",\"senha\":\"SenhaIncorreta\"}"
+          "raw": "{\"nome\":\"Pessoa QA\",\"email\":\"invalido\",\"senha\":\"SenhaFicticia123!\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/cadastro"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CT008 email invalido rejeitado (400)', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT010 - Cadastro valido (base isolada)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\":\"Pessoa QA\",\"email\":\"{{emailTeste}}\",\"senha\":\"{{senhaTeste}}\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/cadastro"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CT010 cadastro responde 201', () => pm.response.to.have.status(201));",
+              "pm.test('CT010 corpo tem ID e email sem campo senha', () => { const data=pm.response.json(); pm.expect(data.id).to.be.a('number'); pm.expect(data.email).to.eql(pm.collectionVariables.get('emailTeste')); pm.expect(data).to.not.have.property('senha'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT009 - Cadastro duplicado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nome\":\"Pessoa QA\",\"email\":\"{{emailTeste}}\",\"senha\":\"{{senhaTeste}}\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/cadastro"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CT009 cadastro duplicado responde 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT005 - Login valido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{emailTeste}}\",\"senha\":\"{{senhaTeste}}\"}"
         },
         "url": "{{baseUrl}}/api/usuarios/login"
       },
@@ -84,15 +172,45 @@
         {
           "listen": "test",
           "script": {
+            "type": "text/javascript",
             "exec": [
-              "pm.test('CT006 login recusado',()=>pm.response.to.have.status(401));"
+              "pm.test('CT005 login responde 200', () => pm.response.to.have.status(200));",
+              "pm.test('CT005 token retornado (nao exibido)', () => {const d=pm.response.json(); pm.expect(d.token).to.be.a('string').and.not.empty;});"
             ]
           }
         }
       ]
     },
     {
-      "name": "CT023 - Tarefa com título vazio (somente localhost)",
+      "name": "CT006 - Senha incorreta",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{emailTeste}}\",\"senha\":\"senha-incorreta\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('CT006 login incorreto responde 401', () => pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT023 - Tarefa sem titulo",
       "request": {
         "method": "POST",
         "header": [
@@ -111,8 +229,9 @@
         {
           "listen": "test",
           "script": {
+            "type": "text/javascript",
             "exec": [
-              "pm.test('CT023 título obrigatório',()=>pm.response.to.have.status(400));"
+              "pm.test('CT023 titulo ausente rejeitado (400)', () => pm.response.to.have.status(400));"
             ]
           }
         }
