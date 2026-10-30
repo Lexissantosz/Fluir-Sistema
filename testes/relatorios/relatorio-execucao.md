@@ -3,12 +3,15 @@
 **Versão sob planejamento:** branch `alex/entrega-documentacao-qa-30-10` (código-base `dawid/realoca-atalhos-calendario-agua-19-10`).
 
 ## Resumo executivo
-O plano possui **46 casos de teste definidos**, com passos, pré-condições, dados, resultado esperado e evidência sugerida. **Não foi realizada uma execução comprovada desses 46 casos nesta entrega.** Assim, não há base para afirmar taxa de aprovação, cobertura funcional real ou prontidão da versão para produção.
+O plano possui **46 casos de teste funcionais/integrados definidos**, com passos, pré-condições, dados, resultado esperado e evidência sugerida. Esses 46 casos ainda aguardam execução formal no catálogo. **Em 30/10/2026, a execução independente da suíte Java (JUnit 5 + Mockito) via GitHub Actions comprovou 23 testes aprovados, 0 falhas, 0 erros e 0 ignorados.** Essa suíte não substitui a execução ponta a ponta dos 46 casos e não comprova prontidão para produção. Consulte [relatório específico do CI](execucao-junit-mockito-2026-10-30.md).
 
 | Indicador | Quantidade |
 |---|---:|
 | Casos planejados | 46 |
-| Casos executados documentados | 0 |
+| Testes automatizados Java executados (suíte separada) | 23 |
+| Testes automatizados Java aprovados | 23 |
+| Falhas / erros / ignorados na suíte Java | 0 / 0 / 0 |
+| Casos funcionais do catálogo executados documentados | 0 |
 | Aprovados | 0 |
 | Reprovados | 0 |
 | Bloqueados | 0 |
@@ -38,7 +41,7 @@ Cadastro, autenticação e sessão; onboarding; dashboard; tarefas; água; conqu
 4. O onboarding e a persistência dos módulos devem ser testados ponta a ponta.
 
 ## Decisão de liberação
-**AINDA NÃO AVALIADA — SEM EVIDÊNCIAS SUFICIENTES.**
+**AINDA NÃO AVALIADA — EVIDÊNCIAS INSUFICIENTES PARA A LIBERAÇÃO GLOBAL.** Embora a suíte Java tenha sido aprovada, a execução dos testes de ponta a ponta e autorização ainda é necessária.
 A recomendação só deve ser emitida após preencher a tabela de execução e associar arquivos de evidência reais.
 
 ## Próximas ações
