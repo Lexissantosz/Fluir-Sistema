@@ -1,0 +1,61 @@
+name: QA Fluir - Cypress (interface)
+on:
+  push:
+    branches: [alex/entrega-documentacao-qa-30-10]
+    paths:
+      - "testes/cypress/**"
+      - "testes/cypress.config.cjs"
+      - "testes/package.json"
+      - ".github/workflows/qa-cypress.yml"
+      - "html/**"
+      - "css/**"
+      - "js/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  testes-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Preparar Node 20
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+      - name: Instalar Cypress e relatorio JUnit
+        working-directory: testes
+        run: npm install --no-audit --no-fund
+      - name: Subir frontend local sem autenticacao de terceiros
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p testes/execucao/cypress
+          nohup python3 -m http.server 5500 --bind 127.0.0.1 > testes/execucao/cypress/servidor.log 2>&1 < /dev/null &
+          for attempt in $(seq 1 15); do
+            if curl --fail --silent http://127.0.0.1:5500/html/login.html > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat testes/execucao/cypress/servidor.log
+          exit 1
+      - name: Executar cenarios visuais e funcionais
+        working-directory: testes
+        env:
+          CYPRESS_RECORD_KEY: ""
+        run: |
+          mkdir -p cypress/results
+          npm run cy:run -- --browser electron --reporter mocha-junit-reporter --reporter-options "mochaFile=cypress/results/junit-[hash].xml,toConsole=true"
+      - name: Guardar XML e screenshots dos testes
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fluir-evidencias-cypress
+          path: |
+            testes/cypress/results/*.xml
+            testes/cypress/screenshots/**
+            testes/execucao/cypress/servidor.log
+          if-no-files-found: warn
+          retention-days: 14
