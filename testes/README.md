@@ -26,3 +26,7 @@
 6. Atualize relatórios e só então faça a decisão de liberação.
 
 **Nota metodológica:** o catálogo é um plano, não é relatório de aprovação; nesta entrega ainda não foram executados os 46 casos. Diferencie claramente evidências históricas e evidências deste ciclo.
+
+## Ferramentas obrigatórias da professora
+
+[Guia de execução de Swagger, Postman, Cypress, Mockito, JUnit e JMeter](GUIA-6-FERRAMENTAS.md). Os scripts e arquivos de teste foram adicionados, **mas ainda não há execução nem evidência comprovada**. Registrar relatórios reais em `execucao/` e evidências em `evidencias/`.
