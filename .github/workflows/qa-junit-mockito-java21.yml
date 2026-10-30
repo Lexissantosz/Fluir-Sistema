@@ -1,0 +1,66 @@
+name: QA Fluir - JUnit e Mockito (Java 21)
+on:
+  push:
+    branches:
+      - alex/entrega-documentacao-qa-30-10
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  testar-backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: fluir
+          POSTGRES_PASSWORD: somente-teste-ci
+          POSTGRES_DB: fluir
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U fluir -d fluir"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DB_HOST: localhost
+      DB_PORT: "5432"
+      DB_NAME: fluir
+      DB_USER: fluir
+      DB_PASSWORD: somente-teste-ci
+    steps:
+      - name: Obter codigo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Configurar Java 21
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+
+      - name: Conferir Java do Maven
+        working-directory: backend
+        run: bash ./mvnw -version
+
+      - name: Executar testes JUnit e Mockito
+        working-directory: backend
+        run: bash ./mvnw -B test
+
+      - name: Guardar relatorios reais do Maven
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: fluir-relatorios-junit-mockito
+          path: |
+            backend/target/surefire-reports/*.xml
+            backend/target/surefire-reports/*.txt
+          if-no-files-found: warn
+          retention-days: 14
