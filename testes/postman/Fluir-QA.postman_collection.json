@@ -1,0 +1,122 @@
+{
+  "info": {
+    "name": "Fluir - QA API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Execução local. Não usar credenciais ou dados reais."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "emailTeste",
+      "value": "qa@example.invalid"
+    },
+    {
+      "key": "senhaTeste",
+      "value": "SenhaDeTeste123!"
+    }
+  ],
+  "item": [
+    {
+      "name": "CT002 - Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/usuarios/teste"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('CT002 status 200',()=>pm.response.to.have.status(200));",
+              "pm.test('CT002 corpo',()=>pm.expect(pm.response.text()).to.include('API do Fluir funcionando'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT007 - Login vazio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"\",\"senha\":\"\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('CT007 entrada inválida',()=>pm.expect(pm.response.code).to.be.oneOf([400,401]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT006 - Senha inválida (conta de teste)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"{{emailTeste}}\",\"senha\":\"SenhaIncorreta\"}"
+        },
+        "url": "{{baseUrl}}/api/usuarios/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('CT006 login recusado',()=>pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "CT023 - Tarefa com título vazio (somente localhost)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"usuarioId\":1,\"titulo\":\"\"}"
+        },
+        "url": "{{baseUrl}}/api/tarefas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('CT023 título obrigatório',()=>pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
