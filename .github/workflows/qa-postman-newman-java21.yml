@@ -48,12 +48,17 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p testes/execucao/postman
-          (cd backend && nohup bash ./mvnw -B spring-boot:run -Dspring-boot.run.profiles=qa > ../testes/execucao/postman/backend-qa.log 2>&1 < /dev/null &)
+          nohup bash -c 'cd backend && exec bash ./mvnw -B spring-boot:run -Dspring-boot.run.profiles=qa' \
+            > testes/execucao/postman/backend-qa.log 2>&1 < /dev/null &
+          APP_PID=$!
+          echo "Backend PID: $APP_PID"
           for i in $(seq 1 90); do
             if curl -fsS --max-time 2 http://127.0.0.1:8080/api/usuarios/teste > /dev/null; then exit 0; fi
             sleep 2
           done
-          echo "API local indisponivel"; exit 1
+          echo "API local indisponivel. Log do backend:"
+          tail -n 100 testes/execucao/postman/backend-qa.log || true
+          exit 1
       - name: Instalar Newman
         run: npm install --global newman@6.2.1
       - name: Executar coleção Postman
