@@ -1,0 +1,12 @@
+{
+  "name": "fluir-testes-qa",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "cy:open": "cypress open --config-file testes/cypress.config.cjs",
+    "cy:run": "cypress run --config-file testes/cypress.config.cjs"
+  },
+  "devDependencies": {
+    "cypress": "13.15.0"
+  }
+}
