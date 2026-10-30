@@ -58,9 +58,9 @@ describe("Fluir - QA visual e funcional (sem dados reais)", () => {
   it("CT037 | modal de conquista abre e fecha", () => {
     cy.visit("/html/achievements.html", { onBeforeLoad: reset });
     cy.get('#achievementsGrid .achievement-card[data-achievement-id]').first().click();
-    cy.get("#achievementModal").should("have.class", "active");
+    cy.get("#achievementModal").should("have.class", "show");
     cy.get("#modalTitle").should("not.be.empty");
     cy.get("#closeAchievementModal").click();
-    cy.get("#achievementModal").should("not.have.class", "active");
+    cy.get("#achievementModal").should("not.have.class", "show");
   });
 });
