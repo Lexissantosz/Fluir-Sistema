@@ -1,0 +1,9 @@
+id,ferramenta,status,ambiente,commit,execucao,evidencia
+CT001,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT007,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT038,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT025,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT026,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT029,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT035,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml
+CT037,Cypress,PASSOU,127.0.0.1:5500,fae81b9af76c46a9be7b69082a0bc020655eef9d,https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/41118845086,testes/evidencias/2026-10-30/cypress-junit.xml

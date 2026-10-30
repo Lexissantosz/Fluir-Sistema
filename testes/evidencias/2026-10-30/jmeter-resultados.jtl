@@ -1,0 +1,5 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1793389884085,21,CT002 - GET usuarios/teste,200,,02 usuarios - Health local 1-1,text,true,,445,135,1,1,http://localhost:8080/api/usuarios/teste,19,0,12
+1793389884108,2,CT002 - GET usuarios/teste,200,,02 usuarios - Health local 1-1,text,true,,445,135,1,1,http://localhost:8080/api/usuarios/teste,2,0,0
+1793389885028,3,CT002 - GET usuarios/teste,200,,02 usuarios - Health local 1-2,text,true,,445,135,1,1,http://localhost:8080/api/usuarios/teste,3,0,0
+1793389885031,2,CT002 - GET usuarios/teste,200,,02 usuarios - Health local 1-2,text,true,,445,135,1,1,http://localhost:8080/api/usuarios/teste,2,0,0

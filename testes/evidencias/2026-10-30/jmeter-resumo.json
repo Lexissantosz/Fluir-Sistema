@@ -1,0 +1,9 @@
+{
+  "amostras": 4,
+  "sucessos": 4,
+  "falhas": 0,
+  "min_ms": 2,
+  "max_ms": 21,
+  "media_ms": 7,
+  "ambiente": "localhost:8080; PostgreSQL isolado; 2 usuarios, 2 loops"
+}

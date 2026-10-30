@@ -1,32 +1,22 @@
 # Fluir | Central de Qualidade e Testes
-**Preparação:** 30/10/2026 • Equipe: Alex e Dawid
+**Data:** 30/10/2026 • Equipe: Alex e Dawid
 
-## Onde está cada coisa
-| Arquivo | Descrição |
+## Resultado das seis ferramentas
+**JUnit, Mockito, Swagger, Postman, Cypress e JMeter tiveram execuções aprovadas em ambiente de QA.** Consulte o [fechamento com números e links de evidência](relatorios/fechamento-6-ferramentas-2026-10-30.md). Não confunda isso com liberação para produção.
+
+## Arquivos importantes
+| Arquivo | Finalidade |
 |---|---|
-| [plano-de-testes.md](plano-de-testes.md) | Estratégia e condições de liberação |
-| [casos-de-teste.md](casos-de-teste.md) | Índice dos 46 casos |
-| [casos-de-teste.csv](casos-de-teste.csv) | 46 casos com passos, dados e resultado esperado |
-| [matriz-rastreabilidade.csv](matriz-rastreabilidade.csv) | Relação requisitos × casos |
-| [execucao/registro-de-execucao.csv](execucao/registro-de-execucao.csv) | Planilha para execução de cada CT |
-| [relatorios/relatorio-execucao.md](relatorios/relatorio-execucao.md) | Indicadores, cobertura e parecer de liberação |
-| [relatorios/relatorio-defeitos.md](relatorios/relatorio-defeitos.md) | Histórico, riscos e defeitos |
-| [defeitos/registro-defeitos.csv](defeitos/registro-defeitos.csv) | Tabela de defeitos da execução |
-| [defeitos/modelo-defeito.md](defeitos/modelo-defeito.md) | Modelo de relatório de defeito reproduzível |
-| [evidencias/README.md](evidencias/README.md) | Procedimento para guardar prints e logs |
-| [monitoramento.md](monitoramento.md) | Plano de disponibilidade |
-| [monitorar-fluir.mjs](monitorar-fluir.mjs) | Verificador de frontend e API |
+| [Casos de teste: 46 cenários](casos-de-teste.csv) | Catálogo de testes documentados |
+| [Matriz de rastreabilidade](matriz-rastreabilidade.csv) | Requisitos x casos |
+| [Registro manual](execucao/registro-de-execucao.csv) | Pendências para execução integral |
+| [Execução automática de interface](execucao/execucao-automatica-2026-10-30.csv) | 8 testes Cypress aprovados no ambiente local |
+| [Relatório consolidado](relatorios/relatorio-execucao.md) | Síntese e decisão |
+| [Fechamento das seis ferramentas](relatorios/fechamento-6-ferramentas-2026-10-30.md) | Resultados confirmados e links GitHub Actions |
+| [Evidências preservadas](evidencias/2026-10-30/) | XML, JTL, JSON e resumos textuais |
+| [Defeitos](relatorios/relatorio-defeitos.md) | Histórico, riscos e modelo |
+| [Guia das seis ferramentas](GUIA-6-FERRAMENTAS.md) | Como repetir as execuções |
+| [Guia Cypress e JMeter](GUIA-CYPRESS-JMETER.md) | Como repetir e interpretar resultados |
 
-## Como executar e documentar
-1. Escolha CT no catálogo, anote ambiente e commit.
-2. Siga os passos sem pular pré-condições.
-3. Selecione PASSOU, FALHOU, BLOQUEADO ou NÃO APLICÁVEL.
-4. Anexe evidência real e registre resultado obtido em `execucao/registro-de-execucao.csv`.
-5. Abra um DEF quando houver falha, usando o modelo.
-6. Atualize relatórios e só então faça a decisão de liberação.
-
-**Nota metodológica:** o catálogo é um plano, não é relatório de aprovação; nesta entrega ainda não foram executados os 46 casos. Diferencie claramente evidências históricas e evidências deste ciclo.
-
-## Ferramentas obrigatórias da professora
-
-[Guia de execução de Swagger, Postman, Cypress, Mockito, JUnit e JMeter](GUIA-6-FERRAMENTAS.md). Os scripts e arquivos de teste foram adicionados, **mas ainda não há execução nem evidência comprovada**. Registrar relatórios reais em `execucao/` e evidências em `evidencias/`.
+## Regras de registro
+Registre **status, executor, ambiente, commit, data, passos e evidência** ao executar um caso de teste. Anote defeitos reproduzíveis em `defeitos/registro-defeitos.csv`. Nunca envie tokens, senhas ou dados reais. Os artefatos completos do GitHub Actions expiram; resumos e evidências textuais relevantes foram preservados nesta branch.

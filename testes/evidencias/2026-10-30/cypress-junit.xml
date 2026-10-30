@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="3.464" tests="8" failures="0">
+  <testsuite name="Root Suite" timestamp="2026-10-30T19:53:43" tests="0" file="cypress/e2e/fluir-smoke.cy.js" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Fluir - QA visual e funcional (sem dados reais)" timestamp="2026-10-30T19:53:43" tests="8" time="3.460" failures="0">
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT001 | login abre com formulario" time="0.543" classname="CT001 | login abre com formulario">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT007 | login vazio mostra validacao" time="0.161" classname="CT007 | login vazio mostra validacao">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT038 | formulario de login no viewport de 320px" time="0.104" classname="CT038 | formulario de login no viewport de 320px">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT025 | registrar 200ml atualiza total e porcentagem" time="0.466" classname="CT025 | registrar 200ml atualiza total e porcentagem">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT026 | registrar 250ml incrementa total" time="0.168" classname="CT026 | registrar 250ml incrementa total">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT029 | mais de 1000ml por registro e rejeitado" time="1.266" classname="CT029 | mais de 1000ml por registro e rejeitado">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT035 | filtros de conquistas reagem ao clique" time="0.300" classname="CT035 | filtros de conquistas reagem ao clique">
+    </testcase>
+    <testcase name="Fluir - QA visual e funcional (sem dados reais) CT037 | modal de conquista abre e fecha" time="0.273" classname="CT037 | modal de conquista abre e fecha">
+    </testcase>
+  </testsuite>
+</testsuites>

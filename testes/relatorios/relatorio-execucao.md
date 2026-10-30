@@ -1,51 +1,38 @@
 # Fluir | Relatório consolidado de execução de testes
-**Equipe:** Alex e Dawid • **Preparado em:** 30/10/2026
-**Versão sob planejamento:** branch `alex/entrega-documentacao-qa-30-10` (código-base `dawid/realoca-atalhos-calendario-agua-19-10`).
+**Equipe:** Alex e Dawid • **Data:** 30/10/2026  
+**Branch de QA:** `alex/entrega-documentacao-qa-30-10`
 
 ## Resumo executivo
-O plano possui **46 casos de teste funcionais/integrados definidos**, com passos, pré-condições, dados, resultado esperado e evidência sugerida. Esses 46 casos ainda aguardam execução formal no catálogo. **Em 30/10/2026, a execução independente da suíte Java (JUnit 5 + Mockito) via GitHub Actions comprovou 23 testes aprovados, 0 falhas, 0 erros e 0 ignorados.** Essa suíte não substitui a execução ponta a ponta dos 46 casos e não comprova prontidão para produção. Consulte [relatório específico do CI](execucao-junit-mockito-2026-10-30.md).
+As **seis ferramentas obrigatórias** foram configuradas e executadas no GitHub Actions (JUnit, Mockito, Swagger, Postman/Newman, Cypress e JMeter). Os resultados automatizados verificados foram aprovados. [Veja o fechamento e as evidências](fechamento-6-ferramentas-2026-10-30.md).
 
-| Indicador | Quantidade |
-|---|---:|
-| Casos planejados | 46 |
-| Testes automatizados Java executados (suíte separada) | 23 |
-| Testes automatizados Java aprovados | 23 |
-| Falhas / erros / ignorados na suíte Java | 0 / 0 / 0 |
-| Casos funcionais do catálogo executados documentados | 0 |
-| Aprovados | 0 |
-| Reprovados | 0 |
-| Bloqueados | 0 |
-| Não executados | 46 |
-| Evidências novas coletadas nesta etapa | 0 |
-| Defeitos novos confirmados pela execução | 0 |
+## Resultados automatizados confirmados
+| Categoria | Quantidade | Situação |
+|---|---:|---|
+| Testes Java JUnit, incluindo Mockito | 23 | 23 aprovados, 0 falhas |
+| Testes Mockito identificados no total Java | 3 | 3 aprovados |
+| Rotas e operações Swagger | 8/8 | Validadas |
+| Requisições Postman / verificações | 8 / 11 | 0 falhas |
+| Testes Cypress | 8 | 8 aprovados após correção do teste CT037 |
+| Amostras JMeter em API local | 4 | 4 sucessos, 0 erros, média de 7 ms |
+| Casos documentados no catálogo global | 46 | Planejados; ainda sem execução formal integral |
 
-## Escopo
-Cadastro, autenticação e sessão; onboarding; dashboard; tarefas; água; conquistas; responsividade; acessibilidade; API; segurança; deploy e banco. Fontes: `../casos-de-teste.csv`, `../matriz-rastreabilidade.csv` e `../execucao/registro-de-execucao.csv`.
+## Diferença entre suíte automatizada e catálogo global
+Os 46 casos têm pré-condições, passos e resultados esperados em `../casos-de-teste.csv`. A suíte Cypress abrange 8 cenários **relacionados** a IDs do catálogo, porém utiliza servidor local e não substitui integralmente os testes de produção. A planilha `../execucao/registro-de-execucao.csv` continua inicializada como NÃO EXECUTADO para a execução manual integrada completa. Há registro independente da execução automática em `../execucao/execucao-automatica-2026-10-30.csv`.
 
-## Critérios de entrada
-- Deploy definido, URL e commit anotados.
-- Backend e banco acessíveis (ou falha documentada).
-- Conta fictícia de teste, sem dados reais.
-- Navegador/viewport anotados e capturas habilitadas.
+## Riscos restantes
+- Isolamento e autorização entre contas ainda não comprovados ponta a ponta (CT024 e CT044 são prioritários).
+- Backend hospedado e fluxo de login público devem ser verificados com conta fictícia de demonstração.
+- Carga leve local do JMeter não demonstra SLA nem capacidade de produção.
+- Validar a versão que será apresentada e guardar evidência do QR code.
+- Alguns módulos ainda utilizam armazenamento local do navegador.
 
-## Critérios de saída sugeridos
-- Executar smoke e cenários críticos; nenhuma falha crítica aberta.
-- Falhas altas com análise de impacto e correção priorizada.
-- Evidências anexadas e resultados consistentes com casos executados.
-- Isolamento de dados entre usuários validado antes de compartilhar QR code com credenciais.
+## Decisão de entrega
+**Entrega didática das seis ferramentas de QA: APROVADA COM EVIDÊNCIAS.**  
+**Liberação geral do Fluir para produção: NÃO AVALIADA.** É necessária validação de segurança e dos fluxos restantes antes de um parecer de publicação.
 
-## Observações e riscos
-1. Frontend Vercel `READY` não comprova disponibilidade do backend Render.
-2. A documentação não substitui resultados de teste ou log real.
-3. Recomenda-se investigar autorização por usuário em endpoints de tarefas.
-4. O onboarding e a persistência dos módulos devem ser testados ponta a ponta.
-
-## Decisão de liberação
-**AINDA NÃO AVALIADA — EVIDÊNCIAS INSUFICIENTES PARA A LIBERAÇÃO GLOBAL.** Embora a suíte Java tenha sido aprovada, a execução dos testes de ponta a ponta e autorização ainda é necessária.
-A recomendação só deve ser emitida após preencher a tabela de execução e associar arquivos de evidência reais.
-
-## Próximas ações
-1. Começar pelos CT001, CT002, CT005, CT006, CT010, CT017, CT018, CT024, CT025 e CT038.
-2. Registrar PASSOU/FALHOU/BLOQUEADO com evidência e ambiente.
-3. Abrir defeitos com ID e severidade para cada divergência.
-4. Atualizar este relatório com números reais e decisão justificada.
+## Fontes e relatórios
+- [Fechamento das seis ferramentas](fechamento-6-ferramentas-2026-10-30.md)
+- [Relatório detalhado JUnit/Mockito](execucao-junit-mockito-2026-10-30.md)
+- [Relatório detalhado Swagger e Postman](execucao-swagger-postman-2026-10-30.md)
+- [Catálogo global de 46 casos](../casos-de-teste.csv)
+- [Evidências permanentes](../evidencias/2026-10-30/)
