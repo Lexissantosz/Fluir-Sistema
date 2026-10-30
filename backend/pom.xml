@@ -84,6 +84,13 @@
     		<artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
 
+        <!-- Swagger UI / OpenAPI para o perfil de QA local (Spring Boot 3.5) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>
