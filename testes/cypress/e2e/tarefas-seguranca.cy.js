@@ -151,4 +151,22 @@ describe("Fluir - tarefas protegidas por Bearer (UC10)", () => {
       expect(JSON.parse(win.sessionStorage.getItem("fluir-user")).id).to.eq(42);
     });
   });
+  it("CT-SEG-09 | sessão removida após carregar bloqueia criação", () => {
+    visitWithSession([]);
+
+    // Intercepta qualquer POST de tarefas: nenhum deve chegar à API.
+    cy.intercept("POST", API, cy.stub().as("unexpectedPost"));
+
+    cy.window().then((win) => {
+      win.sessionStorage.removeItem("fluir-user");
+    });
+
+    cy.get("#newTaskBtn").click();
+    cy.get("#taskTitleInput").type("Tarefa fictícia sem sessão");
+    cy.get("#saveTaskBtn").click();
+
+    cy.location("pathname").should("eq", "/html/login.html");
+    cy.get("@unexpectedPost").should("not.have.been.called");
+  });
+
 });
