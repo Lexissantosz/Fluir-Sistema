@@ -90,4 +90,16 @@ $env:DEBUG=""; npx cypress run --browser electron --spec "cypress/e2e/fluir-smok
 
 Saída do terminal fornecida por Dawid: **8 passing (3s)**, **0 falhas**, mensagem **All specs passed!** e duração reportada de 3 segundos. Casos aprovados: CT001, CT007, CT038 (login), CT025, CT026, CT029 (hidratação) e CT035, CT037 (conquistas). Não foram produzidos screenshots; vídeo desativado.
 
-**Consolidado:** 16/16 cenários Cypress aprovados nas duas suítes (8 segurança de tarefas + 8 smoke). A execução ocorreu no frontend local; a integração de autorização com o backend protegido ainda não foi comprovada. 
+**Consolidado:** 16/16 cenários Cypress aprovados nas duas suítes (8 segurança de tarefas + 8 smoke). A execução ocorreu no frontend local; a integração de autorização com o backend protegido ainda não foi comprovada.
+
+
+## Auditoria de dependências da suíte de testes (04/11/2026)
+
+Dawid executou localmente, em `testes/`, os comandos `npm audit --omit=dev`, `npm audit` e `npm audit fix --dry-run`. A saída fornecida mostrou:
+
+- `npm audit --omit=dev`: **0 vulnerabilidades** nas dependências classificadas como produção **deste pacote de testes**, sem constituir auditoria do backend nem de todo o Fluir.
+- `npm audit`: **8 vulnerabilidades (6 moderadas, 2 altas)** em dependências de desenvolvimento/transitivas, envolvendo `extract-zip`, `glob`, `minimatch`, `qs`, `uuid` e dependências relacionadas ao Cypress/Mocha.
+- `npm audit fix --dry-run`: continuou reportando **8 vulnerabilidades**; nenhuma atualização foi aplicada nessa simulação.
+- Para algumas vulnerabilidades, a ferramenta recomenda `npm audit fix --force`, que instalaria `cypress@16.2.1`, mudança potencialmente incompatível com a versão `13.15.0` usada na validação.
+
+**Decisão:** não executar `--force` nem atualizar dependências sem revisão e regressão. Tratar as vulnerabilidades identificadas como pendência de segurança da cadeia de desenvolvimento, considerando especialmente o uso de arquivos ZIP de fontes confiáveis. Reavaliar correções e compatibilidade em etapa própria. Nenhuma mudança em `package.json` foi feita nesta análise via GitHub. Confirmar `git status -sb` local após a auditoria.
