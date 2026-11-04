@@ -15,6 +15,7 @@ import com.fluir.backend.security.FluirSessionFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
@@ -80,14 +81,34 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/usuarios/**").permitAll()
-                        .requestMatchers("/api/onboarding/**").authenticated()
+
+                        // Rotas publicas de autenticacao
                         .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/usuarios/cadastro",
+                                "/api/usuarios/login"
+                        ).permitAll()
+
+                        // Diagnostico da API
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/usuarios/teste"
+                        ).permitAll()
+
+                        // Modulos protegidos
+                        .requestMatchers(
+                                "/api/onboarding/**",
                                 "/api/tarefas",
                                 "/api/tarefas/**"
                         ).authenticated()
+
+                        // Bloqueia outras rotas de API nao autorizadas
+                        .requestMatchers("/api/**").denyAll()
+
+                        // Preserva o comportamento de rotas fora da API
                         .anyRequest().permitAll()
                 )
+
 
                 .addFilterBefore(
                         fluirSessionFilter,
