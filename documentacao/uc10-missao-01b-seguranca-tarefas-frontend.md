@@ -116,3 +116,25 @@ npx cypress run --browser electron --spec "cypress/e2e/tarefas-seguranca.cy.js"
 Saída do terminal compartilhada: **9 passing (4s)**; **9 testes, 9 aprovações, 0 falhas, 0 pendentes, 0 ignorados**, mensagem **All specs passed!**. Cypress 13.15.0, Electron 118 headless, Node v24.16.0. O resumo tabular indicou duração de 3 segundos. O novo cenário verificou que retirar `fluir-user` de `sessionStorage` após o carregamento bloqueia POST e redireciona ao login. Nenhuma requisição real à API de tarefas foi realizada pela suíte, pois utiliza interceptações.
 
 **Total atualizado das suítes executadas localmente:** **17/17 aprovados** (9 segurança + 8 smoke). **Integração real de autorização no backend do Alex continua pendente**.
+
+
+## Execução consolidada final das duas suítes (04/11/2026)
+
+**Comando executado por Dawid**, no diretório `testes/`, com servidor HTTP local na porta 5500:
+
+```powershell
+npx cypress run --browser electron --spec "cypress/e2e/tarefas-seguranca.cy.js,cypress/e2e/fluir-smoke.cy.js"
+```
+
+**Saída do terminal recebida:**
+
+- `tarefas-seguranca.cy.js`: **10/10 PASSOU** (CT-SEG-01 a CT-SEG-10).
+- `fluir-smoke.cy.js`: **8/8 PASSOU** (CT001, CT007, CT038, CT025, CT026, CT029, CT035, CT037).
+- **Total: 18 testes, 18 aprovações, 0 falhas, 0 pendentes, 0 ignorados**, mensagem `All specs passed!`.
+- Cypress **13.15.0**, Electron **118 (headless)**, Node.js **v24.16.0**, **2 especificações**.
+- Resumo final com duração **00:07**; screenshots 0, vídeo desativado.
+- **CT-SEG-10:** POST recebe 401 simulado, remove a sessão, redireciona para login e não cria evento na timeline.
+
+**Escopo da evidência:** os 10 testes de segurança usam interceptações para simular as respostas HTTP, sem testar autorização real no backend ou persistência no banco. O teste de dois usuários e a integração com as correções do Alex continuam pendentes.
+
+**Estado do backend no GitHub após conferência:** a branch `alex/correcao-seguranca-tarefas-uc10` não tinha commits à frente de `alex/entrega-documentacao-qa-30-10` no momento da consulta. Não presumir que o trabalho local do Alex esteja concluído ou ausente.
