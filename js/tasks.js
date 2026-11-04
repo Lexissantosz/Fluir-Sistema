@@ -177,6 +177,7 @@ const defaultTasks = [
 
 let tasks = [];
 let activeFilter = "all";
+let isSavingTask = false;
 
 
 // =====================================================
@@ -385,8 +386,68 @@ function getCurrentUser() {
   try {
     return JSON.parse(sessionStorage.getItem("fluir-user")) || null;
   } catch (error) {
-    console.error("Erro ao ler usuário logado:", error);
     return null;
+  }
+}
+
+// Todas as operações de tarefas usam a mesma sessão e tratamento HTTP.
+class TaskAuthorizationError extends Error {
+  constructor(status) {
+    super(status === 403
+      ? "Acesso negado. Você não tem permissão para esta tarefa."
+      : "Sua sessão expirou ou é inválida. Faça login novamente.");
+    this.status = status;
+  }
+}
+
+function getAuthenticatedTaskUser() {
+  const user = getCurrentUser();
+
+  if (
+    !user ||
+    (typeof user.id !== "number" && typeof user.id !== "string") ||
+    String(user.id).trim() === "" ||
+    typeof user.token !== "string" ||
+    !user.token.trim()
+  ) {
+    throw new TaskAuthorizationError(401);
+  }
+
+  return user;
+}
+
+async function requestTaskApi(url, options = {}) {
+  const user = getAuthenticatedTaskUser();
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      Authorization: `Bearer ${user.token}`
+    }
+  });
+
+  if (response.status === 401 || response.status === 403) {
+    throw new TaskAuthorizationError(response.status);
+  }
+
+  return response;
+}
+
+function handleTaskRequestError(error, fallbackMessage, inTaskForm = false) {
+  const message = error instanceof TaskAuthorizationError
+    ? error.message
+    : fallbackMessage;
+
+  if (inTaskForm) {
+    showTaskFormMessage(message);
+  } else {
+    alert(message);
+  }
+
+  // Remove somente a sessão inválida, nunca dados locais de tarefas/timeline.
+  if (error instanceof TaskAuthorizationError && error.status === 401) {
+    sessionStorage.removeItem("fluir-user");
+    window.location.replace("login.html");
   }
 }
 
@@ -405,16 +466,9 @@ function mapTaskFromApi(task) {
 }
 
 async function loadTasks() {
-  const user = getCurrentUser();
-
-  if (!user?.id) {
-    console.error("Usuário não encontrado na sessão.");
-    tasks = [];
-    return;
-  }
-
   try {
-    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`);
+    const user = getAuthenticatedTaskUser();
+    const response = await requestTaskApi(`${TASKS_API_URL}/usuario/${user.id}`);
 
     if (!response.ok) {
       throw new Error("Não foi possível carregar as tarefas.");
@@ -422,10 +476,16 @@ async function loadTasks() {
 
     const data = await response.json();
 
+    if (!Array.isArray(data)) {
+      throw new Error("Resposta inválida da API de tarefas.");
+    }
+
     tasks = data.map(mapTaskFromApi);
+    return true;
   } catch (error) {
-    console.error("Erro ao carregar tarefas:", error);
-    tasks = [];
+    // Não substitui tarefas existentes por uma lista vazia após falha.
+    handleTaskRequestError(error, "Não foi possível carregar as tarefas.");
+    return false;
   }
 }
 
@@ -946,6 +1006,11 @@ function clearTaskModalFields() {
 // =====================================================
 
 async function saveNewTask() {
+  // Enter também dispara esta função: impede duas requisições simultâneas.
+  if (isSavingTask) {
+    return;
+  }
+
   clearTaskFormMessage();
   clearTaskInvalidFields();
 
@@ -965,20 +1030,22 @@ async function saveNewTask() {
     return;
   }
 
-  const user = getCurrentUser();
-
-  if (!user?.id) {
-    showTaskFormMessage("Sessão inválida. Faça login novamente.");
+  let user;
+  try {
+    user = getAuthenticatedTaskUser();
+  } catch (error) {
+    handleTaskRequestError(error, "Sessão inválida. Faça login novamente.", true);
     return;
   }
 
+  isSavingTask = true;
   try {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = true;
       saveTaskBtn.textContent = "Salvando...";
     }
 
-    const response = await fetch(TASKS_API_URL, {
+    const response = await requestTaskApi(TASKS_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -996,7 +1063,7 @@ async function saveNewTask() {
     });
 
     if (!response.ok) {
-      throw new Error(await response.text());
+      throw new Error("Não foi possível salvar a tarefa.");
     }
 
     const savedTask = await response.json();
@@ -1009,15 +1076,15 @@ async function saveNewTask() {
 
     showTaskFormMessage("Tarefa salva com sucesso.", "success");
 
-    setTimeout(() => {
-      closeTaskModal();
-      clearTaskModalFields();
-    }, 450);
+    // Mantém o bloqueio até o modal fechar, mesmo após a resposta HTTP.
+    await new Promise((resolve) => setTimeout(resolve, 450));
+    closeTaskModal();
+    clearTaskModalFields();
 
   } catch (error) {
-    console.error("Erro ao salvar tarefa:", error);
-    showTaskFormMessage("Não foi possível salvar a tarefa.");
+    handleTaskRequestError(error, "Não foi possível salvar a tarefa.", true);
   } finally {
+    isSavingTask = false;
     if (saveTaskBtn) {
       saveTaskBtn.disabled = false;
       saveTaskBtn.textContent = "Salvar tarefa";
@@ -1039,7 +1106,7 @@ async function toggleTaskCompleted(taskId) {
   const newStatus = !task.completed;
 
   try {
-    const response = await fetch(
+    const response = await requestTaskApi(
       `${TASKS_API_URL}/${taskId}/status?concluida=${newStatus}`,
       {
         method: "PUT"
@@ -1061,10 +1128,7 @@ async function toggleTaskCompleted(taskId) {
     renderTasks();
 
   } catch (error) {
-    console.error("Erro ao atualizar tarefa:", error);
-
-    alert("Não foi possível atualizar a tarefa.");
-
+    handleTaskRequestError(error, "Não foi possível atualizar a tarefa.");
     renderTasks();
   }
 }
@@ -1082,7 +1146,7 @@ async function deleteTask(taskId) {
   }
 
   try {
-    const response = await fetch(
+    const response = await requestTaskApi(
       `${TASKS_API_URL}/${taskId}`,
       {
         method: "DELETE"
@@ -1103,9 +1167,7 @@ async function deleteTask(taskId) {
     renderTasks();
 
   } catch (error) {
-    console.error("Erro ao excluir tarefa:", error);
-
-    alert("Não foi possível excluir a tarefa.");
+    handleTaskRequestError(error, "Não foi possível excluir a tarefa.");
   }
 }
 
@@ -1122,9 +1184,11 @@ async function clearCompletedTasks() {
   }
 
   try {
+    // Verifica a sessão antes de iniciar qualquer exclusão em lote.
+    getAuthenticatedTaskUser();
     const responses = await Promise.all(
       completed.map((task) =>
-        fetch(`${TASKS_API_URL}/${task.id}`, {
+        requestTaskApi(`${TASKS_API_URL}/${task.id}`, {
           method: "DELETE"
         })
       )
@@ -1156,16 +1220,14 @@ async function clearCompletedTasks() {
     renderTasks();
 
   } catch (error) {
-    console.error(
-      "Erro ao limpar tarefas concluídas:",
-      error
-    );
+    if (!(error instanceof TaskAuthorizationError)) {
+      // Em falhas parciais, sincroniza apenas se ainda houver acesso à API.
+      await loadTasks();
+      renderTasks();
+    }
 
-    await loadTasks();
-
-    renderTasks();
-
-    alert(
+    handleTaskRequestError(
+      error,
       "Não foi possível limpar todas as tarefas concluídas."
     );
   }
@@ -1353,6 +1415,14 @@ function setupClearCompletedButton() {
 // =====================================================
 
 async function initTasksPage() {
+  // Bloqueia a tela antes de configurar ações se não houver sessão.
+  try {
+    getAuthenticatedTaskUser();
+  } catch (error) {
+    handleTaskRequestError(error, "Faça login para acessar suas tarefas.");
+    return;
+  }
+
   applySavedTheme();
   updateWelcomeArea();
   applySelectedModulesToMenu();
@@ -1363,9 +1433,9 @@ async function initTasksPage() {
   setupTaskModal();
   setupClearCompletedButton();
 
-  await loadTasks();
-
-  renderTasks();
+  if (await loadTasks()) {
+    renderTasks();
+  }
 }
 
 initTasksPage();
