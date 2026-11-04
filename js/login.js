@@ -23,10 +23,10 @@ const showLogin = document.getElementById("showLogin");
 
 const passwordButtons = document.querySelectorAll(".password-toggle");
 
-const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
+const API_BASE_URL = "http://127.0.0.1:8081/api/usuarios";
 
 const ONBOARDING_API_BASE_URL =
-  "https://fluir-sistema.onrender.com/api/onboarding";
+  "http://127.0.0.1:8081/api/onboarding";
 
 // =============================
 // 2. FUNÇÕES AUXILIARES
