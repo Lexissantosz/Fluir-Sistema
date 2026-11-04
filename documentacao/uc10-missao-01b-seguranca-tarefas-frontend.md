@@ -79,3 +79,15 @@ Relatório do terminal fornecido por Dawid:
 2. `219a64a` — `test(tasks): cobrir autenticacao Bearer e respostas 401/403 no Cypress`
 
 **Status:** implementação frontend inicial concluída e 8/8 testes Cypress com rede simulada aprovados; integração com backend protegido ainda pendente.
+
+## Regressão funcional independente (04/11/2026)
+
+Dawid executou localmente a suíte pré-existente `testes/cypress/e2e/fluir-smoke.cy.js`, com servidor estático em `127.0.0.1:5500` e navegador Electron 118 (headless):
+
+```powershell
+$env:DEBUG=""; npx cypress run --browser electron --spec "cypress/e2e/fluir-smoke.cy.js"
+```
+
+Saída do terminal fornecida por Dawid: **8 passing (3s)**, **0 falhas**, mensagem **All specs passed!** e duração reportada de 3 segundos. Casos aprovados: CT001, CT007, CT038 (login), CT025, CT026, CT029 (hidratação) e CT035, CT037 (conquistas). Não foram produzidos screenshots; vídeo desativado.
+
+**Consolidado:** 16/16 cenários Cypress aprovados nas duas suítes (8 segurança de tarefas + 8 smoke). A execução ocorreu no frontend local; a integração de autorização com o backend protegido ainda não foi comprovada. 
