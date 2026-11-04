@@ -169,4 +169,27 @@ describe("Fluir - tarefas protegidas por Bearer (UC10)", () => {
     cy.get("@unexpectedPost").should("not.have.been.called");
   });
 
+  it("CT-SEG-10 | POST com 401 encerra sessão sem criar tarefa", () => {
+    visitWithSession([]);
+
+    cy.intercept("POST", API, (request) => {
+      expect(request.headers.authorization).to.eq(`Bearer ${user.token}`);
+      request.reply({
+        statusCode: 401,
+        body: { mensagem: "Sessão expirada" },
+      });
+    }).as("unauthorizedCreate");
+
+    cy.get("#newTaskBtn").click();
+    cy.get("#taskTitleInput").type("Tarefa fictícia rejeitada");
+    cy.get("#saveTaskBtn").click();
+
+    cy.wait("@unauthorizedCreate");
+    cy.location("pathname").should("eq", "/html/login.html");
+    cy.window().then((win) => {
+      expect(win.sessionStorage.getItem("fluir-user")).to.be.null;
+      expect(win.localStorage.getItem("fluir-timeline-events")).to.be.null;
+    });
+  });
+
 });
