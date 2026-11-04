@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verifyNoInteractions;
 
+import com.fluir.backend.model.Tarefa;
+import java.util.Optional;
+
 class TarefaControllerSegurancaTest {
 
     @Test
@@ -60,5 +63,63 @@ class TarefaControllerSegurancaTest {
         );
 
         verifyNoInteractions(tarefas, usuarios);
+    }
+
+    @Test
+    void deveBloquearAlteracaoDeTarefaDeOutroUsuario() {
+        TarefaRepository tarefas =
+                Mockito.mock(TarefaRepository.class);
+
+        UsuarioRepository usuarios =
+                Mockito.mock(UsuarioRepository.class);
+
+        Tarefa tarefa = new Tarefa();
+        tarefa.setUsuarioId(1);
+        tarefa.setConcluida(false);
+
+        Mockito.when(tarefas.findById(99))
+                .thenReturn(Optional.of(tarefa));
+
+        TarefaController controller =
+                new TarefaController(tarefas, usuarios);
+
+        var resposta = controller.alterarStatus(99, true, 2);
+
+        assertEquals(HttpStatus.FORBIDDEN, resposta.getStatusCode());
+        assertEquals(false, tarefa.getConcluida());
+
+        Mockito.verify(tarefas, Mockito.never())
+                .save(Mockito.any(Tarefa.class));
+    }
+
+    @Test
+    void deveBloquearExclusaoDeTarefaDeOutroUsuario() {
+        TarefaRepository tarefas =
+                Mockito.mock(TarefaRepository.class);
+
+        UsuarioRepository usuarios =
+                Mockito.mock(UsuarioRepository.class);
+
+        Tarefa tarefa = new Tarefa();
+        tarefa.setUsuarioId(1);
+
+        Mockito.when(tarefas.findById(99))
+                .thenReturn(Optional.of(tarefa));
+
+        TarefaController controller =
+                new TarefaController(tarefas, usuarios);
+
+        var resposta = controller.excluir(99, 2);
+
+        assertEquals(
+                HttpStatus.FORBIDDEN,
+                resposta.getStatusCode()
+        );
+
+        Mockito.verify(tarefas, Mockito.never())
+                .delete(Mockito.any(Tarefa.class));
+
+        Mockito.verify(tarefas, Mockito.never())
+                .deleteById(Mockito.anyInt());
     }
 }
