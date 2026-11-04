@@ -20,6 +20,7 @@ public class OnboardingController {
         this.onboardingService = onboardingService;
     }
 
+    @PostMapping("/salvar")
     public ResponseEntity<?> salvar(
             @Valid @RequestBody OnboardingRequest request,
             Authentication authentication
