@@ -138,3 +138,28 @@ npx cypress run --browser electron --spec "cypress/e2e/tarefas-seguranca.cy.js,c
 **Escopo da evidência:** os 10 testes de segurança usam interceptações para simular as respostas HTTP, sem testar autorização real no backend ou persistência no banco. O teste de dois usuários e a integração com as correções do Alex continuam pendentes.
 
 **Estado do backend no GitHub após conferência:** a branch `alex/correcao-seguranca-tarefas-uc10` não tinha commits à frente de `alex/entrega-documentacao-qa-30-10` no momento da consulta. Não presumir que o trabalho local do Alex esteja concluído ou ausente.
+
+
+## Execução após bloqueio de POST duplicado (04/11/2026)
+
+A revisão da função `saveNewTask()` identificou que a tecla Enter poderia provocar POSTs simultâneos apesar da desativação do botão. Foi adicionado o estado `isSavingTask` para impedir reentrada durante a operação e até o fechamento do modal, liberando o estado em `finally`.
+
+O novo cenário `CT-SEG-11` simula pressionamentos repetidos de Enter com resposta HTTP atrasada e verifica apenas um POST e uma tarefa renderizada.
+
+Dawid executou localmente, no diretório `testes/`:
+
+```powershell
+npx cypress run --browser electron --spec "cypress/e2e/tarefas-seguranca.cy.js,cypress/e2e/fluir-smoke.cy.js"
+```
+
+**Resultado observado em 04/11/2026:**
+
+- `tarefas-seguranca.cy.js`: **11/11 aprovados** (CT-SEG-01 a CT-SEG-11).
+- `fluir-smoke.cy.js`: **8/8 aprovados**.
+- **Consolidado mais recente: 19 testes, 19 aprovados, zero falhas, zero pendentes/ignorados**, `All specs passed!`.
+- Cypress `13.15.0`, Electron `118 (headless)`, Node `v24.16.0`, duas suítes, duração global `00:08`.
+- Nenhum screenshot foi gerado; gravação de vídeo desativada.
+
+**Limitação:** as requisições de tarefas nos testes de segurança são interceptadas e simuladas; o resultado não comprova integração com o backend real.
+
+**Situação atual da integração:** após a execução, a branch `alex/correcao-seguranca-tarefas-uc10` passou a ter dois commits acima da base, alterando `SecurityConfig.java`, `TarefaController.java` e criando `TarefaControllerSegurancaTest.java`. É necessário revisar o contrato e executar testes de integração antes de aceitar o PR.

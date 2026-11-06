@@ -177,6 +177,7 @@ const defaultTasks = [
 
 let tasks = [];
 let activeFilter = "all";
+let isSavingTask = false;
 
 
 // =====================================================
@@ -1005,6 +1006,11 @@ function clearTaskModalFields() {
 // =====================================================
 
 async function saveNewTask() {
+  // Enter também dispara esta função: impede duas requisições simultâneas.
+  if (isSavingTask) {
+    return;
+  }
+
   clearTaskFormMessage();
   clearTaskInvalidFields();
 
@@ -1032,6 +1038,7 @@ async function saveNewTask() {
     return;
   }
 
+  isSavingTask = true;
   try {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = true;
@@ -1069,14 +1076,15 @@ async function saveNewTask() {
 
     showTaskFormMessage("Tarefa salva com sucesso.", "success");
 
-    setTimeout(() => {
-      closeTaskModal();
-      clearTaskModalFields();
-    }, 450);
+    // Mantém o bloqueio até o modal fechar, mesmo após a resposta HTTP.
+    await new Promise((resolve) => setTimeout(resolve, 450));
+    closeTaskModal();
+    clearTaskModalFields();
 
   } catch (error) {
     handleTaskRequestError(error, "Não foi possível salvar a tarefa.", true);
   } finally {
+    isSavingTask = false;
     if (saveTaskBtn) {
       saveTaskBtn.disabled = false;
       saveTaskBtn.textContent = "Salvar tarefa";

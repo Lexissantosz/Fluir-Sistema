@@ -192,4 +192,29 @@ describe("Fluir - tarefas protegidas por Bearer (UC10)", () => {
     });
   });
 
+  it("CT-SEG-11 | Enter repetido durante POST pendente não duplica tarefa", () => {
+    visitWithSession([]);
+
+    let postCount = 0;
+    cy.intercept("POST", API, (request) => {
+      postCount += 1;
+      request.reply({
+        statusCode: 200,
+        delay: 800,
+        body: { ...task(111), ...request.body, id: 111 },
+      });
+    }).as("createOnce");
+
+    cy.get("#newTaskBtn").click();
+    cy.get("#taskTitleInput").type("Tarefa única");
+    cy.get("#taskTitleInput").type("{enter}{enter}{enter}");
+    cy.wait("@createOnce");
+
+    cy.get(".task-card").should("have.length", 1);
+    cy.get(".task-card").should("contain.text", "Tarefa única");
+    cy.then(() => {
+      expect(postCount, "apenas uma requisição POST").to.eq(1);
+    });
+  });
+
 });
