@@ -424,6 +424,32 @@
     </div>
   </div>
 
+  <!-- Confirmação de exclusão de lançamento -->
+  <div class="delete-modal-overlay" id="deleteModal"
+       role="dialog" aria-modal="true"
+       aria-labelledby="deleteModalTitle">
+    <div class="delete-modal">
+      <div class="delete-modal-icon" aria-hidden="true">×</div>
+
+      <h3 id="deleteModalTitle">Excluir lançamento?</h3>
+
+      <p>
+        Tem certeza de que deseja excluir este lançamento?
+        Esta ação não pode ser desfeita.
+      </p>
+
+      <div class="delete-modal-actions">
+        <button class="secondary-btn" type="button" id="cancelDeleteBtn">
+          Cancelar
+        </button>
+
+        <button class="danger-btn" type="button" id="confirmDeleteBtn">
+          Excluir lançamento
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
