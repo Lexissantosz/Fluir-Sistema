@@ -1305,7 +1305,7 @@ function updateRecentEventsDashboardData() {
     return;
   }
 
-  const events = getStorageJSON("fluir-events", []);
+  const events = getStorageJSON("fluir-timeline-events", []);
 
   if (!Array.isArray(events) || !events.length) {
     eventList.innerHTML = `
