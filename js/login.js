@@ -390,13 +390,30 @@ if (loginForm) {
         return;
       }
 
-      sessionStorage.removeItem("fluir-user");
-      sessionStorage.setItem("fluir-onboarding-completed", "false");
+      if (!data || !data.id || typeof data.token !== "string" || !data.token.trim()) {
+        showMessage(loginMessage, "O servidor não enviou uma sessão válida.", "error");
+        return;
+      }
 
-      const onboardingConcluido =
-        await hasCompletedOnboarding(data);
-
+      // A consulta de onboarding é autenticada; a sessão deve existir antes dela.
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      sessionStorage.removeItem("fluir-onboarding-completed");
+
+      let onboardingConcluido;
+      try {
+        onboardingConcluido = await hasCompletedOnboarding(data);
+      } catch (validationError) {
+        console.error("Erro ao verificar onboarding:", validationError);
+        sessionStorage.removeItem("fluir-user");
+        sessionStorage.removeItem("fluir-onboarding");
+        showMessage(
+          loginMessage,
+          "Não foi possível verificar suas preferências. Tente entrar novamente.",
+          "error"
+        );
+        return;
+      }
+
       sessionStorage.setItem(
         "fluir-onboarding-completed",
         String(onboardingConcluido)
