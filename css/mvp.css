@@ -118,3 +118,16 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #9295
   .app-shell .task-row,.app-shell .habit-row{gap:8px;padding:10px}
   .app-shell .water-buttons .button{min-width:0}
 }
+
+/* Ajuste de marca: sem disco branco, sombra, filtro ou deslocamento óptico */
+.brand,.sidebar-brand{display:inline-flex;align-items:center;gap:12px}
+.brand .fluir-symbol,.sidebar-brand .fluir-symbol,
+:root[data-theme="dark"] .brand .fluir-symbol,
+:root[data-theme="dark"] .sidebar-brand .fluir-symbol{
+  width:38px;height:38px;min-width:38px;flex:0 0 38px;display:block;
+  object-fit:contain;object-position:center;margin:0;padding:0;
+  background:transparent!important;border:0;border-radius:0;
+  box-shadow:none;filter:none!important;transform:none;opacity:1
+}
+.sidebar-brand{align-items:center}
+.sidebar-brand div{justify-content:center;align-content:center;min-height:38px}
