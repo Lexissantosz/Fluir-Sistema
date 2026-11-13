@@ -1329,8 +1329,9 @@
             var inPhone=!!row.closest(".phone-canvas");
             var other=inPhone?desktopCanvas:phoneCanvas;
             var selector=row.closest("[data-task-list]")?"[data-task-list]":row.closest("[data-habit-list]")?"[data-habit-list]":null;
+            var nextDone=!row.classList.contains("done");
             [row, ...(selector&&other.querySelector(selector)?[other.querySelector(selector).querySelectorAll("[data-check]")[index]].filter(Boolean):[])].forEach(function(target){
-              target.classList.toggle("done",!row.classList.contains("done"));
+              target.classList.toggle("done",nextDone);
               var check=target.querySelector(".check");
               if(check)check.textContent=target.classList.contains("done")?"✓":"";
             });
