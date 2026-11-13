@@ -124,6 +124,10 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
   .slide[data-title="Mockup interativo"] .detail-list{grid-template-columns:1fr}
 }
 
+
+/* Logo: mesma geometria oficial com contraste próprio no tema noturno */
+.topbar .brand{color:var(--ink);display:flex;align-items:center;gap:10px}
+.topbar .official-logo{display:block;width:36px;height:36px;object-fit:contain;filter:none;transform:none;opacity:1;flex:0 0 36px}
 </style>
 </head>
 <body>
@@ -285,7 +289,7 @@ function closeExperience(){overlay.classList.remove("open");frame.src="about:bla
 prev.addEventListener("click",function(){go(-1)});
 next.addEventListener("click",function(){go(1)});
 document.getElementById("notesButton").addEventListener("click",function(){notesPanel.classList.toggle("open")});
-document.getElementById("themeButton").addEventListener("click",function(){document.body.classList.toggle("night")});
+document.getElementById("themeButton").addEventListener("click",function(){document.body.classList.toggle("night");document.querySelectorAll(".official-logo").forEach(function(logo){logo.src=document.body.classList.contains("night")?"Assets/brand/fluir-symbol-dark.svg":"Assets/brand/fluir-symbol.svg"})});
 document.getElementById("fullscreenButton").addEventListener("click",function(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}});
 document.querySelectorAll("[data-open-experience]").forEach(function(btn){btn.addEventListener("click",function(){openExperience(btn.dataset.openExperience)})});
 document.getElementById("closeExperience").addEventListener("click",closeExperience);
