@@ -15,3 +15,24 @@
 @media(max-width:940px){.hero{grid-template-columns:1fr;gap:40px}.hero-card{max-width:560px}.auth-shell{grid-template-columns:1fr;max-width:700px;gap:40px}.auth-intro{gap:60px}.app-shell{grid-template-columns:210px 1fr}.task-layout,.habit-layout,.water-grid{grid-template-columns:1fr}.form-card{order:-1}}
 @media(max-width:760px){.landing-header{padding:20px}.landing-main{padding:50px 20px}.hero h1{font-size:45px}.hero-actions{flex-direction:column}.hero-actions .button{width:100%}.auth-shell{display:block;padding:22px}.auth-intro{height:auto;gap:50px;margin-bottom:30px}.auth-intro h1{font-size:42px}.setup-header{padding:20px}.setup-wrap{padding:0 20px;margin-top:24px}.setup-step h1{font-size:39px}.app-shell{display:block}.sidebar{display:none}.main{padding:34px 18px 104px}.topbar{margin-bottom:22px}.topbar h1{font-size:31px}.avatar{display:none}.welcome{padding:23px}.day-score{display:none}.stats{grid-template-columns:1fr 1fr}.grid.two{grid-template-columns:1fr}.task-layout,.habit-layout,.water-grid{grid-template-columns:1fr}.hidden-mobile{display:none}.bottom-nav{display:flex;position:fixed;left:9px;right:9px;bottom:9px;z-index:90;background:rgba(18,18,18,.97);border:1px solid #333;border-radius:21px;padding:7px;box-shadow:0 15px 40px rgba(0,0,0,.25)}.bottom-nav a{flex:1;display:grid;justify-items:center;gap:3px;text-decoration:none;color:#aaa;font-size:8px;font-weight:800;padding:7px 4px;border-radius:14px}.bottom-nav i{font-style:normal;font-size:14px}.bottom-nav a.active{background:#fff;color:#111}.toast{left:18px;right:18px;bottom:90px;text-align:center}.water-ring{width:220px;height:220px}.toolbar{align-items:flex-end}.habit-row{grid-template-columns:30px 1fr 30px}.habit-row>span{display:none}}
 @media(max-width:430px){.stats{grid-template-columns:1fr 1fr}.stats article:last-child{grid-column:1/-1}.task-row{grid-template-columns:30px 1fr 30px}.setup-actions{gap:10px}.setup-actions .button{flex:1}.water-buttons .button{flex:1}.top-actions .icon-btn{width:40px;height:40px}}
+
+
+/* Apresentação acadêmica: refinamento do MVP, identidade oficial e escala responsiva */
+.fluir-symbol{width:36px;height:36px;object-fit:contain;flex-shrink:0}
+.brand,.sidebar-brand{gap:12px}
+.sidebar-brand .fluir-symbol{margin-left:1px}
+.sidebar{background:var(--surface);border-right:1px solid var(--line)}
+.sidebar-foot{background:var(--surface2);border:1px solid var(--line)}
+.app-shell .main{padding-top:clamp(28px,4vw,55px)}
+.topbar h1,.setup-step h1{letter-spacing:-.07em}
+.welcome{background:linear-gradient(135deg,var(--strong) 15%,#41433f 130%);border-radius:24px;box-shadow:var(--shadow)}
+:root[data-theme="dark"] .welcome{background:linear-gradient(135deg,#f1f2ed,#c9cdc7)}
+.stats article,.card{box-shadow:0 8px 22px rgba(18,18,18,.025);border-radius:20px}
+.stats article{min-height:113px;justify-content:center}
+.simple-row,.task-row,.habit-row{transition:background .18s ease,transform .18s ease,border-color .18s ease}
+.task-row:hover,.habit-row:hover{background:var(--surface2);transform:translateY(-1px)}
+button:hover:not(:disabled),a.button:hover{filter:brightness(.95)}
+:root[data-theme="dark"] button:hover:not(:disabled){filter:brightness(1.1)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #92958f;outline-offset:3px}
+.setup-wrap{max-width:800px}.setup-step>p{max-width:680px}
+@media(max-width:760px){.stats article{min-height:auto}.app-shell .main{padding-top:26px}}
