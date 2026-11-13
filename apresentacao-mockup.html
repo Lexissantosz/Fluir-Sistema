@@ -956,7 +956,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
           <h2>Seu dia</h2>
           <p>O essencial em um só lugar, com contexto e sem excesso de informação.</p>
         </div>
-        <div class="avatar-mini">US</div>
+        <div class="avatar-mini" aria-label="Usuário fictício">US</div>
       </header>
 
       <section class="hero-card">
@@ -1355,23 +1355,28 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         });
       }
 
-      function addPrototypeItem(type,label,source){
-        var canvas = getDeviceCanvas(source);
+      function appendPrototypeRow(type,label,targetCanvas){
         var selector = type === "task" ? "[data-task-list]" : "[data-habit-list]";
-        if(!canvas.querySelector(selector)){return;}
-        [desktopCanvas,phoneCanvas].forEach(function(targetCanvas){
-          var list=targetCanvas.querySelector(selector);
-          if(!list)return;
-          var row=document.createElement("div");
+        var list = targetCanvas.querySelector(selector);
+        if(!list){return;}
+        var row = document.createElement("div");
         row.className = type === "task" ? "task-mini" : "habit-mini";
         row.setAttribute("data-check","");
-        row.innerHTML =
-          '<span class="check"></span>' +
+        row.innerHTML = '<span class="check"></span>' +
           '<span><strong></strong><small>' + (type === "task" ? 'Mockup · agora' : 'Novo hábito · diário') + '</small></span>' +
           '<span class="pill">' + (type === "task" ? 'Normal' : '0 dias') + '</span>';
-
         row.querySelector("strong").textContent = label;
         list.appendChild(row);
+      }
+      function addPrototypeItem(type,label,source){
+        var slide = slides[slideIndex];
+        var key = type === "task" ? "tasks" : "habits";
+        if(slide.key !== key){return;}
+        sharedState[key] ??= {};
+        sharedState[key].items ??= [];
+        sharedState[key].items.push(label);
+        [desktopCanvas,phoneCanvas].forEach(function(target){
+          appendPrototypeRow(type,label,target);
         });
         bindCheckRows();
         showToast(type === "task" ? "Tarefa adicionada" : "Hábito adicionado",source);
@@ -1573,6 +1578,14 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         description.textContent = slide.description;
         cloneTemplate(slide.key,desktopCanvas);
         cloneTemplate(slide.key,phoneCanvas);
+        if(slide.key === "tasks" || slide.key === "habits"){
+          var type = slide.key === "tasks" ? "task" : "habit";
+          (sharedState[slide.key]?.items || []).forEach(function(label){
+            [desktopCanvas,phoneCanvas].forEach(function(target){
+              appendPrototypeRow(type,label,target);
+            });
+          });
+        }
         [desktopCanvas,phoneCanvas].forEach(function(canvas){
           Array.from(canvas.querySelectorAll("[data-check]")).forEach(function(el,index){
             var stored=sharedState[slide.key]?.[index];
