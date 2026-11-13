@@ -61,3 +61,18 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #9295
 .water-goal-editor input{width:100%;min-height:40px;background:var(--surface2);border-radius:10px;border:1px solid var(--line);padding:0 11px;color:var(--text)}
 .water-buttons .button{min-width:96px}
 @media(max-width:760px){.water-goal-editor{flex-wrap:wrap}.water-heading{flex-wrap:wrap}.water-buttons{margin-top:12px}}
+
+/* Correções de projeção e tema escuro */
+.sidebar-brand,.brand{color:var(--text)!important;text-decoration:none}
+.sidebar-brand strong,.brand strong{color:var(--text)!important}
+.sidebar-brand .fluir-symbol,.brand .fluir-symbol{background:#fff;padding:3px;border-radius:50%;filter:none;box-sizing:border-box}
+.water-grid>.card{align-self:start;max-height:590px;display:flex;flex-direction:column;min-height:0}
+.water-grid>.card>.card-head{flex:none}
+.water-history{overflow-y:auto;overscroll-behavior:contain;flex:1;min-height:100px;max-height:480px;padding-right:8px;scrollbar-width:thin}
+.water-history>div{flex-shrink:0}
+.stats strong{font-size:clamp(24px,2vw,30px)}
+.simple-row strong,.task-row strong,.habit-row strong{font-size:clamp(12px,1.15vw,15px)}
+.simple-row small,.task-row small,.habit-row small{font-size:clamp(10px,.8vw,12px)}
+.card-head h3,.form-card h3{font-size:20px}
+.main{max-width:1500px}
+@media(max-height:780px){.water-grid>.card{max-height:480px}.water-history{max-height:360px}}
