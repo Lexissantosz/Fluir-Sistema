@@ -39,11 +39,23 @@
 
   function applyTheme(){
     document.documentElement.dataset.theme = localStorage.getItem("fluir-mvp-theme") || "light";
+    syncBrandSymbols();
+  }
+  function syncBrandSymbols(){
+    const file = document.documentElement.dataset.theme === "dark"
+      ? "fluir-symbol-dark.svg" : "fluir-symbol.svg";
+    document.querySelectorAll("img.fluir-symbol").forEach(img=>{
+      const src=img.getAttribute("src")||"";
+      if(/fluir-symbol(?:-dark)?\.svg$/.test(src)){
+        img.setAttribute("src",src.replace(/fluir-symbol(?:-dark)?\.svg$/,file));
+      }
+    });
   }
   function toggleTheme(){
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     localStorage.setItem("fluir-mvp-theme", next);
+    syncBrandSymbols();
   }
 
   const nav = [
@@ -363,6 +375,7 @@
 
   applyTheme();
   renderNav();
+  syncBrandSymbols();
   document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
   document.querySelectorAll("[data-theme-toggle]").forEach(btn=>btn.addEventListener("click",toggleTheme));
   document.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>window.location.href=btn.dataset.nav));
