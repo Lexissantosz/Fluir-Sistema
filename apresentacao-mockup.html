@@ -862,7 +862,18 @@
     }
   .pill{color:#171817!important;background:#f8f8f4!important;border-color:#d6d6d0!important}.dark .pill{color:#171817!important;background:#f8f8f4!important}
       .brand-mark,.brandmark{background:transparent!important}
-      </style>
+      
+/* Polimento visual de marca, controles e estados da apresentação */
+.device-brand{display:flex;align-items:center;gap:7px}
+.mockup-brand-img{width:21px;height:21px;object-fit:contain;flex:0 0 auto}
+.device-sidebar .nav-demo i,.phone-nav i{display:inline-flex;align-items:center;justify-content:center}
+.device-sidebar .nav-demo i img,.phone-nav i img{width:14px;height:14px;opacity:.9}
+body.dark .device-sidebar .nav-demo i img,body.dark .phone-nav i img{filter:invert(1)}
+.setting-mini .switch-row{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.setting-mini .switch-row .switch{width:34px;min-width:34px;height:19px;border:1px solid var(--line);border-radius:99px;display:flex;align-items:center;padding:3px;flex-shrink:0}
+.setting-mini .switch-row .switch::after{width:12px;height:12px;margin:0;transition:transform .18s ease;flex-shrink:0;background:#fff;box-shadow:0 1px 3px #0003}
+body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);margin:0;background:#181919}
+</style>
 </head>
 <body>
   <div class="deck">
@@ -893,13 +904,13 @@
         <div class="devices">
           <div class="desktop-device" data-device-label="DESKTOP">
             <aside class="device-sidebar">
-              <div class="device-brand"><b><img src="Assets/brand/fluir-symbol.svg" alt="" style="height:20px;width:20px"></b><strong>Fluir</strong></div>
+              <div class="device-brand"><img src="Assets/brand/fluir-symbol.svg" alt="" class="mockup-brand-img"><strong>Fluir</strong></div>
 
-              <button class="nav-demo active" data-nav-target="dashboard" type="button"><i>⌂</i>Dashboard</button>
-              <button class="nav-demo" data-nav-target="tasks" type="button"><i>✓</i>Tarefas</button>
-              <button class="nav-demo" data-nav-target="habits" type="button"><i>↻</i>Hábitos</button>
-              <button class="nav-demo" data-nav-target="water" type="button"><i>◌</i>Água</button>
-              <button class="nav-demo" data-nav-target="settings" type="button"><i>⚙</i>Configurações</button>
+              <button class="nav-demo active" data-nav-target="dashboard" type="button"><i><img src="Assets/icons/navigation/layout-dashboard.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Dashboard</button>
+              <button class="nav-demo" data-nav-target="tasks" type="button"><i><img src="Assets/icons/navigation/list-check.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Tarefas</button>
+              <button class="nav-demo" data-nav-target="habits" type="button"><i><img src="Assets/icons/navigation/repeat-2.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Hábitos</button>
+              <button class="nav-demo" data-nav-target="water" type="button"><i><img src="Assets/icons/navigation/droplets.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Água</button>
+              <button class="nav-demo" data-nav-target="settings" type="button"><i><img src="Assets/icons/navigation/settings.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Configurações</button>
 
               <div class="side-note">
                 <strong>Um dia de cada vez.</strong>
@@ -918,10 +929,10 @@
             </div>
             <div class="phone-canvas" id="phoneCanvas"></div>
             <nav class="phone-nav" aria-label="Navegação mobile da demonstração">
-              <button class="active" data-nav-target="dashboard" type="button"><i>⌂</i>Hoje</button>
-              <button data-nav-target="tasks" type="button"><i>✓</i>Tarefas</button>
-              <button data-nav-target="habits" type="button"><i>↻</i>Hábitos</button>
-              <button data-nav-target="water" type="button"><i>◌</i>Água</button>
+              <button class="active" data-nav-target="dashboard" type="button"><i><img src="Assets/icons/navigation/layout-dashboard.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Hoje</button>
+              <button data-nav-target="tasks" type="button"><i><img src="Assets/icons/navigation/list-check.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Tarefas</button>
+              <button data-nav-target="habits" type="button"><i><img src="Assets/icons/navigation/repeat-2.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Hábitos</button>
+              <button data-nav-target="water" type="button"><i><img src="Assets/icons/navigation/droplets.svg" alt="" style="width:14px;height:14px;object-fit:contain"></i>Água</button>
             </nav>
           </div>
         </div>
@@ -1262,6 +1273,7 @@
 
       var slideIndex = 0;
       var water = 1400;
+      var sharedState={dashboard:{},tasks:{},habits:{},choices:{}};
       var screenToSlide = {dashboard:0,tasks:2,habits:3,water:4,settings:5};
 
       var desktopCanvas = document.getElementById("desktopCanvas");
@@ -1325,13 +1337,17 @@
           row.dataset.boundCheck = "true";
 
           row.addEventListener("click",function(){
-            var index=Array.prototype.indexOf.call(row.parentElement.querySelectorAll("[data-check]"),row);
             var inPhone=!!row.closest(".phone-canvas");
+            var current=inPhone?phoneCanvas:desktopCanvas;
             var other=inPhone?desktopCanvas:phoneCanvas;
-            var selector=row.closest("[data-task-list]")?"[data-task-list]":row.closest("[data-habit-list]")?"[data-habit-list]":null;
+            var all=Array.from(current.querySelectorAll("[data-check]"));
+            var index=all.indexOf(row);
+            var partner=other.querySelectorAll("[data-check]")[index];
             var nextDone=!row.classList.contains("done");
-            [row, ...(selector&&other.querySelector(selector)?[other.querySelector(selector).querySelectorAll("[data-check]")[index]].filter(Boolean):[])].forEach(function(target){
+            [row,partner].filter(Boolean).forEach(function(target){
               target.classList.toggle("done",nextDone);
+              sharedState[slides[slideIndex].key]??={};
+              sharedState[slides[slideIndex].key][index]=nextDone;
               var check=target.querySelector(".check");
               if(check)check.textContent=target.classList.contains("done")?"✓":"";
             });
@@ -1557,6 +1573,16 @@
         description.textContent = slide.description;
         cloneTemplate(slide.key,desktopCanvas);
         cloneTemplate(slide.key,phoneCanvas);
+        [desktopCanvas,phoneCanvas].forEach(function(canvas){
+          Array.from(canvas.querySelectorAll("[data-check]")).forEach(function(el,index){
+            var stored=sharedState[slide.key]?.[index];
+            if(typeof stored==="boolean"){
+              el.classList.toggle("done",stored);
+              var check=el.querySelector(".check");
+              if(check)check.textContent=stored?"✓":"";
+            }
+          });
+        });
         renderNotes(slide.notes);
         syncActiveNav(slide.key);
         renderDots();
