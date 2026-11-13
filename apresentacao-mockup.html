@@ -1346,8 +1346,8 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
             var nextDone=!row.classList.contains("done");
             [row,partner].filter(Boolean).forEach(function(target){
               target.classList.toggle("done",nextDone);
-              sharedState[slides[slideIndex].key]??={};
-              sharedState[slides[slideIndex].key][index]=nextDone;
+              sharedState[slides[slideIndex].key === "dashboard" ? "tasks" : slides[slideIndex].key]??={};
+              sharedState[slides[slideIndex].key === "dashboard" ? "tasks" : slides[slideIndex].key][index]=nextDone;
               var check=target.querySelector(".check");
               if(check)check.textContent=target.classList.contains("done")?"✓":"";
             });
@@ -1484,6 +1484,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
             var localCards=group?Array.from(group.querySelectorAll("[data-choice]")):[];
             var position=localCards.indexOf(card);
             var selected=!card.classList.contains("selected");
+             sharedState.choices[position]=selected;
             [desktopCanvas,phoneCanvas].forEach(function(target){
               var targetCard=target.querySelectorAll("[data-choice]")[position];
               if(targetCard)targetCard.classList.toggle("selected",selected);
@@ -1529,6 +1530,20 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         enablePhoneDragScroll();
       }
 
+      function updateDashboardSummary(){
+        if(slides[slideIndex].key !== "dashboard"){return;}
+        [desktopCanvas,phoneCanvas].forEach(function(canvas){
+          var cards=canvas.querySelectorAll(".stats .stat");
+          if(cards.length < 3){return;}
+          var rows=canvas.querySelectorAll("[data-check]");
+          var done=Array.from(rows).filter(function(row){return row.classList.contains("done");}).length;
+          cards[0].querySelector("strong").textContent=done+"/"+rows.length;
+          cards[0].querySelector("small").textContent=(rows.length-done)+" pendentes";
+          cards[2].querySelector("strong").textContent=(water/1000).toLocaleString("pt-BR",{maximumFractionDigits:2})+" L";
+          cards[2].querySelector("small").textContent="de 2 L";
+        });
+      }
+
       function updateWater(feedback){
         var percent = Math.min(100,Math.round((water/2000)*100));
 
@@ -1552,6 +1567,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
           }
         });
 
+        updateDashboardSummary();
         if(feedback){
           document.querySelectorAll("[data-water-feedback]").forEach(function(el){
             el.textContent = feedback;
@@ -1587,8 +1603,15 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
           });
         }
         [desktopCanvas,phoneCanvas].forEach(function(canvas){
+          if(slide.key === "setup"){
+            Array.from(canvas.querySelectorAll("[data-choice]")).forEach(function(el,index){
+              if(typeof sharedState.choices[index] === "boolean"){
+                el.classList.toggle("selected",sharedState.choices[index]);
+              }
+            });
+          }
           Array.from(canvas.querySelectorAll("[data-check]")).forEach(function(el,index){
-            var stored=sharedState[slide.key]?.[index];
+            var stored=sharedState[slide.key === "dashboard" ? "tasks" : slide.key]?.[index];
             if(typeof stored==="boolean"){
               el.classList.toggle("done",stored);
               var check=el.querySelector(".check");
@@ -1604,6 +1627,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         nextBtn.disabled = slideIndex === slides.length-1;
         updateWater();
         attachInteractions();
+         updateDashboardSummary();
       }
 
       function goTo(index){
