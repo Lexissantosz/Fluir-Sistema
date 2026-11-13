@@ -21,19 +21,19 @@
     <section class="setup-step active" data-step="0">
       <span class="eyebrow">Seu jeito de usar</span>
       <h1>Como quer ser chamado?</h1>
-      <p>Esse nome aparece no dashboard e deixa a experiência um pouco menos genérica, felizmente.</p>
+      <p>Seu nome aparecerá no painel para personalizar a experiência.</p>
       <label>Nome ou apelido<input data-setup-name type="text" value="Alex"></label>
     </section>
 
     <section class="setup-step" data-step="1">
       <span class="eyebrow">Foco inicial</span>
       <h1>Escolha o que acompanhar.</h1>
-      <p>O MVP trabalha com três áreas principais para manter o escopo realmente mínimo.</p>
+      <p>Selecione as áreas que deseja acompanhar. Você pode mudar suas preferências depois.</p>
       <div class="choices">
-        <label><input type="checkbox" checked disabled><span><strong>Tarefas</strong><small>Planejamento diário</small></span></label>
-        <label><input type="checkbox" checked disabled><span><strong>Hábitos</strong><small>Constância e rotina</small></span></label>
-        <label><input type="checkbox" checked disabled><span><strong>Água</strong><small>Autocuidado básico</small></span></label>
-      </div>
+        <label class="module-choice"><input type="checkbox" value="tasks" data-module-choice checked><span><strong>Tarefas</strong><small>Planejamento diário</small></span></label>
+        <label class="module-choice"><input type="checkbox" value="habits" data-module-choice checked><span><strong>Hábitos</strong><small>Constância e rotina</small></span></label>
+        <label class="module-choice"><input type="checkbox" value="water" data-module-choice checked><span><strong>Água</strong><small>Autocuidado básico</small></span></label>
+      </div><p class="form-message" data-setup-warning role="status"></p>
     </section>
 
     <section class="setup-step" data-step="2">
