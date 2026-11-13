@@ -873,13 +873,16 @@ body.dark .device-sidebar .nav-demo i img,body.dark .phone-nav i img{filter:inve
 .setting-mini .switch-row .switch{width:34px;min-width:34px;height:19px;border:1px solid var(--line);border-radius:99px;display:flex;align-items:center;padding:3px;flex-shrink:0}
 .setting-mini .switch-row .switch::after{width:12px;height:12px;margin:0;transition:transform .18s ease;flex-shrink:0;background:#fff;box-shadow:0 1px 3px #0003}
 body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);margin:0;background:#181919}
-</style>
+/* Marca oficial visível nos dois temas do protótipo */
+    .mockup-brand-img,.mockup-top-logo{background:transparent;border-radius:0;padding:0;filter:none!important;opacity:1}
+    body.dark .mockup-brand-img,body.dark .mockup-top-logo{background:transparent;filter:none!important}
+    </style>
 </head>
 <body>
   <div class="deck">
     <header class="topbar">
       <div class="brand">
-        <img src="Assets/brand/fluir-symbol.svg" alt="Logo Fluir" style="height:26px;width:26px;object-fit:contain">
+        <img src="Assets/brand/fluir-symbol.svg" alt="Logo Fluir" class="mockup-top-logo" style="height:26px;width:26px;object-fit:contain">
         <span>Fluir</span>
       </div>
       <div class="top-meta">
@@ -956,7 +959,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
           <h2>Seu dia</h2>
           <p>O essencial em um só lugar, com contexto e sem excesso de informação.</p>
         </div>
-        <div class="avatar-mini">US</div>
+        <div class="avatar-mini" aria-label="Usuário fictício">US</div>
       </header>
 
       <section class="hero-card">
@@ -1346,8 +1349,8 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
             var nextDone=!row.classList.contains("done");
             [row,partner].filter(Boolean).forEach(function(target){
               target.classList.toggle("done",nextDone);
-              sharedState[slides[slideIndex].key]??={};
-              sharedState[slides[slideIndex].key][index]=nextDone;
+              sharedState[slides[slideIndex].key === "dashboard" ? "tasks" : slides[slideIndex].key]??={};
+              sharedState[slides[slideIndex].key === "dashboard" ? "tasks" : slides[slideIndex].key][index]=nextDone;
               var check=target.querySelector(".check");
               if(check)check.textContent=target.classList.contains("done")?"✓":"";
             });
@@ -1355,23 +1358,28 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         });
       }
 
-      function addPrototypeItem(type,label,source){
-        var canvas = getDeviceCanvas(source);
+      function appendPrototypeRow(type,label,targetCanvas){
         var selector = type === "task" ? "[data-task-list]" : "[data-habit-list]";
-        if(!canvas.querySelector(selector)){return;}
-        [desktopCanvas,phoneCanvas].forEach(function(targetCanvas){
-          var list=targetCanvas.querySelector(selector);
-          if(!list)return;
-          var row=document.createElement("div");
+        var list = targetCanvas.querySelector(selector);
+        if(!list){return;}
+        var row = document.createElement("div");
         row.className = type === "task" ? "task-mini" : "habit-mini";
         row.setAttribute("data-check","");
-        row.innerHTML =
-          '<span class="check"></span>' +
+        row.innerHTML = '<span class="check"></span>' +
           '<span><strong></strong><small>' + (type === "task" ? 'Mockup · agora' : 'Novo hábito · diário') + '</small></span>' +
           '<span class="pill">' + (type === "task" ? 'Normal' : '0 dias') + '</span>';
-
         row.querySelector("strong").textContent = label;
         list.appendChild(row);
+      }
+      function addPrototypeItem(type,label,source){
+        var slide = slides[slideIndex];
+        var key = type === "task" ? "tasks" : "habits";
+        if(slide.key !== key){return;}
+        sharedState[key] ??= {};
+        sharedState[key].items ??= [];
+        sharedState[key].items.push(label);
+        [desktopCanvas,phoneCanvas].forEach(function(target){
+          appendPrototypeRow(type,label,target);
         });
         bindCheckRows();
         showToast(type === "task" ? "Tarefa adicionada" : "Hábito adicionado",source);
@@ -1479,6 +1487,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
             var localCards=group?Array.from(group.querySelectorAll("[data-choice]")):[];
             var position=localCards.indexOf(card);
             var selected=!card.classList.contains("selected");
+             sharedState.choices[position]=selected;
             [desktopCanvas,phoneCanvas].forEach(function(target){
               var targetCard=target.querySelectorAll("[data-choice]")[position];
               if(targetCard)targetCard.classList.toggle("selected",selected);
@@ -1524,6 +1533,20 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         enablePhoneDragScroll();
       }
 
+      function updateDashboardSummary(){
+        if(slides[slideIndex].key !== "dashboard"){return;}
+        [desktopCanvas,phoneCanvas].forEach(function(canvas){
+          var cards=canvas.querySelectorAll(".stats .stat");
+          if(cards.length < 3){return;}
+          var rows=canvas.querySelectorAll("[data-check]");
+          var done=Array.from(rows).filter(function(row){return row.classList.contains("done");}).length;
+          cards[0].querySelector("strong").textContent=done+"/"+rows.length;
+          cards[0].querySelector("small").textContent=(rows.length-done)+" pendentes";
+          cards[2].querySelector("strong").textContent=(water/1000).toLocaleString("pt-BR",{maximumFractionDigits:2})+" L";
+          cards[2].querySelector("small").textContent="de 2 L";
+        });
+      }
+
       function updateWater(feedback){
         var percent = Math.min(100,Math.round((water/2000)*100));
 
@@ -1547,6 +1570,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
           }
         });
 
+        updateDashboardSummary();
         if(feedback){
           document.querySelectorAll("[data-water-feedback]").forEach(function(el){
             el.textContent = feedback;
@@ -1573,9 +1597,24 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         description.textContent = slide.description;
         cloneTemplate(slide.key,desktopCanvas);
         cloneTemplate(slide.key,phoneCanvas);
+        if(slide.key === "tasks" || slide.key === "habits"){
+          var type = slide.key === "tasks" ? "task" : "habit";
+          (sharedState[slide.key]?.items || []).forEach(function(label){
+            [desktopCanvas,phoneCanvas].forEach(function(target){
+              appendPrototypeRow(type,label,target);
+            });
+          });
+        }
         [desktopCanvas,phoneCanvas].forEach(function(canvas){
+          if(slide.key === "setup"){
+            Array.from(canvas.querySelectorAll("[data-choice]")).forEach(function(el,index){
+              if(typeof sharedState.choices[index] === "boolean"){
+                el.classList.toggle("selected",sharedState.choices[index]);
+              }
+            });
+          }
           Array.from(canvas.querySelectorAll("[data-check]")).forEach(function(el,index){
-            var stored=sharedState[slide.key]?.[index];
+            var stored=sharedState[slide.key === "dashboard" ? "tasks" : slide.key]?.[index];
             if(typeof stored==="boolean"){
               el.classList.toggle("done",stored);
               var check=el.querySelector(".check");
@@ -1591,6 +1630,7 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
         nextBtn.disabled = slideIndex === slides.length-1;
         updateWater();
         attachInteractions();
+         updateDashboardSummary();
       }
 
       function goTo(index){
@@ -1606,6 +1646,10 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
 
       function toggleTheme(){
         document.body.classList.toggle("dark");
+        var file=document.body.classList.contains("dark")?"fluir-symbol-dark.svg":"fluir-symbol.svg";
+        document.querySelectorAll(".mockup-brand-img,.mockup-top-logo").forEach(function(img){
+          img.src="Assets/brand/"+file;
+        });
       }
 
       document.querySelectorAll("[data-nav-target]").forEach(function(btn){

@@ -39,11 +39,23 @@
 
   function applyTheme(){
     document.documentElement.dataset.theme = localStorage.getItem("fluir-mvp-theme") || "light";
+    syncBrandSymbols();
+  }
+  function syncBrandSymbols(){
+    const file = document.documentElement.dataset.theme === "dark"
+      ? "fluir-symbol-dark.svg" : "fluir-symbol.svg";
+    document.querySelectorAll("img.fluir-symbol").forEach(img=>{
+      const src=img.getAttribute("src")||"";
+      if(/fluir-symbol(?:-dark)?\.svg$/.test(src)){
+        img.setAttribute("src",src.replace(/fluir-symbol(?:-dark)?\.svg$/,file));
+      }
+    });
   }
   function toggleTheme(){
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     localStorage.setItem("fluir-mvp-theme", next);
+    syncBrandSymbols();
   }
 
   const nav = [
@@ -342,7 +354,16 @@
     name.value=state.user.name||"Usuário";
     document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
     goal.value=state.waterGoal||2000;
-    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{e.preventDefault();state.user.name=name.value.trim()||"Usuário";save();toast("Nome atualizado");});
+    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{
+      e.preventDefault();
+      state.user.name=name.value.trim()||"Usuário";
+      save();
+      document.querySelectorAll(".avatar").forEach(el=>{
+        el.textContent=avatarInitials(state.user.name);
+        el.setAttribute("aria-label","Configurações de "+state.user.name);
+      });
+      toast("Nome atualizado");
+    });
     document.querySelector("[data-water-goal-form]")?.addEventListener("submit",e=>{e.preventDefault();state.waterGoal=Math.max(500,Math.min(5000,Number(goal.value)||2000));goal.value=state.waterGoal;save();toast("Meta atualizada");});
     document.querySelector("[data-reset-app]")?.addEventListener("click",()=>{localStorage.removeItem(KEY);state=clone(defaults);save();toast("MVP restaurado");setTimeout(()=>location.reload(),700);});
   }
@@ -354,6 +375,7 @@
 
   applyTheme();
   renderNav();
+  syncBrandSymbols();
   document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
   document.querySelectorAll("[data-theme-toggle]").forEach(btn=>btn.addEventListener("click",toggleTheme));
   document.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>window.location.href=btn.dataset.nav));
