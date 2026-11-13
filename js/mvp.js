@@ -5,6 +5,7 @@
 
   const defaults = {
     user: { name: "Alex", email: "alex@fluir.app", setupDone: false },
+    modules: { tasks: true, habits: true, water: true },
     waterGoal: 2000,
     waterTotal: 1400,
     waterHistory: [
@@ -33,6 +34,7 @@
     }catch{ return clone(defaults); }
   }
   let state = load();
+  function enabled(module){ return state.modules?.[module] !== false; }
   function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
 
   function applyTheme(){
@@ -59,12 +61,12 @@
     if(side){
       side.innerHTML = `
         <a class="sidebar-brand" href="../index.html"><img class="fluir-symbol" src="../Assets/brand/fluir-symbol.svg" alt=""><div><strong>Fluir</strong><small>Organização da vida</small></div></a>
-        <nav>${nav.map(([k,l,h,i])=>`<a class="${page===k?"active":""}" href="${h}"><i>${i}</i><span>${l}</span></a>`).join("")}</nav>
+        <nav>${nav.filter(([k])=>k==="settings" || enabled(k)).map(([k,l,h,i])=>`<a class="${page===k?"active":""}" href="${h}"><i>${i}</i><span>${l}</span></a>`).join("")}</nav>
         <div class="sidebar-foot"><strong>Seu ritmo, suas escolhas.</strong><small>Organize diferentes áreas da vida com praticidade.</small></div>
       `;
     }
     if(bottom){
-      bottom.innerHTML = nav.map(([k,l,h,i])=>`<a class="${page===k?"active":""}" href="${h}"><i>${i}</i><span>${l}</span></a>`).join("");
+      bottom.innerHTML = nav.filter(([k])=>k==="settings" || enabled(k)).map(([k,l,h,i])=>`<a class="${page===k?"active":""}" href="${h}"><i>${i}</i><span>${l}</span></a>`).join("");
     }
   }
 
@@ -119,6 +121,9 @@
     const progress=document.querySelector("[data-progress]");
     const name=document.querySelector("[data-setup-name]");
     const water=document.querySelector("[data-setup-water]");
+    const choiceInputs=[...document.querySelectorAll("[data-module-choice]")];
+    choiceInputs.forEach(input=>{ input.checked=enabled(input.value); });
+    const warning=document.querySelector("[data-setup-warning]");
     if(name) name.value=state.user.name || "Alex";
     if(water) water.value=state.waterGoal || 2000;
 
@@ -130,6 +135,15 @@
     }
     next.addEventListener("click",()=>{
       if(current===0 && name) state.user.name=name.value.trim()||"Alex";
+      if(current===1 && choiceInputs.length){
+        if(!choiceInputs.some(input=>input.checked)){
+          if(warning) warning.textContent="Selecione pelo menos uma área para continuar.";
+          toast("Escolha uma área da rotina");
+          return;
+        }
+        state.modules=Object.fromEntries(choiceInputs.map(input=>[input.value,input.checked]));
+        if(warning) warning.textContent="";
+      }
       if(current===2 && water) state.waterGoal=Math.max(500,Math.min(5000,Number(water.value)||2000));
       save();
       if(current<steps.length-1){current++;render();}
@@ -149,7 +163,11 @@
     const taskPct=state.tasks.length?td/state.tasks.length:0;
     const habitPct=state.habits.length?hd/state.habits.length:0;
     const waterPct=Math.min(1,state.waterTotal/state.waterGoal);
-    const score=Math.round((taskPct+habitPct+waterPct)/3*100);
+    const activeScores=[["tasks",taskPct],["habits",habitPct],["water",waterPct]].filter(([key])=>enabled(key)).map(([,value])=>value);
+    const score=Math.round((activeScores.length ? activeScores.reduce((a,b)=>a+b,0)/activeScores.length : 0)*100);
+    document.querySelectorAll("[data-dashboard-module]").forEach(card=>{card.hidden=!enabled(card.dataset.dashboardModule);});
+    const dashGroup=document.querySelector("[data-dashboard-panels]");
+    if(dashGroup)dashGroup.classList.toggle("one-column",!(enabled("tasks")&&enabled("habits")));
 
     document.querySelector("[data-score]").textContent=score+"%";
     document.querySelector("[data-stat-tasks]").textContent=td+"/"+state.tasks.length;
@@ -158,10 +176,28 @@
     document.querySelector("[data-stat-water-goal]").textContent="de "+state.waterGoal+" ml";
 
     const tasks=document.querySelector("[data-dashboard-tasks]");
-    tasks.innerHTML=state.tasks.slice(0,4).map(t=>`<div class="simple-row ${t.done?"done":""}"><span>${t.done?"✓":"○"}</span><div><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml(t.category)} · ${t.time||"sem horário"}</small></div></div>`).join("");
+    tasks.innerHTML=state.tasks.slice(0,4).map(t=>`<div class="simple-row ${t.done?"done":""}"><button class="check" type="button" data-dashboard-toggle-task="${t.id}" aria-label="${t.done?"Desmarcar":"Concluir"} tarefa ${escapeHtml(t.title)}">${t.done?"✓":""}</button><div><strong>${escapeHtml(t.title)}</strong><small>${escapeHtml(t.category)} · ${t.time||"sem horário"}</small></div></div>`).join("");
 
     const habits=document.querySelector("[data-dashboard-habits]");
-    habits.innerHTML=state.habits.slice(0,4).map(h=>`<div class="simple-row ${h.done?"done":""}"><span>${h.done?"✓":"○"}</span><div><strong>${escapeHtml(h.name)}</strong><small>${escapeHtml(h.target||"meta livre")} · sequência ${h.streak||0} dias</small></div></div>`).join("");
+    habits.innerHTML=state.habits.slice(0,4).map(h=>`<div class="simple-row ${h.done?"done":""}"><button class="check" type="button" data-dashboard-toggle-habit="${h.id}" aria-label="${h.done?"Desmarcar":"Concluir"} hábito ${escapeHtml(h.name)}">${h.done?"✓":""}</button><div><strong>${escapeHtml(h.name)}</strong><small>${escapeHtml(h.target||"meta livre")} · sequência ${h.streak||0} dias</small></div></div>`).join("");
+    if(!tasks.dataset.bound){
+      tasks.dataset.bound="true";
+      tasks.addEventListener("click",event=>{
+        const button=event.target.closest("[data-dashboard-toggle-task]");
+        if(!button)return;
+        const item=state.tasks.find(t=>t.id===Number(button.dataset.dashboardToggleTask));
+        if(item){item.done=!item.done;save();dashboard();}
+      });
+    }
+    if(!habits.dataset.bound){
+      habits.dataset.bound="true";
+      habits.addEventListener("click",event=>{
+        const button=event.target.closest("[data-dashboard-toggle-habit]");
+        if(!button)return;
+        const item=state.habits.find(h=>h.id===Number(button.dataset.dashboardToggleHabit));
+        if(item){item.done=!item.done;if(item.done)item.streak=(item.streak||0)+1;save();dashboard();}
+      });
+    }
   }
 
   let taskFilter="all";
@@ -215,10 +251,12 @@
 
     const dialog=document.querySelector("[data-task-dialog]");
     const opener=document.querySelector("[data-open-task-form]");
-    if(opener && dialog) opener.addEventListener("click",()=>{ if(window.innerWidth<760) dialog.showModal(); else form?.querySelector("input")?.focus(); });
+    if(opener && dialog) opener.addEventListener("click",()=>{dialog.showModal();dialog.querySelector('[name="mobileTitle"]')?.focus();});
     const mobileSave=document.querySelector("[data-save-mobile-task]");
     if(mobileSave) mobileSave.addEventListener("click",()=>{
-      addTask(dialog.querySelector('[name="mobileTitle"]').value,dialog.querySelector('[name="mobileCategory"]').value,dialog.querySelector('[name="mobileTime"]').value);
+      const title=dialog.querySelector('[name="mobileTitle"]').value.trim();
+      if(!title){dialog.querySelector('[name="mobileTitle"]').focus();return;}
+      addTask(title,dialog.querySelector('[name="mobileCategory"]').value,dialog.querySelector('[name="mobileTime"]').value);
       dialog.close();
       dialog.querySelector('[name="mobileTitle"]').value="";
     });
@@ -266,13 +304,32 @@
       document.querySelector("[data-water-percent]").textContent=pct+"%";
       document.querySelector("[data-water-goal]").textContent=state.waterGoal+" ml";
       document.querySelector("[data-water-ring]").style.setProperty("--p",pct+"%");
-      document.querySelector("[data-water-history]").innerHTML=state.waterHistory.map(x=>`<div><span>${x.time}</span><strong>+${x.amount} ml</strong></div>`).join("") || '<div class="empty-state">Nenhum registro hoje.</div>';
+      document.querySelector("[data-water-history]").innerHTML=state.waterHistory.map(x=>`<div><span>${x.time}</span><strong>${x.amount<0?"−":"+"}${Math.abs(x.amount)} ml</strong></div>`).join("") || '<div class="empty-state">Nenhum registro hoje.</div>';
     }
     document.querySelectorAll("[data-water-add]").forEach(btn=>btn.addEventListener("click",()=>{
       const amount=Number(btn.dataset.waterAdd);state.waterTotal+=amount;
       state.waterHistory.unshift({amount,time:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})});
       save();render();toast(amount+" ml registrados");
     }));
+    document.querySelectorAll("[data-water-remove]").forEach(btn=>btn.addEventListener("click",()=>{
+      const amount=Math.min(state.waterTotal,Number(btn.dataset.waterRemove)||0);
+      if(!amount){toast("Não há água para corrigir");return;}
+      state.waterTotal-=amount;
+      state.waterHistory.unshift({amount:-amount,time:new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})});
+      save();render();toast(amount+" ml corrigidos");
+    }));
+    document.querySelector("[data-water-edit-goal]")?.addEventListener("click",()=>{
+      const editor=document.querySelector("[data-water-inline-goal]");
+      editor?.classList.toggle("hidden");
+      const field=editor?.querySelector("[name=goal]");
+      if(field){field.value=state.waterGoal;if(!editor.classList.contains("hidden"))field.focus();}
+    });
+    document.querySelector("[data-water-inline-goal]")?.addEventListener("submit",event=>{
+      event.preventDefault();
+      const field=event.currentTarget.querySelector("[name=goal]");
+      state.waterGoal=Math.max(500,Math.min(5000,Number(field?.value)||2000));
+      save();render();event.currentTarget.classList.add("hidden");toast("Meta de água atualizada");
+    });
     document.querySelector("[data-water-reset]")?.addEventListener("click",()=>{state.waterTotal=0;state.waterHistory=[];save();render();toast("Registros de hoje zerados");});
     render();
   }
