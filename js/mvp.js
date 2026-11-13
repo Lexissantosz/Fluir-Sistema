@@ -58,9 +58,9 @@
     const bottom = document.querySelector("[data-bottom-nav]");
     if(side){
       side.innerHTML = `
-        <a class="sidebar-brand" href="../index.html"><span>F</span><div><strong>Fluir</strong><small>MVP</small></div></a>
+        <a class="sidebar-brand" href="../index.html"><img class="fluir-symbol" src="../Assets/brand/fluir-symbol.svg" alt=""><div><strong>Fluir</strong><small>Organização da vida</small></div></a>
         <nav>${nav.map(([k,l,h,i])=>`<a class="${page===k?"active":""}" href="${h}"><i>${i}</i><span>${l}</span></a>`).join("")}</nav>
-        <div class="sidebar-foot"><strong>Um dia de cada vez.</strong><small>Organize sem rigidez excessiva.</small></div>
+        <div class="sidebar-foot"><strong>Seu ritmo, suas escolhas.</strong><small>Organize diferentes áreas da vida com praticidade.</small></div>
       `;
     }
     if(bottom){
