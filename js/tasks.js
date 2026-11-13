@@ -379,7 +379,10 @@ function applySelectedModulesToMenu() {
 // 11. API — TAREFAS
 // =====================================================
 
-const TASKS_API_URL = "https://fluir-sistema.onrender.com/api/tarefas";
+const TASKS_API_URL =
+  (location.hostname === "127.0.0.1" || location.hostname === "localhost"
+    ? "http://127.0.0.1:8081"
+    : "https://fluir-sistema.onrender.com") + "/api/tarefas";
 
 function getCurrentUser() {
   try {
