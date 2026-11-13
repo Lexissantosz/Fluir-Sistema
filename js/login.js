@@ -23,10 +23,14 @@ const showLogin = document.getElementById("showLogin");
 
 const passwordButtons = document.querySelectorAll(".password-toggle");
 
-const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
-
-const ONBOARDING_API_BASE_URL =
-  "https://fluir-sistema.onrender.com/api/onboarding";
+// Para testes locais, use a API isolada; o site publicado continua no Render.
+// Servir o frontend na porta 5500 (origem já permitida no CORS do backend).
+const LOGIN_API_ORIGIN =
+  location.hostname === "127.0.0.1" || location.hostname === "localhost"
+    ? "http://127.0.0.1:8081"
+    : "https://fluir-sistema.onrender.com";
+const API_BASE_URL = `${LOGIN_API_ORIGIN}/api/usuarios`;
+const ONBOARDING_API_BASE_URL = `${LOGIN_API_ORIGIN}/api/onboarding`;
 
 // =============================
 // 2. FUNÇÕES AUXILIARES
