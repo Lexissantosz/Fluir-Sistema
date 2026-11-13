@@ -32,19 +32,58 @@ body.night{--bg:#131412;--paper:#1d1f1c;--ink:#f8f8f1;--muted:#b6b8b0;--line:#39
 @media(max-height:700px){.stage{padding-top:10px;padding-bottom:8px}.heading{font-size:clamp(29px,3.8vw,58px)}.display{font-size:clamp(55px,6.5vw,115px)}.card-num{margin-bottom:12px}.paper{padding:17px}.rule{margin:12px 0}.actions{margin-top:12px}.mock-devices{min-height:260px}.slide.dark-slide{padding:38px}.step{padding:13px}}
 @media(max-width:620px){.topbar,.footer{padding:0 12px}.brand{font-size:15px}.stage{padding:12px}.mock-devices{display:none}.detail-list{grid-template-columns:1fr}.card-copy,.listline{font-size:12px}.paper{padding:15px}.three-col{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.slide{overflow:auto;justify-content:flex-start!important;padding-top:10px}.slide.dark-slide{padding:24px}.metric-card{padding:12px}.metric-card span{margin-bottom:3px}.hero-grid{grid-template-columns:1fr}.footer-left{gap:7px}.footer-left span:nth-child(1){display:none}.footer-counter{font-size:10px}.overlay-bar span{display:none}}
 @media print{body{overflow:visible}.deck{display:block;height:auto}.topbar,.footer,.notes,.overlay,.actions{display:none!important}.stage{padding:0;max-width:none}.slide,.slide.active{display:flex!important;height:190mm;width:330mm;page-break-after:always;break-after:page;padding:18mm!important;overflow:hidden}.slide.dark-slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}.mock-devices{height:100mm}.paper{box-shadow:none}}
+
+/* Ajustes de apresentação em projetor e acessibilidade */
+.official-logo{width:36px;height:36px;object-fit:contain;flex-shrink:0}
+.brand{gap:10px}
+.stage{min-height:0;overflow:hidden;display:block}
+.slide.active{overflow-y:auto;overflow-x:hidden;justify-content:flex-start;padding-top:clamp(12px,3.4vh,35px);padding-bottom:24px;scrollbar-width:thin;scrollbar-color:#aaa8 #f4f3ef}
+.slide.active:first-child{justify-content:center}
+.slide.dark-slide{max-height:100%;overflow-y:auto}
+.paper.dark .pill{background:#f8f8f5;color:#171817;border-color:#ddddda}
+.tech-groups{display:grid;gap:12px;margin-top:12px}
+.technology-group{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:14px 18px}
+.tech-heading{display:flex;justify-content:space-between;align-items:baseline;gap:18px;margin-bottom:10px}
+.tech-heading h3{margin:0;font-size:clamp(15px,1.6vw,20px);letter-spacing:-.045em}
+.tech-heading p{margin:0;color:var(--muted);font-size:11px}
+.technology-items{display:flex;gap:9px;flex-wrap:wrap}
+.tech{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--soft);padding:9px 12px;border-radius:11px;min-height:43px}
+.tech svg{width:22px;height:22px;fill:var(--ink)}
+.tech b{font-size:12px;letter-spacing:-.015em}
+.openai-mark{font-size:23px;font-weight:900;width:23px;line-height:1}
+.technology-note{display:flex;gap:15px;align-items:center;flex-wrap:wrap;padding:12px 15px;color:var(--muted);font-size:12px}
+.technology-note b{color:var(--ink)}
+.product-panels{margin-top:18px}
+.product-panels .paper{min-height:0;padding:22px}
+.product-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.product-pills span{display:inline-flex;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;padding:10px 13px;font-size:12px;font-weight:800}
+.product-pills.soft span{color:var(--ink);background:var(--soft);border-color:var(--line)}
+body.night .product-pills:not(.soft) span{background:#e6e6e0;color:#111;border-color:#d1d1c8}
+.closing-slide.active{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,.85fr);align-content:center;align-items:center;gap:22px}
+.closing-title{font-size:clamp(40px,4.7vw,78px);letter-spacing:-.08em;line-height:1.02;font-weight:800;margin:0 0 24px}
+.closing-slide .subtitle{font-size:17px}
+.closing-right{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.qr-card{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;border:1px solid rgba(255,255,255,.17);background:rgba(255,255,255,.065);border-radius:17px;padding:16px 11px;text-align:center;min-width:0}
+.qr-card b{font-size:12px}.qr-card small{font-size:9px;opacity:.75;overflow-wrap:anywhere}
+.qr-target{background:#fff;padding:8px;border-radius:10px;min-width:158px;min-height:158px;display:grid;place-items:center}
+.qr-target img,.qr-target canvas{width:142px!important;height:142px!important}
+@media(max-height:730px){.tech-groups{gap:7px;margin-top:7px}.technology-group{padding:9px 13px}.tech{padding:6px 9px;min-height:34px}.tech svg{width:18px;height:18px}.tech b{font-size:11px}.technology-items{gap:6px}.tech-heading{margin-bottom:7px}.closing-title{font-size:clamp(35px,4vw,60px)}.qr-target{min-width:120px;min-height:120px}.qr-target img,.qr-target canvas{width:106px!important;height:106px!important}}
+@media(max-width:940px){.closing-slide.active{grid-template-columns:1fr}.closing-right{max-width:460px}.closing-title{font-size:clamp(35px,6vw,60px)}.tech-heading{display:block}.tech-heading p{margin-top:5px}}
+@media(max-width:600px){.closing-right{grid-template-columns:repeat(2,minmax(0,1fr))}.qr-target{min-width:110px;min-height:110px}.qr-target img,.qr-target canvas{width:95px!important;height:95px!important}.technology-items{gap:5px}.tech{padding:7px}.tech b{font-size:10px}.slide.active{padding-bottom:45px}}
+@media print{.slide.active{overflow:visible}.closing-slide.active{display:grid!important}.qr-card{border:1px solid #ddd}}
 </style>
 </head>
 <body>
 <div class="deck" id="deck">
 <header class="topbar">
-  <div class="brand"><span class="brandmark">F</span> Fluir</div>
+  <div class="brand"><img src="Assets/brand/fluir-symbol.svg" alt="Símbolo oficial do Fluir" class="official-logo"> Fluir</div>
   <div class="topright"><span class="topmeta">Projeto Integrador · Senac DF · 2026</span><button class="iconbutton" type="button" id="themeButton" aria-label="Alternar tema" title="Alternar tema">◐</button><button class="iconbutton" type="button" id="fullscreenButton" aria-label="Tela cheia" title="Tela cheia">⛶</button></div>
 </header>
 <main class="stage">
 <section class="slide active" data-title="Capa" data-notes="Apresente o Fluir como um sistema de organização pessoal. Não comece abrindo a API. O foco é o problema que motivou o projeto e o valor da experiência.">
   <div class="hero-grid">
    <div><div class="eyebrow">Pitch de tecnologia · 2026</div><h1 class="display">Fluir<span style="color:#9d9f97">.</span></h1><p class="statement" style="max-width:760px;margin:26px 0 0">Organize o que importa.<br>Viva o que acontece.</p><div class="coverlabel">Do mockup ao MVP interativo</div><p class="covercredit">Projeto Integrador · Técnico em Desenvolvimento de Sistemas<br>Senac DF · Alex Santos e Dawid Lima</p></div>
-   <div class="paper dark" style="padding:30px;min-height:290px;display:flex;flex-direction:column;justify-content:space-between"><div class="smallcaps">A proposta</div><div><div style="font-size:clamp(30px,3.8vw,65px);font-weight:800;letter-spacing:-.07em;line-height:1.05">Menos<br>fragmentação.<br>Mais clareza.</div><p class="card-copy" style="margin-top:18px">Uma plataforma que reúne tarefas, hábitos e autocuidado em uma só experiência.</p></div><span class="smallcaps">Web responsiva · Demonstração ao vivo</span></div>
+   <div class="paper dark" style="padding:30px;min-height:290px;display:flex;flex-direction:column;justify-content:space-between"><div class="smallcaps">A proposta</div><div><div style="font-size:clamp(30px,3.8vw,65px);font-weight:800;letter-spacing:-.07em;line-height:1.05">Organização<br>em um só lugar.<br>Mais autonomia.</div><p class="card-copy" style="margin-top:18px">Uma plataforma que reúne tarefas, hábitos e autocuidado em uma só experiência.</p></div><span class="smallcaps">Web responsiva · Demonstração ao vivo</span></div>
   </div>
 </section>
 <section class="slide" data-title="Problema" data-notes="Mostre que o problema não é a falta de aplicativos, mas o excesso de ferramentas desconectadas. Não faça afirmações quantitativas sem pesquisa de usuários.">
@@ -57,13 +96,13 @@ body.night{--bg:#131412;--paper:#1d1f1c;--ink:#f8f8f1;--muted:#b6b8b0;--line:#39
  <div class="three-col" style="margin-top:20px"><div class="paper"><span class="card-num">01 / ESTUDOS</span><h3 class="card-title">Jovens e estudantes</h3><p class="card-copy">Prazos, matérias, cursos e compromissos no mesmo dia.</p></div><div class="paper"><span class="card-num">02 / COTIDIANO</span><h3 class="card-title">Rotinas corridas</h3><p class="card-copy">Quem concilia trabalho, casa, saúde e vida pessoal.</p></div><div class="paper dark"><span class="card-num">03 / FLEXIBILIDADE</span><h3 class="card-title">Cada pessoa escolhe</h3><p class="card-copy">Módulos e prioridades se adaptam ao que faz sentido acompanhar.</p></div></div>
 </section>
 <section class="slide" data-title="Solução" data-notes="A solução é uma plataforma modular. Mostre que o onboarding permite escolher áreas, e explique a diferença entre o sistema planejado e o MVP reduzido.">
- <div class="eyebrow">03 · A solução</div><h2 class="heading">Tudo começa pelo seu jeito de viver.</h2><p class="subtitle">O Fluir centraliza informações da rotina sem impor a mesma organização a todas as pessoas.</p>
+ <div class="eyebrow">03 · A solução</div><h2 class="heading">Tudo começa pelo seu jeito de viver.</h2><p class="subtitle">O Fluir reúne as ferramentas da rotina em um único lugar, com controle completo e prático sobre as áreas escolhidas.</p>
  <div class="workflow"><div class="step"><div class="smallcaps muted">Passo 01</div><b>Escolher</b><p>Selecionar os módulos relevantes.</p></div><div class="arrow">→</div><div class="step"><div class="smallcaps muted">Passo 02</div><b>Personalizar</b><p>Definir metas e preferências no onboarding.</p></div><div class="arrow">→</div><div class="step"><div class="smallcaps muted">Passo 03</div><b>Acompanhar</b><p>Visualizar o dia e registrar pequenas ações.</p></div></div>
  <div class="paper dark" style="margin-top:20px"><span class="smallcaps">Diferencial</span><p class="statement" style="margin:12px 0 0">Organização sem rigidez.</p></div>
 </section>
 <section class="slide" data-title="Evolução" data-notes="Diferencie três artefatos. Mockup: aparência e navegação. MVP de apresentação: funções locais demonstrativas. Sistema completo: API, banco e módulos ampliados, ainda com pendências de homologação.">
  <div class="eyebrow">04 · Nossa trajetória</div><h2 class="heading">Da ideia ao que pode ser demonstrado.</h2>
- <div class="three-col" style="margin-top:25px"><div class="paper"><span class="card-num">01 / MOCKUP</span><h3 class="card-title">Visualizar</h3><p class="card-copy">Validar hierarquia, componentes, navegação e telas de computador/celular.</p><div class="thinline"><span class="pill">Representação interativa</span></div></div><div class="paper dark"><span class="card-num">02 / MVP</span><h3 class="card-title">Experimentar</h3><p class="card-copy">Criar tarefas, marcar hábitos e registrar água com persistência local.</p><div class="thinline"><span class="pill">Funcional · dados fictícios</span></div></div><div class="paper"><span class="card-num">03 / SISTEMA</span><h3 class="card-title">Desenvolver</h3><p class="card-copy">Frontend completo, API Java, PostgreSQL e testes de integração.</p><div class="thinline"><span class="pill">Evolução em andamento</span></div></div></div>
+ <div class="three-col" style="margin-top:25px"><div class="paper"><span class="card-num">01 / MOCKUP</span><h3 class="card-title">Visualizar</h3><p class="card-copy">Validar hierarquia, componentes, navegação e telas de computador/celular.</p><div class="thinline"><span class="pill">Visualização interativa</span></div></div><div class="paper dark"><span class="card-num">02 / MVP</span><h3 class="card-title">Experimentar</h3><p class="card-copy">Criar tarefas, marcar hábitos e registrar água com persistência local.</p><div class="thinline"><span class="pill">Funcional com dados fictícios</span></div></div><div class="paper"><span class="card-num">03 / SISTEMA</span><h3 class="card-title">Desenvolver</h3><p class="card-copy">Frontend completo, API Java, PostgreSQL e testes de integração.</p><div class="thinline"><span class="pill">Evolução em andamento</span></div></div></div>
 </section>
 <section class="slide" data-title="Mockup interativo" data-notes="Clique em Abrir mockup. Demonstre a navegação entre as sete etapas e os layouts desktop/celular. Ressalte que interações do protótipo são ilustrativas e não comprovam persistência de produção. Pressione Esc para voltar aos slides.">
  <div class="eyebrow">05 · Demonstração do design</div><h2 class="heading">Primeiro, fizemos a experiência ficar visível.</h2>
@@ -72,22 +111,51 @@ body.night{--bg:#131412;--paper:#1d1f1c;--ink:#f8f8f1;--muted:#b6b8b0;--line:#39
  <div class="detail-list"><div class="paper"><h3>Mockup original preservado</h3><p>Sete etapas com visualização de desktop e celular.</p></div><div class="paper"><h3>Cliques demonstrativos</h3><p>Navegação, tarefas, hábitos, água e tema visual.</p></div><div class="paper dark"><h3>Um clique, sem trocar de aba</h3><p>A demonstração abre por cima dos slides e volta com Esc.</p></div><button class="button" data-open-experience="mockup" type="button">▶ Abrir mockup interativo</button></div>
  </div>
 </section>
-<section class="slide" data-title="MVP funcional" data-notes="Clique em Abrir MVP. No Dashboard, entre em Tarefas, adicione e conclua uma tarefa; em Hábitos, marque um hábito; em Água, acrescente 250 ml. Volte ao Dashboard para ver as mudanças. Os dados ficam apenas no navegador de demonstração; não use dados reais.">
+<section class="slide" data-title="MVP funcional" data-notes="Clique em Abrir MVP. Comece pelo onboarding, personalize o nome e a meta, depois registre uma tarefa, um hábito e água. As alterações permanecem no navegador de demonstração. Os dados ficam apenas no navegador de demonstração; não use dados reais.">
  <div class="eyebrow">06 · Demonstração funcional</div><h2 class="heading">Depois, transformamos a interface em ações reais.</h2>
  <p class="subtitle">Este MVP demonstrativo salva o estado no próprio navegador: você pode criar e concluir tarefas, acompanhar hábitos e atualizar a hidratação.</p>
  <div class="three-col" style="margin-top:25px"><div class="paper"><span class="card-num">01</span><h3 class="card-title">Tarefas</h3><p class="card-copy">Criar, marcar como concluída e excluir registros de demonstração.</p></div><div class="paper"><span class="card-num">02</span><h3 class="card-title">Hábitos</h3><p class="card-copy">Adicionar hábitos e atualizar o progresso.</p></div><div class="paper dark"><span class="card-num">03</span><h3 class="card-title">Água</h3><p class="card-copy">Adicionar consumo e acompanhar a meta no mesmo instante.</p></div></div>
- <div class="actions"><button class="button" data-open-experience="mvp" type="button">▶ Abrir MVP funcional</button><button class="button secondary" id="resetDemo" type="button" title="Restaura os dados fictícios do MVP de apresentação">↺ Reiniciar dados fictícios</button></div>
+ <div class="actions"><button class="button" data-open-experience="mvp" type="button">▶ Abrir MVP funcional</button></div>
  <p class="note-line">MVP autônomo, com dados fictícios e localStorage. Não representa validação do backend em produção.</p>
 </section>
-<section class="slide" data-title="O produto" data-notes="O MVP reduzido não contém todos os módulos do sistema completo. Mostre como a arquitetura modular permite expansão, mas não prometa integração plena agora.">
- <div class="eyebrow">07 · Visão do produto</div><h2 class="heading">Começamos com o essencial. Projetamos para crescer.</h2><p class="subtitle">O núcleo demonstrativo comprova interações e organização. O sistema completo amplia as áreas, respeitando a escolha de módulos da pessoa.</p>
- <div class="two-col" style="margin-top:25px"><div class="paper dark"><span class="card-num">MVP DE APRESENTAÇÃO</span><h3 class="card-title">O que demonstramos hoje</h3><div class="listlines"><div class="listline"><span class="index">01</span> Dashboard</div><div class="listline"><span class="index">02</span> Tarefas</div><div class="listline"><span class="index">03</span> Hábitos</div><div class="listline"><span class="index">04</span> Água e configurações</div></div></div><div class="paper"><span class="card-num">SISTEMA AMPLIADO</span><h3 class="card-title">Outras áreas desenvolvidas</h3><p class="card-copy" style="margin-bottom:20px">Sono, Finanças, Diário, Alimentação, Saúde Física, Ciclo Menstrual, Anexos, Timeline, Conquistas e Perfil.</p><div class="pill">Integração e homologação em evolução</div></div></div>
+
+<section class="slide" data-title="O produto" data-notes="Apresente a modularidade e a amplitude do sistema completo. A interação do MVP usa dados fictícios e não equivale à integração dos módulos completos.">
+<div class="eyebrow">07 · Visão do produto</div><h2 class="heading">Um começo funcional. Um sistema com espaço para evoluir.</h2>
+<div class="two-col product-panels">
+ <div class="paper dark"><span class="card-num">MVP DE APRESENTAÇÃO</span><h3 class="card-title">O que podemos demonstrar</h3>
+  <div class="product-pills"><span>✓ Dashboard</span><span>✓ Onboarding</span><span>✓ Tarefas</span><span>✓ Hábitos</span><span>✓ Hidratação</span><span>✓ Preferências</span></div>
+  <p class="card-copy" style="margin-top:15px">Fluxo interativo com dados de demonstração e persistência local.</p>
+ </div>
+ <div class="paper"><span class="card-num">SISTEMA AMPLIADO</span><h3 class="card-title">Outras áreas desenvolvidas</h3>
+  <div class="product-pills soft"><span>☾ Sono</span><span>▤ Diário</span><span>↗ Finanças</span><span>◒ Alimentação</span><span>♡ Saúde física</span><span>◉ Ciclo menstrual</span><span>⌁ Anexos</span><span>↻ Timeline</span><span>✦ Conquistas</span><span>⚙ Perfil</span></div>
+  <p class="card-copy" style="margin-top:15px">Módulos implementados em diferentes estágios de integração e validação.</p>
+ </div>
+</div>
 </section>
-<section class="slide" data-title="Tecnologias" data-notes="Explique a arquitetura real: HTML/CSS/JavaScript, Java 21/Spring Boot, API REST e PostgreSQL com Flyway. Distinga o MVP demonstrativo, que utiliza localStorage, do backend real.">
- <div class="eyebrow">08 · Engenharia</div><h2 class="heading">Uma interface. Uma API. Dados estruturados.</h2>
- <div class="three-col" style="margin-top:25px"><div class="paper"><span class="card-num">FRONTEND</span><h3 class="card-title">HTML · CSS · JS</h3><p class="card-copy">Estrutura, design responsivo e interatividade web.</p></div><div class="paper dark"><span class="card-num">BACKEND</span><h3 class="card-title">Java 21 · Spring Boot</h3><p class="card-copy">API REST, regras de negócio, autenticação e autorização em evolução.</p></div><div class="paper"><span class="card-num">DADOS</span><h3 class="card-title">PostgreSQL · Flyway</h3><p class="card-copy">Persistência relacional e migrations versionadas.</p></div></div>
- <div class="workflow"><div class="step" style="text-align:center"><b>Interface web</b><p>Vercel</p></div><div class="arrow">→</div><div class="step" style="text-align:center"><b>API REST</b><p>Backend / Render</p></div><div class="arrow">→</div><div class="step" style="text-align:center"><b>Banco de dados</b><p>PostgreSQL</p></div></div>
- <p class="note-line">A conexão ponta a ponta da versão publicada ainda requer homologação final; o MVP de apresentação funciona localmente, sem essa dependência.</p>
+
+<section class="slide" data-title="Tecnologias · desenvolvimento" data-notes="Frontend principal: HTML, CSS e JavaScript. Backend: Java 21 e Spring Boot com Security/JPA. Banco: PostgreSQL, versionado pelo Flyway. React e TypeScript pertencem apenas ao protótipo mobile, não a um aplicativo concluído.">
+ <div class="eyebrow">08 · Tecnologia 1/3</div><h2 class="heading">Tecnologias que construíram o Fluir.</h2>
+ <div class="tech-groups">
+ <article class="technology-group"><div class="tech-heading"><h3>Interface web</h3><p>Estrutura, responsividade e interações</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="HTML5"><use href="Assets/brand/tecnologias.svg#html5"></use></svg><b>HTML5</b></div><div class="tech"><svg role="img" aria-label="CSS3"><use href="Assets/brand/tecnologias.svg#css"></use></svg><b>CSS3</b></div><div class="tech"><svg role="img" aria-label="JavaScript"><use href="Assets/brand/tecnologias.svg#javascript"></use></svg><b>JavaScript</b></div></div></article>
+ <article class="technology-group"><div class="tech-heading"><h3>API, segurança e regras de negócio</h3><p>Backend e persistência</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="Java 21"><use href="Assets/brand/tecnologias.svg#openjdk"></use></svg><b>Java 21</b></div><div class="tech"><svg role="img" aria-label="Spring Boot"><use href="Assets/brand/tecnologias.svg#springboot"></use></svg><b>Spring Boot</b></div><div class="tech"><svg role="img" aria-label="Spring Security"><use href="Assets/brand/tecnologias.svg#springsecurity"></use></svg><b>Spring Security</b></div><div class="tech"><svg role="img" aria-label="JPA / Hibernate"><use href="Assets/brand/tecnologias.svg#hibernate"></use></svg><b>JPA / Hibernate</b></div><div class="tech"><svg role="img" aria-label="Maven"><use href="Assets/brand/tecnologias.svg#apachemaven"></use></svg><b>Maven</b></div></div></article>
+ <article class="technology-group"><div class="tech-heading"><h3>Banco e evolução de esquema</h3><p>SQL e migrations versionadas</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="PostgreSQL"><use href="Assets/brand/tecnologias.svg#postgresql"></use></svg><b>PostgreSQL</b></div><div class="tech"><svg role="img" aria-label="Flyway"><use href="Assets/brand/tecnologias.svg#flyway"></use></svg><b>Flyway</b></div></div></article>
+ </div>
+</section>
+<section class="slide" data-title="Tecnologias · infraestrutura" data-notes="Explique a publicação do frontend no Vercel, backend no Render, banco hospedado e ambiente com Docker. Git, GitHub e Actions apoiam controle de versões e automação. O protótipo React/TS não deve ser chamado de aplicativo pronto.">
+ <div class="eyebrow">09 · Tecnologia 2/3</div><h2 class="heading">Do desenvolvimento à implantação.</h2>
+ <div class="tech-groups">
+ <article class="technology-group"><div class="tech-heading"><h3>Hospedagem e ambiente</h3><p>Publicação, banco e execução local</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="Vercel"><use href="Assets/brand/tecnologias.svg#vercel"></use></svg><b>Vercel</b></div><div class="tech"><svg role="img" aria-label="Render"><use href="Assets/brand/tecnologias.svg#render"></use></svg><b>Render</b></div><div class="tech"><svg role="img" aria-label="Supabase"><use href="Assets/brand/tecnologias.svg#supabase"></use></svg><b>Supabase</b></div><div class="tech"><svg role="img" aria-label="Docker"><use href="Assets/brand/tecnologias.svg#docker"></use></svg><b>Docker</b></div></div></article>
+ <article class="technology-group"><div class="tech-heading"><h3>Versionamento e colaboração</h3><p>Branches, revisões, pipelines e planejamento</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="Git"><use href="Assets/brand/tecnologias.svg#git"></use></svg><b>Git</b></div><div class="tech"><svg role="img" aria-label="GitHub"><use href="Assets/brand/tecnologias-extra.svg#github"></use></svg><b>GitHub</b></div><div class="tech"><svg role="img" aria-label="GitHub Actions"><use href="Assets/brand/tecnologias-extra.svg#githubactions"></use></svg><b>GitHub Actions</b></div><div class="tech"><svg role="img" aria-label="Trello"><use href="Assets/brand/tecnologias-extra.svg#trello"></use></svg><b>Trello</b></div></div></article>
+ <article class="technology-group"><div class="tech-heading"><h3>Exploração e protótipo mobile</h3><p>Protótipo experimental; não é um aplicativo nativo finalizado</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="React"><use href="Assets/brand/tecnologias-extra.svg#react"></use></svg><b>React</b></div><div class="tech"><svg role="img" aria-label="TypeScript"><use href="Assets/brand/tecnologias-extra.svg#typescript"></use></svg><b>TypeScript</b></div><div class="tech"><svg role="img" aria-label="Vite"><use href="Assets/brand/tecnologias-extra.svg#vite"></use></svg><b>Vite</b></div><div class="tech"><svg role="img" aria-label="Node.js"><use href="Assets/brand/tecnologias-extra.svg#nodedotjs"></use></svg><b>Node.js</b></div></div></article>
+ </div>
+</section>
+<section class="slide" data-title="Tecnologias · qualidade e IA" data-notes="Mostre as ferramentas de teste efetivamente comprovadas: JUnit, Cypress, Postman, Swagger, JMeter e Mockito. IA: ChatGPT/OpenAI foi usado como apoio em planejamento, revisão e documentação; validação e responsabilidade continuam humanas. Outras IAs precisam de confirmação antes de incluí-las.">
+ <div class="eyebrow">10 · Tecnologia 3/3</div><h2 class="heading">Qualidade, colaboração e IA de apoio.</h2>
+ <div class="tech-groups">
+ <article class="technology-group"><div class="tech-heading"><h3>Testes, documentação e API</h3><p>Também utilizamos Mockito e Newman nos testes</p></div><div class="technology-items"><div class="tech"><svg role="img" aria-label="Cypress"><use href="Assets/brand/tecnologias-extra.svg#cypress"></use></svg><b>Cypress</b></div><div class="tech"><svg role="img" aria-label="Postman"><use href="Assets/brand/tecnologias-extra.svg#postman"></use></svg><b>Postman</b></div><div class="tech"><svg role="img" aria-label="Swagger"><use href="Assets/brand/tecnologias-extra.svg#swagger"></use></svg><b>Swagger</b></div><div class="tech"><svg role="img" aria-label="JUnit 5"><use href="Assets/brand/tecnologias-extra.svg#junit5"></use></svg><b>JUnit 5</b></div><div class="tech"><svg role="img" aria-label="JMeter"><use href="Assets/brand/tecnologias-extra.svg#apachejmeter"></use></svg><b>JMeter</b></div></div></article>
+ <article class="technology-group"><div class="tech-heading"><h3>Inteligência artificial como ferramenta</h3><p>Apoio ao trabalho, sem substituir testes e revisão da equipe</p></div><div class="technology-items"><div class="tech ai-tech"><span class="openai-mark">✳</span><b>ChatGPT / OpenAI</b></div><div class="tech ai-tech"><span class="openai-mark">↗</span><b>Planejamento e ideias</b></div><div class="tech ai-tech"><span class="openai-mark">⌘</span><b>Revisões e documentação</b></div></div></article>
+ <div class="technology-note"><b>Nota sobre as ferramentas</b><span>Exibimos tecnologias identificadas no código e nos registros do projeto. Outras IAs só entram após confirmação da equipe.</span></div>
+ </div>
 </section>
 <section class="slide" data-title="Qualidade" data-notes="Resultados históricos de ambiente QA: 23 testes JUnit/Mockito, 8 Cypress, 8 requisições Postman com 11 verificações e 4 JMeter locais. Swagger também validado. Não somar 3 Mockito aos 23; não apresentar resultados como aprovação de produção.">
  <div class="eyebrow">09 · Qualidade e testes</div><h2 class="heading">Não ficou só no código: nós testamos.</h2>
@@ -95,20 +163,23 @@ body.night{--bg:#131412;--paper:#1d1f1c;--ink:#f8f8f1;--muted:#b6b8b0;--line:#39
  <div class="two-col" style="margin-top:15px"><div class="paper"><h3 class="card-title">Swagger / OpenAPI</h3><p class="card-copy">Documentação técnica da API validada em ambiente de teste.</p></div><div class="paper dark"><h3 class="card-title">JMeter</h3><p class="card-copy">4 requisições locais, 0 erros; cenário leve, não teste de capacidade de produção.</p></div></div>
  <p class="note-line">Evidências históricas vinculadas às branches de QA; homologação do release publicado continua pendente.</p>
 </section>
-<section class="slide" data-title="Limitações" data-notes="Seja transparente com a professora. A interface da main não tem todas as proteções integradas. A estratégia de isolamento local está proposta, não aprovada. O logout, o isolamento das tarefas e a regressão final precisam ser fechados antes da liberação irrestrita.">
- <div class="eyebrow">10 · Limitações conhecidas</div><h2 class="heading">Mostrar o que funciona também exige explicar o que falta.</h2>
- <div class="two-col" style="margin-top:17px"><div class="paper"><span class="card-num">JÁ DESENVOLVIDO</span><h3 class="card-title">Interface + módulos + API + testes</h3><p class="card-copy">Há uma base funcional real, protótipos interativos e evidências históricas das ferramentas de QA.</p></div><div class="paper dark"><span class="card-num">AINDA EM VALIDAÇÃO</span><h3 class="card-title">Segurança e integração final</h3><p class="card-copy">Isolamento entre contas, logout, consistência do Dashboard, revisão de branches e regressão do release.</p></div></div>
- <div class="thinline"><span class="pill">Mockup ≠ MVP demonstrativo ≠ sistema homologado em produção</span></div>
+
+<section class="slide" data-title="Estado de desenvolvimento" data-notes="Mostre com precisão: existem correções de segurança desenvolvidas em branches e evidências locais, mas ainda não homologadas na main/produção. A apresentação demonstrativa é offline e com dados fictícios. Não apresentar segurança como aprovada sem evidências.">
+ <div class="eyebrow">12 · Estado do desenvolvimento</div><h2 class="heading">O que está pronto para mostrar e o que estamos consolidando.</h2>
+ <div class="two-col product-panels"><div class="paper dark"><span class="card-num">ENTREGAS TÉCNICAS</span><h3 class="card-title">Sistema e testes desenvolvidos</h3><div class="product-pills"><span>✓ Interface web</span><span>✓ Mockup e MVP</span><span>✓ API Java</span><span>✓ Banco relacional</span><span>✓ Testes de QA</span></div></div>
+ <div class="paper"><span class="card-num">VALIDAÇÃO FINAL</span><h3 class="card-title">Integração e homologação</h3><div class="product-pills soft"><span>Autorização entre contas</span><span>Logout e sessão</span><span>Isolamento local</span><span>Consistência do Dashboard</span><span>Regressão do release</span></div><p class="card-copy" style="margin-top:15px">Correções em branches não equivalem à homologação em produção.</p></div></div>
+ <p class="note-line">A demonstração de hoje usa dados fictícios, sem conexão ao backend de produção.</p>
 </section>
 <section class="slide" data-title="Próximos passos" data-notes="A continuidade é uma consequência lógica do MVP: fechar primeiro os bloqueadores P0 e a segurança, melhorar integração e indicadores, e só depois expandir para app nativo ou integrações externas.">
  <div class="eyebrow">11 · Próximos passos</div><h2 class="heading">O Fluir foi pensado para evoluir com responsabilidade.</h2>
  <div class="three-col" style="margin-top:22px"><div class="paper dark"><span class="card-num">CURTO PRAZO</span><h3 class="card-title">Consolidar</h3><p class="card-copy">Segurança, correções críticas, testes e versão de entrega consistente.</p></div><div class="paper"><span class="card-num">MÉDIO PRAZO</span><h3 class="card-title">Integrar</h3><p class="card-copy">Sincronizar indicadores, ampliar persistência segura e fortalecer os módulos.</p></div><div class="paper"><span class="card-num">LONGO PRAZO</span><h3 class="card-title">Expandir</h3><p class="card-copy">Aplicativo nativo e novas integrações, conforme a necessidade das pessoas.</p></div></div>
  <div class="thinline muted" style="font-size:17px;font-weight:800">Antes de adicionar mais, fazer o essencial funcionar bem.</div>
 </section>
-<section class="slide dark-slide" data-title="Encerramento" data-notes="Agradeça e abra para perguntas. Se for necessário, o sistema completo está disponível por link, mas não há necessidade de trocar de aba porque o mockup e o MVP já foram demonstrados.">
- <div class="eyebrow">Fluir · Projeto Integrador Senac DF</div><h2 class="display" style="font-size:clamp(47px,6.7vw,114px)">A melhor rotina<br>é a que faz<br>sentido para você.</h2>
- <p class="subtitle" style="margin-top:29px">Obrigado!<br>Alex Santos e Dawid Lima · 2026</p>
- <div class="actions"><a class="button secondary" href="https://fluir-sistema.vercel.app/" target="_blank" rel="noopener noreferrer">Sistema completo (opcional)</a><a class="button secondary" href="https://github.com/Lexissantosz/Fluir-Sistema" target="_blank" rel="noopener noreferrer">Repositório</a></div>
+
+<section class="slide dark-slide closing-slide" data-title="Encerramento" data-notes="Peça que quem quiser conhecer o Fluir escaneie o QR do sistema ou do repositório. Os códigos QR são gerados localmente, offline. Não incentive inserir dados sensíveis: a homologação de produção permanece pendente.">
+ <div class="closing-left"><div class="eyebrow">Fluir · Projeto Integrador Senac DF</div><h2 class="closing-title">A melhor rotina é a que faz sentido para você.</h2><p class="subtitle">Obrigado!<br>Alex Santos e Dawid Lima · 2026</p>
+ <div class="actions"><a class="button secondary" href="https://fluir-sistema.vercel.app/" target="_blank" rel="noopener noreferrer">Sistema completo</a><a class="button secondary" href="https://github.com/Lexissantosz/Fluir-Sistema" target="_blank" rel="noopener noreferrer">Repositório</a></div></div>
+ <div class="closing-right"><article class="qr-card"><div class="qr-target" id="qrSite" aria-label="QR Code para o sistema Fluir"></div><b>Conheça o Fluir</b><small>fluir-sistema.vercel.app</small></article><article class="qr-card"><div class="qr-target" id="qrRepo" aria-label="QR Code para o repositório Fluir"></div><b>Veja o código</b><small>github.com/Lexissantosz/Fluir-Sistema</small></article></div>
 </section>
 </main>
 <footer class="footer">
@@ -150,7 +221,7 @@ function show(i){
 function go(delta){if(!overlay.classList.contains("open"))show(index+delta)}
 function openExperience(mode) {
  openMode=mode;
- var url=mode==="mockup"?"apresentacao-mockup.html":"html/dashboard.html";
+ var url=mode==="mockup"?"apresentacao-mockup.html":"html/setup.html";
  document.getElementById("experienceTitle").textContent=mode==="mockup"?"Fluir · Mockup interativo":"Fluir · MVP funcional";
  document.getElementById("experienceDescription").textContent=mode==="mockup"?"Protótipo visual · interações ilustrativas":"Demonstração local · dados fictícios";
  frame.src=url;
@@ -165,8 +236,8 @@ document.getElementById("themeButton").addEventListener("click",function(){docum
 document.getElementById("fullscreenButton").addEventListener("click",function(){if(!document.fullscreenElement){document.documentElement.requestFullscreen?.()}else{document.exitFullscreen?.()}});
 document.querySelectorAll("[data-open-experience]").forEach(function(btn){btn.addEventListener("click",function(){openExperience(btn.dataset.openExperience)})});
 document.getElementById("closeExperience").addEventListener("click",closeExperience);
-document.getElementById("experienceHome").addEventListener("click",function(){if(openMode){frame.src=openMode==="mockup"?"apresentacao-mockup.html":"html/dashboard.html"}});
-document.getElementById("resetDemo").addEventListener("click",function(){if(!confirm("Restaurar os dados fictícios do MVP para o estado inicial?"))return;try{localStorage.removeItem("fluir-mvp-state-v1");alert("Dados de demonstração reiniciados. O MVP abrirá com seus exemplos iniciais.")}catch(e){alert("Não foi possível limpar os dados neste navegador. Use o Live Server.")}});
+document.getElementById("experienceHome").addEventListener("click",function(){if(openMode){frame.src=openMode==="mockup"?"apresentacao-mockup.html":"html/setup.html"}});
+
 document.addEventListener("keydown",function(e){
  if(overlay.classList.contains("open")){if(e.key==="Escape"){e.preventDefault();closeExperience()}return}
  if(e.target.closest("input,textarea,select"))return;
@@ -180,5 +251,16 @@ document.addEventListener("keydown",function(e){
 show(0);
 })();
 </script>
-</body>
+<script src="js/qrcode.min.js"></script>
+<script>
+(function(){
+  function draw(id,url){
+    var el=document.getElementById(id);if(!el)return;
+    try{new QRCode(el,{text:url,width:142,height:142,colorDark:"#161716",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}
+    catch(e){el.textContent=url;el.style.wordBreak="break-all"}
+  }
+  draw("qrSite","https://fluir-sistema.vercel.app/");
+  draw("qrRepo","https://github.com/Lexissantosz/Fluir-Sistema");
+})();
+</script></body>
 </html>
