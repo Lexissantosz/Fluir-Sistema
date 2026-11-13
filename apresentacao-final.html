@@ -128,6 +128,170 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
 /* Logo: mesma geometria oficial com contraste próprio no tema noturno */
 .topbar .brand{color:var(--ink);display:flex;align-items:center;gap:10px}
 .topbar .official-logo{display:block;width:36px;height:36px;object-fit:contain;filter:none;transform:none;opacity:1;flex:0 0 36px}
+
+/* Monitor e celular completos: sem recorte ou sobreposição de dispositivos */
+.slide[data-title="Mockup interativo"] .mock-devices{
+  display:grid;
+  grid-template-columns:minmax(0,3.5fr) minmax(135px,1fr);
+  justify-items:center;
+  align-items:center;
+  gap:clamp(12px,1.6vw,26px);
+  padding:clamp(12px,1.5vw,24px);
+  overflow:hidden;
+  container-type:inline-size;
+}
+.slide[data-title="Mockup interativo"] .desktop-preview{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:680px;
+  min-width:0;
+  min-height:0;
+  max-height:100%;
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .laptop{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:clamp(165px,31vh,305px);
+  max-height:min(38vh,305px);
+  min-width:0;
+  flex:none;
+  margin:0;
+  border:8px solid #171817;
+  border-bottom-width:11px;
+  border-radius:13px;
+  overflow:hidden;
+  box-shadow:0 15px 25px rgba(0,0,0,.14);
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .laptopbar{
+  min-height:21px;
+  flex:none;
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .mock-internal{
+  min-height:0;
+  height:auto;
+  flex:1;
+  overflow:hidden;
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .mock-content{
+  min-width:0;
+  padding:clamp(9px,1.1vw,17px);
+  gap:clamp(6px,1.1vh,12px);
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .mock-metrics{
+  gap:7px;
+}
+.slide[data-title="Mockup interativo"] .desktop-preview .mock-metrics span{
+  padding:clamp(6px,1vh,13px) 6px;
+}
+.slide[data-title="Mockup interativo"] .monitor-stand{
+  width:12%;
+  min-width:38px;
+  height:clamp(12px,2.6vh,24px);
+  background:linear-gradient(90deg,#454744,#858785 50%,#454744);
+  border-radius:0 0 4px 4px;
+  flex:none;
+}
+.slide[data-title="Mockup interativo"] .monitor-base{
+  width:34%;
+  height:clamp(7px,1.2vh,12px);
+  background:linear-gradient(#575957,#262826);
+  border-radius:50% 50% 5px 5px;
+  flex:none;
+  box-shadow:0 4px 6px rgba(0,0,0,.13);
+}
+.slide[data-title="Mockup interativo"] .mock-devices > .phone{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  width:100%;
+  max-width:188px;
+  min-width:0;
+  height:clamp(220px,40vh,350px);
+  max-height:min(43vh,360px);
+  margin:0;
+  padding:12px clamp(8px,1vw,14px) 12px;
+  border:8px solid #171817;
+  border-radius:clamp(22px,2.3vw,34px);
+  box-shadow:0 13px 24px rgba(0,0,0,.15);
+  overflow:hidden;
+  position:relative;
+}
+.slide[data-title="Mockup interativo"] .mock-devices > .phone .phone-notch{
+  flex:none;
+  width:46%;
+  height:8px;
+  margin:-7px auto clamp(10px,1.5vh,16px);
+  background:#171817;
+}
+.slide[data-title="Mockup interativo"] .mock-devices > .phone strong{
+  font-size:clamp(12px,1vw,16px);
+  margin-bottom:7px;
+}
+.slide[data-title="Mockup interativo"] .mock-devices > .phone span{
+  font-size:clamp(10px,.8vw,13px);
+  margin-bottom:10px;
+}
+.slide[data-title="Mockup interativo"] .mock-devices > .phone .mock-list{
+  flex:none;
+  height:9px;
+  margin-bottom:9px;
+  max-width:100%;
+}
+.slide[data-title="Mockup interativo"] .phone-home{
+  margin:auto auto 0;
+  width:43%;
+  height:4px;
+  min-height:4px;
+  border-radius:10px;
+  background:#171817;
+}
+@media(max-height:700px) and (min-width:621px){
+  .slide[data-title="Mockup interativo"] .desktop-preview .laptop{
+    height:clamp(155px,27vh,235px);
+  }
+  .slide[data-title="Mockup interativo"] .mock-devices > .phone{
+    height:clamp(210px,34vh,285px);
+  }
+}
+@media(max-width:900px){
+  .slide[data-title="Mockup interativo"] .mock-devices{
+    grid-template-columns:minmax(0,3.3fr) minmax(120px,1fr);
+  }
+  .slide[data-title="Mockup interativo"] .desktop-preview .laptop{
+    height:clamp(155px,24vh,270px);
+  }
+  .slide[data-title="Mockup interativo"] .mock-devices > .phone{
+    height:clamp(205px,32vh,310px);
+  }
+}
+@media(max-width:620px){
+  .slide[data-title="Mockup interativo"] .mock-devices{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    min-height:0;
+    overflow:visible;
+    gap:12px;
+    padding:16px;
+  }
+  .slide[data-title="Mockup interativo"] .desktop-preview{
+    width:min(100%,350px);
+  }
+  .slide[data-title="Mockup interativo"] .desktop-preview .laptop{
+    height:clamp(145px,38vw,200px);
+  }
+  .slide[data-title="Mockup interativo"] .mock-devices > .phone{
+    width:125px;
+    height:210px;
+    max-height:none;
+    flex:none;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -164,7 +328,35 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
 <section class="slide" data-title="Mockup interativo" data-notes="Clique em Abrir mockup. Demonstre a navegação entre as sete etapas e os layouts desktop/celular. Ressalte que interações do protótipo são ilustrativas e não comprovam persistência de produção. Pressione Esc para voltar aos slides.">
  <div class="eyebrow">05 · Demonstração do design</div><h2 class="heading">Primeiro, fizemos a experiência ficar visível.</h2>
  <div class="mock-layout">
- <div class="mock-devices" aria-hidden="true"><div class="laptop"><div class="laptopbar"><span>Fluir / mockup</span><span>PC</span></div><div class="mock-internal"><div class="mock-sidebar"><b><img src="Assets/brand/fluir-symbol.svg" alt="" style="width:19px;height:19px;vertical-align:middle"> Fluir</b><span>Dashboard</span><span>Tarefas</span><span>Hábitos</span><span>Água</span></div><div class="mock-content"><div class="mock-hello">Bom dia!</div><div class="mock-metrics"><span>3 / 5</span><span>4 / 6</span><span>1,4 L</span></div><div class="mock-list"></div><div class="mock-list" style="width:65%"></div><div class="mock-list" style="width:84%"></div></div></div></div><div class="phone"><div class="phone-notch"></div><strong>Seu dia</strong><span>Bom dia!</span><div class="mock-list"></div><div class="mock-list"></div><div class="mock-list"></div><div class="mock-list"></div></div></div>
+ <div class="mock-devices" aria-hidden="true">
+   <div class="desktop-preview">
+     <div class="laptop">
+       <div class="laptopbar"><span>Fluir / mockup</span><span>PC</span></div>
+       <div class="mock-internal">
+         <div class="mock-sidebar">
+           <b><img src="Assets/brand/fluir-symbol.svg" alt="" style="width:19px;height:19px;vertical-align:middle"> Fluir</b>
+           <span>Dashboard</span><span>Tarefas</span><span>Hábitos</span><span>Água</span>
+         </div>
+         <div class="mock-content">
+           <div class="mock-hello">Bom dia!</div>
+           <div class="mock-metrics"><span>3 / 5</span><span>4 / 6</span><span>1,4 L</span></div>
+           <div class="mock-list"></div>
+           <div class="mock-list" style="width:65%"></div>
+           <div class="mock-list" style="width:84%"></div>
+         </div>
+       </div>
+     </div>
+     <div class="monitor-stand"></div>
+     <div class="monitor-base"></div>
+   </div>
+   <div class="phone">
+     <div class="phone-notch"></div>
+     <strong>Seu dia</strong><span>Bom dia!</span>
+     <div class="mock-list"></div><div class="mock-list"></div>
+     <div class="mock-list"></div><div class="mock-list"></div>
+     <div class="phone-home"></div>
+   </div>
+ </div>
  <div class="detail-list"><div class="paper"><h3>Mockup original preservado</h3><p>Sete etapas com visualização de desktop e celular.</p></div><div class="paper"><h3>Cliques demonstrativos</h3><p>Navegação, tarefas, hábitos, água e tema visual.</p></div><div class="paper dark"><h3>Um clique, sem trocar de aba</h3><p>A demonstração abre por cima dos slides e volta com Esc.</p></div><button class="button" data-open-experience="mockup" type="button">▶ Abrir mockup interativo</button></div>
  </div>
 </section>
