@@ -23,10 +23,14 @@ const showLogin = document.getElementById("showLogin");
 
 const passwordButtons = document.querySelectorAll(".password-toggle");
 
-const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
-
-const ONBOARDING_API_BASE_URL =
-  "https://fluir-sistema.onrender.com/api/onboarding";
+// Para testes locais, use a API isolada; o site publicado continua no Render.
+// Servir o frontend na porta 5500 (origem já permitida no CORS do backend).
+const LOGIN_API_ORIGIN =
+  location.hostname === "127.0.0.1" || location.hostname === "localhost"
+    ? "http://127.0.0.1:8081"
+    : "https://fluir-sistema.onrender.com";
+const API_BASE_URL = `${LOGIN_API_ORIGIN}/api/usuarios`;
+const ONBOARDING_API_BASE_URL = `${LOGIN_API_ORIGIN}/api/onboarding`;
 
 // =============================
 // 2. FUNÇÕES AUXILIARES
@@ -390,13 +394,27 @@ if (loginForm) {
         return;
       }
 
-      sessionStorage.removeItem("fluir-user");
-      sessionStorage.setItem("fluir-onboarding-completed", "false");
-
-      const onboardingConcluido =
-        await hasCompletedOnboarding(data);
+      if (!data || !data.id || typeof data.token !== "string" || !data.token.trim()) {
+        showMessage(loginMessage, "O servidor não enviou uma sessão válida. Tente novamente.", "error");
+        return;
+      }
 
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      sessionStorage.setItem("fluir-onboarding-completed", "false");
+
+      let onboardingConcluido;
+      try {
+        onboardingConcluido = await hasCompletedOnboarding(data);
+      } catch (validationError) {
+        console.error("Falha ao verificar onboarding:", validationError);
+        showMessage(
+          loginMessage,
+          "Login realizado, mas não foi possível verificar suas preferências. Tente entrar novamente.",
+          "error"
+        );
+        return;
+      }
+
       sessionStorage.setItem(
         "fluir-onboarding-completed",
         String(onboardingConcluido)
