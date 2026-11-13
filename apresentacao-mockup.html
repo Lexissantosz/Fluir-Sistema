@@ -860,13 +860,15 @@
       .notes{grid-template-columns:1fr}
       .controls{grid-template-columns:90px 1fr 90px}
     }
-  </style>
+  .pill{color:#171817!important;background:#f8f8f4!important;border-color:#d6d6d0!important}.dark .pill{color:#171817!important;background:#f8f8f4!important}
+      .brand-mark,.brandmark{background:transparent!important}
+      </style>
 </head>
 <body>
   <div class="deck">
     <header class="topbar">
       <div class="brand">
-        <span class="brand-mark">F</span>
+        <img src="Assets/brand/fluir-symbol.svg" alt="Logo Fluir" style="height:26px;width:26px;object-fit:contain">
         <span>Fluir</span>
       </div>
       <div class="top-meta">
@@ -891,7 +893,7 @@
         <div class="devices">
           <div class="desktop-device" data-device-label="DESKTOP">
             <aside class="device-sidebar">
-              <div class="device-brand"><b>F</b><strong>Fluir</strong></div>
+              <div class="device-brand"><b><img src="Assets/brand/fluir-symbol.svg" alt="" style="height:20px;width:20px"></b><strong>Fluir</strong></div>
 
               <button class="nav-demo active" data-nav-target="dashboard" type="button"><i>⌂</i>Dashboard</button>
               <button class="nav-demo" data-nav-target="tasks" type="button"><i>✓</i>Tarefas</button>
@@ -1159,8 +1161,8 @@
       <section class="hero-card">
         <div>
           <span class="micro-label" style="color:rgba(255,255,255,.55)">Direção do produto</span>
-          <h3>Menos controle. Mais clareza.</h3>
-          <p>O mockup valida a linguagem visual e a navegação antes da expansão do sistema completo.</p>
+          <h3>Mais controle, com menos complicação.</h3>
+          <p>O Fluir reúne informações em um só lugar e facilita o controle de cada área da rotina.</p>
         </div>
         <div class="score">V1</div>
       </section>
@@ -1323,11 +1325,15 @@
           row.dataset.boundCheck = "true";
 
           row.addEventListener("click",function(){
-            row.classList.toggle("done");
-            var check = row.querySelector(".check");
-            if(check){
-              check.textContent = row.classList.contains("done") ? "✓" : "";
-            }
+            var index=Array.prototype.indexOf.call(row.parentElement.querySelectorAll("[data-check]"),row);
+            var inPhone=!!row.closest(".phone-canvas");
+            var other=inPhone?desktopCanvas:phoneCanvas;
+            var selector=row.closest("[data-task-list]")?"[data-task-list]":row.closest("[data-habit-list]")?"[data-habit-list]":null;
+            [row, ...(selector&&other.querySelector(selector)?[other.querySelector(selector).querySelectorAll("[data-check]")[index]].filter(Boolean):[])].forEach(function(target){
+              target.classList.toggle("done",!row.classList.contains("done"));
+              var check=target.querySelector(".check");
+              if(check)check.textContent=target.classList.contains("done")?"✓":"";
+            });
           });
         });
       }
@@ -1335,11 +1341,11 @@
       function addPrototypeItem(type,label,source){
         var canvas = getDeviceCanvas(source);
         var selector = type === "task" ? "[data-task-list]" : "[data-habit-list]";
-        var list = canvas.querySelector(selector);
-
-        if(!list){return;}
-
-        var row = document.createElement("div");
+        if(!canvas.querySelector(selector)){return;}
+        [desktopCanvas,phoneCanvas].forEach(function(targetCanvas){
+          var list=targetCanvas.querySelector(selector);
+          if(!list)return;
+          var row=document.createElement("div");
         row.className = type === "task" ? "task-mini" : "habit-mini";
         row.setAttribute("data-check","");
         row.innerHTML =
@@ -1349,7 +1355,7 @@
 
         row.querySelector("strong").textContent = label;
         list.appendChild(row);
-
+        });
         bindCheckRows();
         showToast(type === "task" ? "Tarefa adicionada" : "Hábito adicionado",source);
       }
@@ -1451,7 +1457,16 @@
         bindCheckRows();
 
         document.querySelectorAll("[data-choice]").forEach(function(card){
-          card.addEventListener("click",function(){card.classList.toggle("selected");});
+          card.addEventListener("click",function(){
+            var group=card.closest(".desktop-canvas,.phone-canvas");
+            var localCards=group?Array.from(group.querySelectorAll("[data-choice]")):[];
+            var position=localCards.indexOf(card);
+            var selected=!card.classList.contains("selected");
+            [desktopCanvas,phoneCanvas].forEach(function(target){
+              var targetCard=target.querySelectorAll("[data-choice]")[position];
+              if(targetCard)targetCard.classList.toggle("selected",selected);
+            });
+          });
         });
 
         document.querySelectorAll("[data-water-add]").forEach(function(btn){
