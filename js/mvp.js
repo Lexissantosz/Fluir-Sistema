@@ -4,7 +4,7 @@
   const KEY = "fluir-mvp-state-v1";
 
   const defaults = {
-    user: { name: "Alex", email: "alex@fluir.app", setupDone: false },
+    user: { name: "Usuário", email: "usuario@exemplo.com", setupDone: false },
     modules: { tasks: true, habits: true, water: true },
     waterGoal: 2000,
     waterTotal: 1400,
@@ -104,7 +104,7 @@
     if(register) register.addEventListener("submit",e=>{
       e.preventDefault();
       const fd = new FormData(register);
-      state.user.name = String(fd.get("name")||"Alex").trim() || "Alex";
+      state.user.name = String(fd.get("name")||"Usuário").trim() || "Usuário";
       state.user.email = String(fd.get("email")||"").trim();
       state.user.setupDone = false;
       save();
@@ -124,7 +124,7 @@
     const choiceInputs=[...document.querySelectorAll("[data-module-choice]")];
     choiceInputs.forEach(input=>{ input.checked=enabled(input.value); });
     const warning=document.querySelector("[data-setup-warning]");
-    if(name) name.value=state.user.name || "Alex";
+    if(name) name.value=state.user.name || "Usuário";
     if(water) water.value=state.waterGoal || 2000;
 
     function render(){
@@ -134,7 +134,7 @@
       next.textContent=current===steps.length-1?"Entrar no Fluir":"Continuar";
     }
     next.addEventListener("click",()=>{
-      if(current===0 && name) state.user.name=name.value.trim()||"Alex";
+      if(current===0 && name) state.user.name=name.value.trim()||"Usuário";
       if(current===1 && choiceInputs.length){
         if(!choiceInputs.some(input=>input.checked)){
           if(warning) warning.textContent="Selecione pelo menos uma área para continuar.";
@@ -156,7 +156,8 @@
   function dashboard(){
     const name=document.querySelector("[data-user-name]");
     if(!name) return;
-    name.textContent=state.user.name||"Alex";
+    name.textContent=state.user.name||"Usuário";
+    document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
 
     const td=state.tasks.filter(x=>x.done).length;
     const hd=state.habits.filter(x=>x.done).length;
@@ -338,19 +339,22 @@
     const name=document.querySelector("[data-settings-name]");
     if(!name) return;
     const goal=document.querySelector("[data-settings-water]");
-    name.value=state.user.name||"Alex";
+    name.value=state.user.name||"Usuário";
+    document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
     goal.value=state.waterGoal||2000;
-    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{e.preventDefault();state.user.name=name.value.trim()||"Alex";save();toast("Nome atualizado");});
+    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{e.preventDefault();state.user.name=name.value.trim()||"Usuário";save();toast("Nome atualizado");});
     document.querySelector("[data-water-goal-form]")?.addEventListener("submit",e=>{e.preventDefault();state.waterGoal=Math.max(500,Math.min(5000,Number(goal.value)||2000));goal.value=state.waterGoal;save();toast("Meta atualizada");});
     document.querySelector("[data-reset-app]")?.addEventListener("click",()=>{localStorage.removeItem(KEY);state=clone(defaults);save();toast("MVP restaurado");setTimeout(()=>location.reload(),700);});
   }
 
+  function avatarInitials(value){ const words=String(value||"Usuário").trim().split(/\s+/); return (words.length>1 ? words[0][0]+words[words.length-1][0] : words[0].slice(0,2)).toLocaleUpperCase("pt-BR"); }
   function escapeHtml(value){
     return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   }
 
   applyTheme();
   renderNav();
+  document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
   document.querySelectorAll("[data-theme-toggle]").forEach(btn=>btn.addEventListener("click",toggleTheme));
   document.querySelectorAll("[data-nav]").forEach(btn=>btn.addEventListener("click",()=>window.location.href=btn.dataset.nav));
   auth(); setupFlow(); dashboard(); tasks(); habits(); water(); settings();
