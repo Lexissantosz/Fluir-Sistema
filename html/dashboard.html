@@ -27,18 +27,18 @@
   </section>
 
   <section class="stats">
-    <article><span>Tarefas</span><strong data-stat-tasks>0/0</strong><small>concluídas hoje</small></article>
-    <article><span>Hábitos</span><strong data-stat-habits>0/0</strong><small>marcados hoje</small></article>
-    <article><span>Água</span><strong data-stat-water>0 ml</strong><small data-stat-water-goal>de 2000 ml</small></article>
+    <article data-dashboard-module="tasks"><span>Tarefas</span><strong data-stat-tasks>0/0</strong><small>concluídas hoje</small></article>
+    <article data-dashboard-module="habits"><span>Hábitos</span><strong data-stat-habits>0/0</strong><small>marcados hoje</small></article>
+    <article data-dashboard-module="water"><span>Água</span><strong data-stat-water>0 ml</strong><small data-stat-water-goal>de 2000 ml</small></article>
   </section>
 
-  <section class="grid two">
-    <article class="card">
+  <section class="grid two" data-dashboard-panels>
+    <article class="card" data-dashboard-module="tasks">
       <div class="card-head"><div><span class="eyebrow">Prioridades</span><h3>Tarefas de hoje</h3></div><a href="tasks.html">Abrir</a></div>
       <div class="simple-list" data-dashboard-tasks></div>
     </article>
 
-    <article class="card">
+    <article class="card" data-dashboard-module="habits">
       <div class="card-head"><div><span class="eyebrow">Rotina</span><h3>Hábitos de hoje</h3></div><a href="habits.html">Abrir</a></div>
       <div class="simple-list" data-dashboard-habits></div>
     </article>
