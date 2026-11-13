@@ -874,15 +874,15 @@ body.dark .device-sidebar .nav-demo i img,body.dark .phone-nav i img{filter:inve
 .setting-mini .switch-row .switch::after{width:12px;height:12px;margin:0;transition:transform .18s ease;flex-shrink:0;background:#fff;box-shadow:0 1px 3px #0003}
 body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);margin:0;background:#181919}
 /* Marca oficial visível nos dois temas do protótipo */
-    .mockup-brand-img{background:#fff;border-radius:50%;padding:2px;filter:none!important;opacity:1}
-    body.dark .mockup-brand-img{background:#fff;filter:none!important}
+    .mockup-brand-img,.mockup-top-logo{background:transparent;border-radius:0;padding:0;filter:none!important;opacity:1}
+    body.dark .mockup-brand-img,body.dark .mockup-top-logo{background:transparent;filter:none!important}
     </style>
 </head>
 <body>
   <div class="deck">
     <header class="topbar">
       <div class="brand">
-        <img src="Assets/brand/fluir-symbol.svg" alt="Logo Fluir" style="height:26px;width:26px;object-fit:contain">
+        <img src="Assets/brand/fluir-symbol.svg" alt="Logo Fluir" class="mockup-top-logo" style="height:26px;width:26px;object-fit:contain">
         <span>Fluir</span>
       </div>
       <div class="top-meta">
@@ -1646,6 +1646,10 @@ body.dark .setting-mini .switch-row .switch::after{transform:translateX(14px);ma
 
       function toggleTheme(){
         document.body.classList.toggle("dark");
+        var file=document.body.classList.contains("dark")?"fluir-symbol-dark.svg":"fluir-symbol.svg";
+        document.querySelectorAll(".mockup-brand-img,.mockup-top-logo").forEach(function(img){
+          img.src="Assets/brand/"+file;
+        });
       }
 
       document.querySelectorAll("[data-nav-target]").forEach(function(btn){
