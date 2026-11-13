@@ -23,13 +23,13 @@
       
   <section class="water-grid">
     <article class="water-card">
-      <span class="eyebrow">Meta diária</span>
+      <div class="water-heading"><span class="eyebrow">Meta diária</span><button class="button ghost compact" type="button" data-water-edit-goal>✎ Alterar meta</button></div>
       <div class="water-ring" data-water-ring>
         <strong data-water-total>0</strong><span>ml</span>
       </div>
       <p><span data-water-percent>0%</span> da meta de <strong data-water-goal>2000 ml</strong></p>
-      <div class="water-buttons">
-        <button class="button ghost" data-water-add="200">+ 200 ml</button>
+      <form class="water-goal-editor hidden" data-water-inline-goal><label>Nova meta (ml)<input type="number" name="goal" min="500" max="5000" step="100" required value="2000"></label><button class="button primary compact" type="submit">Salvar meta</button></form><div class="water-buttons">
+        <button class="button ghost" data-water-remove="200">− 200 ml</button><button class="button ghost" data-water-remove="300">− 300 ml</button><button class="button ghost" data-water-add="200">+ 200 ml</button>
         <button class="button ghost" data-water-add="300">+ 300 ml</button>
         <button class="button primary" data-water-add="500">+ 500 ml</button>
       </div>
