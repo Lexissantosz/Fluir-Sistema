@@ -1543,7 +1543,9 @@ async function finishSetup() {
     };
 
     const response = await fetch(
-      "https://fluir-sistema.onrender.com/api/onboarding/salvar",
+      (location.hostname === "127.0.0.1" || location.hostname === "localhost"
+        ? "http://127.0.0.1:8081"
+        : "https://fluir-sistema.onrender.com") + "/api/onboarding/salvar",
       {
         method: "POST",
         headers: {
