@@ -342,7 +342,16 @@
     name.value=state.user.name||"Usuário";
     document.querySelectorAll(".avatar").forEach(el=>el.textContent=avatarInitials(state.user.name));
     goal.value=state.waterGoal||2000;
-    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{e.preventDefault();state.user.name=name.value.trim()||"Usuário";save();toast("Nome atualizado");});
+    document.querySelector("[data-profile-form]")?.addEventListener("submit",e=>{
+      e.preventDefault();
+      state.user.name=name.value.trim()||"Usuário";
+      save();
+      document.querySelectorAll(".avatar").forEach(el=>{
+        el.textContent=avatarInitials(state.user.name);
+        el.setAttribute("aria-label","Configurações de "+state.user.name);
+      });
+      toast("Nome atualizado");
+    });
     document.querySelector("[data-water-goal-form]")?.addEventListener("submit",e=>{e.preventDefault();state.waterGoal=Math.max(500,Math.min(5000,Number(goal.value)||2000));goal.value=state.waterGoal;save();toast("Meta atualizada");});
     document.querySelector("[data-reset-app]")?.addEventListener("click",()=>{localStorage.removeItem(KEY);state=clone(defaults);save();toast("MVP restaurado");setTimeout(()=>location.reload(),700);});
   }
