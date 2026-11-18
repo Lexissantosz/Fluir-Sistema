@@ -415,7 +415,10 @@
       <section class="recent-events">
         <div class="panel-header">
           <div>
-            <h3>▣ Eventos recentes</h3>
+          <h3>
+            <span class="module-icon icon-timeline" aria-hidden="true"></span>
+            Eventos recentes
+          </h3>
             <p>O que aconteceu nos últimos dias.</p>
           </div>
 
@@ -435,14 +438,30 @@
     </section>
   </main>
 
-  <!-- Catálogo compartilhado das áreas do Fluir -->
-  <script src="../js/app-sections.js"></script>
 
-  <!-- Sidebar compartilhada -->
-  <script src="../js/sidebar.js"></script>
+  <!-- Scripts do Dashboard -->
+  <script>
+    const isDemoMode =
+      new URLSearchParams(window.location.search).get("demo") === "1";
 
-  <!-- Scripts da tela -->
-  <script src="../js/dashboard.js"></script>
-  <script src="../js/mobile.js"></script>
+    const scripts = isDemoMode
+  ? [
+      "../js/app-sections.js",
+      "../js/dashboard-demo.js"
+    ]
+  : [
+      "../js/app-sections.js",
+      "../js/sidebar.js",
+      "../js/dashboard.js",
+      "../js/mobile.js"
+    ];
+
+    scripts.forEach((src) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      document.body.appendChild(script);
+    });
+  </script>
 </body>
 </html>
