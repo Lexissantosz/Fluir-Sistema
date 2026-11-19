@@ -1,3 +1,12 @@
 .idea/
-package-lock.json
 .env
+.env.*
+!.env.example
+/node_modules/
+/www/
+/android/.gradle/
+/android/local.properties
+/android/**/build/
+*.apk
+*.aab
+# package-lock.json deve ser versionado quando gerado.

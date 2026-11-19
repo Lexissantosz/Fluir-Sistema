@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Fluir no iPhone: instalacao pela Tela de Inicio -->
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="../Assets/brand/fluir-symbol.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../Assets/brand/fluir-touch-icon.png" />
+  <meta name="theme-color" content="#e7f4ed" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Fluir" />
+
 
   <title>Fluir | Login e Cadastro</title>
 
@@ -221,9 +230,7 @@
   Explorar demonstração
 </a>
 
-<p class="backend-note">
-  Login em fase de integração com o banco de dados.
-</p>
+
 
           <p class="switch">
             Ainda não tem conta?
@@ -237,9 +244,7 @@
         <form class="form" id="registerForm" novalidate>
           <h2>Criar conta</h2>
           
-          <p class="backend-note">
-  Cadastro em fase de integração com o banco de dados.
-</p>
+          
 
           <p class="form-description">
             Comece a organizar sua rotina em um espaço simples, calmo e inteligente.
@@ -382,5 +387,6 @@
 
   <!-- JS separado -->
   <script src="../js/login.js"></script>
+  <script defer src="../js/pwa-register.js"></script>
 </body>
 </html>

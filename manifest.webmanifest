@@ -1,0 +1,29 @@
+{
+  "id": "/html/login.html",
+  "name": "Fluir | Organização da Vida",
+  "short_name": "Fluir",
+  "description": "Organize tarefas, hábitos, finanças e bem-estar com o Fluir.",
+  "start_url": "/html/login.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#F4F9F6",
+  "theme_color": "#E7F4ED",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/Assets/brand/fluir-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "any"
+    },
+    {
+      "src": "/Assets/brand/fluir-symbol.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}
