@@ -1,0 +1,483 @@
+/* FLUIR: ajustes de responsividade exclusivos da demonstração.
+   Este arquivo não é carregado pelas páginas autenticadas. */
+body.demo-mode, body.demo-module-only { max-width: 100%; overflow-x: clip; }
+body.demo-mode :is(.dashboard-main,.summary-grid,.summary-card,.content-grid,.bottom-grid,.side-panels,.event-list),
+body.demo-module-only :is(.timeline-main,.tasks-main,.water-main,.timeline-sidebar,.side-card,.timeline-panel,.reminder-list,.demo-record) {
+  min-width: 0;
+}
+body.demo-mode .dashboard-page .summary-card::after {
+  content: none !important;
+  display: none !important;
+}
+body.demo-mode .dashboard-page .summary-card {
+  min-width: 0;
+}
+body.demo-mode .dashboard-page .summary-card .card-title {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding-right: 40px;
+  gap: 8px;
+}
+body.demo-mode .dashboard-page .summary-card .card-title p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+}
+body.demo-mode .dashboard-page .summary-card .demo-card-arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--input-bg);
+  color: var(--text);
+  line-height: 1;
+  transform: none;
+  pointer-events: none;
+}
+body.demo-mode .dashboard-page .summary-card .demo-card-arrow::before {
+  display: none !important;
+  content: none !important;
+}
+body.demo-mode .dashboard-page .summary-card .demo-card-arrow img {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  max-width: 18px;
+  max-height: 18px;
+  object-fit: contain;
+  margin: auto;
+}
+body.demo-mode.dark .dashboard-page .summary-card .demo-card-arrow img,
+body.demo-module-only.dark .demo-record-marker img {
+  filter: invert(1);
+}
+/* Registros de exemplo: ícones reais, alinhados com o texto. */
+body.demo-module-only .demo-record {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: start;
+}
+body.demo-module-only .demo-record-marker {
+  width: 35px;
+  height: 35px;
+  flex: 0 0 35px;
+  padding: 0;
+  line-height: 1;
+}
+body.demo-module-only .demo-record-marker img {
+  display: block;
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+  margin: auto;
+}
+body.demo-module-only .demo-record-main,
+body.demo-module-only .demo-record-main :is(strong,p,small) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+body.demo-module-only .demo-record-tag {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.25;
+}
+/* O CSS da Timeline define 'grid' para todo div dentro de lembretes.
+   Os cartões do modo demo têm sua própria estrutura, sem colunas fixas. */
+body.demo-module-only .timeline-page .reminder-list .demo-mini-record,
+body.demo-module-only .demo-mini-record {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px 10px;
+  min-width: 0;
+  max-width: 100%;
+  padding-block: 10px;
+}
+body.demo-module-only .demo-mini-record strong,
+body.demo-module-only .demo-mini-record span {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  line-height: 1.4;
+}
+body.demo-module-only .demo-mini-record strong {
+  flex: 1 1 125px;
+}
+body.demo-module-only .demo-mini-record span {
+  flex: 0 1 auto;
+  text-align: left;
+}
+/* Evita que pseudo-linhas decorativas atravessem os cards fictícios. */
+body.demo-module-only .timeline-page .timeline-panel .event-list::before {
+  display: none !important;
+}
+body.demo-module-only .timeline-page .event-list .demo-record {
+  margin-left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+body.demo-module-only .water-circle {
+  --water-percent: 75%;
+}
+body.demo-module-only .cups-area .demo-cup {
+  display: grid;
+  place-items: center;
+  min-height: 62px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--input-bg);
+  color: var(--muted);
+  font-size: 22px;
+  font-weight: 750;
+}
+body.demo-module-only .cups-area .demo-cup.filled {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--card-bg);
+}
+body.demo-module-only .water-hero {
+  min-width: 0;
+  max-width: 100%;
+}
+body.demo-module-only .water-circle {
+  flex: 0 0 auto;
+}
+body.demo-module-only .water-circle strong {
+  line-height: 1.1;
+  white-space: nowrap;
+}
+/* Containers de módulos: nenhuma coluna pode alargar o viewport. */
+body.demo-module-only :is(.timeline-layout,.water-layout,.tasks-layout,.habits-layout,.finances-layout,.sleep-layout,.attachments-layout) > * {
+  min-width: 0;
+}
+body.demo-module-only .panel-header,
+body.demo-module-only .side-card,
+body.demo-module-only .reminder-list {
+  max-width: 100%;
+}
+@media (max-width: 1250px) {
+  body.demo-mode .dashboard-page .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+/* Em zoom / tablet, desligar a sidebar horizontal enorme do layout antigo.
+   Menu superior, gaveta e barra inferior continuam disponíveis. */
+@media (min-width: 761px) and (max-width: 900px) {
+  body.demo-mode, body.demo-module-only {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 64px 0 90px;
+  }
+  body.demo-mode :is(.dashboard-page,.timeline-page),
+  body.demo-module-only :is(.timeline-page,.tasks-page,.habits-page,.sleep-page,.water-page,.finances-page,.diary-page,.nutrition-page,.health-page,.cycle-page,.attachments-page,.achievements-page) {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: calc(100dvh - 64px) !important;
+    margin: 0 !important;
+    display: block !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  body.demo-mode .sidebar, body.demo-module-only .sidebar { display: none !important; }
+  body.demo-mode .dashboard-main,
+  body.demo-module-only :is(.timeline-main,.tasks-main,.habits-main,.sleep-main,.water-main,.finances-main,.diary-main,.nutrition-main,.health-main,.cycle-main,.attachments-main,.achievements-main) {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 22px 20px 30px !important;
+  }
+  body.demo-mode .mobile-topbar, body.demo-module-only .mobile-topbar {
+    display: flex !important;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 3000;
+    height: 64px;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: var(--page-bg);
+    backdrop-filter: blur(16px);
+  }
+  body.demo-mode .mobile-menu-btn, body.demo-module-only .mobile-menu-btn {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  body.demo-mode .mobile-bottom-nav, body.demo-module-only .mobile-bottom-nav {
+    position: fixed;
+    z-index: 2900;
+    bottom: 10px; left: 12px; right: 12px;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 72px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--page-bg);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+  }
+  body.demo-mode .mobile-bottom-nav :is(.mobile-nav-link,.mobile-more-btn),
+  body.demo-module-only .mobile-bottom-nav :is(.mobile-nav-link,.mobile-more-btn) {
+    min-width: 0;
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 0;
+    border-radius: 18px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+  }
+  body.demo-mode .mobile-bottom-nav .active,
+  body.demo-module-only .mobile-bottom-nav .active {
+    background: var(--button-bg);
+    color: var(--button-text);
+  }
+  body.demo-mode .mobile-drawer-overlay, body.demo-module-only .mobile-drawer-overlay {
+    display: block !important;
+    position: fixed;
+    z-index: 3100;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(0,0,0,.42);
+  }
+  body.demo-mode.mobile-drawer-open .mobile-drawer-overlay,
+  body.demo-module-only.mobile-drawer-open .mobile-drawer-overlay {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  body.demo-mode .mobile-drawer, body.demo-module-only .mobile-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(85vw, 360px);
+    height: 100dvh;
+    padding: 20px;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    transform: translateX(104%);
+    transition: transform .2s ease;
+  }
+  body.demo-mode.mobile-drawer-open .mobile-drawer,
+  body.demo-module-only.mobile-drawer-open .mobile-drawer {
+    transform: translateX(0);
+  }
+  body.demo-mode .mobile-drawer-head, body.demo-module-only .mobile-drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 14px;
+    gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+  body.demo-mode .mobile-drawer-head strong, body.demo-module-only .mobile-drawer-head strong {
+    display: block;
+    font-weight: 850;
+    font-size: 18px;
+  }
+  body.demo-mode .mobile-drawer-head span, body.demo-module-only .mobile-drawer-head span {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  body.demo-mode .mobile-drawer-close, body.demo-module-only .mobile-drawer-close {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  body.demo-mode .mobile-drawer-nav, body.demo-module-only .mobile-drawer-nav { display: grid; gap: 8px; }
+  body.demo-mode .mobile-drawer-link, body.demo-module-only .mobile-drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 48px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  body.demo-mode .mobile-drawer-link i, body.demo-module-only .mobile-drawer-link i {
+    width: 22px;
+    display: inline-block;
+  }
+  body.demo-mode .mobile-drawer-link.active, body.demo-module-only .mobile-drawer-link.active {
+    background: var(--button-bg);
+    color: var(--button-text);
+  }
+  body.demo-mode .mobile-brand, body.demo-module-only .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  body.demo-mode .mobile-brand-icon, body.demo-module-only .mobile-brand-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  body.demo-mode .mobile-brand-icon img, body.demo-module-only .mobile-brand-icon img {
+    width: 24px;
+    height: 24px;
+  }
+  body.demo-mode .mobile-brand-meta strong, body.demo-module-only .mobile-brand-meta strong {
+    display: block;
+    font-size: 19px;
+  }
+  body.demo-mode .mobile-brand-subtitle, body.demo-module-only .mobile-brand-subtitle {
+    font-size: 10px;
+    color: var(--muted);
+  }
+  body.demo-mode .dashboard-page .summary-grid,
+  body.demo-module-only .summary-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+  body.demo-mode .content-grid, body.demo-mode .bottom-grid,
+  body.demo-module-only :is(.timeline-layout,.tasks-layout,.habits-layout,.water-layout,.finances-layout,.sleep-layout) {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+}
+/* Celulares e zoom maior: dois cards por linha com nomes e ícones sem colisões. */
+@media (max-width: 760px) {
+  body.demo-mode .dashboard-page .summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+    gap: 10px !important;
+  }
+  body.demo-mode .dashboard-page .summary-card {
+    min-width: 0 !important;
+    min-height: 145px !important;
+    padding: 12px !important;
+    gap: 10px;
+  }
+  body.demo-mode .dashboard-page .summary-card .card-title {
+    gap: 6px;
+    padding-right: 29px;
+    min-height: 30px;
+  }
+  body.demo-mode .dashboard-page .summary-card .card-title span:first-child {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    font-size: 14px;
+  }
+  body.demo-mode .dashboard-page .summary-card .card-title p {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+  }
+  body.demo-mode .dashboard-page .summary-card .demo-card-arrow {
+    top: 12px; right: 12px;
+    width: 28px; height: 28px; min-width: 28px;
+  }
+  body.demo-mode .dashboard-page .summary-card .demo-card-arrow img {
+    width: 16px; height: 16px;
+  }
+  body.mobile-ui-ready.demo-mode .dashboard-page .summary-card strong {
+    font-size: clamp(19px, 5.8vw, 29px) !important;
+    overflow-wrap: anywhere;
+  }
+  body.demo-mode .dashboard-page .summary-card small {
+    font-size: 11px !important;
+    line-height: 1.4;
+  }
+  body.demo-mode .dashboard-page .demo-banner {
+    gap: 9px;
+  }
+  body.demo-mode .dashboard-page .demo-banner-actions {
+    width: 100%;
+  }
+  body.demo-mode .dashboard-page .event-list {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  body.demo-module-only .demo-record {
+    display: grid;
+    grid-template-columns: 32px minmax(0,1fr);
+    align-items: start;
+    gap: 8px 10px;
+    padding: 12px;
+  }
+  body.demo-module-only .demo-record-marker {
+    width: 32px; height: 32px;
+  }
+  body.demo-module-only .demo-record-tag {
+    grid-column: 2;
+    justify-self: start;
+  }
+  body.demo-module-only .timeline-page .reminder-list .demo-mini-record,
+  body.demo-module-only .demo-mini-record {
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 5px;
+  }
+  body.demo-module-only .demo-banner {
+    flex-wrap: wrap;
+  }
+  body.demo-module-only .demo-banner-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  body.demo-module-only .water-hero {
+    grid-template-columns: minmax(0,1fr);
+    padding: 12px;
+    gap: 12px;
+    justify-items: center;
+  }
+  body.demo-module-only .water-controls { width: 100%; }
+  body.demo-module-only .water-circle {
+    width: min(190px, 75vw);
+    height: min(190px, 75vw);
+  }
+  body.demo-module-only .water-circle strong {
+    font-size: clamp(28px, 9vw, 34px);
+  }
+}
+@media (max-width: 340px) {
+  body.demo-mode .dashboard-page .summary-grid {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+}
