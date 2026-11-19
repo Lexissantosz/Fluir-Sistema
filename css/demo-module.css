@@ -59,3 +59,6 @@ body.demo-module-only { overflow: hidden; }
   .demo-gate { padding: 23px 18px; }
   .demo-module-only .mobile-bottom-nav { display: grid; }
 }
+/* Os filtros também devem ocultar os cards que reproduzem as listas reais. */
+.demo-module-only .demo-real-card[hidden] { display: none !important; }
+.demo-module-only .demo-record[hidden] { display: none !important; }
