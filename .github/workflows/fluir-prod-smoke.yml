@@ -1,0 +1,53 @@
+name: Fluir | QA da API real em producao
+
+on:
+  push:
+    branches:
+      - alex/mobile-ia-avaliacao-integrada-19-11
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-production:
+    name: Health, PostgreSQL, CORS Android e login real (sem criar usuario)
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Verificar API e PostgreSQL do Render
+        shell: bash
+        run: |
+          set -euo pipefail
+          for endpoint in live ready; do
+            url="https://fluir-sistema.onrender.com/api/health/$endpoint"
+            echo "Verificando $endpoint..."
+            code=$(curl -sSL --connect-timeout 15 --max-time 180 -o "/tmp/fluir-$endpoint.json" -w '%{http_code}' "$url")
+            echo "HTTP /$endpoint: $code"
+            if [[ "$code" != "200" ]] || ! grep -Fq '"status":"UP"' "/tmp/fluir-$endpoint.json"; then
+              echo "::error::Endpoint /$endpoint não está saudável"
+              exit 1
+            fi
+          done
+      - name: Validar CORS do aplicativo Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          h=$(mktemp)
+          code=$(curl -sS -X OPTIONS --max-time 30             -H 'Origin: https://localhost'             -H 'Access-Control-Request-Method: POST'             -H 'Access-Control-Request-Headers: content-type'             -D "$h" -o /dev/null -w '%{http_code}'             'https://fluir-sistema.onrender.com/api/usuarios/login')
+          echo "Preflight: $code"
+          if [[ "$code" != "200" ]] && [[ "$code" != "204" ]];then
+            echo "::error::CORS Android recusado ($code)";exit 1
+          fi
+          grep -Eiq '^access-control-allow-origin:\s*https://localhost\s*$' "$h"
+      - name: Verificar que login inválido responde rapidamente e não autentica
+        shell: bash
+        run: |
+          set -euo pipefail
+          body='{"email":"fluir-qa-nao-existe@exemplo.invalid","senha":"senha-de-teste-nao-real"}'
+          code=$(curl -sS --connect-timeout 12 --max-time 25             -X POST -H 'Origin: https://localhost'             -H 'Content-Type: application/json' -d "$body"             -o /tmp/fluir-invalid-login.json -w '%{http_code}'             'https://fluir-sistema.onrender.com/api/usuarios/login')
+          echo "Login de conta inexistente: HTTP $code"
+          if [[ "$code" != "401" ]];then
+            echo "::error::Login deveria retornar 401 sem credenciais corretas.";exit 1
+          fi
+          echo "QA de conectividade Android e backend concluído." >> "$GITHUB_STEP_SUMMARY"
