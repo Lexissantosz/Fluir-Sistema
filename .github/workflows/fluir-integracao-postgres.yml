@@ -76,7 +76,7 @@ jobs:
           import { randomBytes, randomUUID } from 'node:crypto';
 
           const api='http://127.0.0.1:8080/api';
-          const email = (i)=>'fluir-e2e-'+randomUUID()+'-'+i+'@example.invalid';
+          const email = (i)=>'fluir-e2e-'+randomUUID()+'-'+i.toLowerCase().replace(/[^a-z0-9]/g,'')+'@example.invalid';
           async function req(path,method='GET',body=null,token=null){
             const response=await fetch(api+path,{
               method, headers:{
@@ -93,7 +93,7 @@ jobs:
             const password='E2E-'+randomBytes(16).toString('base64url')+'!aA1';
             const resp=await req('/usuarios/cadastro','POST',
               {nome:name,email:email(name),senha:password});
-            assert.equal(resp.status,201,'cadastro precisa retornar 201');
+            assert.equal(resp.status,201,'cadastro precisa retornar 201; resposta: '+JSON.stringify(resp.data));
             assert.ok(resp.data.id&&resp.data.token,'cadastro requer id e sessão');
             return resp.data;
           }
