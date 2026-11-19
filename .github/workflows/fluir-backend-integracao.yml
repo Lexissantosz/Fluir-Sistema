@@ -46,6 +46,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Testar autorização e interpretação de IA com JUnit
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteInterpretacaoServiceTest,AssistenteRegistroServiceTest test
       - name: Iniciar Spring Boot conectado ao PostgreSQL 17 descartavel
         shell: bash
         working-directory: backend
