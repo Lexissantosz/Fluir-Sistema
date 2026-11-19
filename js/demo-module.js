@@ -669,7 +669,7 @@
 
   async function mount() {
     if(!section) throw new Error("Módulo não encontrado");
-    const response=await fetch(section.href,{cache:"no-store",credentials:"omit"});
+    const response=await fetch(section.href,{cache:"no-store",credentials:"same-origin"});
     if(!response.ok)throw new Error("Falha ao carregar interface do módulo: "+response.status);
     const source=new DOMParser().parseFromString(await response.text(),"text/html");
     const main=source.querySelector("main");
