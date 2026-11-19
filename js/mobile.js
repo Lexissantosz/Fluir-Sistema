@@ -202,6 +202,70 @@ function getMobileUserData() {
     document.body.appendChild(bottomNav);
   }
 
+
+  function buildAssistantWidget() {
+    if (document.querySelector(".assistant-floating-root") || currentFileName() === "assistente.html") return;
+    // Nunca confundir a conta real com a demonstracao.
+    let account = null;
+    try { account = JSON.parse(sessionStorage.getItem("fluir-user") || "null"); } catch {}
+    const isDemo = new URLSearchParams(location.search).get("demo") === "1";
+    if (isDemo || !account?.id || !account?.token) return;
+
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "../css/assistant-widget.css";
+    document.head.appendChild(css);
+
+    const root = document.createElement("div");
+    root.className = "assistant-floating-root";
+    const launcher = document.createElement("button");
+    launcher.type = "button";
+    launcher.className = "assistant-floating-trigger";
+    launcher.setAttribute("aria-label", "Conversar com o Assistente Fluir");
+    launcher.setAttribute("aria-expanded", "false");
+    launcher.textContent = "✦";
+    const panel = document.createElement("section");
+    panel.className = "assistant-floating-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", "Chat do Assistente Fluir");
+    panel.hidden = true;
+    const heading = document.createElement("div");
+    heading.className = "assistant-floating-heading";
+    const title = document.createElement("strong");
+    title.textContent = "Assistente Fluir";
+    const links = document.createElement("div");
+    const expand = document.createElement("a");
+    expand.href = "assistente.html";
+    expand.textContent = "Expandir";
+    expand.setAttribute("aria-label", "Abrir o Assistente Fluir em tela completa");
+    const close = document.createElement("button");
+    close.type = "button";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Fechar conversa");
+    links.append(expand, close);
+    heading.append(title, links);
+    const frame = document.createElement("iframe");
+    frame.title = "Conversa com Assistente Fluir";
+    frame.loading = "lazy";
+    panel.append(heading, frame);
+    root.append(panel, launcher);
+    document.body.appendChild(root);
+
+    function toggle(open) {
+      panel.hidden = !open;
+      launcher.setAttribute("aria-expanded", String(open));
+      if (open) {
+        if (!frame.src) frame.src = "assistente.html?widget=1";
+        close.focus();
+      } else launcher.focus();
+    }
+    launcher.addEventListener("click", () => toggle(panel.hidden));
+    close.addEventListener("click", () => toggle(false));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && !panel.hidden) toggle(false);
+    });
+  }
+
   function initMobileUI() {
     if (!appPages.has(currentFileName())) return;
 
@@ -209,6 +273,7 @@ function getMobileUserData() {
     buildTopbar();
     buildDrawer();
     buildBottomNav();
+    buildAssistantWidget();
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeDrawer();

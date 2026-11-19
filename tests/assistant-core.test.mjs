@@ -53,3 +53,37 @@ test("registro com sessao chama API protegida, nao so o localStorage",()=>{
   assert.match(ui,/if\(demo\)localStorage\.setItem/);
   assert.match(ui,/Confirmo o registro desta informação pessoal/);
 });
+
+test("separa conversa espontanea de comando de registro",()=>{
+  assert.equal(core.isExplicitRecordRequest("Hoje estou muito cansado"),false);
+  assert.equal(core.isExplicitRecordRequest("Registre meu humor"),true);
+  assert.equal(core.isExplicitRecordRequest("Crie uma tarefa de estudar"),true);
+  assert.match(core.conversationReply("Hoje estou cansado", "calmo"),/contar|cansativ/i);
+  assert.match(core.conversationReply("Oi", "direto"),/conversar/i);
+});
+
+test("o assistente da conta exige login e a demo exige escolha explicita",()=>{
+  const ui=readFileSync(new URL("../js/assistente.js",import.meta.url),"utf8");
+  const login=readFileSync(new URL("../html/login.html",import.meta.url),"utf8");
+  const dashboard=readFileSync(new URL("../html/dashboard.html",import.meta.url),"utf8");
+  const mobile=readFileSync(new URL("../js/mobile.js",import.meta.url),"utf8");
+  assert.match(ui,/params.get\("demo"\) === "1"/);
+  assert.match(ui,/window.location.replace\("login.html"\)/);
+  assert.match(login,/href="dashboard.html\?demo=1"/);
+  assert.doesNotMatch(login,/Testar assistente Fluir \(demonstração\)/);
+  assert.match(dashboard,/id="demoAssistantCard"/);
+  assert.match(mobile,/assistant-floating-trigger/);
+});
+
+test("chat oferece escolha antes de registrar desabafos",()=>{
+  const ui=readFileSync(new URL("../js/assistente.js",import.meta.url),"utf8");
+  assert.match(ui,/askIfConversation\(message,actions\)/);
+  assert.match(ui,/Só conversar/);
+  assert.match(ui,/Quero registrar/);
+  assert.match(ui,/if\(actions.length && !explicit\)/);
+});
+
+test("marca do Android ocupa area segura e centralizada",()=>{
+  const logo=readFileSync(new URL("../resources/logo.svg",import.meta.url),"utf8");
+  assert.match(logo,/translate\(176 162\) scale\(12\.2\)/);
+});

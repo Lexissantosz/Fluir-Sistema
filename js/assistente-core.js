@@ -120,7 +120,44 @@
     return (messages[tone]||messages.calmo)[category]||messages.calmo.welcome;
   }
 
-  const api = Object.freeze({normalize,parseIntent,describe,getSummary,messageForTone,ROUTES});
+  // Não transformar automaticamente um desabafo em registro.
+  function isExplicitRecordRequest(input) {
+    const message = normalize(input);
+    return /\b(registre|registrar|registra|anote|anotar|anota|salve|salvar|salva|crie|criar|adicione|adicionar|marque|marcar|guarde|coloque)\b/.test(message);
+  }
+
+  // Respostas conversacionais guiadas, transparentes quando o modelo online nao esta ativo.
+  function conversationReply(input, tone="calmo") {
+    const message = normalize(input);
+    if (/\b(oi|ola|bom dia|boa tarde|boa noite)\b/.test(message)) {
+      return tone==="direto" ? "Oi! Sobre o que você gostaria de conversar?" :
+        "Oi! Que bom ter você aqui. Como está sendo seu dia?";
+    }
+    if (/\b(cansad[oa]|exaust[oa]|esgotad[oa]|sem energia|sobrecarregad[oa])\b/.test(message)) {
+      return "Parece que hoje exigiu bastante de você. Quer me contar qual parte foi mais cansativa?";
+    }
+    if (/\b(ansios[oa]|preocupad[oa]|nervos[oa]|medo)\b/.test(message)) {
+      return "Entendi. O que mais está te preocupando neste momento?";
+    }
+    if (/\b(triste|mal|chatead[oa]|sozinh[oa])\b/.test(message)) {
+      return "Sinto que esse assunto é importante para você. Quer me contar um pouco mais do que aconteceu?";
+    }
+    if (/\b(feliz|alegre|animad[oa]|contente|consegui|vit[oó]ria)\b/.test(message)) {
+      return "Que bom ter algo positivo para compartilhar! O que aconteceu de especial?";
+    }
+    if (/\b(estudar|prova|escola|trabalho|projeto|faculdade)\b/.test(message)) {
+      return "Podemos conversar sobre isso ou organizar um próximo passo. O que está mais difícil agora?";
+    }
+    if (/\b(obrigad[oa]|valeu)\b/.test(message)) return "Pode contar comigo. Quer continuar conversando ou organizar alguma coisa?";
+    if (/\b(conversar|papo|desabafar|falar|ouvir)\b/.test(message)) {
+      return "Podemos conversar sem registrar nada. O que você gostaria de me contar?";
+    }
+    return tone==="direto"
+      ? "Estou acompanhando. Me conte mais ou diga como posso ajudar."
+      : "Estou te ouvindo. Me conta um pouco mais? Se preferir, podemos organizar um pequeno próximo passo.";
+  }
+
+  const api = Object.freeze({normalize,parseIntent,isExplicitRecordRequest,conversationReply,describe,getSummary,messageForTone,ROUTES});
   if (typeof module!=="undefined" && module.exports) module.exports=api;
   if (root) root.FluirAssistantCore=api;
 })(typeof window!=="undefined"?window:undefined);

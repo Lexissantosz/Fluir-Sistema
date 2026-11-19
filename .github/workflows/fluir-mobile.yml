@@ -9,6 +9,7 @@ on:
       - alex/google-login-onboarding-19-11
       - alex/assistente-ia-fluir-19-11
       - alex/mobile-ia-avaliacao-integrada-19-11
+      - alex/refino-ux-ia-mobile-19-11
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -57,6 +58,7 @@ jobs:
           node --check js/login.js
           node --check js/google-login.js
           node --check js/tasks.js
+          node --check js/mobile.js
       - name: Criar projeto Android nativo
         run: npx cap add android
       - name: Gerar icones e splash Android com a marca Fluir
@@ -91,8 +93,7 @@ jobs:
       - name: Compilar backend sem conectar ao banco
         working-directory: backend
         run: |
-          chmod +x mvnw
-          ./mvnw --batch-mode -DskipTests package
+          mvn --batch-mode -DskipTests package
       - name: Testar isolamento das tarefas entre usuarios
         working-directory: backend
-        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test
+        run: mvn --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test

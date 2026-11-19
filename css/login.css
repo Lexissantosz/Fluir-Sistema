@@ -2080,3 +2080,15 @@ body.dark .preview {
   }
   html.fluir-native-android .form h2 { font-size: clamp(22px, 6vw, 29px); }
 }
+
+/* Identidade enxuta do login nativo: mais conteudo util, sem boneco ou grandes vazios. */
+.native-login-highlights{display:none}
+html.fluir-native-android .native-login-highlights{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:14px 0 20px}
+html.fluir-native-android .native-login-highlights span{padding:8px 10px;font-size:11px;font-weight:750;border:1px solid #d2e4d7;background:#f0f8f2;color:#335a43;border-radius:99px}
+@media(max-width:1024px){
+ html.fluir-native-android .page{padding-top:calc(22px + env(safe-area-inset-top, 0px));gap:12px}
+ html.fluir-native-android .top{height:auto;min-height:44px}
+ html.fluir-native-android .card{padding:25px 20px;box-shadow:0 7px 28px rgba(22,64,43,.06)}
+ html.fluir-native-android .main{align-items:start}
+ html.fluir-native-android .form-description{margin-bottom:0}
+}

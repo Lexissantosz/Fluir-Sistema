@@ -1,0 +1,16 @@
+/* Widget da IA: apenas desktop, sem atrapalhar os módulos ou o menu mobile. */
+.demo-assistant-card[hidden], .assistant-floating-panel[hidden] {display:none!important}
+.demo-assistant-card{display:flex;align-items:center;gap:16px;padding:16px 20px;border:1px solid #cfe2d3;border-radius:18px;margin:0 0 20px;background:linear-gradient(105deg,#eef7f0,#fff);color:#315342;box-shadow:0 8px 25px rgba(30,69,49,.05)}
+.demo-assistant-card .demo-assistant-logo{display:grid;place-items:center;border-radius:15px;background:#d8ebdd;color:#325c41;font-size:26px;width:52px;height:52px;flex:0 0 52px}
+.demo-assistant-card strong{font-size:16px}.demo-assistant-card p{font-size:12px;line-height:1.5;margin:5px 0 0;color:#54715f}
+.demo-assistant-card>a{background:#315a43;border:0;color:#fff;padding:10px 13px;border-radius:11px;text-decoration:none;font-size:12px;font-weight:750;white-space:nowrap}
+.assistant-floating-root{position:fixed;bottom:30px;right:28px;z-index:5000;font-family:Manrope,system-ui,sans-serif}
+.assistant-floating-trigger{display:grid;place-items:center;width:60px;height:60px;border-radius:22px;background:#315c44;color:#fff;border:2px solid rgba(255,255,255,.7);box-shadow:0 10px 35px rgba(18,63,37,.28);font-size:27px;font-weight:700;cursor:pointer;transition:transform .15s ease}
+.assistant-floating-trigger:hover{transform:translateY(-2px)}.assistant-floating-trigger:focus-visible{outline:3px solid #a2dbad;outline-offset:3px}
+.assistant-floating-panel{position:absolute;right:0;bottom:76px;width:min(420px,calc(100vw - 30px));height:min(640px,calc(100dvh - 115px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #d0e2d4;border-radius:22px;background:#fff;box-shadow:0 18px 70px rgba(20,54,40,.26)}
+.assistant-floating-heading{background:#edf6ef;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#244532;border-bottom:1px solid #d8e9dc;font-size:13px}
+.assistant-floating-heading>div{display:flex;align-items:center;gap:12px}
+.assistant-floating-heading a{font-size:12px;color:#315e44;text-decoration:underline}
+.assistant-floating-heading button{font-size:23px;line-height:1;border:0;background:none;color:#2d4f3a;cursor:pointer}
+.assistant-floating-panel iframe{border:0;width:100%;flex:1;min-height:0}
+@media(max-width:760px){.assistant-floating-root{display:none!important}.demo-assistant-card{flex-wrap:wrap;padding:14px}.demo-assistant-card>a{margin-left:auto}}

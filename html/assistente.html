@@ -1,30 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Assistente Fluir | Sua rotina em conversa</title>
-  <meta name="theme-color" content="#e7f4ed" />
-  <link rel="stylesheet" href="../css/assistente.css" />
-  <link rel="icon" href="../Assets/brand/fluir-symbol.svg" type="image/svg+xml" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#E7F4ED"/>
+  <title>Assistente Fluir | Conversa e organização</title>
+  <link rel="icon" type="image/svg+xml" href="../Assets/brand/fluir-symbol.svg"/>
+  <link rel="stylesheet" href="../css/sidebar.css"/>
+  <link rel="stylesheet" href="../css/mobile.css"/>
+  <link rel="stylesheet" href="../css/assistente.css"/>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="app-header">
-      <a href="dashboard.html" class="brand" aria-label="Voltar para o dashboard">
-        <img src="../Assets/brand/fluir-symbol.svg" alt="" width="40" height="40" />
-        <span><strong>Fluir</strong><small>Assistente pessoal</small></span>
-      </a>
-      <div class="header-right"><span id="experienceLabel" class="status-label">Prévia para avaliação</span><a href="dashboard.html" class="back-link">Voltar ao painel</a></div>
-    </header>
-
-    <div class="workspace">
-      <aside class="side-panel">
-        <p class="eyebrow">SUA EXPERIÊNCIA</p>
-        <h2>Do seu jeito</h2>
-        <p class="helper">O Fluir pode conversar, oferecer escolhas ou combinar os dois jeitos.</p>
-
-        <fieldset class="mode-group" id="chatModes">
+  <div class="assistant-page">
+    <aside class="sidebar" data-shared-sidebar data-sidebar-quote="Um passo de cada vez.">
+      <div class="assistant-sidebar-context" data-sidebar-context>
+        <p>Assistente Fluir</p>
+        <small>Converse, organize e confirme registros sem sair da sua rotina.</small>
+      </div>
+    </aside>
+    <section class="assistant-content">
+      <header class="assistant-header">
+        <a class="assistant-brand" href="dashboard.html" aria-label="Voltar ao painel do Fluir">
+          <img src="../Assets/brand/fluir-symbol.svg" width="37" height="37" alt=""/>
+          <span><strong>Fluir</strong><small>Seu assistente pessoal</small></span>
+        </a>
+        <div class="assistant-header-links">
+          <span class="status-label" id="experienceLabel">Assistente da sua conta</span>
+          <a class="back-link" id="assistantBackLink" href="dashboard.html">Voltar ao painel</a>
+        </div>
+      </header>
+      <main class="chat-panel" aria-label="Chat do Assistente Fluir">
+        <div class="chat-top">
+          <span class="eyebrow" id="assistantEyebrow">SEU ESPAÇO DE CONVERSA</span>
+          <h1>Como posso ajudar hoje?</h1>
+          <p id="welcomeText">Converse normalmente ou me peça ajuda com suas tarefas e registros.</p>
+          <p id="storageNotice" class="storage-notice" role="status"></p>
+        </div>
+        <details class="assistant-options">
+          <summary><span aria-hidden="true">⚙</span> Preferências da conversa</summary>
+          <div class="assistant-options-content">
+            <fieldset class="mode-group" id="chatModes">
           <legend>Forma de conversar</legend>
           <label><input type="radio" name="chatMode" value="mixed" checked /> <span><strong>Misto</strong><small>Conversa e escolhas</small></span></label>
           <label><input type="radio" name="chatMode" value="free" /> <span><strong>Livre</strong><small>Escreva naturalmente</small></span></label>
@@ -42,23 +57,18 @@
 
         <label class="ai-opt-in"><input id="useGenerativeAI" type="checkbox" /><span>Permitir envio das minhas mensagens para IA externa, se configurada <small>Desligado por padrão. O Fluir continua oferecendo comandos guiados sem isso.</small></span></label>
 
-        <div class="side-divider"></div>
-        <div class="side-heading"><strong>Áreas do Fluir</strong><small>Explore as possibilidades</small></div>
-        <div id="modulesNav" class="module-nav"></div>
-      </aside>
-
-      <main class="chat-panel">
-        <div class="chat-top">
-          <span class="eyebrow">ASSISTENTE FLUIR · VERSÃO DE AVALIAÇÃO</span>
-          <h1>Organizar a vida pode começar com uma conversa.</h1>
-          <p id="welcomeText">Você pode me contar como está se sentindo ou pedir ajuda para organizar seu dia.</p>
-          <p id="storageNotice" class="storage-notice" role="status"></p>
-        </div>
+        
+            <div class="module-options">
+              <strong>Ir para outro módulo</strong>
+              <div id="modulesNav" class="module-nav"></div>
+            </div>
+          </div>
+        </details>
         <div class="chat-log" id="messages" role="log" aria-label="Conversa com o assistente" aria-live="polite"></div>
         <div id="pendingActions" class="pending-actions" aria-live="polite"></div>
         <details class="stored-list">
-          <summary>Meus registros confirmados no assistente</summary>
-          <p class="stored-help">Os registros da conta são consultados no backend. Tarefas também aparecem no módulo Tarefas; outras categorias ainda estão em integração com as telas específicas.</p>
+          <summary>Registros confirmados</summary>
+          <p class="stored-help">Os registros da conta são consultados no PostgreSQL. Tarefas também aparecem em Tarefas; outras categorias ainda estão sendo integradas às telas específicas.</p>
           <button type="button" id="reloadRecords" class="reload-records">Atualizar registros</button>
           <div id="savedRecords" aria-live="polite"></div>
         </details>
@@ -77,22 +87,26 @@
             <button type="button" data-action="modules">Explorar módulos</button>
           </div>
         </section>
+        
         <form id="assistantForm" class="composer">
           <label for="messageInput" class="visually-hidden">Sua mensagem</label>
-          <textarea id="messageInput" rows="2" maxlength="1200" placeholder="Ex.: Hoje estou cansado, anote meu humor e crie a tarefa de estudar biologia."></textarea>
+          <textarea id="messageInput" rows="2" maxlength="1200" placeholder="Pode conversar comigo ou dizer o que deseja organizar."></textarea>
           <div class="composer-bottom">
-            <span>Eu só registro algo depois da sua confirmação.</span>
+            <span>Nenhum registro é salvo sem confirmação.</span>
             <button type="submit" id="sendButton">Enviar <span aria-hidden="true">↗</span></button>
           </div>
         </form>
         <div class="chat-footer">
-          <button type="button" id="clearConversation">Limpar conversa neste dispositivo</button>
-          <a href="login.html" id="signInLink">Entrar na minha conta</a>
+          <button type="button" id="clearConversation">Limpar conversa</button>
+          <a href="login.html" id="signInLink" hidden>Entrar na minha conta</a>
         </div>
       </main>
-    </div>
+    </section>
   </div>
+  <script src="../js/app-sections.js"></script>
+  <script src="../js/sidebar.js"></script>
   <script defer src="../js/assistente-core.js"></script>
   <script defer src="../js/assistente.js"></script>
+  <script src="../js/mobile.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - alex/mobile-ia-avaliacao-integrada-19-11
+      - alex/refino-ux-ia-mobile-19-11
   workflow_dispatch:
 
 permissions:
@@ -51,8 +52,8 @@ jobs:
         working-directory: backend
         run: |
           set -euo pipefail
-          chmod +x mvnw
-          ./mvnw --batch-mode -DskipTests spring-boot:run > /tmp/fluir-e2e-backend.log 2>&1 &
+          # Ubuntu runner ja possui Maven; evita o download intermitente do wrapper.
+          mvn --batch-mode -DskipTests spring-boot:run > /tmp/fluir-e2e-backend.log 2>&1 &
           echo $! > /tmp/fluir-e2e-backend.pid
           for i in $(seq 1 150); do
             if curl -sfS --max-time 2 http://127.0.0.1:8080/api/usuarios/teste > /dev/null 2>&1; then

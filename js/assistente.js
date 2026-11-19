@@ -19,11 +19,20 @@
     try { return JSON.parse(store.getItem(key)||"null"); } catch { return null; }
   }
   const user = readJSON(sessionStorage, "fluir-user");
-  const authenticated = Boolean(user && Number.isInteger(Number(user.id)) && user.token && !params.has("demo"));
+  const explicitDemo = params.get("demo") === "1";
+  const authenticated = Boolean(user && Number.isInteger(Number(user.id)) && user.token && !explicitDemo);
+  if (!authenticated && !explicitDemo) { window.location.replace("login.html"); return; }
   const userId = authenticated ? Number(user.id) : null;
-  const demo = !authenticated;
+  const demo = explicitDemo;
+  document.body.classList.add(demo ? "assistant-demo" : "assistant-account");
+  if (params.get("widget") === "1") document.body.classList.add("assistant-widget-mode");
+  const back = document.getElementById("assistantBackLink");
+  if (demo && back) { back.href = "dashboard.html?demo=1"; back.textContent = "Voltar à demonstração"; }
+  const eyebrow = document.getElementById("assistantEyebrow");
+  if (eyebrow) eyebrow.textContent = demo ? "ESPAÇO DE DEMONSTRAÇÃO · DADOS FICTÍCIOS" : "ASSISTENTE DA SUA CONTA";
   const storageKey = "fluir-assistente-demo-v1";
-  let state = demo ? readJSON(localStorage, storageKey) : {messages:[],records:[]};
+  const chatSessionKey = "fluir-assistente-chat-"+(authenticated?userId:"demo");
+  let state = demo ? readJSON(localStorage, storageKey) : {messages:readJSON(sessionStorage,chatSessionKey)||[],records:[]};
   if (!state || !Array.isArray(state.messages) || !Array.isArray(state.records)) state = {messages:[],records:[]};
   const pending = new Map();
   const sensitiveTypes = new Set(["diary","finances","physicalHealth","menstrualCycle"]);
@@ -105,7 +114,9 @@
       output.appendChild(line);
     }
   }
-  let conversationMode = "mixed";
+  const modeKey = "fluir-assistente-modo-"+(authenticated?userId:"demo");
+  let conversationMode = ["free","guided","mixed"].includes(localStorage.getItem(modeKey)) ? localStorage.getItem(modeKey) : "mixed";
+  let pendingConversation = null;
   let tone = "calmo";
   const onboarding = authenticated ? readJSON(localStorage, "fluir-setup") : null;
   if (onboarding && String(onboarding.usuarioId) === String(userId)) {
@@ -121,6 +132,7 @@
       state.messages=state.messages.slice(-70);
       state.records=state.records.slice(-200);
       if(demo)localStorage.setItem(storageKey,JSON.stringify(state));
+      else sessionStorage.setItem(chatSessionKey,JSON.stringify(state.messages));
       return true;
     } catch (error) {
       console.warn("Armazenamento do assistente indisponível.",error);
@@ -240,15 +252,12 @@
 
   function helperReply(text) {
     const query=Core.normalize(text);
-    if (/(relat[oó]rio|resumo|estat[ií]stica)/.test(query)) return showReport();
+    if (/(relatorio|resumo|estatistica)/.test(query)) return showReport();
     if (/(modulo|modulos|area|funcionalidade)/.test(query)) {
-      return "Posso orientar em "+Core.ROUTES.map(item=>item[0]).join(", ")+". Escolha uma área no painel lateral para continuar. Na prévia, a navegação real exige login.";
+      return "Você pode navegar entre "+Core.ROUTES.map(item=>item[0]).join(", ")+
+        (demo?". Os registros desta demonstração ficam separados da sua conta.":". Use o menu do Fluir para abrir o módulo desejado.");
     }
-    if (/(como voce funciona|o que voce faz|ajuda|socorro|ola|oi\b|bom dia|boa tarde)/.test(query)) {
-      return Core.messageForTone(tone,"welcome")+" Posso reconhecer pedidos simples em uma mensagem, como humor, disposição e tarefas. Todo registro precisa ser confirmado.";
-    }
-    return Core.messageForTone(tone,"empty")+
-      " Se quiser registrar algo, tente: 'Estou cansado, crie uma tarefa de revisar química'. Em pedidos mais complexos, posso ajudar a organizar os próximos passos, mas esta prévia ainda não interpreta tudo como uma IA generativa.";
+    return Core.conversationReply(text,tone);
   }
 
   async function tryGenerative(message) {
@@ -269,14 +278,75 @@
     finally {clearTimeout(timer);}
   }
 
+  function clearConversationChoice() {
+    const old=document.getElementById("conversationChoice");
+    if(old)old.remove();
+  }
+
+  function askIfConversation(message,actions) {
+    pendingConversation={message,actions};
+    clearConversationChoice();
+    bubble("assistant","Notei que você está me contando algo, mas não necessariamente pedindo para registrar. Quer só conversar ou prefere guardar um registro disso?","Nada foi salvo");
+    if (conversationMode === "free") {
+      bubble("assistant","Pode escrever 'só conversar' ou 'quero registrar'.","Conversa livre");
+      return;
+    }
+    const wrap=document.createElement("div");
+    wrap.id="conversationChoice";
+    wrap.className="conversation-options";
+    const chat=document.createElement("button");
+    chat.type="button";chat.textContent="Só conversar";
+    const save=document.createElement("button");
+    save.type="button";save.textContent="Quero registrar";
+    function decide(record) {
+      clearConversationChoice();
+      const pendingItem=pendingConversation;
+      pendingConversation=null;
+      if(!pendingItem)return;
+      if(record){
+        bubble("assistant",Core.messageForTone(tone,"confirm"),"Registro proposto");
+        showActions(pendingItem.actions);
+      }else{
+        bubble("assistant",Core.conversationReply(pendingItem.message,tone),"Conversa, sem registro");
+      }
+    }
+    chat.addEventListener("click",()=>decide(false));
+    save.addEventListener("click",()=>decide(true));
+    wrap.append(chat,save);
+    elements.pending.prepend(wrap);
+  }
+
   async function handleMessage(text) {
     const message=String(text||"").trim();
-    if(!message) return;
+    if(!message)return;
     bubble("user",message,"");
     elements.input.value="";
+    const normalized=Core.normalize(message);
+    if(pendingConversation) {
+      if (/\b(quero registrar|pode registrar|registrar|anotar|salvar|sim,? registra)\b/.test(normalized)) {
+        const actions=pendingConversation.actions;
+        pendingConversation=null;clearConversationChoice();
+        bubble("assistant",Core.messageForTone(tone,"confirm"),"Confirme cada item");
+        showActions(actions);
+        return;
+      }
+      if (/\b(so conversar|so falar|conversar|nao registrar|sem registrar)\b/.test(normalized)) {
+        const previous=pendingConversation.message;
+        pendingConversation=null;clearConversationChoice();
+        bubble("assistant",Core.conversationReply(previous,tone),"Conversa, sem registro");
+        return;
+      }
+      pendingConversation=null;
+      clearConversationChoice();
+    }
+    const actions=Core.parseIntent(message);
+    const explicit=Core.isExplicitRecordRequest(message);
+    if(actions.length && !explicit){
+      askIfConversation(message,actions);
+      return;
+    }
     let remoteAttempted=false;
-    // A IA externa recebe somente a mensagem enviada voluntariamente e
-    // sempre devolve PROPOSTAS. A gravação continua em confirmAction().
+    // IA externa somente com consentimento; modelos nunca gravam registros automaticamente.
     if(authenticated && elements.ai.checked){
       remoteAttempted=true;
       try{
@@ -286,23 +356,26 @@
         const proposals=Array.isArray(result.acoes)?result.acoes.slice(0,8)
           .filter(x=>x&&typeof x.type==="string"&&typeof x.value==="string"&&typeof x.label==="string")
           .map(x=>({type:x.type,value:x.value.slice(0,1200),label:x.label.slice(0,160)})):[];
-        bubble("assistant",result.resposta||Core.messageForTone(tone,"confirm"),
-          "IA generativa • proposta, não registro salvo");
+        if(proposals.length && !explicit){
+          askIfConversation(message,proposals);
+          return;
+        }
+        bubble("assistant",result.resposta|| (proposals.length?Core.messageForTone(tone,"confirm"):Core.conversationReply(message,tone)),
+          "IA online • nenhum registro automático");
         if(proposals.length)showActions(proposals);
         return;
       }catch(error){
-        bubble("assistant","IA externa indisponível nesta tentativa. Vou tentar interpretar com as regras locais, sem enviar outros dados.",
+        bubble("assistant","A conversa online está indisponível agora. Podemos continuar pelo modo guiado sem enviar mais informações.",
           "Modo de contingência • "+error.message);
       }
     }
-    const actions=Core.parseIntent(message);
-    if(actions.length) {
-      bubble("assistant",Core.messageForTone(tone,"confirm")+" Identifiquei "+actions.length+" item(ns) na mensagem.","Interpretação guiada • requer confirmação");
+    if(actions.length){
+      bubble("assistant",Core.messageForTone(tone,"confirm")+" Confira os itens antes de salvar.","Confirmação obrigatória");
       showActions(actions);
       return;
     }
     const generated=remoteAttempted?null:await tryGenerative(message);
-    bubble("assistant",generated||helperReply(message),generated?"IA generativa":"Modo guiado • sem IA externa");
+    bubble("assistant",generated||helperReply(message),generated?"IA online":"Conversa guiada • sem IA externa");
   }
 
   const quickGroups={
@@ -370,6 +443,7 @@
 
   function updateMode(){
     elements.form.classList.toggle("hidden",conversationMode==="guided");
+    if (conversationMode==="free") clearConversationChoice();
     elements.choices.classList.toggle("hidden",conversationMode==="free");
   }
 
@@ -378,7 +452,7 @@
     if(event.key==="Enter" && !event.shiftKey){event.preventDefault();handleMessage(elements.input.value);}
   });
   elements.choices.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>handleShortcut(btn.dataset.action)));
-  elements.modeGroup.addEventListener("change",(event)=>{if(event.target.name!=="chatMode")return;conversationMode=event.target.value;updateMode();});
+  elements.modeGroup.addEventListener("change",(event)=>{if(event.target.name!=="chatMode")return;conversationMode=event.target.value;localStorage.setItem(modeKey,conversationMode);updateMode();});
   elements.tone.addEventListener("change",()=>{
     tone=elements.tone.value;
     bubble("assistant","Vou usar o estilo de comunicação selecionado durante esta conversa.","Preferência de comunicação");
@@ -386,19 +460,20 @@
   elements.clear.addEventListener("click",()=>{
     if (!window.confirm(authenticated?"Limpar apenas a conversa deste dispositivo? Seus registros no servidor serão preservados.":"Limpar conversa e registros desta demonstração local?"))return;
     state=authenticated?{messages:[],records:state.records}:{messages:[],records:[]};pending.clear();
+    pendingConversation=null;clearConversationChoice();
     elements.pending.replaceChildren();elements.messages.replaceChildren();
     persist();
     bubble("assistant",Core.messageForTone(tone,"welcome"),"Histórico reiniciado");
   });
 
-  elements.modeLabel.textContent=demo?"Demonstração local":"Prévia vinculada à conta";
+  elements.modeLabel.textContent=demo?"Demonstração · sem backend":"Assistente da sua conta";
   elements.notice.textContent=demo?
     "Modo demonstração sem conta: use somente dados fictícios. Nenhum registro será enviado ao servidor.":"Conectando ao banco de registros do Fluir...";
   elements.ai.disabled=demo;
   if(demo)elements.ai.closest("label").title="A IA externa requer uma conta autenticada e uma chave configurada no servidor.";
   elements.login.hidden=!demo;
   elements.tone.value=tone;
-  elements.welcome.textContent=demo?"Teste o tom, os três modos e os registros guiados antes de conectar contas reais.":"Conte o que precisa. Vou seguir suas preferências do onboarding e pedir confirmação antes de registrar.";
+  elements.welcome.textContent=demo?"Aqui você pode testar conversas e registros fictícios, sem usar sua conta.":"Pode conversar normalmente. Se eu perceber algo que pode virar registro, perguntarei antes de salvar.";
   showModules();
   updateMode();
   if(authenticated)loadRealRecords(); else renderSavedRecords();
