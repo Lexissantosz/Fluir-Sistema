@@ -15,7 +15,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET" || req.mode === "navigate") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
-  if (!/\\.(?:css|js|svg|png|jpe?g|webp|woff2?|ico)$/i.test(url.pathname)) return;
+  if (!/\.(?:css|js|svg|png|jpe?g|webp|woff2?|ico)$/i.test(url.pathname)) return;
   event.respondWith(fetch(req).then((response) => {
     if (response.ok && response.type === "basic") {
       const copy = response.clone();
