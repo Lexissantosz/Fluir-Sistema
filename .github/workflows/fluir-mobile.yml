@@ -95,4 +95,4 @@ jobs:
           ./mvnw --batch-mode -DskipTests package
       - name: Testar isolamento das tarefas entre usuarios
         working-directory: backend
-        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest test
+        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test
