@@ -22,10 +22,89 @@
   const authenticated = Boolean(user && Number.isInteger(Number(user.id)) && user.token && !params.has("demo"));
   const userId = authenticated ? Number(user.id) : null;
   const demo = !authenticated;
-  const storageKey = demo ? "fluir-assistente-demo-v1" : "fluir-assistente-usuario-"+userId+"-v1";
-  let state = readJSON(localStorage, storageKey);
+  const storageKey = "fluir-assistente-demo-v1";
+  let state = demo ? readJSON(localStorage, storageKey) : {messages:[],records:[]};
   if (!state || !Array.isArray(state.messages) || !Array.isArray(state.records)) state = {messages:[],records:[]};
   const pending = new Map();
+  const sensitiveTypes = new Set(["diary","finances","physicalHealth","menstrualCycle"]);
+  const BASE_API = "https://fluir-sistema.onrender.com/api/assistente";
+
+  async function apiRequest(path,options={}) {
+    if(!authenticated)throw new Error("É necessário entrar na sua conta Fluir.");
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(),30000);
+    try {
+      const response = await fetch(BASE_API+path,{
+        ...options,
+        headers:{"Authorization":"Bearer "+user.token,"Content-Type":"application/json",...(options.headers||{})},
+        signal:controller.signal
+      });
+      if(response.status === 401 || response.status === 403) throw new Error("Sessão expirada ou acesso negado. Entre novamente.");
+      if(response.status === 204) return null;
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(data.mensagem||"O servidor recusou a operação (HTTP "+response.status+").");
+      return data;
+    } catch(error) {
+      if(error.name==="AbortError")throw new Error("Servidor não respondeu em 30 segundos. Nenhum dado foi confirmado.");
+      throw error;
+    } finally {clearTimeout(timer);}
+  }
+
+  function mapServerRecord(item) {
+    return {id:item.id,type:item.tipo,value:item.conteudo,label:item.rotulo,at:item.criadoEm,
+      tarefaId:item.tarefaId,syncStatus:"server"};
+  }
+
+  async function loadRealRecords() {
+    if(!authenticated)return;
+    const output=document.getElementById("savedRecords");
+    if(output)output.textContent="Consultando os registros da sua conta...";
+    try{
+      const data=await apiRequest("/registros");
+      if(!Array.isArray(data))throw new Error("Resposta de registros inválida.");
+      state.records=data.map(mapServerRecord);
+      renderSavedRecords();
+      elements.notice.textContent="Conectado ao servidor. Registros do assistente armazenados na sua conta Fluir. Tarefas também entram no módulo Tarefas.";
+    }catch(error){
+      elements.notice.textContent="Falha ao consultar seus registros no servidor: "+error.message;
+      if(output)output.textContent="Não foi possível carregar. Use 'Atualizar registros' para tentar novamente.";
+    }
+  }
+
+  function renderSavedRecords() {
+    const output=document.getElementById("savedRecords");
+    if(!output)return;
+    output.replaceChildren();
+    if(!state.records.length) {output.textContent="Nenhum registro confirmado ainda.";return;}
+    for(const rec of state.records.slice(0,20)){
+      const line=document.createElement("div");
+      line.className="saved-line";
+      const summary=document.createElement("span");
+      summary.textContent=Core.describe(rec);
+      line.appendChild(summary);
+      if(authenticated && rec.syncStatus==="server"){
+        const remove=document.createElement("button");
+        remove.type="button";remove.textContent="Excluir";
+        remove.setAttribute("aria-label","Excluir "+Core.describe(rec));
+        remove.addEventListener("click",async()=>{
+          const note = rec.type==="task" ? "Isso também excluirá a tarefa correspondente. " : "";
+          if(!window.confirm(note+"Deseja realmente excluir este registro da sua conta?"))return;
+          remove.disabled=true;
+          try{
+            await apiRequest("/registros/"+encodeURIComponent(rec.id),{method:"DELETE"});
+            state.records=state.records.filter(item=>item.id!==rec.id);
+            renderSavedRecords();
+            bubble("assistant","Registro excluído da sua conta.","Exclusão confirmada pelo servidor");
+          }catch(error){
+            remove.disabled=false;
+            bubble("assistant","Não consegui excluir: "+error.message,"Nenhuma exclusão confirmada");
+          }
+        });
+        line.appendChild(remove);
+      }
+      output.appendChild(line);
+    }
+  }
   let conversationMode = "mixed";
   let tone = "calmo";
   const onboarding = authenticated ? readJSON(localStorage, "fluir-setup") : null;
@@ -41,7 +120,7 @@
     try {
       state.messages=state.messages.slice(-70);
       state.records=state.records.slice(-200);
-      localStorage.setItem(storageKey,JSON.stringify(state));
+      if(demo)localStorage.setItem(storageKey,JSON.stringify(state));
       return true;
     } catch (error) {
       console.warn("Armazenamento do assistente indisponível.",error);
@@ -69,22 +148,34 @@
     }
   }
 
-  function confirmAction(data) {
-    const now=new Date();
-    const record={
-      id:now.getTime()+"-"+Math.random().toString(36).slice(2,8),
-      type:data.type, value:String(data.value).slice(0,500),
-      label:String(data.label).slice(0,150), at:now.toISOString(),
-      // Preview: registros locais NÃO representam sincronização com backend ou outros módulos.
-      syncStatus:"local-preview"
-    };
-    state.records.push(record);
-    if (persist()) {
-      bubble("assistant","Registrado nesta versão de avaliação: "+Core.describe(record)+".\nAinda não foi sincronizado com os demais módulos nem com o servidor.","Salvo somente neste dispositivo");
-    } else {
-      state.records.pop();
-      bubble("assistant","Não consegui salvar este registro. Nenhuma alteração foi confirmada.","Falha local");
+  async function confirmAction(data,clientKey) {
+    if(authenticated){
+      const stored=await apiRequest("/registros",{
+        method:"POST",
+        body:JSON.stringify({tipo:data.type,conteudo:String(data.value).slice(0,1200),
+            rotulo:String(data.label).slice(0,160),chaveCliente:clientKey})
+      });
+      state.records.unshift(mapServerRecord(stored));
+      state.records=state.records.slice(0,50);
+      renderSavedRecords();
+      bubble("assistant","Salvo na sua conta: "+Core.describe(data)+"."
+        +(data.type==="task"?" A tarefa está disponível no módulo Tarefas.":""),
+        "Confirmado pelo backend • PostgreSQL");
+      return true;
     }
+    // Demonstração explícita: não simular gravação na conta real.
+    const now=new Date();
+    const record={id:clientKey,type:data.type,value:String(data.value).slice(0,500),
+      label:String(data.label).slice(0,150),at:now.toISOString(),syncStatus:"local-preview"};
+    state.records.push(record);
+    if(persist()){
+      renderSavedRecords();
+      bubble("assistant","Registrado apenas nesta demonstração: "+Core.describe(record)+
+        ". Não foi enviado ao backend.","Somente prévia local");
+      return true;
+    }
+    state.records.pop();
+    throw new Error("O armazenamento local não está disponível.");
   }
 
   function showActions(actions) {
@@ -105,9 +196,29 @@
       approve.type="button";approve.textContent="Confirmar e registrar";
       const reject=document.createElement("button");
       reject.type="button";reject.textContent="Descartar";reject.className="discard";
-      approve.addEventListener("click",()=>{
+      const clientKey=crypto.randomUUID();
+      if(sensitiveTypes.has(item.type)){
+        const disclosure=document.createElement("label");
+        disclosure.className="sensitive-consent";
+        const consent=document.createElement("input");
+        consent.type="checkbox";
+        const words=document.createElement("span");
+        words.textContent="Confirmo o registro desta informação pessoal na minha conta.";
+        disclosure.append(consent,words);
+        card.appendChild(disclosure);
+        approve.disabled=true;
+        consent.addEventListener("change",()=>approve.disabled=!consent.checked);
+      }
+      approve.addEventListener("click",async()=>{
         if (!pending.has(id)) return;
-        confirmAction(item); pending.delete(id); card.remove();
+        approve.disabled=true;
+        try{
+          await confirmAction(item,clientKey);
+          pending.delete(id);card.remove();
+        }catch(error){
+          bubble("assistant","Não foi possível salvar: "+error.message,"Sem confirmação de gravação");
+          approve.disabled=false;
+        }
       });
       reject.addEventListener("click",()=>{pending.delete(id);card.remove();bubble("assistant","Esse registro foi descartado. Nenhum dado foi salvo.","Sem alterações");});
       controls.append(approve,reject);
@@ -118,12 +229,13 @@
 
   function showReport() {
     const summary=Core.getSummary(state.records);
-    return "Resumo dos registros confirmados nesta prévia:\n"+
+    return "Resumo dos últimos registros confirmados "+(authenticated?"no backend do assistente:":"nesta demonstração:")+"\n"+
       "• Tarefas: "+summary.tasks+"\n"+
       "• Diário: "+summary.diary+"\n"+
       "• Humor: "+summary.moods+" (último: "+summary.lastMood+")\n"+
       "• Disposição: "+summary.energy+" (última: "+summary.lastEnergy+").\n"+
-      "Esses números se referem apenas aos registros feitos aqui neste dispositivo, não ao banco de dados do Fluir.";
+      "• Água: "+summary.water+" | Sono: "+summary.sleep+" | Finanças: "+summary.finances+" | Hábitos: "+summary.habits+"\n"+
+      (authenticated?"Consulta baseada nos últimos 50 registros do assistente no PostgreSQL. Ainda não agrega todos os registros preexistentes nos outros módulos.":"Esta demonstração não consulta sua conta.");
   }
 
   function helperReply(text) {
@@ -215,7 +327,7 @@
 
   function handleShortcut(topic) {
     if (quickGroups[topic]) {presentChoices(topic);return;}
-    if(topic==="report"){bubble("assistant",showReport(),"Resumo local verificado");return;}
+    if(topic==="report"){bubble("assistant",showReport(),authenticated?"Dados do servidor":"Resumo local");return;}
     if(topic==="modules"){bubble("assistant",helperReply("quais módulos existem"),"Catálogo Fluir");return;}
   }
 
@@ -248,7 +360,7 @@
   });
   elements.clear.addEventListener("click",()=>{
     if (!window.confirm("Limpar o histórico e os registros desta prévia neste dispositivo?"))return;
-    state={messages:[],records:[]};pending.clear();
+    state=authenticated?{messages:[],records:state.records}:{messages:[],records:[]};pending.clear();
     elements.pending.replaceChildren();elements.messages.replaceChildren();
     persist();
     bubble("assistant",Core.messageForTone(tone,"welcome"),"Histórico reiniciado");
@@ -256,7 +368,7 @@
 
   elements.modeLabel.textContent=demo?"Demonstração local":"Prévia vinculada à conta";
   elements.notice.textContent=demo?
-    "Modo demonstração: use dados fictícios. Nenhum registro será enviado ao servidor.":"Esta versão salva os registros do assistente somente neste dispositivo. Ainda não os envia para os módulos do Fluir.";
+    "Modo demonstração sem conta: use somente dados fictícios. Nenhum registro será enviado ao servidor.":"Conectando ao banco de registros do Fluir...";
   elements.ai.disabled=demo;
   if(demo)elements.ai.closest("label").title="A IA externa requer uma conta autenticada e uma chave configurada no servidor.";
   elements.login.hidden=!demo;
@@ -264,6 +376,9 @@
   elements.welcome.textContent=demo?"Teste o tom, os três modos e os registros guiados antes de conectar contas reais.":"Conte o que precisa. Vou seguir suas preferências do onboarding e pedir confirmação antes de registrar.";
   showModules();
   updateMode();
+  if(authenticated)loadRealRecords(); else renderSavedRecords();
+  const reload=document.getElementById("reloadRecords");
+  if(reload)reload.addEventListener("click",()=>authenticated?loadRealRecords():renderSavedRecords());
   if(state.messages.length){
     for(const entry of state.messages.slice(-70))bubble(entry.role,entry.text,entry.source,false);
   } else bubble("assistant",Core.messageForTone(tone,"welcome"),"Prévia do assistente");
