@@ -45,8 +45,11 @@ jobs:
         run: |
           npm run prepare:web
           npm run check:web
+          npm run check:auth
       - name: Criar projeto Android nativo
         run: npx cap add android
+      - name: Gerar icones e splash Android com a marca Fluir
+        run: npx capacitor-assets generate --android --assetPath resources --iconBackgroundColor "#E7F4ED" --iconBackgroundColorDark "#172B24" --splashBackgroundColor "#E7F4ED" --splashBackgroundColorDark "#172B24"
       - name: Gerar APK debug
         working-directory: android
         run: |
