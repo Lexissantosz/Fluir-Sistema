@@ -22,7 +22,7 @@ A pasta `www/` e gerada, e `android/` e gerado no runner do GitHub. **Se voce ja
 
 ## iPhone
 
-Depois de aprovar o PR e publicar a alteracao no site oficial, abra `https://fluir-sistema.vercel.app` no Safari do iPhone, toque em Compartilhar e **Adicionar à Tela de Início**. O icone vem do manifest do Fluir. A instalacao e uma PWA, nao um arquivo IPA ou um aplicativo da App Store.
+Depois de aprovar o PR e publicar a alteracao no site oficial, abra `https://fluir-sistema.vercel.app` no Safari do iPhone, toque em Compartilhar e **Adicionar à Tela de Início**. O icone PNG proprio e servido com apple-touch-icon e manifest do Fluir. A instalacao e uma PWA, nao um arquivo IPA ou um aplicativo da App Store.
 
 O service worker guarda **apenas CSS, JavaScript, fontes e imagens publicas**. Nunca armazena HTML, dados de diario, financas, respostas de API ou paginas privadas. Funcionalidades que dependem do backend continuam precisando de internet.
 

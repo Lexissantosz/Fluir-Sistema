@@ -14,6 +14,12 @@
   "lang": "pt-BR",
   "icons": [
     {
+      "src": "/Assets/brand/fluir-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "any"
+    },
+    {
       "src": "/Assets/brand/fluir-symbol.svg",
       "type": "image/svg+xml",
       "sizes": "any",
