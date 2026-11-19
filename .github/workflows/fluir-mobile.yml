@@ -93,8 +93,7 @@ jobs:
       - name: Compilar backend sem conectar ao banco
         working-directory: backend
         run: |
-          chmod +x mvnw
-          ./mvnw --batch-mode -DskipTests package
+          mvn --batch-mode -DskipTests package
       - name: Testar isolamento das tarefas entre usuarios
         working-directory: backend
-        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test
+        run: mvn --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test
