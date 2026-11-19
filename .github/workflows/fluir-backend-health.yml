@@ -1,0 +1,38 @@
+name: Fluir | Diagnostico publico do Backend
+on:
+  push:
+    branches:
+      - alex/diagnostico-backend-19-11
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Consultar endpoint publico sem credenciais
+        id: check
+        shell: bash
+        run: |
+          set +e
+          API='https://fluir-sistema.onrender.com'
+          echo 'Diagnostico do backend Fluir em acesso externo.'
+          curl -sS -L --max-time 110 --connect-timeout 15             -D /tmp/fluir-headers.txt             -o /tmp/fluir-response.txt             -w 'HTTP_CODE=%{http_code}\nTOTAL_SECONDS=%{time_total}\nDNS_SECONDS=%{time_namelookup}\nCONNECT_SECONDS=%{time_connect}\n'             "$API/api/usuarios/teste"
+          exit_code=$?
+          echo "CURL_EXIT_CODE=$exit_code"
+          echo 'Status e tipo de conteudo da resposta:'
+          grep -Ei '^(HTTP/|content-type:|server:)' /tmp/fluir-headers.txt | tail -8 || true
+          echo "HTTP check exit: $exit_code" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+      - name: Verificar CORS Android sem autenticar
+        shell: bash
+        run: |
+          set +e
+          curl -sS -X OPTIONS --max-time 75 --connect-timeout 15             -H 'Origin: https://localhost'             -H 'Access-Control-Request-Method: POST'             -H 'Access-Control-Request-Headers: content-type'             -D /tmp/fluir-cors.txt -o /dev/null             -w 'PREFLIGHT_CODE=%{http_code}\nPREFLIGHT_SECONDS=%{time_total}\n'             'https://fluir-sistema.onrender.com/api/usuarios/login'
+          echo 'Cabecalhos CORS encontrados:'
+          grep -Ei '^(HTTP/|access-control-allow-origin:|access-control-allow-methods:)' /tmp/fluir-cors.txt || true
+          echo 'No navegador, um preflight sem Access-Control-Allow-Origin indica bloqueio do origin Capacitor.'
+          exit 0
