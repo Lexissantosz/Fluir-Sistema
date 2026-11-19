@@ -118,4 +118,4 @@ jobs:
         working-directory: backend
         run: |
           chmod +x mvnw
-          ./mvnw --batch-mode -Dtest=HealthControllerTest test
+          ./mvnw --batch-mode -Dtest=HealthControllerTest,AndroidCorsConfigurationTest test
