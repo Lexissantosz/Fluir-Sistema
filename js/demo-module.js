@@ -580,6 +580,39 @@
     main.querySelectorAll(".header-actions,.notif-wrapper,.profile-wrapper").forEach((node)=>node.remove());
     $$("input[type='file']").forEach((node)=>node.disabled=true);
     injectNavigation();
+    // Links originais dos HTMLs nunca podem abrir uma área autenticada.
+    // Só os módulos permitidos recebem rotas do explorador demonstrativo.
+    const pageToKey = new Map(sections.map((item) => [item.href, item.key]));
+    $("#demoMount a[href]").forEach((link) => {
+      if (link.classList.contains("demo-nav-link")) return;
+      const raw = link.getAttribute("href") || "";
+      const destination = raw.split("?")[0].split("#")[0];
+      if (pageToKey.has(destination)) {
+        const moduleKey = pageToKey.get(destination);
+        link.href = pageUrl(moduleKey);
+        link.classList.add("demo-nav-link");
+        link.dataset.module = moduleKey;
+      } else if (destination === "dashboard.html") {
+        link.href = dashboardUrl();
+        link.classList.add("demo-nav-link");
+        link.dataset.dashboard = "true";
+      } else if (!raw.startsWith("#")) {
+        link.removeAttribute("href");
+        link.tabIndex = 0;
+        link.setAttribute("role", "button");
+        link.title = "Disponível depois de criar uma conta";
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          gate("Esta funcionalidade fica disponível após criar sua conta no Fluir. Quer começar agora?");
+        });
+        link.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            gate("Esta funcionalidade fica disponível após criar sua conta no Fluir. Quer começar agora?");
+          }
+        });
+      }
+    });
     const content=main.querySelector("[class$='-main']") || main;
     addBanner(content);
     populateSummary();
