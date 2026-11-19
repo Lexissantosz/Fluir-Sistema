@@ -17,3 +17,7 @@ CREATE TABLE IF NOT EXISTS assistente_registros (
 );
 CREATE INDEX IF NOT EXISTS idx_assistente_registros_usuario_data
     ON assistente_registros (usuario_id, criado_em DESC);
+
+-- Impedir acesso direto aos dados sensiveis pelo Data API do Supabase.
+-- O Spring Boot usa conexao de servidor; a API publica aplica sessao e ownership.
+ALTER TABLE public.assistente_registros ENABLE ROW LEVEL SECURITY;
