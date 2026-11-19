@@ -6,6 +6,7 @@ on:
       - main
       - alex/android-apk-fluir
       - alex/automacao-android-iphone-19-11
+      - alex/google-login-onboarding-19-11
   pull_request:
     branches: [main]
   workflow_dispatch:
