@@ -1366,3 +1366,12 @@ if (headerPhotoInput) {
 }
 
 renderHeaderProfileDropdown();
+// A demonstracao possui um unico ponto de entrada e apresenta o assistente no painel.
+(function(){
+  const demo = new URLSearchParams(location.search).get("demo") === "1";
+  const card = document.getElementById("demoAssistantCard");
+  if (demo && card) {
+    sessionStorage.setItem("fluir-demo-context", "true");
+    card.hidden = false;
+  }
+})();
