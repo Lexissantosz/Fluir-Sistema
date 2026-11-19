@@ -3,7 +3,9 @@ name: Fluir | Vigia do backend Render
 on:
   schedule:
     # A cada dez minutos, deslocado da virada de hora para reduzir atrasos.
-    - cron: '7,17,27,37,47,57 * * * *'
+    - cron: '7,17,27,37,47,57 * 19-30 11 *'
+    # Completa a noite de 30/11 em horario de Brasilia (UTC-3).
+    - cron: '7,17,27,37,47,57 0-2 1 12 *'
   workflow_dispatch:
   push:
     branches:
