@@ -274,13 +274,34 @@
     if(!message) return;
     bubble("user",message,"");
     elements.input.value="";
+    let remoteAttempted=false;
+    // A IA externa recebe somente a mensagem enviada voluntariamente e
+    // sempre devolve PROPOSTAS. A gravação continua em confirmAction().
+    if(authenticated && elements.ai.checked){
+      remoteAttempted=true;
+      try{
+        const result=await apiRequest("/interpretar",{
+          method:"POST",body:JSON.stringify({mensagem:message})
+        });
+        const proposals=Array.isArray(result.acoes)?result.acoes.slice(0,8)
+          .filter(x=>x&&typeof x.type==="string"&&typeof x.value==="string"&&typeof x.label==="string")
+          .map(x=>({type:x.type,value:x.value.slice(0,1200),label:x.label.slice(0,160)})):[];
+        bubble("assistant",result.resposta||Core.messageForTone(tone,"confirm"),
+          "IA generativa • proposta, não registro salvo");
+        if(proposals.length)showActions(proposals);
+        return;
+      }catch(error){
+        bubble("assistant","IA externa indisponível nesta tentativa. Vou tentar interpretar com as regras locais, sem enviar outros dados.",
+          "Modo de contingência • "+error.message);
+      }
+    }
     const actions=Core.parseIntent(message);
     if(actions.length) {
       bubble("assistant",Core.messageForTone(tone,"confirm")+" Identifiquei "+actions.length+" item(ns) na mensagem.","Interpretação guiada • requer confirmação");
       showActions(actions);
       return;
     }
-    const generated=await tryGenerative(message);
+    const generated=remoteAttempted?null:await tryGenerative(message);
     bubble("assistant",generated||helperReply(message),generated?"IA generativa":"Modo guiado • sem IA externa");
   }
 
