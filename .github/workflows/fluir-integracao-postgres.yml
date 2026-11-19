@@ -1,0 +1,145 @@
+name: Fluir | Integracao real Spring + PostgreSQL
+
+on:
+  push:
+    branches:
+      - alex/mobile-ia-avaliacao-integrada-19-11
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  api-postgres-e2e:
+    name: Cadastro, login, tarefas, IA e isolamento entre usuarios
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: fluir
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d fluir"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_NAME: fluir
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      PORT: '8080'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Iniciar Spring Boot conectado ao PostgreSQL 17 descartavel
+        shell: bash
+        working-directory: backend
+        run: |
+          set -euo pipefail
+          chmod +x mvnw
+          ./mvnw --batch-mode -DskipTests spring-boot:run > /tmp/fluir-e2e-backend.log 2>&1 &
+          echo $! > /tmp/fluir-e2e-backend.pid
+          for i in $(seq 1 150); do
+            if curl -sfS --max-time 2 http://127.0.0.1:8080/api/usuarios/teste > /dev/null 2>&1; then
+              echo "Backend iniciou com PostgreSQL e Flyway V16/V17."
+              exit 0
+            fi
+            if ! kill -0 "$(cat /tmp/fluir-e2e-backend.pid)" 2>/dev/null; then
+              echo "::error::Java encerrou antes de inicializar"; tail -n 90 /tmp/fluir-e2e-backend.log; exit 1
+            fi
+            sleep 2
+          done
+          echo "::error::Backend não iniciou em 300 segundos."
+          tail -n 90 /tmp/fluir-e2e-backend.log
+          exit 1
+      - name: Testes HTTP de ponta a ponta sem dados pessoais
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { randomBytes, randomUUID } from 'node:crypto';
+
+          const api='http://127.0.0.1:8080/api';
+          const email = (i)=>'fluir-e2e-'+randomUUID()+'-'+i+'@example.invalid';
+          async function req(path,method='GET',body=null,token=null){
+            const response=await fetch(api+path,{
+              method, headers:{
+                ...(body?{'Content-Type':'application/json'}:{}),
+                ...(token?{'Authorization':'Bearer '+token}:{})
+              },body:body?JSON.stringify(body):undefined
+            });
+            const text=await response.text();
+            let data;
+            try{data=JSON.parse(text)}catch{data=text}
+            return {status:response.status,data};
+          }
+          async function create(name){
+            const password='E2E-'+randomBytes(16).toString('base64url')+'!aA1';
+            const resp=await req('/usuarios/cadastro','POST',
+              {nome:name,email:email(name),senha:password});
+            assert.equal(resp.status,201,'cadastro precisa retornar 201');
+            assert.ok(resp.data.id&&resp.data.token,'cadastro requer id e sessão');
+            return resp.data;
+          }
+
+          const owner=await create('QA 1');
+          const other=await create('QA 2');
+          const key=randomUUID();
+          const newAction={tipo:'task',conteudo:'Revisar QA de segurança',
+            rotulo:'Revisar QA de segurança',chaveCliente:key};
+
+          const created=await req('/assistente/registros','POST',newAction,owner.token);
+          assert.equal(created.status,201,'registro autorizado');
+          assert.ok(created.data.tarefaId,'tarefa real precisa ter id de tarefa');
+          const repeat=await req('/assistente/registros','POST',newAction,owner.token);
+          assert.equal(repeat.data.id,created.data.id,'idempotência evita tarefa duplicada');
+
+          const ownTasks=await req('/tarefas/usuario/'+owner.id,'GET',null,owner.token);
+          assert.equal(ownTasks.status,200);
+          assert.ok(ownTasks.data.some(t=>t.titulo==='Revisar QA de segurança'));
+          const crossTasks=await req('/tarefas/usuario/'+owner.id,'GET',null,other.token);
+          assert.equal(crossTasks.status,403,'não ler tarefas de terceiros');
+
+          const otherHistory=await req('/assistente/registros','GET',null,other.token);
+          assert.equal(otherHistory.status,200);
+          assert.ok(!otherHistory.data.some(v=>v.id===created.data.id),'registro privado');
+
+          const denyDelete=await req('/assistente/registros/'+created.data.id,'DELETE',null,other.token);
+          assert.equal(denyDelete.status,404,'não excluir registro alheio');
+          const ownHistory=await req('/assistente/registros','GET',null,owner.token);
+          assert.ok(ownHistory.data.some(v=>v.id===created.data.id));
+
+          const deleted=await req('/assistente/registros/'+created.data.id,'DELETE',null,owner.token);
+          assert.equal(deleted.status,204);
+          const after=await req('/tarefas/usuario/'+owner.id,'GET',null,owner.token);
+          assert.ok(!after.data.some(t=>t.titulo==='Revisar QA de segurança'),'exclusão também remove tarefa');
+
+          const mood=await req('/assistente/registros','POST',
+            {tipo:'mood',conteudo:'heavy',rotulo:'Pesado',chaveCliente:randomUUID()},owner.token);
+          assert.equal(mood.status,201);
+          const bad=await req('/assistente/registros','POST',
+            {tipo:'comando-invalido',conteudo:'x',rotulo:'y',chaveCliente:randomUUID()},owner.token);
+          assert.equal(bad.status,400);
+
+          console.log('OK: cadastro, sessões, registros, tarefas reais, autorização, idempotência e exclusão.');
+          NODE
+      - name: Mostrar erros do backend em caso de falha
+        if: failure()
+        shell: bash
+        run: tail -n 100 /tmp/fluir-e2e-backend.log || true
