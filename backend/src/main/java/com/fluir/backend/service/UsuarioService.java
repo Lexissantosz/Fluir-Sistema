@@ -110,7 +110,10 @@ public class UsuarioService {
             });
 
         String token = authSessionService.criarToken(usuario.getId());
-        return UsuarioResponse.fromUsuario(usuario, "Login Google realizado com sucesso", token);
+        UsuarioResponse resposta = UsuarioResponse.fromUsuario(usuario, "Login Google realizado com sucesso", token);
+        resposta.setProvedor("google");
+        resposta.setEmailVerificado(true);
+        return resposta;
     }
 
     @Transactional
@@ -135,8 +138,11 @@ public class UsuarioService {
         });
         usuario.setGoogleSub(identidade.subject());
         usuarioRepository.save(usuario);
-        return UsuarioResponse.fromUsuario(usuario, "Conta Google vinculada com sucesso", 
-                                          authSessionService.criarToken(usuario.getId()));
+        UsuarioResponse resposta = UsuarioResponse.fromUsuario(usuario, "Conta Google vinculada com sucesso",
+                authSessionService.criarToken(usuario.getId()));
+        resposta.setProvedor("google");
+        resposta.setEmailVerificado(true);
+        return resposta;
     }
 
 }
