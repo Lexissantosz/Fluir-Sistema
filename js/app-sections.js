@@ -28,6 +28,12 @@
       type: SECTION_TYPES.CORE
     },
     {
+      key: "assistant",
+      label: "Assistente Fluir",
+      href: "assistente.html",
+      type: SECTION_TYPES.CORE
+    },
+    {
       key: "timeline",
       label: "Timeline",
       href: "timeline.html",
