@@ -361,6 +361,79 @@
     return article;
   }
 
+
+  // ÍCONES OFICIAIS — uma única implementação para todos os módulos.
+  // A versão real usa símbolos antigos + pseudo-elementos CSS. Na prévia,
+  // mantemos o layout original, mas usamos SVG explícito e alinhado.
+  function createDemoIcon(iconName) {
+    const image = document.createElement("img");
+    image.src = "../Assets/icons/navigation/" + iconName + ".svg";
+    image.width = 22;
+    image.height = 22;
+    image.alt = "";
+    image.decoding = "async";
+    image.setAttribute("aria-hidden", "true");
+    return image;
+  }
+
+  function replacePlaceholderIcon(element, iconName, extraClass) {
+    if (!element) return;
+    element.classList.add("demo-svg-icon");
+    if (extraClass) element.classList.add(extraClass);
+    element.replaceChildren(createDemoIcon(iconName));
+    element.setAttribute("aria-hidden", "true");
+  }
+
+  function normalizePageIcons() {
+    const currentIcon = iconFiles[key] || "layout-dashboard";
+    $$("main .title-left > .page-icon, main .page-title > .title-icon, main .heading-icon").forEach(
+      (element) => replacePlaceholderIcon(element, currentIcon, "demo-page-icon")
+    );
+
+    if (key === "achievements") {
+      const summaryIcons = ["trophy", "circle-check", "repeat-2", "sparkles"];
+      $$(".achievement-summary article > span:first-child").forEach((element, index) => {
+        replacePlaceholderIcon(element, summaryIcons[index] || "trophy", "demo-stat-icon");
+      });
+      replacePlaceholderIcon($(".featured-achievement .featured-icon"), "trophy", "demo-featured-icon");
+    }
+  }
+
+  function achievementStyleCard(row, index) {
+    const unlocked = row[3].includes("unlocked");
+    const card = document.createElement("article");
+    card.className = "achievement-card demo-achievement-card " + (unlocked ? "unlocked" : "locked");
+    card.dataset.filter = row[3];
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", "Visualizar conquista: " + row[0]);
+
+    const icon = document.createElement("span");
+    icon.className = "achievement-icon demo-svg-icon demo-achievement-icon";
+    icon.setAttribute("aria-hidden", "true");
+    const category = (row[3].split(" ").find((tag) => iconFiles[tag]) || "achievements");
+    icon.appendChild(createDemoIcon(iconFiles[category] || "trophy"));
+
+    const title = document.createElement("h3");
+    title.textContent = row[0];
+    const description = document.createElement("p");
+    description.textContent = row[1];
+    const status = document.createElement("span");
+    status.className = "achievement-status";
+    status.textContent = unlocked ? "Conquistada" : "Em andamento";
+    card.append(icon, title, description, status);
+
+    const show = () => showAchievement(row);
+    card.addEventListener("click", show);
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        show();
+      }
+    });
+    return card;
+  }
+
   function cardFor(row,index) {
     const card=document.createElement("article");
     card.className="demo-record";
@@ -375,7 +448,11 @@
       timeline: "history", achievements: "trophy"
     };
     const markerImage = document.createElement("img");
-    markerImage.src = "../Assets/icons/navigation/" + markerIcons[key] + ".svg";
+    const markerType = key === "timeline"
+      ? (row[0] === "Hidratação" ? "water" : row[3])
+      : key;
+    markerImage.src = "../Assets/icons/navigation/" +
+      (markerIcons[markerType] || markerIcons[key] || "layout-dashboard") + ".svg";
     markerImage.width = 19;
     markerImage.height = 19;
     markerImage.alt = "";
@@ -432,7 +509,11 @@
     }
     if(target) {
       target.replaceChildren();
-      (entries[key]||[]).forEach((row,index)=>target.append(originalStyleCard(row,index)||cardFor(row,index)));
+      (entries[key]||[]).forEach((row,index)=>target.append(
+        key === "achievements"
+          ? achievementStyleCard(row,index)
+          : (originalStyleCard(row,index) || cardFor(row,index))
+      ));
       target.classList.add("demo-populated");
     }
     const featured=$("#featuredTitle");
@@ -469,7 +550,7 @@
 
   function filterRecords(filter) {
     currentFilter=filter||"all";
-    const records=$$(".demo-populated .demo-record, .demo-populated .demo-real-card");
+    const records=$$(".demo-populated .demo-record, .demo-populated .demo-real-card, .demo-populated .demo-achievement-card");
     const normalized = currentFilter;
     records.forEach((record)=>{
       const tags=(record.dataset.filter||"").split(" ");
@@ -737,6 +818,7 @@
     });
     const content=main.querySelector("[class$='-main']") || main;
     addBanner(content);
+    normalizePageIcons();
     populateSummary();
     populateRecords();
     setupMobileNavigation();
