@@ -2042,3 +2042,12 @@ body.dark .preview {
   transform: translateY(-1px);
   background: var(--card-bg);
 }
+
+/* Google Sign-In fica invisivel ate a configuracao OAuth real estar ativa. */
+.google-auth-slot { margin: 15px 0 18px; text-align: center; }
+.google-auth-divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 13px; color: #636e69; font-size: .84rem; }
+.google-auth-divider::before, .google-auth-divider::after { content: ""; height: 1px; background: rgba(100,120,108,.22); flex: 1; }
+.google-auth-button { display: flex; justify-content: center; width: 100%; min-height: 43px; }
+.google-auth-native { width: 100%; min-height: 46px; border: 1px solid #c6d5cf; background: #fff; color: #25372f; border-radius: 12px; cursor: pointer; font-weight: 700; }
+.google-auth-native:disabled { opacity: .6; cursor: progress; }
+.google-auth-message { font-size: .84rem; line-height: 1.45; margin: 8px 0; color: #686868; }
