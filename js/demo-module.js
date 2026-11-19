@@ -142,10 +142,12 @@
       button.title = next === "dark" ? "Ativar tema claro" : "Ativar tema escuro";
     });
     // Apenas em memória: a URL transporta a escolha entre páginas demonstrativas.
-    $$(".demo-nav-link").forEach((link) => {
-      if (link.dataset.module) link.href = pageUrl(link.dataset.module,next);
-      else if (link.dataset.dashboard === "true") link.href =
-        "dashboard.html?demo=1&theme=" + next;
+    $(".demo-nav-link").forEach((link) => {
+      if (link.dataset.dashboard === "true") {
+        link.href = "dashboard.html?demo=1&theme=" + next;
+      } else if (link.dataset.module) {
+        link.href = pageUrl(link.dataset.module,next);
+      }
     });
   }
 
@@ -295,6 +297,17 @@
       water:"#waterMiniTimeline"
     };
     const target=$(selectors[key]);
+    if(key==="timeline") {
+      // O HTML original possui exemplos fixos com datas antigas.
+      // Mantemos apenas registros atuais e inteiramente fictícios.
+      $(".timeline-day").forEach((day,index) => {
+        if(index>0)day.remove();
+        else {
+          const title=day.querySelector("h4");
+          if(title)title.textContent="Exemplos de hoje";
+        }
+      });
+    }
     if(target) {
       target.replaceChildren();
       (entries[key]||[]).forEach((row,index)=>target.append(cardFor(row,index)));
@@ -439,6 +452,13 @@
       }
       return;
     }
+    if(key==="water" &&
+       (button.matches("[data-water-amount]") ||
+        /^(addCup|removeCup|resetWater)/.test(button.id))) {
+      event.preventDefault();
+      gate("Você não pode adicionar ou retirar água aqui, pois é apenas uma demonstração. Quer criar sua conta?");
+      return;
+    }
     if(isCreateButton(button)) {
       event.preventDefault();
       openForm();
@@ -567,6 +587,7 @@
     setupMobileNavigation();
     setupEvents();
     setTheme(theme);
+    if(params.get("open")==="1")openForm();
     // Identifica de forma honesta os dados demonstrativos.
     document.body.dataset.demoModule=key;
     console.info("Fluir: explorador visual isolado, módulo",key);
