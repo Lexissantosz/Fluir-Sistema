@@ -481,3 +481,231 @@ body.demo-module-only .reminder-list {
     grid-template-columns: minmax(0,1fr) !important;
   }
 }
+
+
+/* ===========================================================
+   Revisão da origem: não misturar pictogramas de texto,
+   máscaras ::before e SVGs na mesma caixa.
+   A correção existe SOMENTE no explorador demonstrativo.
+   =========================================================== */
+body.demo-module-only .demo-svg-icon {
+  box-sizing: border-box;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto;
+  padding: 0;
+  line-height: 1;
+  font-size: 0 !important;
+  text-indent: 0;
+  overflow: hidden;
+}
+body.demo-module-only .demo-svg-icon::before,
+body.demo-module-only .demo-svg-icon::after {
+  content: none !important;
+  display: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+}
+body.demo-module-only .demo-svg-icon > img {
+  display: block !important;
+  position: static !important;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  max-width: none;
+  max-height: none;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  object-fit: contain;
+  opacity: 1;
+}
+body.demo-module-only.dark .demo-svg-icon > img { filter: invert(1); }
+body.demo-module-only .demo-page-icon {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  border-radius: 14px;
+}
+body.demo-module-only .demo-stat-icon {
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px;
+}
+body.demo-module-only .demo-featured-icon {
+  width: 62px !important;
+  height: 62px !important;
+  min-width: 62px !important;
+  min-height: 62px !important;
+  border-radius: 50%;
+}
+body.demo-module-only .demo-achievement-icon {
+  width: 46px !important;
+  height: 46px !important;
+  min-width: 46px !important;
+  min-height: 46px !important;
+  margin: 0 0 12px !important;
+  border-radius: 50%;
+}
+body.demo-module-only .demo-achievement-icon img {
+  width: 22px !important;
+  height: 22px !important;
+}
+body.demo-module-only .demo-achievement-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+body.demo-module-only .demo-achievement-card h3 {
+  margin: 0 0 8px;
+  padding: 0 !important;
+  max-width: 100%;
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+body.demo-module-only .demo-achievement-card p {
+  margin: 0 0 12px;
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+body.demo-module-only .demo-achievement-card .achievement-status {
+  position: static !important;
+  inset: auto !important;
+  align-self: flex-start;
+  max-width: 100%;
+  min-height: 26px;
+  padding: 5px 9px;
+  margin-top: auto;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+}
+body.demo-module-only .demo-achievement-card.locked {
+  opacity: .8;
+}
+body.demo-module-only .demo-achievement-card.locked .demo-achievement-icon {
+  opacity: .65;
+}
+body.demo-module-only .achievement-summary article,
+body.demo-module-only .featured-achievement,
+body.demo-module-only .achievements-grid {
+  min-width: 0;
+}
+body.demo-module-only .featured-achievement > div {
+  min-width: 0;
+}
+body.demo-module-only .featured-achievement h2,
+body.demo-module-only .featured-achievement p {
+  overflow-wrap: anywhere;
+}
+/* Registros fictícios, sem o pseudo-ícone duplicado do sistema tradicional. */
+body.demo-module-only .demo-record-marker {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+body.demo-module-only .demo-record-marker::before,
+body.demo-module-only .demo-record-marker::after {
+  content: none !important;
+  display: none !important;
+}
+body.demo-module-only .demo-record-marker > img {
+  display: block !important;
+  position: static !important;
+  flex: 0 0 auto;
+  width: 19px !important;
+  height: 19px !important;
+  min-width: 19px;
+  min-height: 19px;
+  max-width: 19px;
+  max-height: 19px;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  object-fit: contain;
+}
+body.demo-module-only .timeline-page .event-list > .demo-record {
+  display: flex;
+  align-items: flex-start;
+}
+/* Mantém a estrutura dos registros em 2 colunas sem invasões
+   das definições de grid próprias dos eventos reais. */
+@media (max-width: 760px) {
+  body.demo-module-only .title-left {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    min-width: 0;
+  }
+  body.demo-module-only .title-left > div { min-width: 0; flex: 1 1 auto; }
+  body.demo-module-only .demo-page-icon {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  body.demo-module-only .timeline-page .event-list > .demo-record {
+    display: grid !important;
+    grid-template-columns: 32px minmax(0,1fr) !important;
+    gap: 8px 10px !important;
+  }
+  body.demo-module-only .timeline-page .event-list > .demo-record .demo-record-tag {
+    grid-column: 2;
+    justify-self: start;
+  }
+  body.demo-module-only .achievements-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 10px !important;
+  }
+  body.demo-module-only .demo-achievement-card {
+    min-height: 205px;
+    padding: 12px;
+    border-radius: 15px;
+  }
+  body.demo-module-only .demo-achievement-card h3 {
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  body.demo-module-only .demo-achievement-card p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  body.demo-module-only .featured-achievement {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+  body.demo-module-only .demo-featured-icon {
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+  }
+  body.demo-module-only .featured-achievement h2 {
+    font-size: clamp(18px,5.5vw,23px);
+    line-height: 1.2;
+  }
+  body.demo-module-only .achievement-summary article {
+    min-width: 0;
+    padding: 12px !important;
+  }
+  body.demo-module-only .achievement-summary article strong {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 340px) {
+  body.demo-module-only .achievements-grid {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+}
