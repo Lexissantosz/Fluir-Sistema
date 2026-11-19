@@ -34,8 +34,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - name: Preparar Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Verificar Android SDK do runner
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME/platforms"
+          test -d "$ANDROID_HOME/build-tools"
       - name: Instalar dependencias Capacitor
         run: npm install --no-audit --no-fund
       - name: Preparar paginas e validar PWA
