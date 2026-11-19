@@ -94,6 +94,11 @@ function preencherDadosDaConta() {
     }
 
     const usuario = JSON.parse(usuarioSalvo);
+    const emailNotice = document.getElementById("verifiedEmailNotice");
+    if (emailNotice && usuario?.provedor === "google" && usuario?.emailVerificado === true) {
+      emailNotice.textContent = "✓ E-mail verificado pelo Google: " + (usuario.email || "");
+      emailNotice.hidden = false;
+    }
     const nameField = document.getElementById("userName");
 
     if (nameField && usuario?.nome && !nameField.value.trim()) {
