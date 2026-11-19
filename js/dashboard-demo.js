@@ -227,6 +227,12 @@
         const arrow = document.createElement("span");
         arrow.className = "demo-card-arrow";
         arrow.setAttribute("aria-hidden", "true");
+        const svgIcon = document.createElement("img");
+        svgIcon.src = "../Assets/icons/ui/chevron-right.svg";
+        svgIcon.alt = "";
+        svgIcon.width = 18;
+        svgIcon.height = 18;
+        arrow.appendChild(svgIcon);
         card.appendChild(arrow);
       }
       const to=()=>go(card.dataset.moduleCard);
