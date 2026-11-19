@@ -63,27 +63,29 @@ public class TarefaController {
     @PutMapping("/{id}/status")
     public ResponseEntity<?> alterarStatus(
             @PathVariable Integer id, @RequestParam Boolean concluida, Authentication auth) {
-        Integer owner=idAutenticado(auth);
-        if (owner==null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado.");
-        return tarefas.findById(id).map(tarefa -> {
-            if (tarefa.getUsuario()==null || !owner.equals(tarefa.getUsuario().getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tarefa de outro usuário.");
-            }
-            tarefa.setConcluida(concluida);
-            return ResponseEntity.ok((Object)tarefas.save(tarefa));
-        }).orElseGet(()->ResponseEntity.notFound().build());
+        Integer owner = idAutenticado(auth);
+        if (owner == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado.");
+        java.util.Optional<Tarefa> encontrada = tarefas.findById(id);
+        if (encontrada.isEmpty()) return ResponseEntity.notFound().build();
+        Tarefa tarefa = encontrada.get();
+        if (tarefa.getUsuario() == null || !owner.equals(tarefa.getUsuario().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tarefa de outro usuário.");
+        }
+        tarefa.setConcluida(concluida);
+        return ResponseEntity.ok(tarefas.save(tarefa));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> excluir(@PathVariable Integer id, Authentication auth) {
-        Integer owner=idAutenticado(auth);
-        if (owner==null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado.");
-        return tarefas.findById(id).map(tarefa -> {
-            if (tarefa.getUsuario()==null || !owner.equals(tarefa.getUsuario().getId())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tarefa de outro usuário.");
-            }
-            tarefas.delete(tarefa);
-            return ResponseEntity.noContent().build();
-        }).orElseGet(()->ResponseEntity.notFound().build());
+        Integer owner = idAutenticado(auth);
+        if (owner == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado.");
+        java.util.Optional<Tarefa> encontrada = tarefas.findById(id);
+        if (encontrada.isEmpty()) return ResponseEntity.notFound().build();
+        Tarefa tarefa = encontrada.get();
+        if (tarefa.getUsuario() == null || !owner.equals(tarefa.getUsuario().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Tarefa de outro usuário.");
+        }
+        tarefas.delete(tarefa);
+        return ResponseEntity.noContent().build();
     }
 }
