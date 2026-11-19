@@ -367,7 +367,20 @@
     card.dataset.filter = row[3] || "all";
     const mark=document.createElement("span");
     mark.className="demo-record-marker";
-    mark.textContent = ["✓","◌","☾","◉","$","✎","☷","♡"][index%8];
+    const markerIcons = {
+      tasks: "list-check", habits: "repeat-2", sleep: "moon-star",
+      water: "droplets", finances: "wallet", diary: "notebook-pen",
+      nutrition: "apple", physicalHealth: "dumbbell",
+      menstrualCycle: "calendar-heart", attachments: "paperclip",
+      timeline: "history", achievements: "trophy"
+    };
+    const markerImage = document.createElement("img");
+    markerImage.src = "../Assets/icons/navigation/" + markerIcons[key] + ".svg";
+    markerImage.width = 19;
+    markerImage.height = 19;
+    markerImage.alt = "";
+    markerImage.setAttribute("aria-hidden", "true");
+    mark.appendChild(markerImage);
     const content=document.createElement("div");
     content.className="demo-record-main";
     const title=document.createElement("strong");
