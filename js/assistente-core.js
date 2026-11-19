@@ -57,23 +57,23 @@
 
 
     // Pedidos específicos para outros módulos, sempre como proposta de registro.
-    const water = text.match(/\\b(?:bebi|tomei|consumi|registrar|anotei)\\s+(?:(\\d+(?:[.,]\\d+)?)\\s*(ml|mililitros|l|litro|litros)\\s*(?:de\\s*)?)?(?:agua)?/);
-    if (water && water[1] && (text.includes("agua") || /\\b(?:ml|mililitros|litros?)\\b/.test(text))) {
+    const water = text.match(/\b(?:bebi|tomei|consumi|registrar|anotei)\s+(?:(\d+(?:[.,]\d+)?)\s*(ml|mililitros|l|litro|litros)\s*(?:de\s*)?)?(?:agua)?/);
+    if (water && water[1] && (text.includes("agua") || /\b(?:ml|mililitros|litros?)\b/.test(text))) {
       const quantity = Number(water[1].replace(",", "."));
       const ml = water[2]?.startsWith("l") ? quantity * 1000 : quantity;
       if (Number.isFinite(ml) && ml >= 1 && ml <= 3000) {
         actions.push({ type:"water", value:String(Math.round(ml))+" mL", label:Math.round(ml)+" mL de água" });
       }
     }
-    const sleep = text.match(/\\b(?:dormi|dormir|sono de|durmo)\\s+(\\d+(?:[.,]\\d+)?)\\s*(?:horas?|h)\\b/);
+    const sleep = text.match(/\b(?:dormi|dormir|sono de|durmo)\s+(\d+(?:[.,]\d+)?)\s*(?:horas?|h)\b/);
     if (sleep) {
       const hours = Number(sleep[1].replace(",","."));
       if (Number.isFinite(hours) && hours >= 0.5 && hours <= 24) {
         actions.push({type:"sleep",value:String(hours)+" h",label:String(hours)+" horas de sono"});
       }
     }
-    const money = text.match(/\\b(gastei|paguei|recebi|ganhei)\\s+(?:r\\$\\s*)?(\\d+(?:[.,]\\d{1,2})?)\\b(?:\\s*(?:reais|com|por|de)\\s*([a-z\\s]{2,60}))?/);
-    if (money && /\\b(?:gastei|paguei|recebi|ganhei)\\s+(?:r\\$|\\d)/.test(text)) {
+    const money = text.match(/\b(gastei|paguei|recebi|ganhei)\s+(?:r\$\s*)?(\d+(?:[.,]\d{1,2})?)\b(?:\s*(?:reais|com|por|de)\s*([a-z\s]{2,60}))?/);
+    if (money && /\b(?:gastei|paguei|recebi|ganhei)\s+(?:r\$|\d)/.test(text)) {
       const amount = Number(money[2].replace(",","."));
       if (Number.isFinite(amount) && amount > 0 && amount < 1000000) {
         const side = /^(gastei|paguei)$/.test(money[1]) ? "Saída" : "Entrada";
@@ -82,7 +82,7 @@
                       label:side+" de R$ "+amount.toFixed(2)});
       }
     }
-    const habit = text.match(/\\b(?:cumpri|completei|fiz)\\s+(?:o\\s+)?(?:habito|hábito)\\s+(?:de\\s+)?([^.!?\\n]{3,100})/);
+    const habit = text.match(/\b(?:cumpri|completei|fiz)\s+(?:o\s+)?(?:habito|hábito)\s+(?:de\s+)?([^.!?\n]{3,100})/);
     if (habit) actions.push({type:"habit",value:habit[1].trim(),label:"Hábito: "+habit[1].trim()});
 
     return actions.filter((item,index,all)=>all.findIndex(other=>other.type===item.type&&other.value===item.value)===index).slice(0,10);
