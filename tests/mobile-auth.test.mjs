@@ -42,6 +42,7 @@ test("Alternar visibilidade preserva a senha e atualiza acessibilidade", () => {
     document: {body, getElementById: () => null, querySelectorAll: (query) => query === ".password-toggle" ? [toggle] : []},
     localStorage: {getItem() {return null;}},
     sessionStorage: {getItem() {return null;}},
+    window: {},
     console, setTimeout, clearTimeout
   });
   vm.runInContext(js, sandbox);
@@ -52,4 +53,11 @@ test("Alternar visibilidade preserva a senha e atualiza acessibilidade", () => {
   toggle.onClick();
   assert.equal(input.type, "password");
   assert.equal(input.value, "SenhaComEspacos  ");
+});
+
+test("Conta Google so e habilitada apos backend retornar configuracao OAuth", () => {
+  const js = readFileSync(new URL("../js/google-login.js", import.meta.url), "utf8");
+  assert.match(js, /config\.habilitado !== true/);
+  assert.match(js, /completeGoogleLogin/);
+  assert.match(js, /GoogleSignIn/);
 });
