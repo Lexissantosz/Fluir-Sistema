@@ -114,3 +114,7 @@ body.dark .chat-panel .action-card{background:#263229;border-color:#6c785e}
  .chat-panel .choices .choice-grid{max-height:88px}
  .chat-footer{padding-bottom:12px}
 }
+
+/* Variaveis que a sidebar compartilhada ja espera no tema claro. */
+:root{--text:#233d2b;--card-bg:#fff;--page-bg:#f5f8f5}
+body.dark{--text:#e6f2e8;--card-bg:#182521;--page-bg:#101a16}

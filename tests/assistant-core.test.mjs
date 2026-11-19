@@ -83,7 +83,7 @@ test("chat oferece escolha antes de registrar desabafos",()=>{
   assert.match(ui,/if\(actions.length && !explicit\)/);
 });
 
-test("marca do Android ocupa area maior e fica centralizada",()=>{
+test("marca do Android ocupa area segura e centralizada",()=>{
   const logo=readFileSync(new URL("../resources/logo.svg",import.meta.url),"utf8");
-  assert.match(logo,/translate\(60 85\) scale\(13\.1\)/);
+  assert.match(logo,/translate\(176 162\) scale\(12\.2\)/);
 });

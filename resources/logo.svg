@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
   <!-- Centro geometrico do simbolo em 512px; maior, mantendo area segura do Android. -->
-  <g transform="translate(60 85) scale(13.1)">
+  <g transform="translate(176 162) scale(12.2)">
     <path d="M18 49 A22 22 0 1 1 42 14" stroke="#81958B" stroke-width="7" stroke-linecap="round"/>
     <path d="M49 27 A22 22 0 0 1 18 49" stroke="#172721" stroke-width="7" stroke-linecap="round"/>
     <circle cx="49" cy="17" r="6" fill="#172721"/>
