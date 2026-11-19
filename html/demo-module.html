@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fluir | Explorar módulos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/mobile.css">
+  <link rel="stylesheet" href="../css/icons.css">
+  <!-- Apenas a folha do módulo escolhido, selecionada por lista permitida -->
+  <link id="demoModuleStylesheet" rel="stylesheet">
+  <link rel="stylesheet" href="../css/demo-module.css">
+</head>
+<body class="demo-module-only demo-mode">
+  <div id="demoMount" aria-live="polite">
+    <main class="demo-loading">
+      <div class="demo-loading-card">
+        <strong>Preparando a demonstração do Fluir…</strong>
+        <p>Esta prévia usa informações fictícias e não exige conta.</p>
+      </div>
+    </main>
+  </div>
+  <div class="demo-gate-backdrop" id="demoGate" hidden>
+    <section class="demo-gate" role="dialog" aria-modal="true" aria-labelledby="demoGateTitle">
+      <span class="demo-gate-symbol" aria-hidden="true">✧</span>
+      <h2 id="demoGateTitle">Você está explorando uma demonstração</h2>
+      <p id="demoGateMessage">Você não pode adicionar aqui, pois é apenas uma demonstração. Quer criar sua conta?</p>
+      <div class="demo-gate-actions">
+        <button type="button" id="demoGateClose">Continuar explorando</button>
+        <a href="login.html" id="demoGateRegister">Quero criar minha conta</a>
+      </div>
+    </section>
+  </div>
+  <script src="../js/app-sections.js"></script>
+  <script src="../js/demo-module.js"></script>
+</body>
+</html>
