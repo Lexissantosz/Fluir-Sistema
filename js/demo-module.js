@@ -142,7 +142,7 @@
       button.title = next === "dark" ? "Ativar tema claro" : "Ativar tema escuro";
     });
     // Apenas em memória: a URL transporta a escolha entre páginas demonstrativas.
-    $(".demo-nav-link").forEach((link) => {
+    $$(".demo-nav-link").forEach((link) => {
       if (link.dataset.dashboard === "true") {
         link.href = "dashboard.html?demo=1&theme=" + next;
       } else if (link.dataset.module) {
@@ -409,7 +409,7 @@
     if(key==="timeline") {
       // O HTML original possui exemplos fixos com datas antigas.
       // Mantemos apenas registros atuais e inteiramente fictícios.
-      $(".timeline-day").forEach((day,index) => {
+      $$(".timeline-day").forEach((day,index) => {
         if(index>0)day.remove();
         else {
           const title=day.querySelector("h4");
@@ -456,7 +456,7 @@
 
   function filterRecords(filter) {
     currentFilter=filter||"all";
-    const records=$(".demo-populated .demo-record, .demo-populated .demo-real-card");
+    const records=$$(".demo-populated .demo-record, .demo-populated .demo-real-card");
     const normalized = currentFilter;
     records.forEach((record)=>{
       const tags=(record.dataset.filter||"").split(" ");
@@ -692,7 +692,7 @@
     // Links originais dos HTMLs nunca podem abrir uma área autenticada.
     // Só os módulos permitidos recebem rotas do explorador demonstrativo.
     const pageToKey = new Map(sections.map((item) => [item.href, item.key]));
-    $("#demoMount a[href]").forEach((link) => {
+    $$("#demoMount a[href]").forEach((link) => {
       if (link.classList.contains("demo-nav-link")) return;
       const raw = link.getAttribute("href") || "";
       const destination = raw.split("?")[0].split("#")[0];
