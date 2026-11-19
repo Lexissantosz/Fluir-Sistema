@@ -367,7 +367,8 @@
   // mantemos o layout original, mas usamos SVG explícito e alinhado.
   function createDemoIcon(iconName) {
     const image = document.createElement("img");
-    image.src = "../Assets/icons/navigation/" + iconName + ".svg";
+    const uiIcons = new Set(["circle-check", "sparkles", "sun", "moon", "heart"]);
+    image.src = "../Assets/icons/" + (uiIcons.has(iconName) ? "ui/" : "navigation/") + iconName + ".svg";
     image.width = 22;
     image.height = 22;
     image.alt = "";
