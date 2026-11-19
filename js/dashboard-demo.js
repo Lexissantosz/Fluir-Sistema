@@ -33,6 +33,11 @@
       "body.demo-mode .dashboard-main{min-width:0}",
       "body.demo-mode .summary-card{cursor:pointer}",
       "body.demo-mode .summary-card:hover{border-color:var(--border-strong)}",
+      "body.demo-mode .dashboard-page .summary-card::after{content:none!important;display:none!important}",
+      "body.demo-mode .dashboard-page .summary-card .card-title{padding-right:42px;min-width:0}",
+      "body.demo-mode .dashboard-page .summary-card .demo-card-arrow{position:absolute;top:18px;right:18px;display:grid;place-items:center;width:34px;height:34px;min-width:34px;border:1px solid var(--border);border-radius:50%;background:var(--input-bg);color:var(--text);pointer-events:none;line-height:1}",
+      "body.demo-mode .dashboard-page .summary-card .demo-card-arrow::before{content:'';display:block;width:18px;height:18px;background:currentColor;-webkit-mask:url('../Assets/icons/ui/chevron-right.svg') center / contain no-repeat;mask:url('../Assets/icons/ui/chevron-right.svg') center / contain no-repeat}",
+      "@media(max-width:760px){body.demo-mode .dashboard-page .summary-card .demo-card-arrow{top:14px;right:14px;width:34px;height:34px}body.demo-mode .dashboard-page .summary-card .card-title{padding-right:40px}}",
       "body.demo-mode .task-item input{cursor:pointer}",
       "body.demo-mode .sidebar-nav .nav-item{cursor:pointer}",
       "body.demo-mode .demo-banner button:disabled{opacity:1}",
@@ -217,6 +222,13 @@
       if(!icons[card.dataset.moduleCard])return;
       card.tabIndex=0;
       card.setAttribute("role","link");
+      // Ícone vetorial fixo, centralizado: evita o desalinhamento da seta tipográfica.
+      if (!card.querySelector(".demo-card-arrow")) {
+        const arrow = document.createElement("span");
+        arrow.className = "demo-card-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        card.appendChild(arrow);
+      }
       const to=()=>go(card.dataset.moduleCard);
       card.addEventListener("click",to);
       card.addEventListener("keydown",(event)=>{
