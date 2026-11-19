@@ -56,6 +56,12 @@
         </div>
         <div class="chat-log" id="messages" role="log" aria-label="Conversa com o assistente" aria-live="polite"></div>
         <div id="pendingActions" class="pending-actions" aria-live="polite"></div>
+        <details class="stored-list">
+          <summary>Meus registros confirmados no assistente</summary>
+          <p class="stored-help">Os registros da conta são consultados no backend. Tarefas também aparecem no módulo Tarefas; outras categorias ainda estão em integração com as telas específicas.</p>
+          <button type="button" id="reloadRecords" class="reload-records">Atualizar registros</button>
+          <div id="savedRecords" aria-live="polite"></div>
+        </details>
         <section id="quickChoices" class="choices" aria-label="Ações rápidas">
           <p>Por onde começamos?</p>
           <div class="choice-grid">
@@ -63,6 +69,10 @@
             <button type="button" data-action="energy">Registrar disposição</button>
             <button type="button" data-action="task">Criar uma tarefa</button>
             <button type="button" data-action="diary">Escrever no diário</button>
+            <button type="button" data-action="water">Registrar água</button>
+            <button type="button" data-action="sleep">Registrar sono</button>
+            <button type="button" data-action="finances">Registrar finanças</button>
+            <button type="button" data-action="habit">Registrar hábito</button>
             <button type="button" data-action="report">Ver meu resumo</button>
             <button type="button" data-action="modules">Explorar módulos</button>
           </div>
