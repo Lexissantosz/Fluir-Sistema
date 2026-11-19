@@ -252,6 +252,115 @@
     if(title) title.textContent = "Olá, Visitante";
   }
 
+
+  // Registros que reproduzem a estrutura dos cards originais de cada módulo.
+  // Os eventos de edição são interceptados antes de qualquer alteração.
+  function originalStyleCard(row,index) {
+    if(!["tasks","habits","finances","sleep"].includes(key))return null;
+    const article=document.createElement("article");
+    article.className=({
+      tasks:"task-card",habits:"habit-card",
+      finances:"transaction-card",sleep:"sleep-card"
+    })[key]+" demo-real-card";
+    article.dataset.filter=row[3]||"all";
+    const action=(label,title)=>{
+      const button=document.createElement("button");
+      button.type="button";
+      button.title=title;
+      button.textContent=label;
+      button.addEventListener("click",(event)=>{
+        event.stopPropagation();
+        gate("Você não pode alterar registros aqui, pois é apenas uma demonstração. Quer criar sua conta?");
+      });
+      return button;
+    };
+    if(key==="tasks") {
+      const check=document.createElement("input");
+      check.type="checkbox";
+      check.checked=row[2]==="Concluída";
+      check.setAttribute("aria-label","Marcar tarefa como concluída");
+      check.addEventListener("click",(event)=>{
+        event.preventDefault();
+        gate("Você não pode concluir tarefas nesta demonstração. Quer criar sua conta?");
+      });
+      const info=document.createElement("div");
+      info.className="task-info";
+      const name=document.createElement("strong");name.textContent=row[0];
+      const desc=document.createElement("p");
+      desc.textContent=check.checked?"Tarefa ilustrativa concluída.":"Tarefa ilustrativa pendente.";
+      const meta=document.createElement("div");meta.className="task-meta";
+      [row[1].split(" · ")[0],row[3]?.includes("high")?"Alta prioridade":"Prioridade normal",row[1].split(" · ")[1]||"Hoje"].forEach((v)=>{
+        const span=document.createElement("span");span.textContent=v;meta.append(span);
+      });
+      info.append(name,desc,meta);
+      const actions=document.createElement("div");actions.className="task-actions";
+      const del=action("×","Excluir tarefa");del.className="task-action-btn delete-task-btn";
+      actions.append(del);
+      article.classList.toggle("completed",check.checked);
+      article.append(check,info,actions);
+    }
+    if(key==="habits") {
+      const check=action(row[2]==="Concluído"?"✓":"○","Marcar hábito de hoje");
+      check.className="habit-check";
+      const info=document.createElement("div");info.className="habit-info";
+      const name=document.createElement("strong");name.textContent=row[0];
+      const desc=document.createElement("p");desc.textContent="Hábito diário demonstrativo";
+      const meta=document.createElement("div");meta.className="habit-meta";
+      ["Saúde e bem-estar","5/7 na semana",row[1].split(" · ")[0]].forEach((v)=>{
+        const span=document.createElement("span");span.textContent=v;meta.append(span);
+      });
+      const week=document.createElement("div");week.className="habit-week";
+      ["✓","✓","✓","✓","✓","○","○"].forEach((v)=>{
+        const dot=document.createElement("span");dot.textContent=v;if(v==="✓")dot.className="done";week.append(dot);
+      });
+      info.append(name,desc,meta,week);
+      const actions=document.createElement("div");actions.className="habit-actions";
+      const del=action("×","Excluir hábito");del.className="habit-action-btn delete-habit-btn";
+      actions.append(del);
+      article.classList.toggle("completed-today",row[2]==="Concluído");
+      article.append(check,info,actions);
+    }
+    if(key==="finances") {
+      const income=row[3].includes("income");
+      const icon=document.createElement("div");
+      icon.className="transaction-icon";icon.textContent=income?"+":"−";
+      const info=document.createElement("div");info.className="transaction-info";
+      const name=document.createElement("strong");name.textContent=row[0];
+      const desc=document.createElement("p");desc.textContent="Lançamento fictício · "+row[1].split(" · ").pop();
+      const meta=document.createElement("div");meta.className="transaction-meta";
+      [income?"Entrada":"Saída",row[3].includes("fixed")?"Fixo":"Variável"].forEach((v)=>{
+        const span=document.createElement("span");span.textContent=v;meta.append(span);
+      });
+      info.append(name,desc,meta);
+      const amount=document.createElement("strong");
+      amount.className="transaction-value "+(income?"income":"expense");
+      amount.textContent=row[2];
+      const actions=document.createElement("div");actions.className="transaction-actions";
+      const del=action("×","Excluir lançamento");del.className="transaction-action-btn delete-transaction-btn";
+      actions.append(del);
+      article.append(icon,info,amount,actions);
+    }
+    if(key==="sleep") {
+      const icon=document.createElement("div");
+      icon.className="sleep-icon";icon.textContent="☾";
+      const info=document.createElement("div");info.className="sleep-info";
+      const head=document.createElement("div");head.className="sleep-card-header";
+      const duration=document.createElement("strong");duration.textContent=row[2];
+      const when=document.createElement("span");when.textContent="Registro de exemplo";
+      head.append(duration,when);
+      const note=document.createElement("p");note.textContent="Descanso registrado com qualidade.";
+      const meta=document.createElement("div");meta.className="sleep-meta";
+      ["Sono principal",row[1],"Qualidade boa"].forEach((v)=>{
+        const label=document.createElement("span");label.textContent=v;meta.append(label);
+      });
+      info.append(head,note,meta);
+      const del=action("×","Excluir registro de sono");
+      del.className="sleep-action-btn delete-sleep-btn";
+      article.append(icon,info,del);
+    }
+    return article;
+  }
+
   function cardFor(row,index) {
     const card=document.createElement("article");
     card.className="demo-record";
@@ -310,7 +419,7 @@
     }
     if(target) {
       target.replaceChildren();
-      (entries[key]||[]).forEach((row,index)=>target.append(cardFor(row,index)));
+      (entries[key]||[]).forEach((row,index)=>target.append(originalStyleCard(row,index)||cardFor(row,index)));
       target.classList.add("demo-populated");
     }
     const featured=$("#featuredTitle");
@@ -347,7 +456,7 @@
 
   function filterRecords(filter) {
     currentFilter=filter||"all";
-    const records=$$(".demo-populated .demo-record");
+    const records=$(".demo-populated .demo-record, .demo-populated .demo-real-card");
     const normalized = currentFilter;
     records.forEach((record)=>{
       const tags=(record.dataset.filter||"").split(" ");
