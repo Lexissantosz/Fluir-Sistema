@@ -1,0 +1,119 @@
+name: Fluir | Vigia do backend Render
+
+on:
+  schedule:
+    # A cada dez minutos, deslocado da virada de hora para reduzir atrasos.
+    - cron: '7,17,27,37,47,57 * * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - alex/vigia-render-backend-19-11
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fluir-render-vigia
+  cancel-in-progress: false
+
+jobs:
+  manter-acordado:
+    name: Verificar backend Fluir (sem contas nem senhas)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Consultar API publica para manter backend ativo
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Protecao do limite de 750h gratuito: apos a apresentacao,
+          # manter apenas a observabilidade manual ate revisar o plano.
+          # O evento manual permanece disponivel.
+          if [[ "${{ github.event_name }}" == "schedule" ]] && [[ "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "2026-12-01T02:59:59Z" ]]; then
+            echo "::notice::Fim da janela automatica de apresentacao. Revisar custos antes de reativar."
+            exit 0
+          fi
+          url="https://fluir-sistema.onrender.com/api/usuarios/teste"
+          echo "Verificando ${url}, sem enviar credenciais."
+          http_code=$(curl --silent --show-error --location \
+            --connect-timeout 15 --max-time 170 \
+            --output /tmp/fluir-health-body --write-out '%{http_code}' "$url") || {
+            echo "::error::Fluir nao respondeu. Conferir logs e status no Render."
+            exit 1
+          }
+          echo "HTTP: $http_code"
+          if [[ "$http_code" != "200" ]]; then
+            echo "::error::Fluir retornou HTTP $http_code."
+            exit 1
+          fi
+          if ! grep -Fq 'API do Fluir funcionando' /tmp/fluir-health-body; then
+            echo "::error::Resposta nao corresponde ao backend esperado."
+            exit 1
+          fi
+          echo "API Fluir esta respondendo."
+          echo "### Backend Fluir respondeu HTTP 200" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verificar PostgreSQL por endpoint dedicado
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://fluir-sistema.onrender.com/api/health/ready"
+          http_code=$(curl --silent --show-error --location \
+            --connect-timeout 12 --max-time 45 \
+            --output /tmp/fluir-ready-body --write-out '%{http_code}' "$url") || {
+              echo "::error::Health check do PostgreSQL falhou."
+              exit 1
+          }
+          echo "Readiness: HTTP $http_code"
+          if [[ "$http_code" != "200" ]] || ! grep -Fq '"status":"UP"' /tmp/fluir-ready-body; then
+            echo "::error::Backend respondeu, mas banco ou endpoint /ready nao esta operacional."
+            exit 1
+          fi
+          echo "Readiness do Fluir aprovada."
+
+      - name: Verificar se Android esta autorizado pelo CORS
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          headers=$(mktemp)
+          code=$(curl --silent --show-error \
+            --connect-timeout 12 --max-time 40 -X OPTIONS \
+            -H 'Origin: https://localhost' \
+            -H 'Access-Control-Request-Method: POST' \
+            -H 'Access-Control-Request-Headers: content-type' \
+            -D "$headers" -o /dev/null -w '%{http_code}' \
+            'https://fluir-sistema.onrender.com/api/usuarios/login') || {
+              echo "::error::Preflight CORS do Android nao respondeu."
+              exit 1
+          }
+          echo "CORS preflight: HTTP $code"
+          if [[ "$code" != "200" ]] && [[ "$code" != "204" ]]; then
+            echo "::error::Origem Android bloqueada pelo backend."
+            exit 1
+          fi
+          if ! grep -Eiq '^access-control-allow-origin:\s*https://localhost\s*$' "$headers"; then
+            echo "::error::Origin https://localhost nao foi autorizado."
+            exit 1
+          fi
+          echo "CORS do Android aprovado."
+
+  validar-codigo:
+    if: github.event_name == 'push'
+    name: Validar health check e CORS (Java 21)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Testar endpoints de saude
+        working-directory: backend
+        run: |
+          chmod +x mvnw
+          ./mvnw --batch-mode -Dtest=HealthControllerTest test
