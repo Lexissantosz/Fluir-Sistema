@@ -1,0 +1,8 @@
+{
+  "appId": "br.com.fluir.sistema",
+  "appName": "Fluir",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
