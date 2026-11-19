@@ -300,13 +300,17 @@
       ["Hoje foi um dia tranquilo","Hoje foi um dia tranquilo","Hoje foi um dia tranquilo"],
       ["Hoje me senti sobrecarregado","Hoje me senti sobrecarregado","Hoje me senti sobrecarregado"],
       ["Hoje consegui cuidar de mim","Hoje consegui cuidar de mim","Hoje consegui cuidar de mim"]
-    ]
+    ],
+    water:[["250 mL","250 mL","250 mL de água"],["500 mL","500 mL","500 mL de água"],["1 litro","1000 mL","1 litro de água"]],
+    sleep:[["6 horas","6 h","6 horas"],["7 horas","7 h","7 horas"],["8 horas","8 h","8 horas"]],
+    finances:[["Saída de R$ 10","Saída: R$ 10.00 • não especificada","Gasto de R$ 10"],["Entrada de R$ 20","Entrada: R$ 20.00 • não especificada","Entrada de R$ 20"]],
+    habit:[["Ler","Ler","Hábito: Ler"],["Caminhar","Caminhar","Hábito: Caminhar"],["Meditar","Meditar","Hábito: Meditar"]]
   };
 
   function presentChoices(topic) {
     const items=quickGroups[topic];
     if(!items)return;
-    const labels={mood:"Como você se sentiu?",energy:"Como está sua disposição?",task:"Qual tarefa deseja registrar?",diary:"Selecione uma frase para o diário."};
+    const labels={mood:"Como você se sentiu?",energy:"Como está sua disposição?",task:"Qual tarefa deseja registrar?",diary:"Selecione uma frase para o diário.",water:"Quanta água você bebeu?",sleep:"Quantas horas dormiu?",finances:"Qual movimento deseja registrar?",habit:"Qual hábito concluiu?"};
     bubble("assistant",labels[topic]+" Vou pedir sua confirmação antes de registrar.","Escolhas guiadas");
     const container=document.createElement("section");
     container.className="action-card";
@@ -359,7 +363,7 @@
     bubble("assistant","Vou usar o estilo de comunicação selecionado durante esta conversa.","Preferência de comunicação");
   });
   elements.clear.addEventListener("click",()=>{
-    if (!window.confirm("Limpar o histórico e os registros desta prévia neste dispositivo?"))return;
+    if (!window.confirm(authenticated?"Limpar apenas a conversa deste dispositivo? Seus registros no servidor serão preservados.":"Limpar conversa e registros desta demonstração local?"))return;
     state=authenticated?{messages:[],records:state.records}:{messages:[],records:[]};pending.clear();
     elements.pending.replaceChildren();elements.messages.replaceChildren();
     persist();
