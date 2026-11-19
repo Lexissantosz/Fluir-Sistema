@@ -1,0 +1,61 @@
+/* Complementos isolados do explorador do Fluir. O sistema tradicional não importa este CSS. */
+body.demo-module-only { overflow: hidden; }
+.demo-loading { min-height: 75vh; display: grid; place-items: center; padding: 24px; }
+.demo-loading-card { padding: 32px; max-width: 500px; border: 1px solid var(--border); border-radius: 22px; background: var(--card-bg); box-shadow: var(--shadow-soft); }
+.demo-loading-card strong { display: block; margin-bottom: 8px; font-size: 20px; }
+.demo-loading-card p { font-size: 13px; color: var(--muted); }
+.demo-banner { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; margin: 0 0 20px; border: 1px solid var(--border); border-radius: 16px; background: var(--input-bg); box-shadow: var(--shadow-soft); }
+.demo-banner strong { display: block; font-weight: 850; font-size: 13px; }
+.demo-banner small { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
+.demo-banner-actions { display: flex; gap: 9px; align-items: center; flex-shrink: 0; }
+.demo-theme-toggle { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--card-bg); color: var(--text); font-size: 20px; line-height: 1; cursor: pointer; }
+.demo-back-dashboard { padding: 10px 13px; border: 1px solid var(--border); border-radius: 11px; background: var(--card-bg); font-size: 12px; font-weight: 850; }
+.demo-module-only .header-actions, .demo-module-only .notif-wrapper, .demo-module-only .profile-wrapper { display: none !important; }
+.demo-module-only .sidebar-nav .nav-item { text-decoration: none; }
+.demo-module-only .demo-record { display: flex; align-items: flex-start; gap: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 15px; background: var(--input-bg); margin-bottom: 10px; min-width: 0; }
+.demo-record-marker { display: grid; place-items: center; flex: 0 0 35px; height: 35px; border-radius: 11px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); font-size: 18px; }
+.demo-record-main { flex: 1; min-width: 0; }
+.demo-record-main strong { display: block; font-weight: 800; font-size: 13px; color: var(--text); line-height: 1.45; }
+.demo-record-main p { margin: 4px 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.demo-record-main small { display: block; margin-top: 5px; font-size: 11px; color: var(--muted); font-weight: 700; }
+.demo-record-tag { display: inline-flex; align-items: center; justify-content: center; min-height: 27px; padding: 5px 8px; flex-shrink: 0; border: 1px solid var(--border); border-radius: 99px; color: var(--text); background: var(--card-bg); font-size: 10px; font-weight: 850; text-align: center; }
+.demo-record[hidden] { display: none !important; }
+.demo-module-only .empty-state { display: none !important; }
+.demo-mini-record { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 12px; }
+.demo-mini-record:last-child { border: none; }
+.demo-mini-record span { color: var(--muted); }
+.demo-module-only button { cursor: pointer; }
+.demo-module-only .summary-card { cursor: default; }
+.demo-module-only .summary-card:hover { transform: none; box-shadow: var(--shadow-soft); }
+.demo-module-only .week-grid { min-width: 0; }
+.demo-module-only .demo-disabled-privacy { display: none !important; }
+.demo-module-only .water-circle { --demo-water-progress: 75%; }
+.demo-module-only .water-circle #waterCircleText { font-variant-numeric: tabular-nums; }
+.demo-module-only .demo-modal-visible { display: flex !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; z-index: 3050 !important; }
+.demo-module-only .demo-form-lock { margin: 12px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--input-bg); border: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+.demo-gate-backdrop[hidden] { display: none !important; }
+.demo-gate-backdrop { position: fixed; z-index: 99999; inset: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(5px); display: grid; place-items: center; padding: 20px; }
+.demo-gate { width: min(100%, 470px); padding: 30px; border: 1px solid var(--border); border-radius: 24px; background: var(--bg); color: var(--text); box-shadow: 0 28px 90px rgba(0,0,0,.24); text-align: center; }
+.demo-gate-symbol { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 15px; border-radius: 16px; border: 1px solid var(--border); background: var(--card-bg); font-size: 24px; }
+.demo-gate h2 { font-size: 21px; line-height: 1.3; letter-spacing: -.04em; }
+.demo-gate p { margin: 12px 0 22px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.demo-gate-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.demo-gate-actions a, .demo-gate-actions button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border-strong); font-size: 12px; font-weight: 800; }
+.demo-gate-actions a { background: var(--button-bg); color: var(--button-text); }
+.demo-gate-actions button { background: var(--card-bg); color: var(--text); }
+.demo-module-only .mobile-brand { text-decoration: none; }
+.demo-module-only .mobile-drawer-link { text-decoration: none; }
+.demo-module-only :is(.mobile-drawer-link, .mobile-nav-link) { -webkit-tap-highlight-color: transparent; }
+.demo-module-only .achievement-demo-item { border: 1px solid var(--border); padding: 20px; border-radius: 18px; background: var(--card-bg); text-align: center; cursor: pointer; }
+.demo-module-only .achievement-demo-item strong { display: block; font-size: 15px; margin: 10px 0 4px; }
+.demo-module-only .achievement-demo-item span { font-size: 30px; }
+.demo-module-only .achievement-demo-item p { color: var(--muted); font-size: 12px; line-height: 1.4; }
+@media(max-width: 760px) {
+  body.demo-module-only { overflow: auto !important; }
+  .demo-module-only .demo-banner { flex-wrap: wrap; }
+  .demo-module-only .demo-banner-actions { width: 100%; justify-content: flex-start; }
+  .demo-module-only .demo-record { gap: 9px; padding: 11px; }
+  .demo-module-only .demo-record-tag { font-size: 9px; }
+  .demo-gate { padding: 23px 18px; }
+  .demo-module-only .mobile-bottom-nav { display: grid; }
+}
