@@ -80,8 +80,7 @@
     };
     state.records.push(record);
     if (persist()) {
-      bubble("assistant","Registrado nesta versão de avaliação: "+Core.describe(record)+".
-Ainda não foi sincronizado com os demais módulos nem com o servidor.","Salvo somente neste dispositivo");
+      bubble("assistant","Registrado nesta versão de avaliação: "+Core.describe(record)+".\nAinda não foi sincronizado com os demais módulos nem com o servidor.","Salvo somente neste dispositivo");
     } else {
       state.records.pop();
       bubble("assistant","Não consegui salvar este registro. Nenhuma alteração foi confirmada.","Falha local");
