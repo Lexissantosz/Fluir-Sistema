@@ -71,8 +71,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/health/**").permitAll()
+                        .requestMatchers("/api/usuarios/google/vincular").authenticated()
                         .requestMatchers("/api/usuarios/**").permitAll()
                         .requestMatchers("/api/onboarding/**").authenticated()
+                        .requestMatchers("/api/assistente/**").authenticated()
+                        .requestMatchers("/api/tarefas/**").authenticated()
                         .anyRequest().permitAll()
                 )
 
