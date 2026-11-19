@@ -9,6 +9,8 @@ public class UsuarioResponse {
     private String email;
     private String mensagem;
     private String token;
+    private String provedor;
+    private Boolean emailVerificado;
 
     public UsuarioResponse() {
     }
@@ -78,6 +80,11 @@ public class UsuarioResponse {
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
     }
+
+    public String getProvedor() { return provedor; }
+    public void setProvedor(String provedor) { this.provedor = provedor; }
+    public Boolean getEmailVerificado() { return emailVerificado; }
+    public void setEmailVerificado(Boolean emailVerificado) { this.emailVerificado = emailVerificado; }
 
     public String getToken() {
         return token;
