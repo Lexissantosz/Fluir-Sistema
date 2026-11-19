@@ -599,3 +599,21 @@ if (registerForm) {
 // =============================
 
 applySavedTheme();
+
+// Fluxo compartilhado do Google: novo cadastro tambem passa pelo onboarding.
+window.FluirAuth = {
+  async completeGoogleLogin(data) {
+    if (!data || !data.id || !data.token) throw new Error("O servidor não retornou uma sessão válida.");
+    sessionStorage.setItem("fluir-user", JSON.stringify(data));
+    sessionStorage.removeItem("fluir-onboarding-completed");
+    let concluido;
+    try {
+      concluido = await hasCompletedOnboarding(data);
+    } catch (error) {
+      sessionStorage.removeItem("fluir-user");
+      throw new Error("Não foi possível verificar o onboarding. Tente novamente.");
+    }
+    sessionStorage.setItem("fluir-onboarding-completed", String(concluido));
+    window.location.href = concluido ? "dashboard.html" : "setup.html";
+  }
+};

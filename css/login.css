@@ -2042,3 +2042,41 @@ body.dark .preview {
   transform: translateY(-1px);
   background: var(--card-bg);
 }
+
+/* Google Sign-In fica invisivel ate a configuracao OAuth real estar ativa. */
+.google-auth-slot { margin: 15px 0 18px; text-align: center; }
+.google-auth-divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 13px; color: #636e69; font-size: .84rem; }
+.google-auth-divider::before, .google-auth-divider::after { content: ""; height: 1px; background: rgba(100,120,108,.22); flex: 1; }
+.google-auth-button { display: flex; justify-content: center; width: 100%; min-height: 43px; }
+.google-auth-native { width: 100%; min-height: 46px; border: 1px solid #c6d5cf; background: #fff; color: #25372f; border-radius: 12px; cursor: pointer; font-weight: 700; }
+.google-auth-native:disabled { opacity: .6; cursor: progress; }
+.google-auth-message { font-size: .84rem; line-height: 1.45; margin: 8px 0; color: #686868; }
+
+/* Android nativo: o usuario ja instalou o app e deve ver o formulario imediatamente. */
+@media (max-width: 1024px) {
+  html.fluir-native-android body { overflow-x: hidden; }
+  html.fluir-native-android .page {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    height: auto;
+    margin: 0;
+    padding: calc(28px + env(safe-area-inset-top, 0px)) 18px max(20px, env(safe-area-inset-bottom, 0px));
+    border-radius: 0;
+    border: 0;
+    grid-template-rows: auto 1fr;
+    gap: 18px;
+  }
+  html.fluir-native-android .top { min-height: 56px; align-items: center; }
+  html.fluir-native-android .brand { align-items: center; }
+  html.fluir-native-android .brand-icon { flex: 0 0 40px; width: 40px; height: 40px; }
+  html.fluir-native-android .brand-icon img { width: 40px; height: 40px; object-fit: contain; }
+  html.fluir-native-android .main { display: block; overflow: visible; transform: none; }
+  html.fluir-native-android .art, html.fluir-native-android .preview { display: none !important; }
+  html.fluir-native-android .card {
+    width: 100%; max-width: 520px; height: auto; min-height: 0; max-height: none;
+    margin: 0 auto; padding: 28px 20px; transform: none; overflow: visible;
+  }
+  html.fluir-native-android .form h2 { font-size: clamp(22px, 6vw, 29px); }
+}

@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@capacitor/core": "8.6.2",
-    "@capacitor/android": "8.6.2"
+    "@capacitor/android": "8.6.2",
+    "@capawesome/capacitor-google-sign-in": "0.1.4"
   },
   "devDependencies": {
     "@capacitor/cli": "8.6.2",

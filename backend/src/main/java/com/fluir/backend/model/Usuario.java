@@ -21,6 +21,9 @@ public class Usuario {
     @Column(nullable = false, length = 255)
     private String senha;
 
+    @Column(name = "google_sub", unique = true, length = 255)
+    private String googleSub;
+
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
 
@@ -67,6 +70,9 @@ public class Usuario {
         this.senha = senha;
     }
 
+
+    public String getGoogleSub() { return googleSub; }
+    public void setGoogleSub(String googleSub) { this.googleSub = googleSub; }
 
     public LocalDateTime getCriadoEm() {
         return criadoEm;
