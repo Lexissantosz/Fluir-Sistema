@@ -8,7 +8,8 @@
     "check:web": "node scripts/check-web.mjs",
     "android:sync": "npm run prepare:web && npx cap sync android",
     "android:debug": "npm run prepare:web && npm run check:web && npx cap sync android && cd android && ./gradlew assembleDebug",
-    "check:auth": "node --test tests/mobile-auth.test.mjs"
+    "check:auth": "node --test tests/mobile-auth.test.mjs",
+    "check:assistant": "node --test tests/assistant-core.test.mjs"
   },
   "dependencies": {
     "@capacitor/core": "8.6.2",

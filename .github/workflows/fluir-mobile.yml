@@ -7,6 +7,7 @@ on:
       - alex/android-apk-fluir
       - alex/automacao-android-iphone-19-11
       - alex/google-login-onboarding-19-11
+      - alex/assistente-ia-fluir-19-11
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -47,6 +48,14 @@ jobs:
           npm run prepare:web
           npm run check:web
           npm run check:auth
+          npm run check:assistant
+      - name: Validar sintaxe JavaScript do assistente e login
+        run: |
+          node --check js/assistente-core.js
+          node --check js/assistente.js
+          node --check js/login.js
+          node --check js/google-login.js
+          node --check js/tasks.js
       - name: Criar projeto Android nativo
         run: npx cap add android
       - name: Gerar icones e splash Android com a marca Fluir
@@ -83,3 +92,6 @@ jobs:
         run: |
           chmod +x mvnw
           ./mvnw --batch-mode -DskipTests package
+      - name: Testar isolamento das tarefas entre usuarios
+        working-directory: backend
+        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest test

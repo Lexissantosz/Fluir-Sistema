@@ -381,6 +381,11 @@ function applySelectedModulesToMenu() {
 
 const TASKS_API_URL = "https://fluir-sistema.onrender.com/api/tarefas";
 
+function taskAuthHeaders() {
+  const current = getCurrentUser();
+  return current?.token ? { Authorization: "Bearer " + current.token } : {};
+}
+
 function getCurrentUser() {
   try {
     return JSON.parse(sessionStorage.getItem("fluir-user")) || null;
@@ -414,7 +419,7 @@ async function loadTasks() {
   }
 
   try {
-    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`);
+    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`, { headers: taskAuthHeaders() });
 
     if (!response.ok) {
       throw new Error("Não foi possível carregar as tarefas.");
@@ -981,7 +986,8 @@ async function saveNewTask() {
     const response = await fetch(TASKS_API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        ...taskAuthHeaders()
       },
       body: JSON.stringify({
         usuarioId: user.id,
@@ -1042,7 +1048,8 @@ async function toggleTaskCompleted(taskId) {
     const response = await fetch(
       `${TASKS_API_URL}/${taskId}/status?concluida=${newStatus}`,
       {
-        method: "PUT"
+        method: "PUT",
+        headers: taskAuthHeaders()
       }
     );
 
@@ -1085,7 +1092,8 @@ async function deleteTask(taskId) {
     const response = await fetch(
       `${TASKS_API_URL}/${taskId}`,
       {
-        method: "DELETE"
+        method: "DELETE",
+          headers: taskAuthHeaders()
       }
     );
 
@@ -1125,7 +1133,8 @@ async function clearCompletedTasks() {
     const responses = await Promise.all(
       completed.map((task) =>
         fetch(`${TASKS_API_URL}/${task.id}`, {
-          method: "DELETE"
+          method: "DELETE",
+          headers: taskAuthHeaders()
         })
       )
     );
