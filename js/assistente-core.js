@@ -55,7 +55,37 @@
       }
     }
 
-    return actions.filter((item,index,all)=>all.findIndex(other=>other.type===item.type&&other.value===item.value)===index).slice(0,6);
+
+    // Pedidos específicos para outros módulos, sempre como proposta de registro.
+    const water = text.match(/\\b(?:bebi|tomei|consumi|registrar|anotei)\\s+(?:(\\d+(?:[.,]\\d+)?)\\s*(ml|mililitros|l|litro|litros)\\s*(?:de\\s*)?)?(?:agua)?/);
+    if (water && water[1] && (text.includes("agua") || /\\b(?:ml|mililitros|litros?)\\b/.test(text))) {
+      const quantity = Number(water[1].replace(",", "."));
+      const ml = water[2]?.startsWith("l") ? quantity * 1000 : quantity;
+      if (Number.isFinite(ml) && ml >= 1 && ml <= 3000) {
+        actions.push({ type:"water", value:String(Math.round(ml))+" mL", label:Math.round(ml)+" mL de água" });
+      }
+    }
+    const sleep = text.match(/\\b(?:dormi|dormir|sono de|durmo)\\s+(\\d+(?:[.,]\\d+)?)\\s*(?:horas?|h)\\b/);
+    if (sleep) {
+      const hours = Number(sleep[1].replace(",","."));
+      if (Number.isFinite(hours) && hours >= 0.5 && hours <= 24) {
+        actions.push({type:"sleep",value:String(hours)+" h",label:String(hours)+" horas de sono"});
+      }
+    }
+    const money = text.match(/\\b(gastei|paguei|recebi|ganhei)\\s+(?:r\\$\\s*)?(\\d+(?:[.,]\\d{1,2})?)\\b(?:\\s*(?:reais|com|por|de)\\s*([a-z\\s]{2,60}))?/);
+    if (money && /\\b(?:gastei|paguei|recebi|ganhei)\\s+(?:r\\$|\\d)/.test(text)) {
+      const amount = Number(money[2].replace(",","."));
+      if (Number.isFinite(amount) && amount > 0 && amount < 1000000) {
+        const side = /^(gastei|paguei)$/.test(money[1]) ? "Saída" : "Entrada";
+        const description = money[3]?.trim()||"sem descrição";
+        actions.push({type:"finances",value:side+": R$ "+amount.toFixed(2)+" • "+description,
+                      label:side+" de R$ "+amount.toFixed(2)});
+      }
+    }
+    const habit = text.match(/\\b(?:cumpri|completei|fiz)\\s+(?:o\\s+)?(?:habito|hábito)\\s+(?:de\\s+)?([^.!?\\n]{3,100})/);
+    if (habit) actions.push({type:"habit",value:habit[1].trim(),label:"Hábito: "+habit[1].trim()});
+
+    return actions.filter((item,index,all)=>all.findIndex(other=>other.type===item.type&&other.value===item.value)===index).slice(0,10);
   }
 
   function describe(record) {
@@ -63,6 +93,10 @@
     if (record.type==="mood") return "Humor: "+record.label;
     if (record.type==="energy") return "Disposição: "+record.label;
     if (record.type==="diary") return "Diário: "+record.value;
+    if (record.type==="water") return "Água: "+record.label;
+    if (record.type==="sleep") return "Sono: "+record.label;
+    if (record.type==="finances") return "Finanças: "+record.value;
+    if (record.type==="habit") return "Hábito: "+record.label;
     return "Registro";
   }
   function getSummary(records) {
@@ -70,7 +104,7 @@
     const count = (type) => r.filter(item=>item.type===type).length;
     const latest = (type) => [...r].reverse().find(item=>item.type===type);
     return {
-      tasks:count("task"), diary:count("diary"), moods:count("mood"), energy:count("energy"),
+      tasks:count("task"), diary:count("diary"), moods:count("mood"), energy:count("energy"), water:count("water"), sleep:count("sleep"), finances:count("finances"), habits:count("habit"),
       lastMood:latest("mood")?.label||"sem registro",
       lastEnergy:latest("energy")?.label||"sem registro"
     };
