@@ -18,3 +18,15 @@
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.hidden{display:none!important}
 @media(max-width:950px){.workspace{grid-template-columns:1fr}.side-panel{min-height:0}.module-nav{grid-template-columns:repeat(4,minmax(0,1fr))}.side-panel{padding:20px}.chat-panel{min-height:640px}}
 @media(max-width:600px){.app-shell{padding:calc(10px + env(safe-area-inset-top,0px)) 10px 20px}.app-header{padding:12px 7px 14px}.brand strong{font-size:21px}.brand img{width:36px;height:36px}.status-label{font-size:10px}.back-link{display:none}.workspace{gap:12px}.side-panel,.chat-panel{border-radius:16px}.side-panel{padding:18px}.side-panel h2{font-size:20px}.mode-group{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.mode-group legend{grid-column:1/-1}.mode-group label{padding:9px 6px;margin:0;gap:5px}.mode-group label small{display:none}.mode-group label strong{font-size:11px}.module-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.chat-top{padding:23px 18px 17px}.chat-log{padding:17px 15px;min-height:180px;max-height:360px}.pending-actions{padding:0 15px}.choices{padding:10px 15px 16px}.choice-grid button{padding:9px 10px}.composer{margin:0 15px 10px}.composer-bottom span{max-width:62%;font-size:10px}.chat-footer{padding:0 15px 17px}.bubble{max-width:92%}}
+
+.sensitive-consent{display:flex;gap:9px;align-items:start;font-size:12px;color:#5d5837;margin:8px 0 13px;line-height:1.5}
+.sensitive-consent input{accent-color:#34634b;margin-top:3px}
+.action-card button:disabled{opacity:.55;cursor:not-allowed}
+.stored-list{margin:0 35px 10px;border:1px solid var(--border);border-radius:12px;padding:11px 15px;background:#fcfdfa}
+.stored-list summary{cursor:pointer;font-size:12px;font-weight:800;color:#2b6444}
+.stored-help{font-size:11px;color:var(--muted);line-height:1.6}
+.reload-records{border:1px solid var(--border);background:#eff5f0;padding:8px 10px;border-radius:8px;font-size:11px;font-weight:700}
+.saved-line{display:flex;justify-content:space-between;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}
+.saved-line span{overflow-wrap:anywhere}
+.saved-line button{background:#fff;border:1px solid #cbd9ce;padding:5px 9px;border-radius:7px;font-size:11px;flex:none}
+@media(max-width:600px){.stored-list{margin:0 15px 10px}}

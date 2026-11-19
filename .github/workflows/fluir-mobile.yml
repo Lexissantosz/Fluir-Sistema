@@ -8,6 +8,7 @@ on:
       - alex/automacao-android-iphone-19-11
       - alex/google-login-onboarding-19-11
       - alex/assistente-ia-fluir-19-11
+      - alex/mobile-ia-avaliacao-integrada-19-11
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -94,4 +95,4 @@ jobs:
           ./mvnw --batch-mode -DskipTests package
       - name: Testar isolamento das tarefas entre usuarios
         working-directory: backend
-        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest test
+        run: ./mvnw --batch-mode -Dtest=TarefaControllerSecurityTest,AssistenteRegistroServiceTest,AssistenteInterpretacaoServiceTest test

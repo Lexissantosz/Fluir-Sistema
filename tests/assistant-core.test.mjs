@@ -31,11 +31,25 @@ test("resumo e adaptacao de tom sao deterministicos",()=>{
 test("o usuario confirma registros e dados pessoais nao sao enviados sem optar",()=>{
  const ui=readFileSync(new URL("../js/assistente.js",import.meta.url),"utf8");
  const page=readFileSync(new URL("../html/assistente.html",import.meta.url),"utf8");
- assert.match(ui,/confirmAction\(item\)/);
+ assert.match(ui,/confirmAction\(item,clientKey\)/);
  assert.match(ui,/if \(!elements\.ai\.checked \|\| demo\) return null/);
- assert.match(ui,/fluir-assistente-usuario-/);
+ assert.match(ui,/apiRequest\("\/registros"/);
  assert.match(page,/id="useGenerativeAI"/);
  assert.match(page,/value="free"/);
  assert.match(page,/value="guided"/);
  assert.match(page,/value="mixed"/);
+});
+
+test("extrai agua, sono e movimento financeiro com valores validados",()=>{
+  assert.ok(core.parseIntent("Bebi 500 ml de água").some(x=>x.type==="water"&&x.value==="500 mL"));
+  assert.ok(core.parseIntent("Dormi 8 horas").some(x=>x.type==="sleep"&&x.value==="8 h"));
+  assert.ok(core.parseIntent("Gastei R$ 35 com almoço").some(x=>x.type==="finances"));
+  assert.ok(core.parseIntent("Completei o hábito de ler").some(x=>x.type==="habit"));
+});
+test("registro com sessao chama API protegida, nao so o localStorage",()=>{
+  const ui=readFileSync(new URL("../js/assistente.js",import.meta.url),"utf8");
+  assert.match(ui,/apiRequest\("\/registros",\s*\{/);
+  assert.match(ui,/Authorization.*Bearer/);
+  assert.match(ui,/if\(demo\)localStorage\.setItem/);
+  assert.match(ui,/Confirmo o registro desta informação pessoal/);
 });
