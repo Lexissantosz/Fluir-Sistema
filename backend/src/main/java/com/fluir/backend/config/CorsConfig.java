@@ -19,7 +19,9 @@ public class CorsConfig {
                             "http://localhost:5500",
                             "http://localhost:5173",
                             "https://lexissantosz.github.io",
-                            "https://fluir-sistema.vercel.app"
+                            "https://fluir-sistema.vercel.app",
+                            "https://localhost", // Capacitor Android
+                            "http://localhost"
                         )
                         
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
