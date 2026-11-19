@@ -31,9 +31,9 @@ test("resumo e adaptacao de tom sao deterministicos",()=>{
 test("o usuario confirma registros e dados pessoais nao sao enviados sem optar",()=>{
  const ui=readFileSync(new URL("../js/assistente.js",import.meta.url),"utf8");
  const page=readFileSync(new URL("../html/assistente.html",import.meta.url),"utf8");
- assert.match(ui,/confirmAction\(item\)/);
+ assert.match(ui,/confirmAction\(item,clientKey\)/);
  assert.match(ui,/if \(!elements\.ai\.checked \|\| demo\) return null/);
- assert.match(ui,/fluir-assistente-usuario-/);
+ assert.match(ui,/apiRequest\("\/registros"/);
  assert.match(page,/id="useGenerativeAI"/);
  assert.match(page,/value="free"/);
  assert.match(page,/value="guided"/);
