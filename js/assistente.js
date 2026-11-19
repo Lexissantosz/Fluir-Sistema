@@ -323,14 +323,14 @@
     elements.input.value="";
     const normalized=Core.normalize(message);
     if(pendingConversation) {
-      if (/\\b(quero registrar|pode registrar|registrar|anotar|salvar|sim,? registra)\\b/.test(normalized)) {
+      if (/\b(quero registrar|pode registrar|registrar|anotar|salvar|sim,? registra)\b/.test(normalized)) {
         const actions=pendingConversation.actions;
         pendingConversation=null;clearConversationChoice();
         bubble("assistant",Core.messageForTone(tone,"confirm"),"Confirme cada item");
         showActions(actions);
         return;
       }
-      if (/\\b(so conversar|so falar|conversar|nao registrar|sem registrar)\\b/.test(normalized)) {
+      if (/\b(so conversar|so falar|conversar|nao registrar|sem registrar)\b/.test(normalized)) {
         const previous=pendingConversation.message;
         pendingConversation=null;clearConversationChoice();
         bubble("assistant",Core.conversationReply(previous,tone),"Conversa, sem registro");

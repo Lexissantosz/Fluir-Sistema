@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - alex/mobile-ia-avaliacao-integrada-19-11
+      - alex/refino-ux-ia-mobile-19-11
   workflow_dispatch:
 
 permissions:

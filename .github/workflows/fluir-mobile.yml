@@ -9,6 +9,7 @@ on:
       - alex/google-login-onboarding-19-11
       - alex/assistente-ia-fluir-19-11
       - alex/mobile-ia-avaliacao-integrada-19-11
+      - alex/refino-ux-ia-mobile-19-11
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -57,6 +58,7 @@ jobs:
           node --check js/login.js
           node --check js/google-login.js
           node --check js/tasks.js
+          node --check js/mobile.js
       - name: Criar projeto Android nativo
         run: npx cap add android
       - name: Gerar icones e splash Android com a marca Fluir
