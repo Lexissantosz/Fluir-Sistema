@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Assistente Fluir | Sua rotina em conversa</title>
+  <meta name="theme-color" content="#e7f4ed" />
+  <link rel="stylesheet" href="../css/assistente.css" />
+  <link rel="icon" href="../Assets/brand/fluir-symbol.svg" type="image/svg+xml" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <a href="dashboard.html" class="brand" aria-label="Voltar para o dashboard">
+        <img src="../Assets/brand/fluir-symbol.svg" alt="" width="40" height="40" />
+        <span><strong>Fluir</strong><small>Assistente pessoal</small></span>
+      </a>
+      <div class="header-right"><span id="experienceLabel" class="status-label">Prévia para avaliação</span><a href="dashboard.html" class="back-link">Voltar ao painel</a></div>
+    </header>
+
+    <div class="workspace">
+      <aside class="side-panel">
+        <p class="eyebrow">SUA EXPERIÊNCIA</p>
+        <h2>Do seu jeito</h2>
+        <p class="helper">O Fluir pode conversar, oferecer escolhas ou combinar os dois jeitos.</p>
+
+        <fieldset class="mode-group" id="chatModes">
+          <legend>Forma de conversar</legend>
+          <label><input type="radio" name="chatMode" value="mixed" checked /> <span><strong>Misto</strong><small>Conversa e escolhas</small></span></label>
+          <label><input type="radio" name="chatMode" value="free" /> <span><strong>Livre</strong><small>Escreva naturalmente</small></span></label>
+          <label><input type="radio" name="chatMode" value="guided" /> <span><strong>Por escolhas</strong><small>Um passo de cada vez</small></span></label>
+        </fieldset>
+
+        <label class="select-label" for="communicationTone">Como devo falar com você?</label>
+        <select id="communicationTone">
+          <option value="calmo">Calmo e acolhedor</option>
+          <option value="direto">Direto e objetivo</option>
+          <option value="motivador">Motivador</option>
+          <option value="neutro">Neutro</option>
+        </select>
+        <p id="toneHint" class="microcopy">O tom é carregado do onboarding quando disponível.</p>
+
+        <label class="ai-opt-in"><input id="useGenerativeAI" type="checkbox" /><span>Permitir envio das minhas mensagens para IA externa, se configurada <small>Desligado por padrão. O Fluir continua oferecendo comandos guiados sem isso.</small></span></label>
+
+        <div class="side-divider"></div>
+        <div class="side-heading"><strong>Áreas do Fluir</strong><small>Explore as possibilidades</small></div>
+        <div id="modulesNav" class="module-nav"></div>
+      </aside>
+
+      <main class="chat-panel">
+        <div class="chat-top">
+          <span class="eyebrow">ASSISTENTE FLUIR · VERSÃO DE AVALIAÇÃO</span>
+          <h1>Organizar a vida pode começar com uma conversa.</h1>
+          <p id="welcomeText">Você pode me contar como está se sentindo ou pedir ajuda para organizar seu dia.</p>
+          <p id="storageNotice" class="storage-notice" role="status"></p>
+        </div>
+        <div class="chat-log" id="messages" role="log" aria-label="Conversa com o assistente" aria-live="polite"></div>
+        <div id="pendingActions" class="pending-actions" aria-live="polite"></div>
+        <section id="quickChoices" class="choices" aria-label="Ações rápidas">
+          <p>Por onde começamos?</p>
+          <div class="choice-grid">
+            <button type="button" data-action="mood">Registrar meu humor</button>
+            <button type="button" data-action="energy">Registrar disposição</button>
+            <button type="button" data-action="task">Criar uma tarefa</button>
+            <button type="button" data-action="diary">Escrever no diário</button>
+            <button type="button" data-action="report">Ver meu resumo</button>
+            <button type="button" data-action="modules">Explorar módulos</button>
+          </div>
+        </section>
+        <form id="assistantForm" class="composer">
+          <label for="messageInput" class="visually-hidden">Sua mensagem</label>
+          <textarea id="messageInput" rows="2" maxlength="1200" placeholder="Ex.: Hoje estou cansado, anote meu humor e crie a tarefa de estudar biologia."></textarea>
+          <div class="composer-bottom">
+            <span>Eu só registro algo depois da sua confirmação.</span>
+            <button type="submit" id="sendButton">Enviar <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+        <div class="chat-footer">
+          <button type="button" id="clearConversation">Limpar conversa neste dispositivo</button>
+          <a href="login.html" id="signInLink">Entrar na minha conta</a>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script defer src="../js/assistente.js"></script>
+</body>
+</html>
