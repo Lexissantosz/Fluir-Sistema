@@ -26,8 +26,11 @@ public class AssistenteRegistro {
     @Column(nullable = false, length = 160)
     private String rotulo;
 
-    @Column(name = "criado_em", nullable = false, insertable = false, updatable = false)
+    @Column(name = "criado_em", nullable = false, updatable = false)
     private OffsetDateTime criadoEm;
+
+    @PrePersist
+    public void antesDeCriar() { if (criadoEm == null) criadoEm = OffsetDateTime.now(java.time.ZoneOffset.UTC); }
 
     @Column(name = "chave_cliente", nullable = false, updatable = false)
     private UUID chaveCliente;
