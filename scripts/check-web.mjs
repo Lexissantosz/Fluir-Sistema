@@ -11,4 +11,6 @@ for (const file of ["index.html", "html/login.html"]) {
   const html = readFileSync(join(root,file), "utf8");
   if (!html.includes('rel="manifest"') || !html.includes('pwa-register.js')) throw new Error("PWA nao integrada a " + file);
 }
+const cap = JSON.parse(readFileSync(join(process.cwd(), "capacitor.config.json"), "utf8"));
+if (cap.server?.appStartPath !== "/html/login.html") throw new Error("Android deve abrir login, nao landing.");
 console.log("Fluir: " + pages.length + " paginas e " + assets.length + " recursos essenciais verificados.");
