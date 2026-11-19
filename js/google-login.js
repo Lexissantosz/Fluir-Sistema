@@ -33,15 +33,27 @@
     if (!idToken || typeof idToken !== "string") {
       throw new Error("Não recebemos uma credencial válida do Google.");
     }
-    setMessage(slot, "Validando sua conta Google no Fluir...");
-    const response = await request(API + "/google", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken })
+    const isLink = slot?.dataset?.googleAuth === "link";
+    const user = isLink ? JSON.parse(sessionStorage.getItem("fluir-user") || "null") : null;
+    if (isLink && !user?.token) throw new Error("Entre na sua conta Fluir antes de vincular o Google.");
+
+    setMessage(slot, isLink ? "Vinculando sua conta Google..." : "Validando sua conta Google no Fluir...");
+    const headers = { "Content-Type": "application/json" };
+    if (isLink) headers.Authorization = "Bearer " + user.token;
+
+    const response = await request(API + (isLink ? "/google/vincular" : "/google"), {
+      method: "POST", headers, body: JSON.stringify({ idToken })
     });
     const data = await readJson(response);
-    if (!response.ok) {
-      throw new Error(data.mensagem || "Não foi possível autenticar com Google.");
+    if (!response.ok) throw new Error(data.mensagem || "Não foi possível autenticar com Google.");
+
+    if (isLink) {
+      // Atualizar somente metadados da sessão já autenticada. Não recriar onboarding.
+      sessionStorage.setItem("fluir-user", JSON.stringify({
+        ...user, provedor: "google", emailVerificado: true, token: data.token || user.token
+      }));
+      setMessage(slot, "Conta Google vinculada com sucesso! Na próxima vez, você poderá entrar com Google.");
+      return;
     }
     if (!window.FluirAuth || typeof window.FluirAuth.completeGoogleLogin !== "function") {
       throw new Error("O fluxo de autenticação não está disponível.");
@@ -77,7 +89,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = "google-auth-native";
-      button.textContent = "Continuar com Google";
+      button.textContent = slot.dataset.googleAuth === "link" ? "Vincular conta Google" : "Continuar com Google";
       button.addEventListener("click", async function () {
         button.disabled = true;
         try {
