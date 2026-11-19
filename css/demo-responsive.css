@@ -709,3 +709,62 @@ body.demo-module-only .timeline-page .event-list > .demo-record {
     grid-template-columns: minmax(0,1fr) !important;
   }
 }
+
+/* ================================================================
+   TIMELINE DEMO | correção da causa-raiz de letras na vertical
+   dashboard.css define .event-list em 4 colunas para seus cards;
+   timeline.css herda a propriedade. A demonstração precisa de UMA
+   coluna de eventos, independentemente do tamanho ou zoom.
+   ================================================================ */
+body.demo-module-only .timeline-page .timeline-panel .event-list {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-auto-flow: row !important;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
+  gap: 12px;
+}
+
+body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record {
+  display: grid !important;
+  grid-template-columns: 35px minmax(0, 1fr) auto !important;
+  gap: 14px !important;
+  align-items: center !important;
+  min-width: 0;
+  width: 100%;
+}
+
+body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record .demo-record-main {
+  min-width: 0;
+  max-width: 100%;
+  width: auto;
+}
+
+body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record .demo-record-main :is(strong, p, small) {
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+  line-height: 1.45;
+}
+
+body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record .demo-record-tag {
+  grid-column: 3;
+  align-self: center;
+  max-width: 12rem;
+  white-space: normal;
+}
+
+@media (max-width: 900px) {
+  body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record {
+    grid-template-columns: 32px minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 8px 10px !important;
+  }
+
+  body.demo-module-only .timeline-page .timeline-panel .event-list > .demo-record .demo-record-tag {
+    grid-column: 2 !important;
+    justify-self: start;
+    max-width: 100%;
+  }
+}
