@@ -77,6 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/google/vincular").authenticated()
                         .requestMatchers("/api/usuarios/**").permitAll()
                         .requestMatchers("/api/onboarding/**").authenticated()
+                        .requestMatchers("/api/ciclos/**").authenticated()
                         .requestMatchers("/api/assistente/**").authenticated()
                         .requestMatchers("/api/tarefas/**").authenticated()
                         .anyRequest().permitAll()

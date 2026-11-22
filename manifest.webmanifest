@@ -1,0 +1,19 @@
+{
+  "name": "Fluir | Organização da Vida",
+  "short_name": "Fluir",
+  "description": "Organização pessoal e bem-estar",
+  "id": "/",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#faf8fd",
+  "theme_color": "#7754ae",
+  "icons": [
+    {
+      "src": "/Assets/brand/fluir-symbol.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

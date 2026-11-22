@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Fluir | Acompanhamento de ciclos</title>
+<link rel="stylesheet" href="../css/menstrual-profiles.css">
+</head>
+<body>
+<a class="skip-link" href="#principal">Ir para o conteúdo</a>
+<div class="shell">
+<aside class="side">
+<a class="logo" href="../index.html" aria-label="Fluir, início">fluir<span>.</span></a>
+<p class="side-label">ORGANIZAÇÃO E CUIDADO</p>
+<nav aria-label="Navegação principal">
+<a href="dashboard.html">Visão geral</a><a href="tasks.html">Tarefas</a><a href="habits.html">Hábitos</a>
+<a class="active" href="menstrual-cycle.html" aria-current="page">Ciclo menstrual</a>
+<a href="settings.html">Configurações</a>
+</nav>
+<div class="side-note">Seu corpo, seu tempo. Os dados só são compartilhados com a sua autorização.</div>
+</aside>
+<main id="principal">
+<header class="top"><div><span class="eyebrow">BEM-ESTAR · FLUIR</span><h1>Ciclo menstrual</h1><p>Um espaço para acompanhar cada pessoa com respeito e privacidade.</p></div><a href="dashboard.html" class="link">Voltar ao painel</a></header>
+<div id="alert" class="alert" role="status" aria-live="polite" hidden></div>
+<div id="authError" class="card" hidden><h2>Entre na sua conta</h2><p>Este módulo precisa de autenticação para evitar misturar dados de saúde entre pessoas.</p><a class="btn primary" href="login.html">Ir para o login</a><p class="muted">Histórico local anterior preservado, com recuperação pendente de revisão de privacidade.</p></div>
+<div id="app" hidden>
+<section class="card intro" id="intro">
+<div class="eyebrow">CONFIGURAÇÃO · 01</div>
+<h2>Quem você deseja acompanhar?</h2><p>Você pode acompanhar seu próprio ciclo, o de outra pessoa com autorização ou deixar para depois.</p>
+<fieldset class="choices" id="choices"><legend class="sr-only">Escolha o acompanhamento</legend>
+<label><input type="radio" name="mode" value="self" checked> Meu próprio ciclo</label>
+<label><input type="radio" name="mode" value="other"> O ciclo de outra pessoa</label>
+<label><input type="radio" name="mode" value="both"> Meu ciclo e o de outra pessoa</label>
+<label><input type="radio" name="mode" value="later"> Agora não</label>
+</fieldset>
+<div class="mini-question"><strong>Você deseja acompanhar o ciclo menstrual de mais de uma pessoa?</strong><p>Uma pessoa é um perfil, independentemente de quantos períodos ela registre.</p><span class="tag">Disponível para você e mais uma pessoa no plano gratuito</span></div>
+<button id="start" class="btn primary">Continuar</button>
+</section>
+<section class="workspace" id="workspace" hidden>
+<div class="row between wrap"><div><span class="eyebrow">PERFIS AUTORIZADOS</span><h2>Seu acompanhamento</h2></div><button class="btn secondary" id="editSetup">Alterar preferência</button></div>
+<div class="tabs" id="profileTabs" role="tablist" aria-label="Escolha uma pessoa"></div>
+<div id="profileEmpty" class="card" hidden><h3>Nenhum perfil selecionado</h3><p>Você pode configurar o próprio ciclo ou solicitar autorização para acompanhar outra pessoa.</p></div>
+<div id="profileArea" hidden>
+<div class="card profile-head"><div class="avatar" id="selectedAvatar" aria-hidden="true">F</div><div class="grow"><h3 id="selectedName"></h3><p id="selectedType"></p></div><span class="tag" id="accessTag"></span><button class="btn" type="button" id="renameShared" hidden>Editar apelido</button></div>
+<section class="card calendar-panel" aria-label="Calendário do perfil selecionado">
+<div class="row between wrap"><div><h3>Calendário do ciclo</h3><p class="muted" id="calendarHint">Selecione um dia para filtrar os registros.</p></div>
+<div class="row"><button class="btn" type="button" id="monthPrev" aria-label="Mês anterior">‹</button><strong id="monthHeading" aria-live="polite"></strong><button class="btn" type="button" id="monthNext" aria-label="Próximo mês">›</button></div></div>
+<div id="calendarGrid" class="calendar-grid" role="grid" aria-label="Dias do mês"></div>
+<div class="row wrap legend"><span><i class="dot period-dot"></i> Menstruação</span><span><i class="dot symptom-dot"></i> Sintoma</span><span><i class="dot predicted-dot"></i> Previsão estimada</span><button class="btn" type="button" id="clearDateFilter" hidden>Ver todos os registros</button></div>
+</section>
+<div class="grid">
+<section class="card"><div class="row between"><h3>Histórico</h3><button class="btn primary" id="newRecord">+ Novo registro</button></div><p class="muted" id="recordsHint">Registros desse perfil</p><div id="records" class="records"></div></section>
+<section class="card"><h3>Resumo e previsões</h3><p id="estimate">Previsões de ciclos são estimativas e não servem como diagnóstico ou contracepção.</p><p class="muted">Os registros de outras pessoas são somente para consulta, quando autorizado.</p><button id="removeAccess" class="btn danger" hidden>Deixar de acompanhar</button></section>
+</div></div>
+<div class="grid actions">
+<section class="card" id="ownSettings">
+<h3>Meu perfil</h3><p>Preencha apenas o que desejar. Foto e apelido são opcionais.</p>
+<form id="profileForm">
+<label>Apelido <input id="alias" maxlength="60" placeholder="Como deseja aparecer"></label>
+<label>Minha foto <input id="photo" type="file" accept="image/png,image/jpeg,image/webp"><small>Até 150 KB após ajuste da imagem, opcional.</small></label>
+<div class="preview"><span class="avatar" id="photoPreview">F</span><button type="button" class="btn" id="removePhoto">Remover foto</button></div>
+<label>Você menstrua atualmente? <select id="menstruates"><option value="prefiro-nao-responder">Prefiro não responder</option><option value="sim">Sim</option><option value="nao">Não</option></select></label>
+<div class="pair"><label>Duração do ciclo (dias) <input id="cycleLength" type="number" min="15" max="90" placeholder="Ex.: 28"></label><label>Duração da menstruação (dias) <input id="periodLength" type="number" min="1" max="20" placeholder="Ex.: 5"></label></div>
+<label>Último início, se conhecido <input id="lastPeriod" type="date"></label>
+<button class="btn primary" type="submit">Salvar meu perfil</button>
+</form></section>
+<section class="card" id="sharing">
+<h3>Convites e compartilhamento</h3>
+<p>O código permite <strong>solicitar</strong> acesso. A pessoa titular deve aprovar o pedido.</p>
+<div class="permissions"><label><input id="allowCalendar" type="checkbox" checked> Calendário e períodos</label><label><input id="allowSymptoms" type="checkbox"> Sintomas</label><label><input id="allowNotes" type="checkbox"> Notas pessoais</label><label><input id="allowIdentity" type="checkbox"> Sincronizar apelido e foto</label></div>
+<button class="btn secondary" id="generate" type="button">Gerar código de convite (10 min)</button>
+<div id="inviteCode" class="codebox" hidden><label>Código temporário <input id="codeValue" readonly aria-label="Código temporário"></label><button type="button" class="btn" id="copyCode">Copiar código</button></div>
+<hr>
+<label>Recebeu um código? <input id="receivedCode" autocomplete="off" placeholder="Cole aqui o código recebido"></label><button id="requestAccess" class="btn secondary">Solicitar acesso</button>
+<h4>Pedidos para aprovar</h4><div id="requests" class="request-list"></div>
+<h4>Compartilhamentos que autorizei</h4><div id="grants" class="request-list"></div>
+<p class="muted">Plano gratuito: um compartilhamento autorizado por titular e um perfil adicional por visitante. Perfis extras e assinatura ainda não estão habilitados.</p>
+</section>
+</div>
+</section>
+</div>
+<div class="footer"><span>Registros antigos do navegador não são importados automaticamente para proteger a privacidade.</span><span>Dados de saúde são privados. Não compartilhe seus códigos publicamente.</span></div>
+</main></div>
+<dialog id="recordDialog"><form id="recordForm" method="dialog"><h2>Novo registro no meu ciclo</h2><p>Confira a pessoa selecionada antes de salvar.</p>
+<label>Tipo<select id="recordType" required><option value="period">Menstruação</option><option value="symptom">Sintoma</option><option value="mood">Humor</option><option value="other">Outro</option></select></label>
+<label>Data<input id="recordDate" type="date" required></label><label>Intensidade<select id="intensity"><option value="nenhum">Não informada</option><option value="leve">Leve</option><option value="medio">Moderada</option><option value="forte">Forte</option></select></label>
+<label>Título<input id="recordTitle" maxlength="150" minlength="2" required></label><label>Nota opcional<textarea id="recordNote" maxlength="2000" rows="3"></textarea></label>
+<div class="row end"><button type="button" class="btn" id="cancelRecord">Cancelar</button><button type="submit" class="btn primary">Salvar registro</button></div></form></dialog>
+<script src="../js/menstrual-profiles.js" defer></script>
+</body></html>
