@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluir · Protótipo de acompanhamento de ciclos</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#2d2740;background:#faf8fd}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 0 0,#eee2ff,transparent 40%),#faf8fd}main{width:min(100%,650px);background:#fff;border:1px solid #e7ddef;border-radius:24px;box-shadow:0 16px 50px #48206d12;padding:clamp(20px,5vw,42px)}header{display:flex;justify-content:space-between;align-items:center;color:#76668d;font-size:.85rem}header strong{font-size:1.5rem;color:#7356a7;letter-spacing:-.07em}h1{font-size:clamp(1.5rem,4vw,2rem);letter-spacing:-.03em;line-height:1.17;margin:28px 0 10px}p{color:#685f72;line-height:1.55}fieldset{border:0;padding:0;margin:26px 0}label.option{display:flex;gap:13px;align-items:flex-start;border:1px solid #e7ddea;border-radius:13px;padding:16px;margin:10px 0;cursor:pointer;background:white}label.option:has(input:checked){border-color:#8d68c2;background:#f7f1ff}input[type=radio],input[type=checkbox]{accent-color:#7754ae;width:18px;height:18px;flex-shrink:0}button{font:inherit;border-radius:12px;padding:13px 18px;border:1px solid #ddd0e9;background:white;cursor:pointer;color:#543a7b}button.primary{background:#7754ae;color:#fff;border-color:#7754ae}button:focus-visible,input:focus-visible{outline:3px solid #ad8be3;outline-offset:3px}nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}small{color:#766c7f}.hidden{display:none!important}.field{display:grid;gap:8px;margin:15px 0}.field input,.field select{border:1px solid #d8cbe4;border-radius:11px;padding:12px;font:inherit;width:100%}.note{background:#f7f2fd;border-radius:12px;padding:12px 16px;font-size:.9rem}.progress{height:5px;background:#eee8f3;border-radius:10px;margin-top:16px}.progress>div{height:100%;width:25%;background:#9470be;border-radius:10px;transition:width .2s}.profile{border:1px solid #ddd1e8;border-radius:14px;padding:15px;margin:12px 0}.avatar{width:36px;height:36px;border-radius:100%;display:inline-grid;place-items:center;background:#ede4f7;font-weight:700;color:#5f438b;margin-right:10px}.pill{font-size:.72rem;color:#7b4eac;background:#f1e7fc;padding:5px 9px;border-radius:99px}.warning{color:#934e20}.success{color:#326c4f}.footer{margin-top:24px}#summary{white-space:pre-line}
+</style>
+</head>
+<body>
+<main>
+<header><strong>fluir.</strong><span>PRÉVIA · Dados fictícios, não salvos</span></header>
+<div class="progress" aria-hidden="true"><div id="progress"></div></div>
+<section id="step1">
+<h1>Quem você deseja acompanhar?</h1><p>Você pode usar o módulo para seu próprio ciclo, acompanhar outra pessoa com autorização ou configurar isso depois.</p>
+<fieldset aria-label="Quem deseja acompanhar">
+<label class="option"><input name="who" type="radio" value="self" checked><span>Meu próprio ciclo</span></label>
+<label class="option"><input name="who" type="radio" value="other"><span>O ciclo de outra pessoa</span></label>
+<label class="option"><input name="who" type="radio" value="both"><span>Meu ciclo e o de outra pessoa</span></label>
+<label class="option"><input name="who" type="radio" value="later"><span>Agora não</span></label>
+</fieldset>
+</section>
+<section id="step2" class="hidden">
+<h1>Você deseja acompanhar o ciclo menstrual de mais de uma pessoa?</h1><p>Isso significa alternar entre pessoas distintas. Não significa registrar vários ciclos da mesma pessoa.</p>
+<fieldset aria-label="Quantidade de pessoas">
+<label class="option"><input name="many" type="radio" value="no" checked><span>Não, somente uma pessoa</span></label>
+<label class="option"><input name="many" type="radio" value="yes"><span>Sim, mais de uma pessoa</span></label>
+</fieldset>
+<div class="note">O plano gratuito proposto contempla seu perfil e mais uma pessoa, ou apenas uma pessoa se você não acompanhar seu próprio ciclo. O limite definitivo ainda será aprovado.</div>
+</section>
+<section id="step3" class="hidden">
+<h1>Vamos personalizar seus perfis</h1><p>Nome, apelido e foto são opcionais. Nenhum acesso de outra pessoa será concedido nesta prévia.</p>
+<div id="ownBlock">
+<div class="field"><label for="menstruates">Você menstrua atualmente? <small>(opcional)</small></label><select id="menstruates"><option value="skip">Prefiro não responder</option><option value="yes">Sim</option><option value="no">Não</option></select></div>
+</div>
+<div id="otherBlock">
+<div class="field"><label for="nickname">Nome ou apelido da outra pessoa <small>(opcional)</small></label><input id="nickname" maxlength="40" autocomplete="off" placeholder="Ex.: Ana"></div>
+<div class="field"><label for="image">Foto de perfil (apenas demonstração local)</label><input id="image" type="file" accept="image/png,image/jpeg,image/webp"></div>
+<label class="option"><input id="sync" type="checkbox"><span>Gostaria de solicitar sincronização de apelido e foto, se a titular autorizar.</span></label>
+<div class="note"><strong>Como funcionará:</strong> a titular cria um convite de uso único e escolhe quem pode ver quais dados. Inserir o código não dá acesso por si só. <strong>Compartilhamento ainda não implementado.</strong></div>
+</div>
+</section>
+<section id="step4" class="hidden">
+<h1>Confira a configuração</h1><p>Nenhum dado é enviado ou gravado. Este fluxo é somente um protótipo de interface para validação.</p>
+<div id="summary" class="note" aria-live="polite"></div>
+<div id="profilePreview"></div>
+<p class="warning">Para ativar compartilhamento real, são necessários backend autenticado, consentimento, escopos e testes de isolamento.</p>
+</section>
+<nav class="footer"><button id="back" type="button" class="hidden">Voltar</button><button id="next" type="button" class="primary">Continuar</button></nav>
+</main>
+<script>
+(()=>{'use strict';let step=1;const max=4;
+const $=id=>document.getElementById(id),checked=n=>document.querySelector('input[name="'+n+'"]:checked')?.value;
+const text=(el,s)=>{el.textContent=s};
+function show(){for(let i=1;i<=max;i++)$('step'+i).classList.toggle('hidden',i!==step);$('back').classList.toggle('hidden',step===1);text($('next'),step===max?'Recomeçar':'Continuar');$('progress').style.width=step*25+'%';if(step===3){let w=checked('who');$('ownBlock').classList.toggle('hidden',w==='other');$('otherBlock').classList.toggle('hidden',w==='self')}if(step===4)summary()}
+function summary(){let w=checked('who'),many=checked('many')==='yes',nick=$('nickname').value.trim().slice(0,40)||'Outra pessoa',own=w==='self'||w==='both',other=w==='other'||w==='both';let labels={self:'Meu próprio ciclo',other:'Outra pessoa',both:'Meu ciclo e o de outra pessoa',later:'Configurar depois'};const lines=['Escolha: '+labels[w], 'Mais de uma pessoa: '+(many?'sim':'não')];if(own)lines.push('Menstruação atual: '+({yes:'sim',no:'não',skip:'não informado'}[$('menstruates').value]));if(other)lines.push('Outro perfil: '+nick,'Sincronização solicitável: '+($('sync').checked?'sim, sujeita à autorização':'não'));text($('summary'),lines.join('\n'));$('profilePreview').replaceChildren();if(own)addProfile('Meu ciclo','perfil próprio');if(other)addProfile(nick,'aguardando consentimento');}
+function addProfile(name,state){const card=document.createElement('div');card.className='profile';const avatar=document.createElement('span');avatar.className='avatar';text(avatar,name.charAt(0).toLocaleUpperCase('pt-BR'));const title=document.createElement('strong');text(title,name+' ');const badge=document.createElement('span');badge.className='pill';text(badge,state);card.append(avatar,title,badge);$('profilePreview').append(card)}
+$('next').addEventListener('click',()=>{if(step===max){$('nickname').value='';$('image').value='';$('sync').checked=false;step=1;show();return}if(step===1&&checked('who')==='later'){step=4;show();return}if(step===2){const w=checked('who'),many=checked('many')==='yes';if(w==='both'&&!many){document.querySelector('input[name=many][value=yes]').checked=true}if(w==='self'&&many){document.querySelector('input[name=who][value=both]').checked=true}}step++;show()});
+$('back').addEventListener('click',()=>{step=step===4&&checked('who')==='later'?1:Math.max(1,step-1);show()});
+$('image').addEventListener('change',()=>{const f=$('image').files[0];if(f&&(!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>2*1024*1024)){alert('Escolha JPG, PNG ou WebP com até 2 MB.');$('image').value=''}});
+show()})();
+</script></body></html>
