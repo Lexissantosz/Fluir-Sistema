@@ -20,6 +20,8 @@ public class CorsConfig {
                             "http://localhost:5173",
                             "https://lexissantosz.github.io",
                             "https://fluir-sistema.vercel.app",
+                            "https://fluir-sistema-einry2uxv-lexissantosz.vercel.app",
+                            "https://fluir-sistema-git-alex-refino-ux-ia-mobile-19-11-lexissantosz.vercel.app",
                             "https://localhost", // Capacitor Android
                             "http://localhost"
                         )
