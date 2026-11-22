@@ -28,6 +28,9 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "https://fluir-sistema.vercel.app",
+                // Preview QA privado e alias estavel desta branch, sem origens wildcard.
+                "https://fluir-sistema-einry2uxv-lexissantosz.vercel.app",
+                "https://fluir-sistema-git-alex-refino-ux-ia-mobile-19-11-lexissantosz.vercel.app",
                 "http://127.0.0.1:5500",
                 "http://localhost:5500",
                 "https://localhost", // Capacitor Android
