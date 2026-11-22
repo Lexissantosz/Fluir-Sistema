@@ -28,6 +28,27 @@ const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
 const ONBOARDING_API_BASE_URL =
   "https://fluir-sistema.onrender.com/api/onboarding";
 
+// Um backend gratuito pode despertar lentamente: sempre limitar a espera.
+const AUTH_TIMEOUT_MS = 90000;
+async function fetchAuth(url, options = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), AUTH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+function explainConnectionFailure(error) {
+  if (error?.name === "AbortError") return "O servidor demorou mais de 90 segundos para responder. Tente novamente.";
+  console.warn("Falha de comunicação:", error);
+  return "Não conseguimos acessar o servidor. Verifique a conexão e tente novamente. O serviço pode estar indisponível.";
+}
+function notifySlowConnection(element) {
+  return setTimeout(() => showMessage(element, "Conectando ao servidor... A primeira conexão pode demorar.", "info"), 8000);
+}
+
+
 // =============================
 // 2. FUNÇÕES AUXILIARES
 // =============================
@@ -152,7 +173,7 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
 async function hasCompletedOnboarding(usuario) {
   sessionStorage.removeItem("fluir-onboarding");
 
-  const response = await fetch(
+  const response = await fetchAuth(
     `${ONBOARDING_API_BASE_URL}/usuario/${usuario.id}`,
     {
       headers: {
@@ -318,7 +339,10 @@ passwordButtons.forEach(function (button) {
       return;
     }
 
-    input.type = input.type === "password" ? "text" : "password";
+    const shouldShow = input.type === "password";
+    input.type = shouldShow ? "text" : "password";
+    button.setAttribute("aria-label", shouldShow ? "Ocultar senha" : "Mostrar senha");
+    button.setAttribute("aria-pressed", String(shouldShow));
   });
 });
 
@@ -333,11 +357,11 @@ if (loginForm) {
     event.preventDefault();
 
     const emailInput = loginForm.querySelector('input[type="email"]');
-    const senhaInput = loginForm.querySelector('input[type="password"]');
+    const senhaInput = loginForm.querySelector("input.password");
     const submitButton = loginForm.querySelector('button[type="submit"]');
 
     const email = emailInput ? emailInput.value.trim() : "";
-    const senha = senhaInput ? senhaInput.value.trim() : "";
+    const senha = senhaInput ? senhaInput.value : "";
 
     showMessage(loginMessage, "", "info");
 
@@ -365,10 +389,11 @@ if (loginForm) {
       return;
     }
 
+    const slowNotice = notifySlowConnection(loginMessage);
     try {
       setButtonLoading(submitButton, true, "Entrando...", "Entrar");
 
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const response = await fetchAuth(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -432,10 +457,11 @@ if (loginForm) {
     } catch (error) {
       showMessage(
         loginMessage,
-        "Não foi possível conectar ao servidor. Verifique se o backend está rodando.",
+        explainConnectionFailure(error),
         "error"
       );
     } finally {
+      clearTimeout(slowNotice);
       setButtonLoading(submitButton, false, "Entrando...", "Entrar");
     }
   });
@@ -459,9 +485,9 @@ if (registerForm) {
 
     const nome = nomeInput ? nomeInput.value.trim() : "";
     const email = emailInput ? emailInput.value.trim() : "";
-    const senha = senhaInput ? senhaInput.value.trim() : "";
+    const senha = senhaInput ? senhaInput.value : "";
     const confirmarSenha = confirmarSenhaInput
-      ? confirmarSenhaInput.value.trim()
+      ? confirmarSenhaInput.value
       : "";
 
     showMessage(registerMessage, "", "info");
@@ -512,10 +538,11 @@ if (registerForm) {
       return;
     }
 
+    const slowNotice = notifySlowConnection(registerMessage);
     try {
       setButtonLoading(submitButton, true, "Cadastrando...", "Cadastrar");
 
-      const response = await fetch(`${API_BASE_URL}/cadastro`, {
+      const response = await fetchAuth(`${API_BASE_URL}/cadastro`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -556,10 +583,11 @@ if (registerForm) {
       } catch (error) {
       showMessage(
         registerMessage,
-        "Não foi possível conectar ao servidor. Verifique se o backend está rodando.",
+        explainConnectionFailure(error),
         "error"
       );
     } finally {
+      clearTimeout(slowNotice);
       setButtonLoading(submitButton, false, "Cadastrando...", "Cadastrar");
     }
   });

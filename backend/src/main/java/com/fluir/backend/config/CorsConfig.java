@@ -18,6 +18,8 @@ public class CorsConfig {
                             "http://127.0.0.1:5500",
                             "http://localhost:5500",
                             "http://localhost:5173",
+                            "https://localhost", // Capacitor Android
+                            "http://localhost",
                             "https://lexissantosz.github.io",
                             "https://fluir-sistema.vercel.app",
                             "https://localhost", // Capacitor Android
