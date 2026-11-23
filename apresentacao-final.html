@@ -498,7 +498,7 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
 
 <section class="slide dark-slide closing-slide" data-title="Encerramento" data-notes="Peça que quem quiser conhecer o Fluir escaneie o QR do sistema ou do repositório. Os códigos QR são gerados localmente, offline. Não incentive inserir dados sensíveis: a homologação de produção permanece pendente.">
  <div class="closing-left"><div class="eyebrow">Fluir · Projeto Integrador Senac DF</div><h2 class="closing-title">A melhor rotina é a que faz sentido para você.</h2><p class="subtitle">Obrigado!<br>Alex Santos e Dawid Lima · 2026</p>
- <div class="actions"><a class="button secondary" href="https://fluir-sistema.vercel.app/" target="_blank" rel="noopener noreferrer">Sistema completo</a><a class="button secondary" href="https://github.com/Lexissantosz/Fluir-Sistema" target="_blank" rel="noopener noreferrer">Repositório</a></div></div>
+ <div class="actions"><a class="button secondary" href="https://fluir-sistema.vercel.app/html/login.html" target="_blank" rel="noopener noreferrer">Sistema completo</a><a class="button secondary" href="https://github.com/Lexissantosz/Fluir-Sistema" target="_blank" rel="noopener noreferrer">Repositório</a></div></div>
  <div class="closing-right"><article class="qr-card"><div class="qr-target" id="qrSite" aria-label="QR Code para o sistema Fluir"></div><b>Conheça o Fluir</b><small>fluir-sistema.vercel.app</small></article><article class="qr-card"><div class="qr-target" id="qrRepo" aria-label="QR Code para o repositório Fluir"></div><b>Veja o código</b><small>github.com/Lexissantosz/Fluir-Sistema</small></article></div>
 </section>
 </main>
@@ -579,7 +579,7 @@ show(0);
     try{new QRCode(el,{text:url,width:142,height:142,colorDark:"#161716",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}
     catch(e){el.textContent=url;el.style.wordBreak="break-all"}
   }
-  draw("qrSite","https://fluir-sistema.vercel.app/");
+  draw("qrSite","https://fluir-sistema.vercel.app/html/login.html");
   draw("qrRepo","https://github.com/Lexissantosz/Fluir-Sistema");
 })();
 </script></body>
