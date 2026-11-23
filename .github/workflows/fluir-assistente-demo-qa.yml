@@ -1,0 +1,39 @@
+name: Fluir | QA assistente e demonstracao
+on:
+  push:
+    branches:
+      - alex/release-assistente-demo-prod-23-11
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Playwright de teste
+        run: npm install --no-audit --no-fund --no-save playwright@1.57.0
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Validar sintaxe
+        run: |
+          node --check js/assistant.js
+          node --check js/demo.js
+      - name: Executar QA em navegador
+        run: |
+          python3 -m http.server 5500 --bind 127.0.0.1 --directory . >/tmp/fluir-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:5500/html/demo.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/assistente-demo.e2e.cjs
