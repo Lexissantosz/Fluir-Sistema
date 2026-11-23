@@ -21,8 +21,8 @@ jobs:
           node-version: "22"
       - name: Instalar Playwright de teste
         run: npm install --no-audit --no-fund --no-save playwright@1.57.0
-      - name: Instalar Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Verificar Chrome do runner
+        run: google-chrome --version
       - name: Validar sintaxe
         run: |
           node --check js/assistant.js
