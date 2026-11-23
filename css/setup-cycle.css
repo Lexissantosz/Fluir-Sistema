@@ -41,3 +41,24 @@
 .cycle-review-person span:last-child{display:grid;gap:4px;min-width:0}
 .cycle-review-person strong{font-size:14px;overflow-wrap:anywhere}
 .cycle-review-person small{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* Perguntas em ordem lógica: quantidade primeiro, escolha da pessoa depois. */
+.cycle-onboard .cycle-count-buttons { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px; }
+.cycle-onboard .cycle-count-buttons button { width:100%;height:auto;min-height:46px;padding:10px 14px;white-space:normal;line-height:1.45; }
+.cycle-onboard #cycleCountLater { grid-column:1/-1; }
+.cycle-onboard #cycleOwnMenstrualFields { min-width:0; }
+.cycle-onboard #cycleOwnMenstrualFields[hidden] { display:none !important; }
+.cycle-onboard .cycle-upload { display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 8px;min-width:0; }
+.cycle-onboard .cycle-file-input { position:absolute !important;width:1px !important;height:1px !important;overflow:hidden !important;clip-path:inset(50%);white-space:nowrap;opacity:0; }
+.cycle-onboard .cycle-upload-button { display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px solid var(--border-strong);border-radius:12px;background:var(--button-bg);color:var(--button-text);font:inherit;font-size:13px;font-weight:750;cursor:pointer;transition:filter .15s ease,transform .15s ease; }
+.cycle-onboard .cycle-upload-button:hover { filter:brightness(.88); }
+.cycle-onboard .cycle-upload-button:active { transform:scale(.985); }
+.cycle-onboard .cycle-file-input:focus-visible + .cycle-upload-button { outline:3px solid var(--border-strong);outline-offset:3px; }
+.cycle-onboard .cycle-upload-name { color:var(--muted);font-size:12.5px;overflow-wrap:anywhere;flex:1;min-width:125px; }
+.cycle-onboard .cycle-remove-photo {justify-self:start;padding:8px 14px;min-height:38px;height:auto;font-size:12px;margin:-4px 0 10px;}
+@media(max-width:530px){
+ .cycle-onboard .cycle-count-buttons { grid-template-columns:minmax(0,1fr); }
+ .cycle-onboard #cycleCountLater { grid-column:auto; }
+ .cycle-onboard .cycle-upload-button { width:100%; }
+ .cycle-onboard .cycle-upload-name { width:100%; }
+}

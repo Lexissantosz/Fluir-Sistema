@@ -56,6 +56,15 @@ class CicloOnboardingControllerTest {
         assertEquals("salvo",controller.configure(payload,user(7)).get("status"));
     }
 
+    @Test void naoMenstruaNaoPersisteDatasMesmoSePayloadForjado(){
+        Map<String,Object> payload=Map.of("modo","self","rascunhos",List.of(),
+            "menstrua","nao","ultimaMenstruacao","2026-02-01",
+            "duracaoCiclo",28,"duracaoMenstruacao",6);
+        assertEquals("salvo",controller.configure(payload,user(7)).get("status"));
+        verify(db).update(contains("INSERT INTO ciclo_perfis"),
+            eq(7),isNull(),isNull(),eq("nao"),eq("self"),isNull(),isNull(),isNull());
+    }
+
     @Test void naoPermiteFotoSvgOuImagemFalsa(){
         Map<String,Object> payload=new java.util.HashMap<>();
         payload.put("modo","self");

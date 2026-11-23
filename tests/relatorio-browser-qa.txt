@@ -1,14 +1,19 @@
 PASS onboarding original permanece com quatro etapas
 PASS Ciclo integrado à etapa 3, sem protótipo paralelo
-PASS Múltiplas pessoas: 'Outra pessoa' + 'Sim' cria duas vagas
+PASS A quantidade é a primeira pergunta; opções individuais ficam condicionais
+PASS Mais de uma pessoa com perfis de terceiros cria duas identificações
+PASS Alternar de 'Sim' para 'Não' remove segunda vaga e mantém escolha de terceiro
+PASS Botões de foto são acessíveis e substituem input nativo visível
 PASS Apelido com HTML não é executado
 PASS Prévia de foto aparece no perfil e na revisão
 PASS Recomeçar zera as escolhas e volta à primeira etapa
-PASS Meu próprio ciclo tem campos de duração sem supor identidade
+PASS Meu próprio ciclo preenche Sim e esconde períodos quando seleciono Não
+PASS Meu e outra pessoa + Não menstruo esconde dados próprios sem ocultar terceiros
+PASS Agora não oculta perfis e campos sensíveis
 PASS Tema clássico mantém botões pretos e tipografia original
 PASS Nenhuma exceção de script no fluxo desktop
 PASS Largura 390px sem scroll horizontal na abertura
 PASS Fluxo de duas pessoas também funciona no celular (390px)
 PASS Nenhuma exceção JS em tela móvel
 PASS Falha temporária na API de ciclo não duplica POST do onboarding
-13 testes aprovados
+18 testes aprovados

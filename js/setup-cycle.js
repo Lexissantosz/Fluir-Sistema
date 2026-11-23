@@ -5,7 +5,7 @@
 (function () {
   "use strict";
   const blankPerson=()=>({id:Math.random().toString(36).slice(2),apelido:"",possuiFluir:"nao-sei",sincronizar:false,fotoPreview:null});
-  const blank=()=>({modo:"later",pessoas:[],menstrua:"prefiro-nao-responder",ultimaMenstruacao:"",
+  const blank=()=>({multi:"later",modo:"later",pessoas:[],menstrua:"sim",ultimaMenstruacao:"",
     duracaoCiclo:"",duracaoMenstruacao:"",lembretes:"nao-sei",foto:null});
   let state=blank();
   const $=id=>document.getElementById(id);
@@ -17,20 +17,19 @@
       <h4>Acompanhamento de ciclos</h4>
       <p class="question-block-description">O mesmo Fluir, com cuidado para cada pessoa. Você pode configurar depois e não precisa informar seu gênero para usar o módulo.</p>
       <div class="question-grid">
-        <label class="field question-full"><span>Quem você deseja acompanhar?</span>
-          <select id="cycleMode">
-            <option value="later">Agora não</option><option value="self">Meu próprio ciclo</option>
-            <option value="other">O ciclo de outra pessoa</option>
-            <option value="both">Meu ciclo e o de outra pessoa</option>
-          </select></label>
-        <div class="field question-full" id="cycleCountBox" hidden>
+        <div class="field question-full" id="cycleCountBox">
           <span>Você deseja acompanhar o ciclo menstrual de mais de uma pessoa?</span>
           <div class="cycle-count-buttons" role="group" aria-label="Quantidade de pessoas">
-            <button id="cycleCountNo" type="button" class="secondary-btn" aria-pressed="false">Não</button>
-            <button id="cycleCountYes" type="button" class="secondary-btn" aria-pressed="false">Sim</button>
+            <button id="cycleCountNo" type="button" class="secondary-btn" aria-pressed="false">Não, apenas uma</button>
+            <button id="cycleCountYes" type="button" class="secondary-btn" aria-pressed="false">Sim, mais de uma</button>
+            <button id="cycleCountLater" type="button" class="secondary-btn" aria-pressed="false">Agora não</button>
           </div>
-          <small>Estamos falando de pessoas diferentes, não de vários períodos da mesma pessoa.</small>
+          <small>Uma pessoa pode ser você ou alguém que autorize o acompanhamento.</small>
         </div>
+        <label class="field question-full" id="cycleModeField" hidden>
+          <span id="cycleModeLabel">Quem você deseja acompanhar?</span>
+          <select id="cycleMode" aria-labelledby="cycleModeLabel"></select>
+        </label>
       </div>
       <section id="cycleOwn" hidden aria-label="Meu próprio ciclo">
         <h5>Meu ciclo</h5>
@@ -40,17 +39,26 @@
             <option value="prefiro-nao-responder">Prefiro não responder</option>
             <option value="sim">Sim</option><option value="nao">Não</option>
           </select></label>
-          <label class="field"><span>Data da última menstruação (se souber)</span><input id="cycleLastDate" type="date"></label>
-          <label class="field"><span>Duração habitual do ciclo (dias)</span><input id="cycleDuration" type="number" min="15" max="90" placeholder="Ex.: 28"></label>
-          <label class="field"><span>Duração da menstruação (dias)</span><input id="cycleBleeding" type="number" min="1" max="20" placeholder="Ex.: 5"></label>
-          <label class="field"><span>Deseja receber lembretes?</span><select id="cycleReminders">
-            <option value="nao-sei">Decidirei depois</option><option value="sim">Sim</option><option value="nao">Não</option>
-          </select></label>
-          <label class="field question-full"><span>Foto opcional do meu perfil</span>
-            <input id="cycleOwnPhoto" type="file" accept="image/png,image/jpeg,image/webp">
-            <small>Prévia no próprio Fluir. Até 150 KB após a redução da imagem.</small></label>
+          <div id="cycleOwnMenstrualFields" class="question-full question-grid">
+            <label class="field"><span>Data da última menstruação (se souber)</span><input id="cycleLastDate" type="date"></label>
+            <label class="field"><span>Duração habitual do ciclo (dias)</span><input id="cycleDuration" type="number" min="15" max="90" placeholder="Ex.: 28"></label>
+            <label class="field"><span>Duração da menstruação (dias)</span><input id="cycleBleeding" type="number" min="1" max="20" placeholder="Ex.: 5"></label>
+            <label class="field"><span>Deseja receber lembretes?</span><select id="cycleReminders">
+              <option value="nao-sei">Decidirei depois</option><option value="sim">Sim</option><option value="nao">Não</option>
+            </select></label>
+          </div>
+          <p class="soft-note question-full" id="cycleOwnNoPeriodNote" hidden>
+            Você informou que não menstrua atualmente. Não pediremos datas ou duração do ciclo. É possível atualizar isso depois.
+          </p>
+          <div class="field question-full"><span>Foto opcional do meu perfil</span>
+            <span class="cycle-upload">
+              <input id="cycleOwnPhoto" class="cycle-file-input" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="cycleOwnFileName">
+              <label class="cycle-upload-button" for="cycleOwnPhoto">Escolher foto</label>
+              <span id="cycleOwnFileName" class="cycle-upload-name" aria-live="polite">Nenhuma foto selecionada</span>
+            </span>
+            <small>JPG, PNG ou WebP. Até 8 MB, reduzida antes de salvar.</small></div>
           <div class="cycle-avatar-line question-full"><span id="cycleOwnAvatar" class="cycle-avatar" aria-hidden="true">EU</span>
-            <button id="cycleClearOwnPhoto" class="secondary-btn" type="button">Remover foto</button></div>
+            <button id="cycleClearOwnPhoto" class="secondary-btn" type="button" hidden>Remover foto</button></div>
         </div>
       </section>
       <section id="cycleOthers" hidden aria-label="Pessoas que desejo acompanhar">
@@ -69,6 +77,7 @@
   }
   function renderPerson(person,index){
     const free=index===0;
+    const inputId="cyclePersonPhoto_"+person.id;
     const card=document.createElement("article");card.className="cycle-person";card.dataset.personId=person.id;
     card.innerHTML=`<div class="cycle-person-head">
       <span class="cycle-avatar" data-avatar aria-hidden="true"></span>
@@ -79,9 +88,14 @@
         <input data-alias maxlength="60" autocomplete="off" placeholder="Ex.: Ana" value="${enc(person.apelido)}"></label>
       <label class="field"><span>A pessoa já utiliza o Fluir?</span>
         <select data-has-app><option value="nao-sei">Não sei</option><option value="sim">Sim</option><option value="nao">Não</option></select></label>
-      <label class="field question-full"><span>Foto de identificação (prévia apenas neste navegador)</span>
-        <input data-photo type="file" accept="image/png,image/jpeg,image/webp">
-        <small>Essa foto não será enviada nem armazenada pelo Fluir até que a pessoa autorize.</small></label>
+      <div class="field question-full"><span>Foto de identificação (prévia apenas neste navegador)</span>
+        <span class="cycle-upload">
+          <input id="${inputId}" data-photo class="cycle-file-input" type="file" accept="image/png,image/jpeg,image/webp">
+          <label for="${inputId}" data-upload-button class="cycle-upload-button">${person.fotoPreview?"Trocar foto":"Escolher foto"}</label>
+          <span data-upload-name class="cycle-upload-name" aria-live="polite">${person.fotoPreview?"Foto selecionada":"Nenhuma foto selecionada"}</span>
+        </span>
+        <small>Prévia local; a foto não é enviada sem autorização.</small></div>
+      <button type="button" data-remove-photo class="secondary-btn cycle-remove-photo question-full" ${person.fotoPreview?"":"hidden"}>Remover foto desta pessoa</button>
       <label class="cycle-check question-full"><input data-sync type="checkbox">
         Solicitar sincronização de nome, apelido e foto quando o convite for aprovado.</label></div>`;
     card.querySelector("[data-has-app]").value=person.possuiFluir;
@@ -94,8 +108,23 @@
     card.querySelector("[data-has-app]").addEventListener("change",e=>person.possuiFluir=e.target.value);
     card.querySelector("[data-sync]").addEventListener("change",e=>person.sincronizar=e.target.checked);
     card.querySelector("[data-photo]").addEventListener("change",async e=>{
-      try{person.fotoPreview=await fileImage(e.target.files?.[0]);setAvatar(card.querySelector("[data-avatar]"),person.apelido,person.fotoPreview);error("");}
-      catch(err){e.target.value="";error(err.message);}
+      try{
+        const photo=await fileImage(e.target.files?.[0]);
+        if(!state.pessoas.includes(person))return;
+        person.fotoPreview=photo;
+        setAvatar(card.querySelector("[data-avatar]"),person.apelido,photo);
+        card.querySelector("[data-upload-name]").textContent=photo?"Foto selecionada":"Nenhuma foto selecionada";
+        card.querySelector("[data-upload-button]").textContent=photo?"Trocar foto":"Escolher foto";
+        card.querySelector("[data-remove-photo]").hidden=!photo;
+        error("");
+      }catch(err){e.target.value="";error(err.message);}
+    });
+    card.querySelector("[data-remove-photo]").addEventListener("click",()=>{
+      person.fotoPreview=null;card.querySelector("[data-photo]").value="";
+      card.querySelector("[data-upload-name]").textContent="Nenhuma foto selecionada";
+      card.querySelector("[data-upload-button]").textContent="Escolher foto";
+      card.querySelector("[data-remove-photo]").hidden=true;
+      setAvatar(card.querySelector("[data-avatar]"),person.apelido,null);
     });
     card.querySelector("[data-remove]").addEventListener("click",()=>{
       state.pessoas=state.pessoas.filter(p=>p.id!==person.id);
@@ -131,74 +160,122 @@
     });
   }
   function error(msg){const n=$("cycleError");if(n){n.hidden=!msg;n.textContent=msg||"";}}
+  function normaliseSelection(){
+    if(state.multi==="later"){state.modo="later";state.pessoas=[];return;}
+    if(state.multi==="one"){
+      if(state.modo!=="self"&&state.modo!=="other")state.modo="self";
+      if(state.modo==="self")state.pessoas=[];
+      else state.pessoas=state.pessoas.slice(0,1);
+    }else{
+      if(state.modo!=="both"&&state.modo!=="other")state.modo="both";
+      if(state.modo==="both")state.pessoas=state.pessoas.slice(0,5);
+    }
+    if(hasOthers()){
+      const minimum=state.multi==="many"&&state.modo==="other"?2:1;
+      while(state.pessoas.length<minimum)state.pessoas.push(blankPerson());
+    }
+  }
   function refresh(){
     if(!$("fluirCycleBlock"))return;
-    $("cycleMode").value=state.modo;
+    normaliseSelection();
+    for(const [id,value] of [["cycleCountNo","one"],["cycleCountYes","many"],["cycleCountLater","later"]])
+      $(id).setAttribute("aria-pressed",String(state.multi===value));
+    $("cycleModeField").hidden=state.multi==="later";
+    const select=$("cycleMode");
+    const options=state.multi==="one"?
+      [["self","Meu próprio ciclo"],["other","O ciclo de outra pessoa"]]:
+      [["both","Meu ciclo e outras pessoas"],["other","Só outras pessoas"]];
+    select.replaceChildren();
+    if(state.multi!=="later")options.forEach(([value,label])=>{
+      const option=document.createElement("option");option.value=value;option.textContent=label;select.append(option);
+    });
+    select.value=state.modo;
     $("cycleOwn").hidden=!hasOwn();
     $("cycleOthers").hidden=!hasOthers();
-    $("cyclePauseNote").hidden=state.modo!=="later";
-    $("cycleCountBox").hidden=state.modo==="later";
-    const many=Number(hasOwn())+state.pessoas.length>1;
-    $("cycleCountNo").setAttribute("aria-pressed",String(!many));
-    $("cycleCountYes").setAttribute("aria-pressed",String(many));
+    $("cyclePauseNote").hidden=state.multi!=="later";
     $("cycleMenstruates").value=state.menstrua;
-    $("cycleLastDate").value=state.ultimaMenstruacao;
-    $("cycleDuration").value=state.duracaoCiclo;
-    $("cycleBleeding").value=state.duracaoMenstruacao;
+    const showPeriodDetails=hasOwn()&&state.menstrua==="sim";
+    $("cycleOwnMenstrualFields").hidden=!showPeriodDetails;
+    $("cycleOwnNoPeriodNote").hidden=!hasOwn()||state.menstrua==="sim";
+    $("cycleOwnNoPeriodNote").textContent=state.menstrua==="nao"?
+      "Você informou que não menstrua atualmente. Não pediremos datas ou duração do ciclo. É possível atualizar isso depois.":
+      "Você preferiu não responder. Não pediremos datas nem duração do ciclo neste momento.";
+    $("cycleLastDate").value=showPeriodDetails?state.ultimaMenstruacao:"";
+    $("cycleDuration").value=showPeriodDetails?state.duracaoCiclo:"";
+    $("cycleBleeding").value=showPeriodDetails?state.duracaoMenstruacao:"";
     $("cycleReminders").value=state.lembretes;
+    $("cycleOwnFileName").textContent=state.foto?"Foto selecionada":"Nenhuma foto selecionada";
+    $("cycleClearOwnPhoto").hidden=!state.foto;
     setAvatar($("cycleOwnAvatar"),"Eu",state.foto);
     const list=$("cycleDraftList");list.replaceChildren();
-    if(hasOthers()){
-      if(!state.pessoas.length)state.pessoas=[blankPerson()];
-      state.pessoas.forEach((p,i)=>list.append(renderPerson(p,i)));
-    }
+    if(hasOthers())state.pessoas.forEach((person,i)=>list.append(renderPerson(person,i)));
+    $("cycleAddPerson").hidden=state.multi!=="many";
     $("cycleAddPerson").disabled=state.pessoas.length>=5;
-    $("cyclePlanNote").textContent=state.pessoas.length>1?
-      "A primeira pessoa cabe no plano gratuito. As outras "+(state.pessoas.length-1)+" ficam apenas como planejamento: acesso e cobrança dependem de um plano pago que ainda não está disponível.":
-      "Plano gratuito: seu ciclo e mais uma pessoa, ou somente uma pessoa se você não acompanhar o próprio ciclo. O acompanhamento exige convite e aprovação.";
+    const extra=Math.max(0,state.pessoas.length-1);
+    $("cyclePlanNote").textContent=extra?
+      "A primeira pessoa está no plano gratuito; "+extra+" identificação(ões) adicional(is) ficam como planejamento. Acesso extra e cobrança ainda não estão disponíveis.":
+      "O plano gratuito permite acompanhar o próprio ciclo e uma outra pessoa, ou apenas uma pessoa de sua escolha. Acesso somente com convite e autorização.";
     error("");
   }
   function mount(root){
     if(!root.querySelector("#fluirCycleBlock"))return;
+    for(const [id,value] of [["cycleCountNo","one"],["cycleCountYes","many"],["cycleCountLater","later"]])
+      $(id).addEventListener("click",()=>{
+        const previous=state.multi;
+        state.multi=value;
+        if(value==="later")state.modo="later";
+        else if(value==="one")state.modo=previous==="many"&&state.modo==="other"?"other":"self";
+        else state.modo=previous==="one"&&state.modo==="other"?"other":"both";
+        normaliseSelection();refresh();
+      });
     $("cycleMode").addEventListener("change",e=>{
-      state.modo=e.target.value;
-      if(hasOthers()&&!state.pessoas.length)state.pessoas=[blankPerson()];
-      if(state.modo==="self"||state.modo==="later")state.pessoas=[];
+      state.modo=e.target.value;normaliseSelection();refresh();
+    });
+    $("cycleMenstruates").addEventListener("change",e=>{
+      state.menstrua=e.target.value;
+      if(state.menstrua!=="sim"){
+        state.ultimaMenstruacao="";state.duracaoCiclo="";state.duracaoMenstruacao="";state.lembretes="nao-sei";
+      }
       refresh();
     });
-    $("cycleCountYes").addEventListener("click",()=>{
-      if(state.modo==="self"){state.modo="both";state.pessoas=[blankPerson()]}
-      else if(state.modo==="other" && state.pessoas.length<2)state.pessoas.push(blankPerson());
-      refresh();
-    });
-    $("cycleCountNo").addEventListener("click",()=>{
-      if(state.modo==="both"){state.modo="self";state.pessoas=[]}
-      else if(state.modo==="other")state.pessoas=state.pessoas.slice(0,1);
-      refresh();
-    });
-    for(const [id,key] of [["cycleMenstruates","menstrua"],["cycleLastDate","ultimaMenstruacao"],
-      ["cycleDuration","duracaoCiclo"],["cycleBleeding","duracaoMenstruacao"],["cycleReminders","lembretes"]])
+    for(const [id,key] of [["cycleLastDate","ultimaMenstruacao"],["cycleDuration","duracaoCiclo"],
+      ["cycleBleeding","duracaoMenstruacao"],["cycleReminders","lembretes"]])
       $(id).addEventListener("change",e=>{state[key]=e.target.value});
-    $("cycleAddPerson").addEventListener("click",()=>{if(state.pessoas.length<5){state.pessoas.push(blankPerson());refresh()}});
-    $("cycleOwnPhoto").addEventListener("change",async e=>{
-      try{state.foto=await fileImage(e.target.files?.[0]);setAvatar($("cycleOwnAvatar"),"Eu",state.foto);error("")}
-      catch(err){e.target.value="";error(err.message)}
+    $("cycleAddPerson").addEventListener("click",()=>{
+      if(state.multi==="many"&&state.pessoas.length<5){state.pessoas.push(blankPerson());refresh();}
     });
-    $("cycleClearOwnPhoto").addEventListener("click",()=>{state.foto=null;$("cycleOwnPhoto").value="";setAvatar($("cycleOwnAvatar"),"Eu",null)});
-    $("cycleReset").addEventListener("click",()=>{if(confirm("Limpar todas as escolhas e fotos desta configuração de ciclo?")){reset();refresh()}});
+    $("cycleOwnPhoto").addEventListener("change",async e=>{
+      try{
+        const photo=await fileImage(e.target.files?.[0]);
+        state.foto=photo;setAvatar($("cycleOwnAvatar"),"Eu",photo);
+        $("cycleOwnFileName").textContent=photo?"Foto selecionada":"Nenhuma foto selecionada";
+        $("cycleClearOwnPhoto").hidden=!photo;
+        error("");
+      }catch(err){e.target.value="";error(err.message);}
+    });
+    $("cycleClearOwnPhoto").addEventListener("click",()=>{
+      state.foto=null;$("cycleOwnPhoto").value="";
+      $("cycleOwnFileName").textContent="Nenhuma foto selecionada";
+      $("cycleClearOwnPhoto").hidden=true;
+      setAvatar($("cycleOwnAvatar"),"Eu",null);
+    });
+    $("cycleReset").addEventListener("click",()=>{
+      if(confirm("Limpar todas as escolhas e fotos desta configuração de ciclo?")){reset();refresh();}
+    });
     refresh();
   }
   function validate(){
     if(state.modo==="later")return true;
     const today=new Date(),iso=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
-    if(hasOwn()){
+    if(hasOwn()&&state.menstrua==="sim"){
       if(state.ultimaMenstruacao && state.ultimaMenstruacao>iso){error("A última menstruação não pode ter data futura.");$("cycleLastDate")?.focus();return false}
       for(const [key,min,max] of [["duracaoCiclo",15,90],["duracaoMenstruacao",1,20]]){
         if(state[key]!=="" && (!Number.isInteger(Number(state[key]))||Number(state[key])<min||Number(state[key])>max)){
           error("Confira os valores de duração em dias.");$(key==="duracaoCiclo"?"cycleDuration":"cycleBleeding")?.focus();return false}
       }
     }
-    if(hasOthers()&&(!state.pessoas.length||state.pessoas.length>5)){error("Adicione entre uma e cinco identificações.");return false;}
+    if(hasOthers()&&(!state.pessoas.length||state.pessoas.length>5||
+        (state.multi==="many"&&state.modo==="other"&&state.pessoas.length<2))){error("Adicione entre uma e cinco identificações.");return false;}
     if(hasOthers()&&state.pessoas.some(p=>p.apelido.trim().length===0)){
       error("Informe um nome ou apelido para identificar cada pessoa.");$("cycleDraftList").querySelector("[data-alias]:placeholder-shown")?.focus();return false;
     }
@@ -206,9 +283,10 @@
   }
   function legacy(){
     if(!hasOwn())return null;
-    return {currentlyMenstruates:state.menstrua,lastPeriodDate:state.ultimaMenstruacao,
-      cycleLength:state.duracaoCiclo,bleedingLength:state.duracaoMenstruacao,
-      reminders:state.lembretes==="nao-sei"?"":state.lembretes};
+    const active=state.menstrua==="sim";
+    return {currentlyMenstruates:state.menstrua,lastPeriodDate:active?state.ultimaMenstruacao:"",
+      cycleLength:active?state.duracaoCiclo:"",bleedingLength:active?state.duracaoMenstruacao:"",
+      reminders:active&&state.lembretes!=="nao-sei"?state.lembretes:""};
   }
   function photoBadge(photo,name){
     if(photo && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(photo))
@@ -236,9 +314,9 @@
     const payload={
       modo:state.modo,apelido:hasOwn()?String(nickname||"").slice(0,60):null,
       foto:hasOwn()?state.foto:null,menstrua:hasOwn()?state.menstrua:null,
-      ultimaMenstruacao:hasOwn()?state.ultimaMenstruacao:null,
-      duracaoCiclo:hasOwn()&&state.duracaoCiclo?Number(state.duracaoCiclo):null,
-      duracaoMenstruacao:hasOwn()&&state.duracaoMenstruacao?Number(state.duracaoMenstruacao):null,
+      ultimaMenstruacao:hasOwn()&&state.menstrua==="sim"?state.ultimaMenstruacao:null,
+      duracaoCiclo:hasOwn()&&state.menstrua==="sim"&&state.duracaoCiclo?Number(state.duracaoCiclo):null,
+      duracaoMenstruacao:hasOwn()&&state.menstrua==="sim"&&state.duracaoMenstruacao?Number(state.duracaoMenstruacao):null,
       rascunhos:hasOthers()?state.pessoas.map(p=>({
         apelido:p.apelido.trim(),possuiFluir:p.possuiFluir,sincronizar:p.sincronizar
       })):[]
@@ -247,9 +325,13 @@
     const response=await fetch(url,{method:"PUT",cache:"no-store",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify(payload)});
     if(!response.ok)throw Error("O cadastro geral foi salvo, mas o módulo Ciclo Menstrual não pôde ser configurado agora (HTTP "+response.status+"). Tente novamente antes de sair.");
   }
-  function reset(){state=blank();if($("fluirCycleBlock"))refresh();}
+  function reset(){
+    state=blank();
+    if($("cycleOwnPhoto"))$("cycleOwnPhoto").value="";
+    if($("fluirCycleBlock"))refresh();
+  }
   window.FluirCycleOnboarding={html,mount,validate,legacy,reviewHtml,persist,reset,getState:()=>structuredClone({
-    modo:state.modo,pessoas:state.pessoas.map(p=>({apelido:p.apelido,possuiFluir:p.possuiFluir,sincronizar:p.sincronizar})),
+    multi:state.multi,modo:state.modo,pessoas:state.pessoas.map(p=>({apelido:p.apelido,possuiFluir:p.possuiFluir,sincronizar:p.sincronizar})),
     menstrua:state.menstrua,ultimaMenstruacao:state.ultimaMenstruacao,duracaoCiclo:state.duracaoCiclo,
     duracaoMenstruacao:state.duracaoMenstruacao,lembretes:state.lembretes,hasPhoto:!!state.foto
   })};

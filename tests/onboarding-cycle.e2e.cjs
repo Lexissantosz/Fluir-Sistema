@@ -36,12 +36,36 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
   assert.match(await page.locator("#fluirCycleBlock").textContent(),/mais de uma pessoa/i);
   assert.doesNotMatch(await page.locator("#fluirCycleBlock").textContent(),/sexo atribuído ao nascer/i);
  });
- await run("Múltiplas pessoas: 'Outra pessoa' + 'Sim' cria duas vagas",async()=>{
+ await run("A quantidade é a primeira pergunta; opções individuais ficam condicionais",async()=>{
+  assert.equal(await page.locator("#cycleCountBox").isVisible(),true);
+  assert.equal(await page.locator("#cycleModeField").isVisible(),false);
+  await page.locator("#cycleCountNo").click();
+  assert.equal(await page.locator("#cycleModeField").isVisible(),true);
+  assert.equal(await page.locator("#cycleMode").inputValue(),"self");
+  assert.equal(await page.locator("#cycleMenstruates").inputValue(),"sim");
   await page.locator("#cycleMode").selectOption("other");
   assert.equal(await page.locator(".cycle-person").count(),1);
+  assert.equal(await page.locator("#cycleOwn").isVisible(),false);
+ });
+ await run("Mais de uma pessoa com perfis de terceiros cria duas identificações",async()=>{
+  await page.locator("#cycleCountYes").click();
+  assert.equal(await page.locator("#cycleMode").inputValue(),"other");
+  assert.equal(await page.locator(".cycle-person").count(),2);
+  assert.match(await page.locator("#cyclePlanNote").innerText(),/plano gratuito/i);
+ });
+ await run("Alternar de 'Sim' para 'Não' remove segunda vaga e mantém escolha de terceiro",async()=>{
+  await page.locator("#cycleCountNo").click();
+  assert.equal(await page.locator(".cycle-person").count(),1);
+  assert.equal(await page.locator("#cycleMode").inputValue(),"other");
   await page.locator("#cycleCountYes").click();
   assert.equal(await page.locator(".cycle-person").count(),2);
-  assert.match(await page.locator("#cyclePlanNote").innerText(),/plano pago/);
+ });
+ await run("Botões de foto são acessíveis e substituem input nativo visível",async()=>{
+  const file=page.locator(".cycle-person [data-photo]").first();
+  assert.equal(await file.evaluate(el=>getComputedStyle(el).position),"absolute");
+  assert.equal(await page.locator(".cycle-person .cycle-upload-button").first().isVisible(),true);
+  const associated=await page.locator(".cycle-person .cycle-upload-button").first().getAttribute("for");
+  assert.equal(associated,await file.getAttribute("id"));
  });
  await run("Apelido com HTML não é executado",async()=>{
   await page.locator("[data-alias]").nth(0).fill("<img src=x onerror=alert(1)>");
@@ -64,17 +88,48 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
   assert.equal(await page.locator('.setup-step[data-step="1"].active').count(),1);
   assert.equal(await page.locator('.module-option input[value="menstrualCycle"]').isChecked(),false);
   assert.equal(await page.evaluate(()=>window.FluirCycleOnboarding.getState().modo),"later");
+  assert.equal(await page.evaluate(()=>window.FluirCycleOnboarding.getState().multi),"later");
   assert.deepEqual(await page.evaluate(()=>window.FluirCycleOnboarding.getState().pessoas),[]);
  });
- await run("Meu próprio ciclo tem campos de duração sem supor identidade",async()=>{
+ await run("Meu próprio ciclo preenche Sim e esconde períodos quando seleciono Não",async()=>{
   await reachCycle();
-  await page.locator("#cycleMode").selectOption("self");
-  await page.locator("#cycleMenstruates").selectOption("sim");
+  await page.locator("#cycleCountNo").click();
+  assert.equal(await page.locator("#cycleMode").inputValue(),"self");
+  assert.equal(await page.locator("#cycleMenstruates").inputValue(),"sim");
   await page.locator("#cycleDuration").fill("28");
   await page.locator("#cycleBleeding").fill("5");
+  await page.locator("#cycleMenstruates").selectOption("nao");
+  assert.equal(await page.locator("#cycleOwnMenstrualFields").isVisible(),false);
+  assert.equal(await page.locator("#cycleDuration").inputValue(),"");
+  assert.equal(await page.locator("#cycleBleeding").inputValue(),"");
+  const legacy=await page.evaluate(()=>window.FluirCycleOnboarding.legacy());
+  assert.equal(legacy.currentlyMenstruates,"nao");
+  assert.equal(legacy.cycleLength,"");
+  assert.equal(legacy.bleedingLength,"");
+  assert.equal(await page.locator("#cycleOwnNoPeriodNote").isVisible(),true);
   await page.locator("#nextBtn").click();
   assert.equal(await page.locator(".cycle-review-person").count(),1);
   assert.match(await page.locator(".cycle-review-person").innerText(),/Meu ciclo/);
+ });
+ await run("Meu e outra pessoa + Não menstruo esconde dados próprios sem ocultar terceiros",async()=>{
+  await page.locator("#backBtn").click();
+  await page.locator("#cycleCountYes").click();
+  assert.equal(await page.locator("#cycleMode").inputValue(),"both");
+  await page.locator("#cycleMenstruates").selectOption("nao");
+  assert.equal(await page.locator("#cycleOwnMenstrualFields").isVisible(),false);
+  assert.equal(await page.locator(".cycle-person").count(),1);
+  await page.locator("[data-alias]").fill("Ana");
+  await page.locator("#nextBtn").click();
+  assert.equal(await page.locator(".cycle-review-person").count(),2);
+ });
+ await run("Agora não oculta perfis e campos sensíveis",async()=>{
+  await page.locator("#backBtn").click();
+  await page.locator("#cycleCountLater").click();
+  assert.equal(await page.locator("#cycleModeField").isVisible(),false);
+  assert.equal(await page.locator("#cycleOwn").isVisible(),false);
+  assert.equal(await page.locator("#cycleOthers").isVisible(),false);
+  assert.equal(await page.evaluate(()=>window.FluirCycleOnboarding.getState().modo),"later");
+  await page.locator("#nextBtn").click();
  });
  await run("Tema clássico mantém botões pretos e tipografia original",async()=>{
   const bgcolor=await page.locator("#nextBtn").evaluate(el=>getComputedStyle(el).backgroundColor);
@@ -102,8 +157,8 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    await mobile.locator("#nextBtn").click();
    await mobile.locator('.module-option input[value="menstrualCycle"]').check();
    await mobile.locator("#nextBtn").click();
-   await mobile.locator("#cycleMode").selectOption("other");
    await mobile.locator("#cycleCountYes").click();
+   await mobile.locator("#cycleMode").selectOption("other");
    assert.equal(await mobile.locator(".cycle-person").count(),2);
    await mobile.locator("[data-alias]").nth(0).fill("Ana");
    await mobile.locator("[data-alias]").nth(1).fill("Bia");
@@ -137,6 +192,7 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    await retry.locator("#nextBtn").click();
    await retry.locator('.module-option input[value="menstrualCycle"]').check();
    await retry.locator("#nextBtn").click();
+   await retry.locator("#cycleCountNo").click();
    await retry.locator("#cycleMode").selectOption("self");
    await retry.locator("#nextBtn").click();
    await retry.locator("#nextBtn").click();

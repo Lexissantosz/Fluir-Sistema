@@ -98,6 +98,13 @@ public class CicloOnboardingController {
         Integer cycle=hasSelf?days(payload,"duracaoCiclo",15,90):null;
         Integer bleeding=hasSelf?days(payload,"duracaoMenstruacao",1,20):null;
         LocalDate last=hasSelf?date(payload,"ultimaMenstruacao"):null;
+        // Ausência de menstruação atual ou recusa em responder nunca deve deixar
+        // datas e durações antigas preenchidas no perfil.
+        if(!"sim".equals(menstruates)){
+            last=null;
+            cycle=null;
+            bleeding=null;
+        }
 
         if(hasSelf){
             db.update("INSERT INTO ciclo_perfis(usuario_id,apelido,foto_data,menstrua_atualmente,"+
