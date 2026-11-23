@@ -149,16 +149,37 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
   );
 }
 
+
+// A API pode ficar indisponível durante inicialização do Render.
+// Impede carregamento interminável e preserva as credenciais digitadas.
+async function fetchWithDeadline(url, options, timeoutMs = 25000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      const timedOut = new Error("O servidor demorou mais do que o limite de espera.");
+      timedOut.code = "API_TIMEOUT";
+      throw timedOut;
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function hasCompletedOnboarding(usuario) {
   sessionStorage.removeItem("fluir-onboarding");
 
-  const response = await fetch(
+  const response = await fetchWithDeadline(
     `${ONBOARDING_API_BASE_URL}/usuario/${usuario.id}`,
     {
       headers: {
         Authorization: `Bearer ${usuario.token}`
       }
-    }
+    },
+    18000
   );
 
   const onboarding = await readResponse(response);
@@ -197,9 +218,63 @@ async function hasCompletedOnboarding(usuario) {
     return false;
   }
 
-  throw new Error(
-    "Não foi possível verificar o onboarding."
+  if (response.status === 401) {
+    const error = new Error("Sessão rejeitada pelo servidor.");
+    error.code = "AUTH_REJECTED";
+    throw error;
+  }
+  throw new Error("Não foi possível consultar o onboarding (HTTP " + response.status + ").");
+}
+
+// Uma falha de preferências não torna inválido o token emitido pelo login.
+// Permitir tentar a consulta novamente SEM reenviar e-mail/senha ou criar novo token.
+let retryOnboardingButton = null;
+function clearVerificationRetry() {
+  retryOnboardingButton?.remove();
+  retryOnboardingButton = null;
+}
+function completeAuthenticatedLogin(completed) {
+  clearVerificationRetry();
+  sessionStorage.setItem("fluir-onboarding-completed", String(completed));
+  showMessage(loginMessage, "Login realizado com sucesso.", "success");
+  window.FluirTransition.navigate(
+    completed ? "dashboard.html" : "setup.html",
+    "Entrando no Fluir...",
+    "Carregando sua experiência personalizada."
   );
+}
+function showVerificationRetry(usuario) {
+  clearVerificationRetry();
+  retryOnboardingButton = document.createElement("button");
+  retryOnboardingButton.type = "button";
+  retryOnboardingButton.className = "secondary";
+  retryOnboardingButton.textContent = "Tentar carregar preferências novamente";
+  loginMessage.insertAdjacentElement("afterend", retryOnboardingButton);
+  retryOnboardingButton.addEventListener("click", async () => {
+    retryOnboardingButton.disabled = true;
+    try {
+      const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+      if (!current || current.id !== usuario.id || current.token !== usuario.token) {
+        clearVerificationRetry();
+        showMessage(loginMessage, "Entre novamente para continuar.", "error");
+        return;
+      }
+      const completed = await hasCompletedOnboarding(usuario);
+      completeAuthenticatedLogin(completed);
+    } catch (error) {
+      if (error?.code === "AUTH_REJECTED") {
+        sessionStorage.removeItem("fluir-user");
+        sessionStorage.removeItem("fluir-onboarding");
+        clearVerificationRetry();
+        showMessage(loginMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
+      } else {
+        showMessage(loginMessage,
+          "Ainda não foi possível consultar as preferências. Sua sessão foi mantida; tente novamente.", "error");
+      }
+    } finally {
+      if (retryOnboardingButton) retryOnboardingButton.disabled = false;
+    }
+  });
 }
 
 function isValidEmail(email) {
@@ -328,9 +403,11 @@ passwordButtons.forEach(function (button) {
 // Preparado para integração com backend Spring Boot
 // =============================
 
+let loginPending = false;
 if (loginForm) {
   loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
+    if (loginPending) return;
 
     const emailInput = loginForm.querySelector('input[type="email"]');
     const senhaInput = loginForm.querySelector('input[type="password"]');
@@ -339,6 +416,7 @@ if (loginForm) {
     const email = emailInput ? emailInput.value.trim() : "";
     const senha = senhaInput ? senhaInput.value.trim() : "";
 
+    clearVerificationRetry();
     showMessage(loginMessage, "", "info");
 
     if (!email || !senha) {
@@ -365,10 +443,16 @@ if (loginForm) {
       return;
     }
 
+    loginPending = true;
+    const slowNotice = setTimeout(() => {
+      showMessage(loginMessage,
+        "O servidor está demorando a responder. Você pode aguardar; a tentativa será encerrada se exceder o limite.",
+        "info");
+    }, 6500);
     try {
       setButtonLoading(submitButton, true, "Entrando...", "Entrar");
 
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const response = await fetchWithDeadline(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -377,7 +461,7 @@ if (loginForm) {
           email,
           senha
         })
-      });
+      }, 28000);
 
       const data = await readResponse(response);
 
@@ -403,39 +487,32 @@ if (loginForm) {
       try {
         onboardingConcluido = await hasCompletedOnboarding(data);
       } catch (validationError) {
-        console.error("Erro ao verificar onboarding:", validationError);
-        sessionStorage.removeItem("fluir-user");
-        sessionStorage.removeItem("fluir-onboarding");
-        showMessage(
-          loginMessage,
-          "Não foi possível verificar suas preferências. Tente entrar novamente.",
-          "error"
-        );
+        // 401 rejeita a sessão. CORS, timeout e 503 não justificam removê-la.
+        if (validationError?.code === "AUTH_REJECTED") {
+          sessionStorage.removeItem("fluir-user");
+          sessionStorage.removeItem("fluir-onboarding");
+          showMessage(loginMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
+        } else {
+          showMessage(loginMessage,
+            "Login confirmado, mas não foi possível consultar suas preferências. Sua sessão foi mantida.",
+            "error");
+          showVerificationRetry(data);
+        }
         return;
       }
-
-      sessionStorage.setItem(
-        "fluir-onboarding-completed",
-        String(onboardingConcluido)
-      );
-
-      showMessage(loginMessage, "Login realizado com sucesso.", "success");
-
-      setTimeout(function () {
-        const destination = onboardingConcluido
-          ? "dashboard.html"
-          : "setup.html";
-
-        window.location.href = destination;
-      }, 700);
+      completeAuthenticatedLogin(onboardingConcluido);
 
     } catch (error) {
       showMessage(
         loginMessage,
-        "Não foi possível conectar ao servidor. Verifique se o backend está rodando.",
+        error?.code === "API_TIMEOUT"
+          ? "O servidor demorou demais para responder. Nenhuma informação foi apagada; tente novamente."
+          : "Não foi possível conectar ao servidor. Confira a rede e se esta versão está autorizada na API.",
         "error"
       );
     } finally {
+      clearTimeout(slowNotice);
+      loginPending = false;
       setButtonLoading(submitButton, false, "Entrando...", "Entrar");
     }
   });
@@ -447,9 +524,11 @@ if (loginForm) {
 // Preparado para integração com backend Spring Boot
 // =============================
 
+let registrationPending = false;
 if (registerForm) {
   registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
+    if (registrationPending) return;
 
     const nomeInput = registerForm.querySelector('input[type="text"]');
     const emailInput = registerForm.querySelector('input[type="email"]');
@@ -512,10 +591,18 @@ if (registerForm) {
       return;
     }
 
+    let redirecting = false;
+    registrationPending = true;
+    const slowNotice = setTimeout(() => {
+      window.FluirTransition.update(
+        "Servidor iniciando...",
+        "O cadastro está demorando. Se não responder, você poderá tentar novamente.");
+    }, 6500);
     try {
       setButtonLoading(submitButton, true, "Cadastrando...", "Cadastrar");
+      window.FluirTransition.show("Criando sua conta...", "Estamos preparando seu acesso ao Fluir.");
 
-      const response = await fetch(`${API_BASE_URL}/cadastro`, {
+      const response = await fetchWithDeadline(`${API_BASE_URL}/cadastro`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -525,7 +612,7 @@ if (registerForm) {
           email,
           senha
         })
-      });
+      }, 28000);
 
       const data = await readResponse(response);
 
@@ -535,6 +622,10 @@ if (registerForm) {
           data.mensagem || "Não foi possível criar a conta.",
           "error"
         );
+        return;
+      }
+      if (!data?.id || typeof data.token !== "string" || !data.token.trim()) {
+        showMessage(registerMessage, "O cadastro foi recebido, mas o servidor não retornou uma sessão válida.", "error");
         return;
       }
       sessionStorage.removeItem("fluir-onboarding");
@@ -549,18 +640,28 @@ if (registerForm) {
 
       registerForm.reset();
 
-      setTimeout(function () {
-        window.location.href = "setup.html";
-      }, 700);
+      redirecting = true;
+      window.FluirTransition.navigate(
+        "setup.html",
+        "Conta criada!",
+        "Abrindo a configuração inicial do Fluir."
+      );
 
       } catch (error) {
       showMessage(
         registerMessage,
-        "Não foi possível conectar ao servidor. Verifique se o backend está rodando.",
+        error?.code === "API_TIMEOUT"
+          ? "O cadastro demorou para responder. Verifique se sua conta foi criada antes de tentar novamente."
+          : "Não foi possível conectar ao servidor. Confira a rede e se esta prévia está autorizada na API.",
         "error"
       );
     } finally {
-      setButtonLoading(submitButton, false, "Cadastrando...", "Cadastrar");
+      clearTimeout(slowNotice);
+      if (!redirecting) {
+        registrationPending = false;
+        window.FluirTransition.hide();
+        setButtonLoading(submitButton, false, "Cadastrando...", "Cadastrar");
+      }
     }
   });
 }
