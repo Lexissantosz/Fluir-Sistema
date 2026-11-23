@@ -89,6 +89,51 @@ const token="QA_FAKE_TOKEN_FOR_UI_TEST_ONLY_0123456789";
     assert.equal(await user.evaluate(()=>JSON.parse(sessionStorage.getItem("fluir-user")).id),901);
   });
   await user.close();
+  const auth=await browser.newPage();
+  let prefsCalls=0;
+  await auth.route("**/api/usuarios/login",route=>{
+    return route.fulfill({status:200,contentType:"application/json",
+      headers:{"access-control-allow-origin":BASE},
+      body:JSON.stringify({id:901,nome:"QA",email:"qa@example.invalid",token})});
+  });
+  await auth.route("**/api/onboarding/usuario/901",route=>{
+    prefsCalls++;
+    return route.fulfill({status:prefsCalls===1?503:200,contentType:"application/json",
+      headers:{"access-control-allow-origin":BASE},
+      body:prefsCalls===1?'{"mensagem":"Serviço temporariamente indisponível"}':
+        JSON.stringify({usuarioId:901,onboardingConcluido:true,modulos:{tasks:true},nome:"QA"})});
+  });
+  await auth.goto(BASE+"/html/login.html");
+  await auth.locator("#loginForm input[type=email]").fill("qa@example.invalid");
+  await auth.locator("#loginForm input[type=password]").fill("SenhaDeTeste123!");
+  await auth.locator("#loginForm button[type=submit]").click();
+  await auth.getByText("Tentar carregar preferências novamente").waitFor();
+  await check("Falha 503 do onboarding não apaga sessão válida nem bloqueia login",async()=>{
+    assert.equal(await auth.evaluate(()=>JSON.parse(sessionStorage.getItem("fluir-user")).id),901);
+    assert.equal(await auth.locator("#loginForm button[type=submit]").isEnabled(),true);
+    assert.equal(prefsCalls,1);
+  });
+  await auth.getByText("Tentar carregar preferências novamente").click();
+  await auth.waitForURL("**/dashboard.html",{timeout:10000});
+  await check("Nova tentativa carrega preferências sem reenviar senha",async()=>{
+    assert.equal(prefsCalls,2);
+    assert.equal(await auth.evaluate(()=>sessionStorage.getItem("fluir-onboarding-completed")),"true");
+  });
+  await auth.close();
+
+  const offline=await browser.newPage();
+  await offline.route("**/api/usuarios/login",route=>route.abort("failed"));
+  await offline.goto(BASE+"/html/login.html");
+  await offline.locator("#loginForm input[type=email]").fill("qa@example.invalid");
+  await offline.locator("#loginForm input[type=password]").fill("SenhaDeTeste123!");
+  await offline.locator("#loginForm button[type=submit]").click();
+  await offline.locator("#loginMessage.error").waitFor();
+  await check("Falha de rede informa erro e libera botão para nova tentativa",async()=>{
+    assert.equal(await offline.locator("#loginForm button[type=submit]").isEnabled(),true);
+    assert.match(await offline.locator("#loginMessage").innerText(),/Não foi possível conectar/i);
+    assert.equal(await offline.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+  });
+  await offline.close();
   const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
   await mobile.goto(BASE+"/html/demo.html");
   await mobile.locator("#fluirAssistantButton").click();
