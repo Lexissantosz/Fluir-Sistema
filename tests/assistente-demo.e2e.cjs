@@ -7,7 +7,7 @@ const token="QA_FAKE_TOKEN_FOR_UI_TEST_ONLY_0123456789";
 (async()=>{
  let passed=0;
  const check=async(label,fn)=>{await fn();passed++;console.log("PASS",label)};
- const browser=await chromium.launch({headless:true});
+ const browser=await chromium.launch({headless:true,channel:"chrome"});
  try{
   const demo=await browser.newPage({viewport:{width:1280,height:800}});
   let externalCalls=0;
