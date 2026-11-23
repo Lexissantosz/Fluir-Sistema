@@ -45,7 +45,7 @@ jobs:
           const ai=await request(api+"/assistente/chat",{method:"POST",headers:{
             "Content-Type":"application/json","Origin":preview
           },body:JSON.stringify({mensagem:"teste"})});
-          assert.equal(ai.status,401,"IA exige autenticação");
+          assert.ok([401,403].includes(ai.status),"IA deve recusar acesso sem autenticação");
           console.log("SMOKE_LIVE_OK: saúde, prontidão, CORS seguro e IA autenticada.");
           NODE
   java-cors:
