@@ -1,0 +1,7 @@
+PASS Falha 503 de preferências mantém token recebido no login
+PASS Retry verifica preferências sem gerar segundo login
+PASS 401 de preferências remove token e não oferece Retry
+PASS Falha de rede preserva sessão e oferece Retry
+PASS 403 na consulta de preferências não destrói token válido
+PASS Conta nova sem onboarding vai para configuração, sem erro de sessão
+6 cenários aprovados

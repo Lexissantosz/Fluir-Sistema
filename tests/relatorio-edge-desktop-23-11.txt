@@ -1,0 +1,10 @@
+Fluir PWA no Microsoft Edge desktop: teste automatizado, não é instalação real
+PASS Edge carrega login do Fluir
+PASS Edge reconhece manifesto instalável e ícones
+PASS Edge ativa Service Worker sem credenciais
+PASS Login não extrapola a largura em 1440 px
+PASS Login não extrapola a largura em 1024 px
+PASS Login não extrapola a largura em 768 px
+PASS Edge abre onboarding original em modo QA
+PASS Edge não registra exceções JavaScript nessas telas
+8 verificações aprovadas

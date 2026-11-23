@@ -7,6 +7,8 @@
 **Responsáveis pela avaliação humana:** Alex (PC) e Dawid (Android); iPhone depende de aparelho disponível.
 **Aviso:** documentação técnica de engenharia. **Não é uma declaração de disponibilidade comercial ou homologação de segurança.**
 
+> **Complemento de 23/11:** leia também [QA_COMPLEMENTAR_SESSAO_CICLO_DESKTOP_23-11-2026.md](QA_COMPLEMENTAR_SESSAO_CICLO_DESKTOP_23-11-2026.md). A auditoria adicional realizou 38/38 testes HTTP com três contas fictícias e PostgreSQL isolado, 6/6 verificações de recuperação de sessão, 8/8 testes em Edge e 66/66 JUnit. O deploy em produção continua pendente. Os números abaixo refletem a primeira rodada e são preservados como registro histórico.
+
 ## 1. Resumo executivo
 
 O Fluir possui um frontend web principal, backend REST Java/Spring, banco PostgreSQL e protótipos/empacotamentos separados. Nesta auditoria, preparamos metadados e ícones da PWA para instalação no Windows/Android/iOS, registro seguro de Service Worker, página de indisponibilidade offline, ferramentas de avaliação, automação de QA e empacotamento do frontend atual via Capacitor para Android.

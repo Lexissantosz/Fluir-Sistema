@@ -1,0 +1,41 @@
+Fluir QA real HTTP com PostgreSQL isolado (3 contas fictícias; não usar em produção)
+Nenhuma credencial, token ou código de convite é registrado.
+APROVADO | PostgreSQL isolado respondeu | HTTP 200
+APROVADO | Cadastro fictício A | HTTP 201
+APROVADO | Cadastro fictício B | HTTP 201
+APROVADO | Cadastro fictício C | HTTP 201
+APROVADO | A lista apenas perfis autenticados | HTTP 200
+APROVADO | A atualiza menstruação para Sim | HTTP 200
+APROVADO | A muda para Não e envia datas antigas sem intenção | HTTP 200
+APROVADO | API recupera perfil após resposta Não | HTTP 200
+APROVADO | Prefiro não responder também limpa datas | HTTP 200
+APROVADO | Sem sessão ciclos bloqueados | HTTP 401
+APROVADO | Token falso rejeitado | HTTP 401
+APROVADO | A registrou próprio dado sintético | HTTP 200
+APROVADO | A registrou sintoma sintético | HTTP 200
+APROVADO | B não lê A sem autorização | HTTP 404
+APROVADO | C não lê A sem autorização | HTTP 404
+APROVADO | A gerou convite com escopo mínimo | HTTP 200
+APROVADO | C não solicita com código inválido | HTTP 400
+APROVADO | B solicita código | HTTP 200
+APROVADO | B permanece bloqueado até aprovação | HTTP 404
+APROVADO | A vê pedido pendente | HTTP 200
+APROVADO | C não pode aprovar convite de A | HTTP 404
+APROVADO | A aprova convite de B | HTTP 200
+APROVADO | B lê somente escopo autorizado | HTTP 200
+APROVADO | C continua sem acesso após aprovação de B | HTTP 404
+APROVADO | B não apaga registro de A | HTTP 404
+APROVADO | A consulta compartilhamento | HTTP 200
+APROVADO | B não revoga permissão concedida por A | HTTP 404
+APROVADO | A revoga permissão | HTTP 200
+APROVADO | B volta a ficar sem acesso | HTTP 404
+APROVADO | C nunca acessa ciclo de A | HTTP 404
+APROVADO | IA sem chave configurada falha com 503, não inventa resposta | HTTP 503
+APROVADO | Interpretação sem chave configurada falha com 503 | HTTP 503
+APROVADO | IA exige sessão | HTTP 401
+APROVADO | Google config pública acessível | HTTP 200
+APROVADO | CORS Produção | HTTP 200
+APROVADO | CORS Preview autorizada | HTTP 200
+APROVADO | CORS Local QA | HTTP 200
+APROVADO | CORS Origem não autorizada | HTTP 403
+TOTAL: 38 verificações aprovadas

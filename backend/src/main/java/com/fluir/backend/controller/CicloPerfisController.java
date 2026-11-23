@@ -147,6 +147,13 @@ public class CicloPerfisController {
         Integer period=intRange(input,"duracaoMenstruacao",1,20);
         LocalDate last=date(input,"ultimaMenstruacao");
         if(last!=null && last.isAfter(LocalDate.now())) throw bad("A data não pode ser futura.");
+        // Minimização de dados: resposta negativa ou não informada não deve
+        // manter datas/durações menstruais antigas no banco.
+        if(!"sim".equals(menstrual)){
+            cycle=null;
+            period=null;
+            last=null;
+        }
         db.update("INSERT INTO ciclo_perfis(usuario_id,apelido,foto_data,menstrua_atualmente,duracao_ciclo,duracao_menstruacao,ultima_menstruacao) "+
             "VALUES(?,?,?,?,?,?,?) ON CONFLICT(usuario_id) DO UPDATE SET apelido=EXCLUDED.apelido,"+
             "foto_data=EXCLUDED.foto_data,menstrua_atualmente=EXCLUDED.menstrua_atualmente,"+

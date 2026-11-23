@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - alex/pwa-dispositivos-dossie-23-11
+      - alex/estabilizar-sessao-ia-desktop-23-11
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -71,8 +72,39 @@ jobs:
           java-version: "21"
           cache: maven
           cache-dependency-path: backend/pom.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
       - name: JUnit, Mockito, Spring Security e regras de dominio
         run: mvn -B -f backend/pom.xml test
+      - name: Gerar executavel para QA HTTP isolado
+        run: mvn -B -f backend/pom.xml -DskipTests package
+      - name: Testar contas A/B/C, convites, revogacao, CORS e IA indisponivel
+        env:
+          PORT: "18081"
+          FLUIR_GEMINI_API_KEY: ""
+          FLUIR_GOOGLE_CLIENT_ID: ""
+        run: |
+          java -jar backend/target/backend-0.0.1-SNAPSHOT.jar >/tmp/fluir-ci-api.log 2>&1 &
+          app_pid=$!
+          trap 'kill "$app_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:18081/api/health/ready >/dev/null; then ready=1; break; fi
+            sleep 2
+          done
+          if [ "$ready" -ne 1 ]; then
+            echo "Backend QA não iniciou"; tail -30 /tmp/fluir-ci-api.log; exit 1
+          fi
+          node tests/isolamento-ciclos-abc.e2e.cjs
+      - name: Guardar relatorio anonimo do teste isolado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluir-QA-Integracao-ABC
+          path: tests/relatorio-isolamento-abc-23-11.txt
+          if-no-files-found: warn
+          retention-days: 7
 
   android:
     name: Compilar APK Android de debug (nao e release)

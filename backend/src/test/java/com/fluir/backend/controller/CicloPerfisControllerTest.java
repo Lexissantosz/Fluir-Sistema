@@ -82,6 +82,19 @@ class CicloPerfisControllerTest {
             eq(true),eq(false),eq(false),eq(false));
         verify(db,never()).update(contains("INSERT INTO ciclo_permissoes"),(Object[])any(Object[].class));
     }
+    @Test void naoMenstruaNaoPersisteDatasMesmoEmRequisicaoManual() {
+        api.saveProfile(Map.of("apelido","Pessoa QA","menstrua","nao",
+            "duracaoCiclo",28,"duracaoMenstruacao",5,
+            "ultimaMenstruacao","2026-11-01"),user(20));
+        verify(db).update(contains("INSERT INTO ciclo_perfis"),eq(20),
+            eq("Pessoa QA"),isNull(),eq("nao"),isNull(),isNull(),isNull());
+    }
+    @Test void prefiroNaoResponderDescartaDatasAntigas() {
+        api.saveProfile(Map.of("menstrua","prefiro-nao-responder",
+            "duracaoCiclo",31,"ultimaMenstruacao","2026-11-01"),user(20));
+        verify(db).update(contains("INSERT INTO ciclo_perfis"),eq(20),
+            isNull(),isNull(),eq("prefiro-nao-responder"),isNull(),isNull(),isNull());
+    }
     @Test void preferenciaInvalidaNaoEhPersistida() {
         assertEquals(HttpStatus.BAD_REQUEST,assertThrows(ResponseStatusException.class,
             ()->api.savePreference(Map.of("modo","outro"),user(20))).getStatusCode());

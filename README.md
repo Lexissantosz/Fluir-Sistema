@@ -1287,6 +1287,7 @@ O APK debug atualizado foi compilado em 23/11/2026 e documentado com SHA-256, ve
 - [Dossiê técnico multiplataforma](docs/DOSSIE_FLUIR_MULTIPLATAFORMA_23-11-2026.md)
 - [Roteiro de QA separado: Alex, Dawid, iPhone e backend](docs/ROTEIRO_QA_DISPOSITIVOS_23-11-2026.md)
 - [Relatório do APK atualizado](docs/RELATORIO_APK_ANDROID_23-11-2026.md)
+- [QA complementar: sessões, privacidade A/B/C, Gemini e Edge Desktop](docs/QA_COMPLEMENTAR_SESSAO_CICLO_DESKTOP_23-11-2026.md)
 
 ### Comandos de validação
 
@@ -1303,4 +1304,4 @@ npm run build --prefix mobile
 
 Para uma compilação Android limpa, antes do comando Windows rode `npm run android:prepare` uma vez se ainda não existir `android/`. A automação no GitHub está em `.github/workflows/fluir-multiplataforma-qa.yml`, que gera um **APK de debug temporário**, não uma versão de loja.
 
-**Resultados locais:** PWA 10/10 em Chrome e 6/6 estáticos; onboarding de ciclos 21/21; planos 17/17; backend Java 64/64 com PostgreSQL 16 isolado. Os resultados **não** são homologação em aparelhos físicos, nem autorizam deploy ou cobrança.
+**Resultados locais:** PWA 10/10 em Chrome e 6/6 estáticos; onboarding de ciclos 21/21; planos 17/17; backend Java **66/66** com PostgreSQL 16 isolado; sessão e recuperação **6/6**; isolamento de ciclos A/B/C com API real **38/38**; Edge Desktop **8/8**. Os resultados **não** são homologação em aparelhos físicos, nem autorizam deploy ou cobrança.

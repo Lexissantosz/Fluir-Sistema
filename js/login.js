@@ -197,9 +197,61 @@ async function hasCompletedOnboarding(usuario) {
     return false;
   }
 
-  throw new Error(
-    "Não foi possível verificar o onboarding."
-  );
+  if (response.status === 401) {
+    const error = new Error("Sessão rejeitada pelo servidor.");
+    error.code = "AUTH_REJECTED";
+    throw error;
+  }
+  throw new Error("Não foi possível consultar o onboarding (HTTP " + response.status + ").");
+}
+
+// Uma falha de preferências não torna inválido o token emitido pelo login.
+// Permitir tentar a consulta novamente SEM reenviar e-mail/senha ou criar novo token.
+let retryOnboardingButton = null;
+function clearVerificationRetry() {
+  retryOnboardingButton?.remove();
+  retryOnboardingButton = null;
+}
+function completeAuthenticatedLogin(completed) {
+  clearVerificationRetry();
+  sessionStorage.setItem("fluir-onboarding-completed", String(completed));
+  showMessage(loginMessage, "Login realizado com sucesso.", "success");
+  setTimeout(() => {
+    window.location.href = completed ? "dashboard.html" : "setup.html";
+  }, 700);
+}
+function showVerificationRetry(usuario) {
+  clearVerificationRetry();
+  retryOnboardingButton = document.createElement("button");
+  retryOnboardingButton.type = "button";
+  retryOnboardingButton.className = "secondary";
+  retryOnboardingButton.textContent = "Tentar carregar preferências novamente";
+  loginMessage.insertAdjacentElement("afterend", retryOnboardingButton);
+  retryOnboardingButton.addEventListener("click", async () => {
+    retryOnboardingButton.disabled = true;
+    try {
+      const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+      if (!current || current.id !== usuario.id || current.token !== usuario.token) {
+        clearVerificationRetry();
+        showMessage(loginMessage, "Entre novamente para continuar.", "error");
+        return;
+      }
+      const completed = await hasCompletedOnboarding(usuario);
+      completeAuthenticatedLogin(completed);
+    } catch (error) {
+      if (error?.code === "AUTH_REJECTED") {
+        sessionStorage.removeItem("fluir-user");
+        sessionStorage.removeItem("fluir-onboarding");
+        clearVerificationRetry();
+        showMessage(loginMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
+      } else {
+        showMessage(loginMessage,
+          "Ainda não foi possível consultar as preferências. Sua sessão foi mantida; tente novamente.", "error");
+      }
+    } finally {
+      if (retryOnboardingButton) retryOnboardingButton.disabled = false;
+    }
+  });
 }
 
 function isValidEmail(email) {
@@ -339,6 +391,7 @@ if (loginForm) {
     const email = emailInput ? emailInput.value.trim() : "";
     const senha = senhaInput ? senhaInput.value.trim() : "";
 
+    clearVerificationRetry();
     showMessage(loginMessage, "", "info");
 
     if (!email || !senha) {
@@ -403,31 +456,20 @@ if (loginForm) {
       try {
         onboardingConcluido = await hasCompletedOnboarding(data);
       } catch (validationError) {
-        console.error("Erro ao verificar onboarding:", validationError);
-        sessionStorage.removeItem("fluir-user");
-        sessionStorage.removeItem("fluir-onboarding");
-        showMessage(
-          loginMessage,
-          "Não foi possível verificar suas preferências. Tente entrar novamente.",
-          "error"
-        );
+        // 401 rejeita a sessão. CORS, timeout e 503 não justificam removê-la.
+        if (validationError?.code === "AUTH_REJECTED") {
+          sessionStorage.removeItem("fluir-user");
+          sessionStorage.removeItem("fluir-onboarding");
+          showMessage(loginMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
+        } else {
+          showMessage(loginMessage,
+            "Login confirmado, mas não foi possível consultar suas preferências. Sua sessão foi mantida.",
+            "error");
+          showVerificationRetry(data);
+        }
         return;
       }
-
-      sessionStorage.setItem(
-        "fluir-onboarding-completed",
-        String(onboardingConcluido)
-      );
-
-      showMessage(loginMessage, "Login realizado com sucesso.", "success");
-
-      setTimeout(function () {
-        const destination = onboardingConcluido
-          ? "dashboard.html"
-          : "setup.html";
-
-        window.location.href = destination;
-      }, 700);
+      completeAuthenticatedLogin(onboardingConcluido);
 
     } catch (error) {
       showMessage(
