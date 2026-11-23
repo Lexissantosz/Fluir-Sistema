@@ -82,8 +82,24 @@ const defaultSetup = {
    Coisinhas pequenas para evitar repetição e dor de cabeça.
 ===================================================== */
 
-  function isOnboardingCompleted() {
+function getAuthenticatedUser() {
   try {
+    const user = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+    if (user?.id == null || typeof user.token !== "string" || !user.token.trim()) {
+      return null;
+    }
+    return user;
+  } catch (error) {
+    console.warn("Sessão local inválida:", error);
+    return null;
+  }
+}
+
+function isOnboardingCompleted() {
+  try {
+    const user = getAuthenticatedUser();
+    if (!user) return false;
+
     const onboardingCompleted =
       sessionStorage.getItem("fluir-onboarding-completed");
 
@@ -91,15 +107,11 @@ const defaultSetup = {
       return onboardingCompleted === "true";
     }
 
-    const setup = localStorage.getItem("fluir-setup");
-
-    if (!setup) {
-      return false;
-    }
-
-    const setupData = JSON.parse(setup);
-
-    return setupData.onboardingConcluido === true;
+    // Não reaproveitar onboarding salvo por uma conta diferente.
+    const setup = JSON.parse(localStorage.getItem("fluir-setup") || "null");
+    return setup?.onboardingConcluido === true &&
+      setup.usuarioId != null &&
+      String(setup.usuarioId) === String(user.id);
   } catch (error) {
     console.warn("Erro ao verificar onboarding:", error);
     return false;
@@ -107,10 +119,13 @@ const defaultSetup = {
 }
 
 function protectDashboardAccess() {
-  const completed = isOnboardingCompleted();
+  if (!getAuthenticatedUser()) {
+    window.location.replace("login.html");
+    return false;
+  }
 
-  if (!completed) {
-    window.location.href = "setup.html";
+  if (!isOnboardingCompleted()) {
+    window.location.replace("setup.html");
     return false;
   }
 
