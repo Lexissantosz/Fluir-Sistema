@@ -1502,9 +1502,9 @@ async function finishSetup() {
     }
 
     const usuario = JSON.parse(usuarioSalvo);
-    if (!usuario.token) {
+    if (usuario?.id == null || typeof usuario.token !== "string" || !usuario.token.trim()) {
       showFormMessage(
-        "Sua sessão expirou. Faça login novamente."
+        "Não encontramos uma sessão válida. Entre novamente para concluir o cadastro."
       );
       return;
     }
@@ -1542,19 +1542,28 @@ async function finishSetup() {
       anexos: setupData.preferences.attachments || null,
     };
 
-    const response = await fetch(
-      "https://fluir-sistema.onrender.com/api/onboarding/salvar",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${usuario.token}`
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    const text = await response.text();
+    // Limite inclui a leitura da resposta, para não deixar "Salvando..." preso.
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    let response;
+    let text;
+    try {
+      response = await fetch(
+        "https://fluir-sistema.onrender.com/api/onboarding/salvar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${usuario.token}`
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        }
+      );
+      text = await response.text();
+    } finally {
+      clearTimeout(timeout);
+    }
 
     let data = {};
 
@@ -1566,7 +1575,9 @@ async function finishSetup() {
 
     if (!response.ok) {
       showFormMessage(
-        data.mensagem || text || "Não foi possível salvar sua configuração."
+        response.status === 401
+          ? "Sua sessão não foi aceita pelo servidor. Entre novamente para concluir a configuração."
+          : (data.mensagem || text || "Não foi possível salvar sua configuração.")
       );
       return;
     }
@@ -1587,7 +1598,9 @@ async function finishSetup() {
     console.error("Erro ao salvar onboarding:", error);
 
     showFormMessage(
-      "Não foi possível salvar sua configuração. Tente novamente."
+      error?.name === "AbortError"
+        ? "O servidor demorou demais para responder. Você pode tentar novamente sem refazer as etapas."
+        : "Não foi possível conectar ao servidor. Suas respostas continuam nesta tela para outra tentativa."
     );
   } finally {
     if (!setupSaved) {
