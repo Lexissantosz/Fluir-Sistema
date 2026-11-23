@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171817">
+<title>Fluir | Demonstração do Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/demo.css">
+<link rel="stylesheet" href="../css/assistant.css">
+</head>
+<body data-fluir-demo="true">
+<div class="demo-app">
+  <aside class="demo-sidebar" aria-label="Navegação de demonstração">
+    <div class="demo-brand"><img src="../Assets/brand/fluir-symbol.svg" alt=""><div><strong>Fluir</strong><small>Sistema de Organização da Vida</small></div></div>
+    <nav class="demo-navigation" aria-label="Áreas demonstrativas">
+      <button type="button" class="active" data-demo-view="dashboard">▦ <span>Dashboard</span></button>
+      <button type="button" data-demo-view="timeline">◷ <span>Timeline</span></button>
+      <button type="button" data-demo-view="tasks">☷ <span>Tarefas</span></button>
+      <button type="button" data-demo-view="habits">↻ <span>Hábitos</span></button>
+      <button type="button" data-demo-view="water">♧ <span>Água</span></button>
+      <button type="button" data-demo-view="cycle">◌ <span>Ciclo menstrual</span></button>
+      <button type="button" data-demo-view="finances">▤ <span>Finanças</span></button>
+      <button type="button" data-demo-view="diary">▤ <span>Diário</span></button>
+    </nav>
+    <div class="demo-sidebar-footer">
+      <p>“Pequenas ações constroem grandes mudanças.”</p>
+      <div class="demo-focus"><small>Foco de hoje</small><strong id="demoFocus">0%</strong><div class="demo-progress"><span id="demoFocusBar"></span></div><small>Uma tarefa de cada vez.</small></div>
+    </div>
+  </aside>
+  <main class="demo-main" id="demoMain">
+    <div class="demo-top">
+      <div><span class="demo-eyebrow">Ambiente de demonstração</span><h1 id="demoHeading">Olá, visitante</h1><p id="demoSubtitle">Explore o Fluir com exemplos fictícios, sem cadastro.</p></div>
+      <div class="demo-top-actions"><span class="demo-mode-tag">DEMO · Dados fictícios</span><a href="login.html" class="demo-exit">Sair da demonstração</a></div>
+    </div>
+    <section id="demoScreen" aria-live="polite"></section>
+  </main>
+</div>
+<div class="demo-mobile-nav"><button data-demo-view="dashboard" class="active">Início</button><button data-demo-view="tasks">Tarefas</button><button data-demo-view="habits">Hábitos</button><button data-demo-view="water">Água</button></div>
+<script src="../js/demo.js"></script>
+<script src="../js/assistant.js"></script>
+</body>
+</html>
