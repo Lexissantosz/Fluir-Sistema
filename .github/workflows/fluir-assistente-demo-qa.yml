@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - alex/release-assistente-demo-prod-23-11
+      - alex/qa-estabilidade-sessao-23-11
   workflow_dispatch:
 permissions:
   contents: read
@@ -60,6 +61,8 @@ jobs:
         run: |
           node --check js/assistant.js
           node --check js/demo.js
+          node --check js/dashboard.js
+          node --check js/setup.js
       - name: Executar QA em navegador
         run: |
           python3 -m http.server 5500 --bind 127.0.0.1 --directory . >/tmp/fluir-http.log 2>&1 &
@@ -70,3 +73,4 @@ jobs:
             sleep 1
           done
           node tests/assistente-demo.e2e.cjs
+          FLUIR_TEST_BASE=http://127.0.0.1:5500 node tests/qa-sessao-pos-apresentacao.e2e.cjs
