@@ -46,7 +46,7 @@ const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
 // =====================================================
 
 let currentStep = 1;
-const totalSteps = 4;
+const totalSteps = setupSteps.length;
 let isFinishingSetup = false;
 let previouslySavedOnboarding = null; // evita repetir POST ao retentar o ciclo
 
@@ -66,6 +66,15 @@ function readOnboardingSession() {
 }
 
 function showSetupSessionNotice() {
+  if (isLocalVisualQA) {
+    const badge = document.createElement("span");
+    badge.className = "setup-qa-indicator";
+    badge.id = "setupSessionNotice";
+    badge.textContent = "Prévia local · dados não salvos";
+    badge.title = "As escolhas deste teste não serão enviadas ao servidor nem gravadas.";
+    document.querySelector(".setup-top")?.append(badge);
+    return;
+  }
   const note = document.createElement("section");
   note.className = "setup-session-notice";
   note.id = "setupSessionNotice";
@@ -73,11 +82,7 @@ function showSetupSessionNotice() {
   const heading = document.createElement("strong");
   const explanation = document.createElement("p");
   note.append(heading, explanation);
-  if (isLocalVisualQA) {
-    heading.textContent = "Simulação local de qualidade";
-    explanation.textContent =
-      "Este teste não usa uma sessão real. Nada será enviado ao servidor nem salvo no navegador.";
-  } else if (!readOnboardingSession()) {
+  if (!readOnboardingSession()) {
     heading.textContent = "Entre na sua conta para salvar";
     explanation.textContent =
       "Não encontramos login neste endereço e nesta aba. Isso não significa que sua sessão expirou.";
@@ -298,21 +303,14 @@ if (
 
 // =====================================================
 // VALIDAÇÃO DA ETAPA 2
-// Exige pelo menos 1 funcionalidade além da Timeline
+// Módulos adicionais são opcionais; Timeline permanece gratuita e ativa.
 // =====================================================
 
 function validateStep2() {
   clearFormMessage();
 
-  const selectedModules = Array.from(
-    document.querySelectorAll('.module-option input:checked:not([disabled])')
-  );
-
-  if (selectedModules.length === 0) {
-    showFormMessage("Escolha pelo menos uma funcionalidade para continuar.");
-    return false;
-  }
-
+  // A Timeline é gratuita e permanece ativa. É válido continuar sem
+  // nenhum módulo adicional, inclusive após retirar recursos pagos no passo 4.
   return true;
 }
 
@@ -386,7 +384,8 @@ const stepTitles = {
   1: "Sobre você",
   2: "Funcionalidades",
   3: "Preferências",
-  4: "Revisão final"
+  4: "Planos e escolhas",
+  5: "Revisão final"
 };
 
 
@@ -480,7 +479,11 @@ document.querySelectorAll(".module-option input").forEach((checkbox) => {
 });
 
 updateModuleCardsVisual();
-
+window.FluirPlansOnboarding.attach({
+  get modules(){return setupData.modules;},
+  get preferences(){return setupData.preferences;},
+  updateCards:updateModuleCardsVisual
+});
 
 // =====================================================
 // 8. ATUALIZAR ETAPA VISUAL
@@ -523,20 +526,8 @@ function updateStepView() {
 
 function updateMiniCards() {
   miniCards.forEach((card) => {
-    card.classList.remove("active");
+    card.classList.toggle("active", Number(card.dataset.miniStep) === currentStep);
   });
-
-  if (currentStep === 1) {
-    document.querySelector('[data-mini-step="1"]').classList.add("active");
-  }
-
-  if (currentStep === 2) {
-    document.querySelector('[data-mini-step="2"]').classList.add("active");
-  }
-
-  if (currentStep === 3 || currentStep === 4) {
-    document.querySelector('[data-mini-step="3"]').classList.add("active");
-  }
 }
 
 
@@ -1307,8 +1298,8 @@ function generateReview() {
     </div>
 
     <div class="review-section">
-      <h4>Funcionalidades ativadas</h4>
-      <p>Essas áreas aparecerão no seu dashboard inicial.</p>
+      <h4>Módulos escolhidos</h4>
+      <p>Essas áreas serão consideradas na personalização. Recursos pagos planejados não são desbloqueados automaticamente.</p>
 
       <div class="review-list">
         ${activeModules.map((moduleKey) => {
@@ -1327,6 +1318,7 @@ function generateReview() {
   if (setupData.modules.menstrualCycle) {
     reviewBox.insertAdjacentHTML("beforeend", window.FluirCycleOnboarding.reviewHtml());
   }
+  reviewBox.insertAdjacentHTML("beforeend", window.FluirPlansOnboarding.summaryHtml());
 }
 
 
@@ -1360,6 +1352,7 @@ if (restartSetupBtn) restartSetupBtn.addEventListener("click", () => {
   Object.keys(setupData.user).forEach(key => setupData.user[key] = "");
   Object.keys(setupData.modules).forEach(key => setupData.modules[key] = key === "timeline");
   setupData.preferences = {};
+  window.FluirPlansOnboarding.reset();
   moduleQuestions.replaceChildren();
   reviewBox.replaceChildren();
   clearFormMessage();
@@ -1395,6 +1388,9 @@ nextBtn.addEventListener("click", () => {
     }
 
     collectPreferences();
+    window.FluirPlansOnboarding.render();
+  }
+  if (currentStep === 4) {
     generateReview();
   }
 
@@ -1443,6 +1439,7 @@ async function finishSetup() {
   collectUserData();
   collectSelectedModules();
   collectPreferences();
+  setupData.planInterest = window.FluirPlansOnboarding.snapshot();
 
   clearFormMessage();
 
@@ -1522,6 +1519,7 @@ async function finishSetup() {
     if (setupData.modules.menstrualCycle) {
       await window.FluirCycleOnboarding.persist(usuario.token, setupData.user.nickname);
     }
+    await window.FluirPlansOnboarding.persist(usuario.token);
     setupData.usuarioId = usuario.id;
     setupData.onboardingConcluido = true;
     setupData.atualizadoEm = new Date().toISOString();
@@ -1643,7 +1641,7 @@ function closeSuccessModal() {
 if (reviewSetupBtn) {
   reviewSetupBtn.addEventListener("click", () => {
     closeSuccessModal();
-    currentStep = 4;
+    currentStep = 5;
     updateStepView();
   });
 }

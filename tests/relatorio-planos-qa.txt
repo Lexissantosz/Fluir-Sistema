@@ -1,0 +1,18 @@
+PASS Onboarding possui cinco etapas, planos antes do resumo
+PASS Duas escolhas do Pessoal sugerem Pessoal
+PASS Sem seleção premium, outros planos ficam recolhidos
+PASS Duas escolhas Pessoal + uma Completo recomendam Completo
+PASS Remover premium rebaixa para Pessoal sem presumir interesse em outro plano
+PASS Interesse selecionado não cria cobrança
+PASS Retirar finanças não remove diário
+PASS Sem escolha paga, recomenda Gratuito e retira interesse
+PASS Todos os preços de referência correspondem à página de planos
+PASS Resumo final mostra indicação gratuita
+PASS Escolhas continuam após voltar do resumo
+PASS Retirar tudo faz downgrade gratuito sem manter extras selecionados
+PASS Telas não executam script estranho
+PASS Segundo perfil de terceiro aparece como vaga adicional paga
+PASS Remover vaga extra conserva uma pessoa gratuita
+PASS Sem selecionar módulos pagos: o fluxo continua gratuito, sem insistência comercial
+PASS Tela de planos sem deslocamento horizontal em 390px
+17 cenários aprovados

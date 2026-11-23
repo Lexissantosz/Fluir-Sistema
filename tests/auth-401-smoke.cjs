@@ -29,6 +29,7 @@ const {chromium}=require(path.join(process.env.TEMP||process.env.TMP,"fluir-brow
  await advance();
  await advance();
  await advance();
+ await advance();
  await page.locator("#formMessage.show").waitFor({timeout:8000});
  console.log("HTTP_POST_COUNT",calls);
  console.log("STATUS",await page.locator("#formMessage").innerText());

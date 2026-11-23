@@ -20,6 +20,7 @@
   <!-- CSS da tela de configuração -->
   <link rel="stylesheet" href="../css/setup.css" />
   <link rel="stylesheet" href="../css/setup-cycle.css">
+  <link rel="stylesheet" href="../css/setup-plans.css">
 </head>
 
 <body>
@@ -101,6 +102,17 @@
             <strong>Preferências</strong>
             <p>Configure metas e detalhes das áreas escolhidas.</p>
           </div>
+          <div class="mini-card" data-mini-step="4">
+            <span>04</span>
+            <strong>Planos e escolhas</strong>
+            <p>Veja o que pode ser gratuito e o que é recurso futuro.</p>
+          </div>
+          <div class="mini-card" data-mini-step="5">
+            <span>05</span>
+            <strong>Resumo final</strong>
+            <p>Confira antes de concluir.</p>
+          </div>
+
 
         </div>
 
@@ -117,7 +129,7 @@
         <!-- ===================================================== -->
         <div class="progress-area">
           <div class="progress-text">
-            <span id="stepLabel">Etapa 1 de 4</span>
+            <span id="stepLabel">Etapa 1 de 5</span>
             <strong id="stepTitle">Sobre você</strong>
           </div>
 
@@ -357,7 +369,49 @@
           <!-- ETAPA 4 — REVISÃO FINAL -->
           <!-- Resumo do setup antes de finalizar -->
           <!-- ===================================================== -->
+          <!-- ETAPA 4 - PLANOS E FUNCIONALIDADES SOLICITADAS -->
           <section class="setup-step" data-step="4">
+            <div class="step-header">
+              <h3>Escolha o que faz sentido para você.</h3>
+              <p>O Fluir recomenda um plano de acordo com suas escolhas.
+                Remova recursos individualmente ou adicione outros, sem contratar nada agora.</p>
+            </div>
+            <div class="plan-onboard" id="planOnboarding">
+              <section class="plan-summary" aria-live="polite">
+                <span class="plan-eyebrow">Plano indicado</span>
+                <span class="plan-name" id="planSuggestedName">Gratuito</span>
+                <span class="plan-price-highlight" id="planSuggestedPrice">R$ 0/mês</span>
+                <span class="plan-subtitle" id="planCountSummary">Nenhum recurso pago</span>
+                <p class="plan-why" id="planSuggestedReason"></p>
+              </section>
+              <section class="plan-section" aria-label="Escolhas pagas">
+                <h4>Recursos pagos que você escolheu</h4>
+                <div class="plan-feature-list" id="planSelectedList"></div>
+              </section>
+              <details id="planExplore" class="plan-details">
+                <summary>Adicionar mais recursos ou conhecer outras opções</summary>
+                <p>Recursos planejados para as versões futuras do Fluir. Adicionar não ativa cobrança nem libera acesso.</p>
+                <div id="planExploreList" class="plan-feature-list"></div>
+              </details>
+              <details id="planComparison" class="plan-details">
+                <summary>Comparar valores e benefícios dos três planos</summary>
+                <div class="plan-brief-cards" id="planCards"></div>
+                <p>Valores mensais de referência da página de planos, sujeitos a confirmação antes do lançamento.</p>
+              </details>
+              <section class="plan-section">
+                <h4>Deseja conhecer o plano indicado?</h4>
+                <div id="planInterestChoices" class="plan-interest-choices" role="group"
+                  aria-label="Interesse em planos"></div>
+                <button id="planRemoveAll" class="secondary-btn plan-remove-all" type="button" hidden>
+                  Tirar todas as escolhas pagas e ficar com o Gratuito
+                </button>
+                <p class="plan-warning" id="planSelectionNotice" role="status"></p>
+              </section>
+            </div>
+          </section>
+
+          <!-- ETAPA 5 - REVISÃO FINAL -->
+          <section class="setup-step" data-step="5">
 
             <div class="step-header">
               <h3>Revise sua configuração.</h3>
@@ -412,6 +466,7 @@
 
   <!-- JS da tela de configuração -->
   <script src="../js/setup-cycle.js"></script>
+  <script src="../js/setup-plans.js"></script>
   <script src="../js/setup.js"></script>
 </body>
 </html>

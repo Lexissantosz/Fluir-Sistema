@@ -331,12 +331,27 @@
     const response=await fetch(url,{method:"PUT",cache:"no-store",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify(payload)});
     if(!response.ok)throw Error("O cadastro geral foi salvo, mas o módulo Ciclo Menstrual não pôde ser configurado agora (HTTP "+response.status+"). Tente novamente antes de sair.");
   }
+  function removeExtraPerson(index){
+    if(!hasOthers()||index<1||index>=state.pessoas.length)return false;
+    state.pessoas.splice(index,1);
+    if(state.modo==="other"&&state.pessoas.length===1)state.multi="one";
+    refresh();
+    return true;
+  }
+  function reduceExtraProfiles(){
+    if(hasOthers()){
+      state.pessoas=state.pessoas.slice(0,1);
+      if(state.modo==="other"&&state.pessoas.length===1)state.multi="one";
+      refresh();
+    }
+  }
   function reset(){
     state=blank();
     if($("cycleOwnPhoto"))$("cycleOwnPhoto").value="";
     if($("fluirCycleBlock"))refresh();
   }
-  window.FluirCycleOnboarding={html,mount,validate,legacy,reviewHtml,persist,reset,getState:()=>structuredClone({
+  window.FluirCycleOnboarding={html,mount,validate,legacy,reviewHtml,persist,reset,
+    removeExtraPerson,reduceExtraProfiles,getState:()=>structuredClone({
     multi:state.multi,modo:state.modo,pessoas:state.pessoas.map(p=>({apelido:p.apelido,possuiFluir:p.possuiFluir,sincronizar:p.sincronizar})),
     menstrua:state.menstrua,ultimaMenstruacao:state.ultimaMenstruacao,duracaoCiclo:state.duracaoCiclo,
     duracaoMenstruacao:state.duracaoMenstruacao,lembretes:state.lembretes,hasPhoto:!!state.foto

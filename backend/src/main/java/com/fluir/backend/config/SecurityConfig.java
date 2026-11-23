@@ -85,6 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/usuarios/**").permitAll()
                         .requestMatchers("/api/onboarding/**").authenticated()
                         .requestMatchers("/api/ciclos/**").authenticated()
+                        .requestMatchers("/api/planos/**").authenticated()
                         .requestMatchers("/api/assistente/**").authenticated()
                         .requestMatchers("/api/tarefas/**").authenticated()
                         .anyRequest().permitAll()

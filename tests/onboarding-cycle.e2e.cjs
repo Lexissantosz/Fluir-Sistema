@@ -14,8 +14,8 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
  const page=await browser.newPage({viewport:{width:1366,height:768},deviceScaleFactor:1});
  let errors=[];page.on("pageerror",e=>errors.push(e.message));
  await page.goto(URL,{waitUntil:"domcontentloaded"});
- await run("onboarding original permanece com quatro etapas",async()=>{
-  assert.match(await page.title(),/Fluir/i);assert.equal(await page.locator(".setup-step").count(),4);
+ await run("onboarding original preservado com cinco etapas",async()=>{
+  assert.match(await page.title(),/Fluir/i);assert.equal(await page.locator(".setup-step").count(),5);
   assert.equal(await page.locator("#restartSetupBtn").count(),1);
  });
  async function reachCycle(){
@@ -78,8 +78,10 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
  await run("Prévia de foto aparece no perfil e na revisão",async()=>{
   await page.locator(".cycle-person [data-photo]").first().setInputFiles({name:"avatar.png",mimeType:"image/png",buffer:png});
   await page.locator(".cycle-person .cycle-avatar img").first().waitFor({state:"attached",timeout:4000});
-  await page.locator("#nextBtn").click();
+  await page.locator("#nextBtn").click(); // Planos
   assert.equal(await page.locator('.setup-step[data-step="4"].active').count(),1);
+  await page.locator("#nextBtn").click(); // Resumo
+  assert.equal(await page.locator('.setup-step[data-step="5"].active').count(),1);
   assert.equal(await page.locator(".cycle-review-person").count(),2);
   assert.equal(await page.locator(".cycle-review-person img").count(),1);
   assert.match(await page.locator("#reviewBox").innerText(),/Bia/);
@@ -108,12 +110,14 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
   assert.equal(legacy.cycleLength,"");
   assert.equal(legacy.bleedingLength,"");
   assert.equal(await page.locator("#cycleOwnNoPeriodNote").isVisible(),true);
-  await page.locator("#nextBtn").click();
+  await page.locator("#nextBtn").click(); // Planos
+  await page.locator("#nextBtn").click(); // Resumo
   assert.equal(await page.locator(".cycle-review-person").count(),1);
   assert.match(await page.locator(".cycle-review-person").innerText(),/Meu ciclo/);
  });
  await run("Meu ciclo e outras pessoas predefine Sim sem repetir a pergunta",async()=>{
-  await page.locator("#backBtn").click();
+  await page.locator("#backBtn").click(); // Planos
+  await page.locator("#backBtn").click(); // Preferências
   await page.locator("#cycleCountYes").click();
   assert.equal(await page.locator("#cycleMode").inputValue(),"both");
   assert.equal(await page.locator("#cycleMenstruationQuestion").isVisible(),false);
@@ -121,17 +125,20 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
   assert.equal(await page.locator("#cycleOwnMenstrualFields").isVisible(),true);
   assert.equal(await page.locator(".cycle-person").count(),1);
   await page.locator("[data-alias]").fill("Ana");
-  await page.locator("#nextBtn").click();
+  await page.locator("#nextBtn").click(); // Planos
+  await page.locator("#nextBtn").click(); // Resumo
   assert.equal(await page.locator(".cycle-review-person").count(),2);
  });
  await run("Agora não oculta perfis e campos sensíveis",async()=>{
-  await page.locator("#backBtn").click();
+  await page.locator("#backBtn").click(); // Planos
+  await page.locator("#backBtn").click(); // Preferências
   await page.locator("#cycleCountLater").click();
   assert.equal(await page.locator("#cycleModeField").isVisible(),false);
   assert.equal(await page.locator("#cycleOwn").isVisible(),false);
   assert.equal(await page.locator("#cycleOthers").isVisible(),false);
   assert.equal(await page.evaluate(()=>window.FluirCycleOnboarding.getState().modo),"later");
-  await page.locator("#nextBtn").click();
+  await page.locator("#nextBtn").click(); // Planos
+  await page.locator("#nextBtn").click(); // Resumo
  });
  await run("Tema clássico mantém botões pretos e tipografia original",async()=>{
   const bgcolor=await page.locator("#nextBtn").evaluate(el=>getComputedStyle(el).backgroundColor);
@@ -177,7 +184,8 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    const dims=await mobile.evaluate(()=>({content:document.documentElement.scrollWidth,window:innerWidth}));
    assert.ok(dims.content<=dims.window+1,JSON.stringify(dims));
    await mobile.screenshot({path:path.join(__dirname,"evidencia-onboarding-mobile-etapa3.png"),fullPage:true});
-   await mobile.locator("#nextBtn").click();
+   await mobile.locator("#nextBtn").click(); // Planos
+   await mobile.locator("#nextBtn").click(); // Resumo
    assert.equal(await mobile.locator(".cycle-review-person").count(),2);
  });
  await run("Nenhuma exceção JS em tela móvel",async()=>assert.deepEqual(mobileErrors,[]));
@@ -185,7 +193,10 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    const retry=await browser.newPage({viewport:{width:1200,height:800}});
    await retry.addInitScript(()=>sessionStorage.setItem("fluir-user",
      JSON.stringify({id:3,nome:"Conta de Testes",token:"TOKEN_FICTICIO_QA_SEM_CREDENCIAL_123456789"})));
-   let general=0,cycle=0;
+   let general=0,cycle=0,plan=0;
+   await retry.route("http://localhost:8080/api/planos/interesse",async route=>{
+     plan++;await route.fulfill({status:200,contentType:"application/json",body:'{"status":"salvo"}'});
+   });
    await retry.route("https://fluir-sistema.onrender.com/api/onboarding/salvar",async route=>{
      general++;await route.fulfill({status:200,contentType:"application/json",body:'{"status":"salvo"}'});
    });
@@ -206,14 +217,15 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    await retry.locator("#nextBtn").click();
    await retry.locator("#cycleCountNo").click();
    await retry.locator("#cycleMode").selectOption("self");
-   await retry.locator("#nextBtn").click();
-   await retry.locator("#nextBtn").click();
+   await retry.locator("#nextBtn").click(); // Planos
+   await retry.locator("#nextBtn").click(); // Resumo
+   await retry.locator("#nextBtn").click(); // Salvar
    await retry.locator("#formMessage.show").waitFor({timeout:7000});
    assert.match(await retry.locator("#formMessage").innerText(),/cadastro geral foi salvo/i);
    assert.equal(general,1);assert.equal(cycle,1);
    await retry.locator("#nextBtn").click();
    await retry.waitForURL("**/dashboard.html",{timeout:8000});
-   assert.equal(general,1);assert.equal(cycle,2);
+   assert.equal(general,1);assert.equal(cycle,2);assert.equal(plan,1);
    await retry.close();
  });
  await run("Sem login no mesmo endereço: informar ausência de sessão antes do formulário",async()=>{
@@ -244,8 +256,9 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    await reject.locator("#nextBtn").click();
    await reject.locator('.module-option input[value="menstrualCycle"]').check();
    await reject.locator("#nextBtn").click();
-   await reject.locator("#nextBtn").click();
-   await reject.locator("#nextBtn").click();
+   await reject.locator("#nextBtn").click(); // Planos
+   await reject.locator("#nextBtn").click(); // Resumo
+   await reject.locator("#nextBtn").click(); // Salvar
    await reject.locator("#formMessage.show").waitFor({timeout:7000});
    assert.equal(calls,1);
    assert.match(await reject.locator("#formMessage").innerText(),/Sua sessão de 12 horas terminou/);

@@ -1,4 +1,4 @@
-PASS onboarding original permanece com quatro etapas
+PASS onboarding original preservado com cinco etapas
 PASS Ciclo integrado à etapa 3, sem protótipo paralelo
 PASS A quantidade é a primeira pergunta; opções individuais ficam condicionais
 PASS Mais de uma pessoa com perfis de terceiros cria duas identificações
