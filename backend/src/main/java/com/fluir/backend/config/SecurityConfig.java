@@ -33,8 +33,17 @@ public class SecurityConfig {
                 "https://fluir-sistema-git-alex-refino-ux-ia-mobile-19-11-lexissantosz.vercel.app",
                 "http://127.0.0.1:5500",
                 "http://localhost:5500",
+                "http://127.0.0.1:5505", // QA local, servidor estatico
+                "http://localhost:5505",
                 "https://localhost", // Capacitor Android
                 "http://localhost"
+        ));
+        // Previews Vercel mudam de hostname a cada branch/deploy. Permitir apenas
+        // subdominios do projeto na conta da equipe, sem liberar *.vercel.app.
+        // A lista explicita acima continua cobrindo a origem de producao.
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://fluir-sistema-git-*-lexissantosz.vercel.app",
+                "https://fluir-sistema-*-lexissantosz.vercel.app"
         ));
 
         configuration.setAllowedMethods(List.of(
