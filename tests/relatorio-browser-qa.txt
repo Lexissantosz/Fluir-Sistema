@@ -8,12 +8,15 @@ PASS Apelido com HTML não é executado
 PASS Prévia de foto aparece no perfil e na revisão
 PASS Recomeçar zera as escolhas e volta à primeira etapa
 PASS Meu próprio ciclo preenche Sim e esconde períodos quando seleciono Não
-PASS Meu e outra pessoa + Não menstruo esconde dados próprios sem ocultar terceiros
+PASS Meu ciclo e outras pessoas predefine Sim sem repetir a pergunta
 PASS Agora não oculta perfis e campos sensíveis
 PASS Tema clássico mantém botões pretos e tipografia original
 PASS Nenhuma exceção de script no fluxo desktop
+PASS Prévia local QA finaliza sem salvar e sem usar token fictício
 PASS Largura 390px sem scroll horizontal na abertura
 PASS Fluxo de duas pessoas também funciona no celular (390px)
 PASS Nenhuma exceção JS em tela móvel
 PASS Falha temporária na API de ciclo não duplica POST do onboarding
-18 testes aprovados
+PASS Sem login no mesmo endereço: informar ausência de sessão antes do formulário
+PASS 401 real no backend é apresentado como sessão expirada
+21 testes aprovados

@@ -62,3 +62,22 @@
  .cycle-onboard .cycle-upload-button { width:100%; }
  .cycle-onboard .cycle-upload-name { width:100%; }
 }
+
+/* Estado de autenticação do onboarding. Não altera telas protegidas nem sessões. */
+.setup-session-notice {
+  max-width: 960px;
+  margin: 12px auto 20px;
+  padding: 16px 20px;
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border, #dedede);
+  border-left: 4px solid var(--button-bg, #202020);
+  border-radius: 14px;
+  color: var(--text, #222);
+  line-height: 1.5;
+}
+.setup-session-notice strong { display:block;font-weight:800;margin-bottom:5px; }
+.setup-session-notice p { color:var(--muted,#666);margin:0 0 10px; }
+.setup-session-notice a { display:inline-flex;align-items:center;justify-content:center;margin:6px 8px 0 0;padding:10px 14px;text-decoration:none;border-radius:12px; }
+.setup-session-notice a:focus-visible{outline:3px solid #666;outline-offset:3px;}
+.cycle-onboard #cycleMenstruationQuestion[hidden],
+.cycle-onboard #cycleOwnIncludedNote[hidden]{display:none !important;}

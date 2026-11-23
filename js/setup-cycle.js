@@ -35,10 +35,13 @@
         <h5>Meu ciclo</h5>
         <p class="question-block-description">Todas as perguntas são opcionais. As previsões são estimativas, não diagnósticos.</p>
         <div class="question-grid">
-          <label class="field question-full"><span>Você menstrua atualmente?</span><select id="cycleMenstruates">
+          <label class="field question-full" id="cycleMenstruationQuestion"><span>Você menstrua atualmente?</span><select id="cycleMenstruates">
             <option value="prefiro-nao-responder">Prefiro não responder</option>
             <option value="sim">Sim</option><option value="nao">Não</option>
           </select></label>
+          <p class="soft-note question-full" id="cycleOwnIncludedNote" hidden>
+            Seu próprio ciclo foi incluído nesta escolha. Você poderá atualizar seus dados depois nas configurações.
+          </p>
           <div id="cycleOwnMenstrualFields" class="question-full question-grid">
             <label class="field"><span>Data da última menstruação (se souber)</span><input id="cycleLastDate" type="date"></label>
             <label class="field"><span>Duração habitual do ciclo (dias)</span><input id="cycleDuration" type="number" min="15" max="90" placeholder="Ex.: 28"></label>
@@ -193,7 +196,10 @@
     $("cycleOwn").hidden=!hasOwn();
     $("cycleOthers").hidden=!hasOthers();
     $("cyclePauseNote").hidden=state.multi!=="later";
+    if(state.modo==="both")state.menstrua="sim";
     $("cycleMenstruates").value=state.menstrua;
+    $("cycleMenstruationQuestion").hidden=!hasOwn()||state.modo==="both";
+    $("cycleOwnIncludedNote").hidden=state.modo!=="both";
     const showPeriodDetails=hasOwn()&&state.menstrua==="sim";
     $("cycleOwnMenstrualFields").hidden=!showPeriodDetails;
     $("cycleOwnNoPeriodNote").hidden=!hasOwn()||state.menstrua==="sim";

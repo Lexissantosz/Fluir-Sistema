@@ -48,7 +48,58 @@ const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
 let currentStep = 1;
 const totalSteps = 4;
 let isFinishingSetup = false;
-let previouslySavedOnboarding = null; // evita repetir o POST se a gravação do ciclo falhar
+let previouslySavedOnboarding = null; // evita repetir POST ao retentar o ciclo
+
+// Sessões pertencem à origem e à aba. 127.0.0.1 e Vercel não compartilham token.
+// Modo QA é apenas uma simulação visual local, sem acesso às APIs.
+const isLoopbackSetup = ["127.0.0.1", "localhost"].includes(location.hostname);
+const isLocalVisualQA = isLoopbackSetup &&
+  new URLSearchParams(location.search).get("qa") === "1";
+
+function readOnboardingSession() {
+  try {
+    const data = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
+    if (!data || !Number.isInteger(Number(data.id)) || Number(data.id) <= 0 ||
+        typeof data.token !== "string" || data.token.trim().length < 20) return null;
+    return data;
+  } catch { return null; }
+}
+
+function showSetupSessionNotice() {
+  const note = document.createElement("section");
+  note.className = "setup-session-notice";
+  note.id = "setupSessionNotice";
+  note.setAttribute("role", "status");
+  const heading = document.createElement("strong");
+  const explanation = document.createElement("p");
+  note.append(heading, explanation);
+  if (isLocalVisualQA) {
+    heading.textContent = "Simulação local de qualidade";
+    explanation.textContent =
+      "Este teste não usa uma sessão real. Nada será enviado ao servidor nem salvo no navegador.";
+  } else if (!readOnboardingSession()) {
+    heading.textContent = "Entre na sua conta para salvar";
+    explanation.textContent =
+      "Não encontramos login neste endereço e nesta aba. Isso não significa que sua sessão expirou.";
+    const login = document.createElement("a");
+    login.href = "login.html";
+    login.className = "secondary-btn";
+    login.textContent = "Ir para o login";
+    note.append(login);
+    if (isLoopbackSetup) {
+      const qa = document.createElement("a");
+      qa.href = "setup.html?qa=1";
+      qa.className = "secondary-btn";
+      qa.textContent = "Avaliar a interface sem salvar";
+      note.append(qa);
+    }
+    setupForm.inert = true;
+  } else {
+    return;
+  }
+  document.querySelector(".setup-top")?.after(note);
+}
+showSetupSessionNotice();
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted && isFinishingSetup) {
@@ -1396,18 +1447,13 @@ async function finishSetup() {
   clearFormMessage();
 
   try {
-    const usuarioSalvo = sessionStorage.getItem("fluir-user");
-
-    if (!usuarioSalvo) {
-      showFormMessage("Sua sessão expirou. Faça login novamente.");
+    if (isLocalVisualQA) {
+      showFormMessage("Simulação concluída: os dados não foram enviados nem salvos. Para salvar de verdade, use uma conta autenticada em um ambiente de testes.");
       return;
     }
-
-    const usuario = JSON.parse(usuarioSalvo);
-    if (!usuario.token) {
-      showFormMessage(
-        "Sua sessão expirou. Faça login novamente."
-      );
+    const usuario = readOnboardingSession();
+    if (!usuario) {
+      showFormMessage("Nenhum login ativo neste endereço. Entre pela tela de login do mesmo site antes de salvar.");
       return;
     }
 
@@ -1460,7 +1506,15 @@ async function finishSetup() {
       const responseText = await response.text();
       try { data = JSON.parse(responseText); } catch { data = {}; }
       if (!response.ok) {
-        showFormMessage(data.mensagem || responseText || "Não foi possível salvar sua configuração.");
+        if (response.status === 401) {
+          showFormMessage("Sua sessão de 12 horas terminou ou foi invalidada pelo servidor. Faça login novamente neste mesmo site.");
+        } else if (response.status === 403) {
+          showFormMessage("Sua conta não tem permissão para salvar este cadastro. Confira qual conta está conectada.");
+        } else if (response.status === 404) {
+          showFormMessage("A versão do backend ainda não oferece o salvamento solicitado. Verifique o deploy de teste.");
+        } else {
+          showFormMessage(data.mensagem || responseText || "Falha ao salvar a configuração (HTTP " + response.status + ").");
+        }
         return;
       }
       previouslySavedOnboarding = data;

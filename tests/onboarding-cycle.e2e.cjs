@@ -4,7 +4,8 @@ const path=require("node:path");
 const {chromium}=(()=>{try{return require("playwright")}catch{
  return require(path.join(process.env.TEMP||process.env.TMP,"fluir-browser-qa-2211","node_modules","playwright"));
 }})();
-const URL="http://127.0.0.1:5505/html/setup.html";
+const AUTH_URL="http://127.0.0.1:5505/html/setup.html";
+const URL=AUTH_URL+"?qa=1";
 const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLttAAAAABJRU5ErkJggg==","base64");
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",args:["--no-sandbox"]});
@@ -111,12 +112,13 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
   assert.equal(await page.locator(".cycle-review-person").count(),1);
   assert.match(await page.locator(".cycle-review-person").innerText(),/Meu ciclo/);
  });
- await run("Meu e outra pessoa + Não menstruo esconde dados próprios sem ocultar terceiros",async()=>{
+ await run("Meu ciclo e outras pessoas predefine Sim sem repetir a pergunta",async()=>{
   await page.locator("#backBtn").click();
   await page.locator("#cycleCountYes").click();
   assert.equal(await page.locator("#cycleMode").inputValue(),"both");
-  await page.locator("#cycleMenstruates").selectOption("nao");
-  assert.equal(await page.locator("#cycleOwnMenstrualFields").isVisible(),false);
+  assert.equal(await page.locator("#cycleMenstruationQuestion").isVisible(),false);
+  assert.equal(await page.evaluate(()=>window.FluirCycleOnboarding.getState().menstrua),"sim");
+  assert.equal(await page.locator("#cycleOwnMenstrualFields").isVisible(),true);
   assert.equal(await page.locator(".cycle-person").count(),1);
   await page.locator("[data-alias]").fill("Ana");
   await page.locator("#nextBtn").click();
@@ -137,6 +139,16 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
  });
  await run("Nenhuma exceção de script no fluxo desktop",async()=>assert.deepEqual(errors,[]));
  await page.screenshot({path:path.join(__dirname,"evidencia-onboarding-pc.png"),fullPage:true});
+ await run("Prévia local QA finaliza sem salvar e sem usar token fictício",async()=>{
+   let outbound=0;
+   page.on("request",req=>{
+     if(req.url().startsWith("https://fluir-sistema.onrender.com/"))outbound++;
+   });
+   await page.locator("#nextBtn").click();
+   assert.match(await page.locator("#formMessage").innerText(),/Simulação concluída/);
+   assert.equal(outbound,0);
+   assert.equal(await page.evaluate(()=>localStorage.getItem("fluir-setup")),null);
+ });
  await page.close();
  const mobile=await browser.newPage({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:2});
  let mobileErrors=[];mobile.on("pageerror",e=>mobileErrors.push(e.message));
@@ -172,7 +184,7 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
  await run("Falha temporária na API de ciclo não duplica POST do onboarding",async()=>{
    const retry=await browser.newPage({viewport:{width:1200,height:800}});
    await retry.addInitScript(()=>sessionStorage.setItem("fluir-user",
-     JSON.stringify({id:3,nome:"Conta de Testes",token:"TOKEN_FICTICIO_QA"})));
+     JSON.stringify({id:3,nome:"Conta de Testes",token:"TOKEN_FICTICIO_QA_SEM_CREDENCIAL_123456789"})));
    let general=0,cycle=0;
    await retry.route("https://fluir-sistema.onrender.com/api/onboarding/salvar",async route=>{
      general++;await route.fulfill({status:200,contentType:"application/json",body:'{"status":"salvo"}'});
@@ -181,7 +193,7 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
      cycle++;await route.fulfill({status:cycle===1?503:200,contentType:"application/json",
        body:cycle===1?'{"erro":"indisponivel"}':'{"status":"salvo"}'});
    });
-   await retry.goto(URL,{waitUntil:"domcontentloaded"});
+   await retry.goto(AUTH_URL,{waitUntil:"domcontentloaded"});
    await retry.locator("#userName").fill("Pessoa de Testes");
    await retry.locator("#userNickname").fill("Teste");
    for(const id of ["sexAtBirth","userPronouns","communicationTone"]){
@@ -203,6 +215,41 @@ const png=Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIH
    await retry.waitForURL("**/dashboard.html",{timeout:8000});
    assert.equal(general,1);assert.equal(cycle,2);
    await retry.close();
+ });
+ await run("Sem login no mesmo endereço: informar ausência de sessão antes do formulário",async()=>{
+   const unauth=await browser.newPage({viewport:{width:1200,height:800}});
+   await unauth.goto(AUTH_URL,{waitUntil:"domcontentloaded"});
+   assert.equal(await unauth.locator("#setupForm").evaluate(el=>el.inert),true);
+   assert.match(await unauth.locator("#setupSessionNotice").innerText(),/não significa que sua sessão expirou/i);
+   assert.equal(await unauth.locator('a[href="setup.html?qa=1"]').count(),1);
+   await unauth.close();
+ });
+ await run("401 real no backend é apresentado como sessão expirada",async()=>{
+   const reject=await browser.newPage({viewport:{width:1200,height:800}});
+   await reject.addInitScript(()=>sessionStorage.setItem("fluir-user",
+     JSON.stringify({id:3,nome:"Conta de Testes",token:"TOKEN_FICTICIO_QA_SEM_CREDENCIAL_123456789"})));
+   let calls=0;
+   await reject.route("https://fluir-sistema.onrender.com/api/onboarding/salvar",async route=>{
+     calls++;await route.fulfill({status:401,contentType:"application/json",
+       body:'{"mensagem":"Sessão ausente ou expirada."}'});
+   });
+   await reject.goto(AUTH_URL,{waitUntil:"domcontentloaded"});
+   await reject.locator("#userName").fill("QA Sessão");
+   await reject.locator("#userNickname").fill("QA");
+   for(const id of ["sexAtBirth","userPronouns","communicationTone"]){
+     const opts=await reject.locator("#"+id+" option").evaluateAll(v=>v.map(o=>o.value).filter(Boolean));
+     await reject.locator("#"+id).selectOption(opts[0]);
+   }
+   await reject.locator("#userAge").fill("22");
+   await reject.locator("#nextBtn").click();
+   await reject.locator('.module-option input[value="menstrualCycle"]').check();
+   await reject.locator("#nextBtn").click();
+   await reject.locator("#nextBtn").click();
+   await reject.locator("#nextBtn").click();
+   await reject.locator("#formMessage.show").waitFor({timeout:7000});
+   assert.equal(calls,1);
+   assert.match(await reject.locator("#formMessage").innerText(),/Sua sessão de 12 horas terminou/);
+   await reject.close();
  });
  await browser.close();
  fs.writeFileSync(path.join(__dirname,"relatorio-browser-qa.txt"),lines.join("\n")+"\n"+passed+" testes aprovados\n");

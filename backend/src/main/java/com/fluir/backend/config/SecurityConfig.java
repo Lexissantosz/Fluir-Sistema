@@ -72,6 +72,13 @@ public class SecurityConfig {
                         cors.configurationSource(corsConfigurationSource)
                 )
 
+                .exceptionHandling(exceptions -> exceptions.authenticationEntryPoint((request, response, error) -> {
+                    response.setStatus(401);
+                    response.setCharacterEncoding("UTF-8");
+                    response.setContentType("application/json; charset=UTF-8");
+                    response.setHeader("Cache-Control", "no-store");
+                    response.getWriter().write("{\"mensagem\":\"Sessão ausente ou expirada. Faça login novamente.\"}");
+                }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/health/**").permitAll()
                         .requestMatchers("/api/usuarios/google/vincular").authenticated()
