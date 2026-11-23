@@ -19,6 +19,7 @@
 
   <!-- CSS da tela de configuração -->
   <link rel="stylesheet" href="../css/setup.css" />
+  <link rel="stylesheet" href="../css/setup-cycle.css">
 </head>
 
 <body>
@@ -103,10 +104,7 @@
 
         </div>
 
-        <!-- Frase emocional -->
-        <div class="quiet-box">
-          <p>“Um passo de cada vez.”</p>
-        </div>
+
       </aside>
 
       <!-- ===================================================== -->
@@ -375,6 +373,7 @@
           <div class="form-message" id="formMessage" aria-live="polite"></div>
 
 <div class="setup-actions">
+  <button class="secondary-btn" id="restartSetupBtn" type="button">Recomeçar onboarding</button>
   <button class="secondary-btn" id="backBtn" type="button">
     Voltar
   </button>
@@ -412,6 +411,7 @@
 </div>
 
   <!-- JS da tela de configuração -->
+  <script src="../js/setup-cycle.js"></script>
   <script src="../js/setup.js"></script>
 </body>
 </html>

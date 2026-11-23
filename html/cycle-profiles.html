@@ -11,7 +11,7 @@
 <a class="skip-link" href="#principal">Ir para o conteúdo</a>
 <div class="shell">
 <aside class="side">
-<a class="logo" href="../index.html" aria-label="Fluir, início">fluir<span>.</span></a>
+<a class="logo" href="../index.html" aria-label="Fluir, início"><img src="../Assets/brand/fluir-symbol.svg" alt="" width="34" height="34"> fluir<span>.</span></a>
 <p class="side-label">ORGANIZAÇÃO E CUIDADO</p>
 <nav aria-label="Navegação principal">
 <a href="dashboard.html">Visão geral</a><a href="tasks.html">Tarefas</a><a href="habits.html">Hábitos</a>
@@ -67,6 +67,11 @@
 </form></section>
 <section class="card" id="sharing">
 <h3>Convites e compartilhamento</h3>
+<div class="drafts-area" aria-label="Pessoas que desejo acompanhar">
+  <h4>Pessoas identificadas no onboarding</h4>
+  <p class="muted">Identificações planejadas. Nenhuma delas tem acesso a dados até a aprovação do titular.</p>
+  <div id="plannedProfiles" class="request-list"></div>
+</div>
 <p>O código permite <strong>solicitar</strong> acesso. A pessoa titular deve aprovar o pedido.</p>
 <div class="permissions"><label><input id="allowCalendar" type="checkbox" checked> Calendário e períodos</label><label><input id="allowSymptoms" type="checkbox"> Sintomas</label><label><input id="allowNotes" type="checkbox"> Notas pessoais</label><label><input id="allowIdentity" type="checkbox"> Sincronizar apelido e foto</label></div>
 <button class="btn secondary" id="generate" type="button">Gerar código de convite (10 min)</button>

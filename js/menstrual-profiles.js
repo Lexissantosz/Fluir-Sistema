@@ -119,7 +119,22 @@ async function renderSelected(){
 }
 function resetOwn(){const d=state.own||{}; $("alias").value=d.apelido||"";$("menstruates").value=d.menstrua_atualmente||"prefiro-nao-responder";$("cycleLength").value=d.duracao_ciclo??"";$("periodLength").value=d.duracao_menstruacao??"";$("lastPeriod").value=d.ultima_menstruacao||"";state.photo=d.foto||null;imgOrInitial($("photoPreview"),d.apelido||user?.nome||"Eu",state.photo);}
 async function refreshPanels(){
- const [p,pending,grants]=await Promise.all([api("/meu-perfil"),api("/convites/pendentes"),api("/compartilhamentos")]);
+ const [p,pending,grants,drafts]=await Promise.all([api("/meu-perfil"),api("/convites/pendentes"),api("/compartilhamentos"),api("/rascunhos")]);
+ const draftBox=$("plannedProfiles");draftBox.replaceChildren();
+ if(!drafts.length)draftBox.textContent="Nenhuma identificação pendente.";
+ drafts.forEach(draft=>{
+   const card=document.createElement("div");card.className="request";
+   const name=document.createElement("strong");name.textContent=draft.apelido;
+   const status=document.createElement("small");status.textContent=draft.tipo_vaga==="GRATUITO"?
+     "Vaga gratuita · ainda requer convite e autorização":
+     "Vaga planejada · requer plano pago ainda indisponível";
+   const remove=document.createElement("button");remove.type="button";remove.className="btn danger";remove.textContent="Remover identificação";
+   remove.addEventListener("click",async()=>{if(!confirm("Remover esta identificação planejada?"))return;
+     try{await api("/rascunhos/"+draft.id,{method:"DELETE"});await refreshPanels();alertUser("Identificação removida.","ok")}
+     catch(e){alertUser(errMsg(e),"error")}
+   });
+   card.append(name,status,remove);draftBox.append(card);
+ });
  state.own=p;state.mode=p.modo_acompanhamento||"later";resetOwn();
  const r=$("requests");r.replaceChildren();if(!pending.length)r.textContent="Nenhum pedido pendente.";
  pending.forEach(request=>{const card=document.createElement("div");card.className="request";const name=document.createElement("strong");name.textContent=request.solicitante;

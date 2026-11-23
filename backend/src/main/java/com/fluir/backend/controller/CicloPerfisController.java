@@ -140,7 +140,7 @@ public class CicloPerfisController {
         int id=actor(auth);
         String nick=string(input,"apelido",60);
         String image=safeImage(input);
-        String menstrual=string(input,"menstrua",20);
+        String menstrual=string(input,"menstrua",32);
         if(menstrual!=null && !List.of("sim","nao","prefiro-nao-responder").contains(menstrual))
             throw bad("Resposta inválida.");
         Integer cycle=intRange(input,"duracaoCiclo",15,90);

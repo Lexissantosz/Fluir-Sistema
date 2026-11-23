@@ -48,6 +48,7 @@ const closeSuccessModalBtn = document.getElementById("closeSuccessModalBtn");
 let currentStep = 1;
 const totalSteps = 4;
 let isFinishingSetup = false;
+let previouslySavedOnboarding = null; // evita repetir o POST se a gravação do ciclo falhar
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted && isFinishingSetup) {
@@ -311,6 +312,10 @@ function validateStep3() {
           "A data da última menstruação não pode estar no futuro.";
       }
     }
+  }
+
+  if (document.getElementById("fluirCycleBlock") && !window.FluirCycleOnboarding.validate()) {
+    return false;
   }
 
   if (firstInvalidField) {
@@ -598,6 +603,7 @@ function generateModuleQuestions() {
       moduleQuestions.innerHTML += createAttachmentsQuestions();
     }
   });
+  window.FluirCycleOnboarding.mount(moduleQuestions);
 }
 
 
@@ -1078,145 +1084,9 @@ function createPhysicalHealthQuestions() {
 // =====================================================
 
 function createMenstrualCycleQuestions() {
-  const sexAtBirth = setupData.user.sexAtBirth;
-
-  let introText = `
-    Configure acompanhamento de menstruação, sintomas e saúde reprodutiva.
-    Você pode pular qualquer pergunta que não quiser responder.
-  `;
-
-  if (sexAtBirth === "masculino") {
-    introText = `
-      Você selecionou sexo atribuído ao nascer masculino. 
-      Ainda assim, deixamos esta área disponível caso você queira registrar informações relacionadas à saúde reprodutiva ou acompanhar alguém.
-    `;
-  }
-
-  if (sexAtBirth === "prefiro-nao-informar" || sexAtBirth === "") {
-    introText = `
-      Como você preferiu não informar ou ainda não informou o sexo atribuído ao nascer,
-      esta área será configurada de forma opcional e respeitosa.
-    `;
-  }
-
-  return `
-    <div class="question-block" data-module="menstrualCycle">
-      <h4>Ciclo menstrual</h4>
-
-      <p class="question-block-description">
-        ${introText}
-      </p>
-
-      <div class="question-grid">
-        <label class="field">
-          <span>Você ainda menstrua?</span>
-          <select data-pref="menstrualCycle.currentlyMenstruates">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="as-vezes">Às vezes / irregular</option>
-            <option value="prefiro-nao-responder">Prefiro não responder</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Seu ciclo costuma ser regular?</span>
-          <select data-pref="menstrualCycle.regularCycle">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="nao-sei">Não sei</option>
-            <option value="prefiro-nao-responder">Prefiro não responder</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Data da última menstruação</span>
-          <input type="date" data-pref="menstrualCycle.lastPeriodDate" />
-        </label>
-
-        <label class="field">
-          <span>Duração média do ciclo</span>
-          <input type="text" data-pref="menstrualCycle.cycleLength" placeholder="Ex: 28 dias" />
-        </label>
-
-        <label class="field">
-          <span>Duração média do sangramento</span>
-          <input type="text" data-pref="menstrualCycle.bleedingLength" placeholder="Ex: 5 dias" />
-        </label>
-
-        <label class="field">
-          <span>Você sente cólicas?</span>
-          <select data-pref="menstrualCycle.cramps">
-            <option value="">Selecione</option>
-            <option value="fortes">Fortes</option>
-            <option value="moderadas">Moderadas</option>
-            <option value="leves">Leves</option>
-            <option value="nao">Não</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Está grávida atualmente?</span>
-          <select data-pref="menstrualCycle.pregnant">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="nao-sei">Não sei</option>
-            <option value="prefiro-nao-responder">Prefiro não responder</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Está amamentando?</span>
-          <select data-pref="menstrualCycle.breastfeeding">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="prefiro-nao-responder">Prefiro não responder</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Usa método hormonal?</span>
-          <select data-pref="menstrualCycle.hormonalMethod">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="prefiro-nao-responder">Prefiro não responder</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>Quer receber previsões e lembretes?</span>
-          <select data-pref="menstrualCycle.reminders">
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-            <option value="talvez">Talvez depois</option>
-          </select>
-        </label>
-
-        <div class="field question-full">
-          <span>Sintomas que deseja acompanhar</span>
-
-          <div class="checkbox-list">
-            ${createChoicePill("menstrualCycle.symptoms", "Cólicas")}
-            ${createChoicePill("menstrualCycle.symptoms", "Dor de cabeça")}
-            ${createChoicePill("menstrualCycle.symptoms", "Inchaço")}
-            ${createChoicePill("menstrualCycle.symptoms", "Alteração de humor")}
-            ${createChoicePill("menstrualCycle.symptoms", "Cansaço")}
-            ${createChoicePill("menstrualCycle.symptoms", "Acne")}
-            ${createChoicePill("menstrualCycle.symptoms", "Desejos alimentares")}
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  return window.FluirCycleOnboarding.html();
 }
 
-
-// =====================================================
 // 23. PERGUNTAS — ANEXOS
 // =====================================================
 
@@ -1306,6 +1176,9 @@ function collectPreferences() {
       setNestedValue(setupData.preferences, path, currentArray);
     }
   });
+  if (setupData.modules.menstrualCycle) {
+    setupData.preferences.menstrualCycle = window.FluirCycleOnboarding.legacy();
+  }
 }
 
 
@@ -1351,6 +1224,11 @@ function getNestedValue(object, path) {
 // 27. GERAR REVISÃO FINAL
 // =====================================================
 
+function escapeSetupHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
+}
 function generateReview() {
   collectUserData();
   collectSelectedModules();
@@ -1368,11 +1246,11 @@ function generateReview() {
     <div class="review-section">
       <h4>Sobre você</h4>
       <p>
-        Nome: <strong>${setupData.user.name || "Não informado"}</strong><br>
-        Como quer ser chamado(a): <strong>${displayName}</strong><br>
+        Nome: <strong>${escapeSetupHtml(setupData.user.name) || "Não informado"}</strong><br>
+        Como quer ser chamado(a): <strong>${escapeSetupHtml(displayName)}</strong><br>
         Sexo atribuído ao nascer: <strong>${formatText(setupData.user.sexAtBirth)}</strong><br>
         Pronomes: <strong>${formatText(pronounsText)}</strong><br>
-        Idade: <strong>${setupData.user.age || "Não informada"}</strong><br>
+        Idade: <strong>${escapeSetupHtml(setupData.user.age) || "Não informada"}</strong><br>
         Comunicação: <strong>${formatText(setupData.user.communicationTone)}</strong>
       </p>
     </div>
@@ -1395,6 +1273,9 @@ function generateReview() {
       </p>
     </div>
   `;
+  if (setupData.modules.menstrualCycle) {
+    reviewBox.insertAdjacentHTML("beforeend", window.FluirCycleOnboarding.reviewHtml());
+  }
 }
 
 
@@ -1407,15 +1288,36 @@ function formatText(value) {
     return "Não informado";
   }
 
-  return String(value)
+  return escapeSetupHtml(String(value)
     .replaceAll("-", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    .replace(/\b\w/g, (letter) => letter.toUpperCase()));
 }
 
 
 // =====================================================
 // 29. AVANÇAR ETAPA
 // =====================================================
+const restartSetupBtn = document.getElementById("restartSetupBtn");
+if (restartSetupBtn) restartSetupBtn.addEventListener("click", () => {
+  if (previouslySavedOnboarding) {
+    alert("O cadastro geral já foi salvo. Ajuste apenas a configuração do ciclo e finalize novamente.");
+    return;
+  }
+  if (!confirm("Recomeçar todo o onboarding? As respostas ainda não salvas serão descartadas.")) return;
+  setupForm.reset();
+  window.FluirCycleOnboarding.reset();
+  Object.keys(setupData.user).forEach(key => setupData.user[key] = "");
+  Object.keys(setupData.modules).forEach(key => setupData.modules[key] = key === "timeline");
+  setupData.preferences = {};
+  moduleQuestions.replaceChildren();
+  reviewBox.replaceChildren();
+  clearFormMessage();
+  clearInvalidFields();
+  preencherDadosDaConta();
+  updateModuleCardsVisual();
+  currentStep = 1;
+  updateStepView();
+});
 nextBtn.addEventListener("click", () => {
   clearFormMessage();
 
@@ -1542,40 +1444,38 @@ async function finishSetup() {
       anexos: setupData.preferences.attachments || null,
     };
 
-    const response = await fetch(
-      "https://fluir-sistema.onrender.com/api/onboarding/salvar",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${usuario.token}`
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    const text = await response.text();
-
-    let data = {};
-
-    try {
-      data = JSON.parse(text);
-    } catch {
-      data = {};
-    }
-
-    if (!response.ok) {
-      showFormMessage(
-        data.mensagem || text || "Não foi possível salvar sua configuração."
+    let data = previouslySavedOnboarding || {};
+    if (!previouslySavedOnboarding) {
+      const response = await fetch(
+        "https://fluir-sistema.onrender.com/api/onboarding/salvar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${usuario.token}`
+          },
+          body: JSON.stringify(payload)
+        }
       );
-      return;
+      const responseText = await response.text();
+      try { data = JSON.parse(responseText); } catch { data = {}; }
+      if (!response.ok) {
+        showFormMessage(data.mensagem || responseText || "Não foi possível salvar sua configuração.");
+        return;
+      }
+      previouslySavedOnboarding = data;
+    }
+    if (setupData.modules.menstrualCycle) {
+      await window.FluirCycleOnboarding.persist(usuario.token, setupData.user.nickname);
     }
     setupData.usuarioId = usuario.id;
     setupData.onboardingConcluido = true;
     setupData.atualizadoEm = new Date().toISOString();
 
     // Mantemos localmente porque outras telas ainda dependem disso.
-    localStorage.setItem("fluir-setup", JSON.stringify(setupData));
+    const publicSetup = { ...setupData, preferences: { ...setupData.preferences } };
+    delete publicSetup.preferences.menstrualCycle;
+    localStorage.setItem("fluir-setup", JSON.stringify(publicSetup));
     sessionStorage.setItem("fluir-onboarding", JSON.stringify(data));
     sessionStorage.setItem("fluir-onboarding-completed", "true");
     seedExampleContent();
@@ -1587,7 +1487,8 @@ async function finishSetup() {
     console.error("Erro ao salvar onboarding:", error);
 
     showFormMessage(
-      "Não foi possível salvar sua configuração. Tente novamente."
+      error?.message?.startsWith("O cadastro geral foi salvo") ?
+        error.message : "Não foi possível salvar sua configuração. Tente novamente."
     );
   } finally {
     if (!setupSaved) {

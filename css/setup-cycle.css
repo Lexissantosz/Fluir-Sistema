@@ -1,0 +1,43 @@
+/* Integração do ciclo ao onboarding original. Segue variáveis de tema do Fluir. */
+.cycle-onboard { color: var(--text); }
+.cycle-onboard h5 { margin: 20px 0 12px; font-size: 15px; font-weight: 850; letter-spacing: -.02em; }
+.cycle-onboard .question-block-description { color: var(--muted); line-height: 1.6; }
+.cycle-onboard [hidden] { display: none !important; }
+.cycle-onboard #cycleOwn, .cycle-onboard #cycleOthers { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+.cycle-onboard .cycle-count-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 5px; }
+.cycle-count-buttons button[aria-pressed="true"] { background: var(--button-bg); color: var(--button-text); border-color: var(--border-strong); }
+.cycle-onboard small { font-size: 12px; font-weight: 500; line-height: 1.5; color: var(--muted); }
+.cycle-onboard .cycle-person { background: var(--card-bg); border: 1px solid var(--border); padding: 16px; border-radius: 16px; margin: 0 0 14px; }
+.cycle-person-head { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; min-width: 0; }
+.cycle-person-title { display: grid; gap: 5px; min-width: 0; flex: 1; }
+.cycle-person-title strong { font-weight: 800; color: var(--text); overflow-wrap: anywhere; }
+.cycle-person-head .secondary-btn { font-size: 12px; height: 38px; padding: 0 14px; }
+.cycle-avatar { width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: var(--button-bg); color: var(--button-text); font-size: 17px; font-weight: 800; }
+.cycle-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cycle-avatar-line { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.cycle-avatar-line .secondary-btn { height: 40px; font-size: 12px; }
+.cycle-onboard .cycle-check { display: flex; gap: 10px; align-items: flex-start; line-height: 1.55; font-size: 13px; color: var(--text); cursor: pointer; }
+.cycle-onboard .cycle-check input { width: 17px; height: 17px; margin-top: 2px; flex-shrink: 0; accent-color: #171717; }
+.cycle-onboard .cycle-toolbar { margin-top: 20px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.cycle-onboard .cycle-error { font-size: 13px; color: #a73c3c; font-weight: 700; }
+.cycle-onboard .soft-note { margin-top: 15px; }
+.cycle-onboard .field input[type=file] { width: 100%; font-size: 12px; }
+.cycle-onboard .field input:focus-visible, .cycle-onboard .field select:focus-visible, .cycle-onboard button:focus-visible { outline: 3px solid var(--border-strong); outline-offset: 3px; }
+.cycle-review-list { padding-left: 20px; margin: 10px 0; line-height: 1.8; overflow-wrap: anywhere; }
+.setup-actions { flex-wrap: wrap; }
+#restartSetupBtn { height: 50px; margin-right: auto; }
+@media (max-width: 760px) {
+ .cycle-onboard .question-grid { grid-template-columns: minmax(0,1fr); }
+ .cycle-onboard .question-full { grid-column: auto; }
+ .cycle-person-head { flex-wrap: wrap; }
+ .cycle-person-head .cycle-person-title { flex-basis: calc(100% - 70px); }
+ .cycle-person-head .secondary-btn { margin-left: 66px; }
+ .setup-actions { gap: 8px; }
+ #restartSetupBtn { width: 100%; margin-right: 0; }
+}
+
+.cycle-review-cards{display:grid;gap:12px;margin:14px 0}
+.cycle-review-person{display:flex;align-items:center;gap:13px;padding:12px 14px;background:var(--card-bg);border:1px solid var(--border);border-radius:14px;min-width:0}
+.cycle-review-person span:last-child{display:grid;gap:4px;min-width:0}
+.cycle-review-person strong{font-size:14px;overflow-wrap:anywhere}
+.cycle-review-person small{font-size:12px;color:var(--muted);line-height:1.5}
