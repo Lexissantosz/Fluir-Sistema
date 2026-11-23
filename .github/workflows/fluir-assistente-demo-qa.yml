@@ -7,6 +7,47 @@ on:
 permissions:
   contents: read
 jobs:
+  smoke-prod:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar Render ao vivo sem credenciais
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from "node:assert/strict";
+          const api="https://fluir-sistema.onrender.com/api";
+          const preview="https://fluir-sistema-git-alex-hotfix-demo-dashboar-c85cea-lexissantosz.vercel.app";
+          async function request(url,options){
+            return fetch(url,{...options,signal:AbortSignal.timeout(25000)});
+          }
+          const live=await request(api+"/health/live");
+          assert.equal(live.status,200,"saúde do backend");
+          const ready=await request(api+"/health/ready");
+          assert.equal(ready.status,200,"prontidão do backend");
+          async function checkCors(origin,ok){
+            const r=await request(api+"/usuarios/login",{
+              method:"OPTIONS",
+              headers:{"Origin":origin,"Access-Control-Request-Method":"POST",
+              "Access-Control-Request-Headers":"content-type"}
+            });
+            const allowed=r.headers.get("access-control-allow-origin");
+            if(ok){assert.equal(r.status,200);assert.equal(allowed,origin)}
+            else{assert.notEqual(allowed,origin)}
+            console.log("CORS",origin,r.status,allowed||"bloqueado");
+          }
+          await checkCors("https://fluir-sistema.vercel.app",true);
+          await checkCors(preview,true);
+          await checkCors("https://fluir-sistema-git-alex-release-assistente-d-e74a9f-lexissantosz.vercel.app",true);
+          await checkCors("https://outro-projeto.vercel.app",false);
+          const ai=await request(api+"/assistente/chat",{method:"POST",headers:{
+            "Content-Type":"application/json","Origin":preview
+          },body:JSON.stringify({mensagem:"teste"})});
+          assert.equal(ai.status,401,"IA exige autenticação");
+          console.log("SMOKE_LIVE_OK: saúde, prontidão, CORS seguro e IA autenticada.");
+          NODE
   java-cors:
     runs-on: ubuntu-24.04
     timeout-minutes: 14
