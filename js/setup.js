@@ -1454,6 +1454,11 @@ async function finishSetup() {
       return;
     }
 
+    window.FluirTransition.show(
+      "Salvando suas preferências...",
+      "Estamos preparando seu dashboard com as escolhas que você confirmou."
+    );
+
     const pronomes =
       setupData.user.pronouns === "personalizado"
         ? setupData.user.customPronouns
@@ -1534,7 +1539,11 @@ async function finishSetup() {
 
     setupSaved = true;
 
-    window.location.href = "dashboard.html";
+    window.FluirTransition.navigate(
+      "dashboard.html",
+      "Tudo pronto!",
+      "Abrindo seu dashboard personalizado."
+    );
   } catch (error) {
     console.error("Erro ao salvar onboarding:", error);
 
@@ -1544,6 +1553,7 @@ async function finishSetup() {
     );
   } finally {
     if (!setupSaved) {
+      window.FluirTransition.hide();
       isFinishingSetup = false;
       nextBtn.disabled = false;
       nextBtn.textContent = "Finalizar";

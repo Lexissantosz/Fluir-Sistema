@@ -372,3 +372,12 @@ footer {
 .version-download:hover,.version-download:focus-visible{background:#343434}
 .version-disclaimer{margin-top:10px;font-size:12px;line-height:1.45!important}
 .version-download:focus-visible,#windowsDownload:focus-visible{outline:3px solid #777;outline-offset:3px}
+
+
+.desktop-qa-warning {
+  margin-top:12px;
+  max-width:58ch;
+  color:#666;
+  font-size:12px;
+  line-height:1.5;
+}

@@ -1,0 +1,9 @@
+PASS Cadastro exibe carregamento enquanto backend ainda processa
+PASS Cadastro só navega ao onboarding após resposta válida
+PASS Cadastro 503 restaura formulário sem prender overlay
+PASS Onboarding mostra progresso durante gravação, sem navegar antes da resposta
+PASS Onboarding só abre dashboard após confirmar salvamento
+PASS Falha ao salvar mostra erro e restaura o botão para tentar de novo
+PASS Nova tentativa salva e navega normalmente
+PASS Tela responsiva 390px e animação desligada em reduzir movimento
+8 testes aprovados

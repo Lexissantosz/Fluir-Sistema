@@ -216,9 +216,11 @@ function completeAuthenticatedLogin(completed) {
   clearVerificationRetry();
   sessionStorage.setItem("fluir-onboarding-completed", String(completed));
   showMessage(loginMessage, "Login realizado com sucesso.", "success");
-  setTimeout(() => {
-    window.location.href = completed ? "dashboard.html" : "setup.html";
-  }, 700);
+  window.FluirTransition.navigate(
+    completed ? "dashboard.html" : "setup.html",
+    "Entrando no Fluir...",
+    "Carregando sua experiência personalizada."
+  );
 }
 function showVerificationRetry(usuario) {
   clearVerificationRetry();
@@ -489,9 +491,11 @@ if (loginForm) {
 // Preparado para integração com backend Spring Boot
 // =============================
 
+let registrationPending = false;
 if (registerForm) {
   registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
+    if (registrationPending) return;
 
     const nomeInput = registerForm.querySelector('input[type="text"]');
     const emailInput = registerForm.querySelector('input[type="email"]');
@@ -554,8 +558,11 @@ if (registerForm) {
       return;
     }
 
+    let redirecting = false;
     try {
+      registrationPending = true;
       setButtonLoading(submitButton, true, "Cadastrando...", "Cadastrar");
+      window.FluirTransition.show("Criando sua conta...", "Estamos preparando seu acesso ao Fluir.");
 
       const response = await fetch(`${API_BASE_URL}/cadastro`, {
         method: "POST",
@@ -579,6 +586,10 @@ if (registerForm) {
         );
         return;
       }
+      if (!data?.id || typeof data.token !== "string" || !data.token.trim()) {
+        showMessage(registerMessage, "O cadastro foi recebido, mas o servidor não retornou uma sessão válida.", "error");
+        return;
+      }
       sessionStorage.removeItem("fluir-onboarding");
       sessionStorage.setItem("fluir-onboarding-completed", "false");
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
@@ -591,9 +602,12 @@ if (registerForm) {
 
       registerForm.reset();
 
-      setTimeout(function () {
-        window.location.href = "setup.html";
-      }, 700);
+      redirecting = true;
+      window.FluirTransition.navigate(
+        "setup.html",
+        "Conta criada!",
+        "Abrindo a configuração inicial do Fluir."
+      );
 
       } catch (error) {
       showMessage(
@@ -602,7 +616,11 @@ if (registerForm) {
         "error"
       );
     } finally {
-      setButtonLoading(submitButton, false, "Cadastrando...", "Cadastrar");
+      if (!redirecting) {
+        registrationPending = false;
+        window.FluirTransition.hide();
+        setButtonLoading(submitButton, false, "Cadastrando...", "Cadastrar");
+      }
     }
   });
 }

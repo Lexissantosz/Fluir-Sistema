@@ -1,8 +1,8 @@
 # Fluir | Backlog de UX: transições com carregamento
 
 **Registrado em:** 23/11/2026
-**Prioridade:** próxima rodada de correções do Fluir, **depois da homologação atual do instalador Windows**
-**Status:** PLANEJADO, NÃO IMPLEMENTADO.
+**Prioridade:** implementação antecipada após solicitação em 23/11/2026; revisar antes da integração na main.
+**Status:** IMPLEMENTADO E TESTADO LOCALMENTE, pendente revisão humana e integração na main.
 
 ## Ideia aprovada para avaliação
 
@@ -26,8 +26,8 @@ Criar telas/estados de carregamento com a identidade **clássica oficial do Flui
 
 ## Regra de execução
 
-**Não implementar durante a homologação do Windows.** Reunir essa melhoria ao lote de correções que Alex enviar após os testes atuais; preparar código em branch separada e validar antes de integrar na `main`.
+**Implementado em branch separada**: `alex/transicoes-loading-windows-signing-23-11`. A correção permanece em prévia, sem merge na `main` ou publicação no backend de produção.
 
 ## Próxima avaliação
 
-Conferir primeiro se o instalador do Windows abre corretamente e se a sessão funciona no contexto instalado. Depois abrir uma rodada única de ajustes de UX e adicionar este item ao escopo.
+Verificar com Alex e Dawid a aparência no navegador/desktop e Android físico após a aprovação do fluxo. Testes automatizados: `tests/loading-transitions.e2e.cjs`, 8/8, incluindo falha de rede, carregamento real, retry, movimento reduzido e viewport móvel. A assinatura digital do instalador Windows permanece pendente de credencial confiável.

@@ -1,60 +1,114 @@
-name: "Fluir Desktop | Instalador Windows QA"
+name: "Fluir Desktop | Windows QA e assinatura de lançamento"
+
 on:
   push:
+    branches:
+      - alex/transicoes-loading-windows-signing-23-11
     tags:
-      - "desktop-qa-v*"
+      - "desktop-v*"
   workflow_dispatch:
+
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   windows-installer:
-    name: Testar e publicar instalador Windows
+    name: Validar e compilar Fluir Windows
     runs-on: windows-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "24"
-          cache: "npm"
-          cache-dependency-path: "desktop/package-lock.json"
-      - name: Instalar dependências Electron
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências
         run: npm ci --prefix desktop --no-audit --no-fund
-      - name: Validar configurações de segurança
+      - name: Testar configurações desktop
         run: npm run check --prefix desktop
-      - name: Compilar instalador Windows x64
+      # Tag estável só pode distribuir instalador com certificado legítimo.
+      # As credenciais ficam em GitHub Secrets; nunca no repositório nem em prints.
+      - name: Exigir assinatura de código nas versões publicadas
+        if: startsWith(github.ref, 'refs/tags/desktop-v')
+        shell: pwsh
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:WIN_CSC_LINK) -or [string]::IsNullOrWhiteSpace($env:WIN_CSC_KEY_PASSWORD)) {
+            throw "Publicação bloqueada: certificado de assinatura confiável não configurado. Não publicar .exe anônimo."
+          }
+      - name: Testar transições de cadastro e onboarding no Chrome
+        shell: pwsh
+        run: |
+          $browserDir = Join-Path $env:TEMP "fluir-browser-qa-2211"
+          npm install --prefix $browserDir playwright@1.57.0 --no-audit --no-fund
+          $site = Start-Process -FilePath python -ArgumentList @("-m","http.server","5505","--bind","127.0.0.1","--directory",$PWD.Path) -PassThru -WindowStyle Hidden
+          try {
+            $ready = $false
+            for ($i=0; $i -lt 20; $i++) {
+              try {
+                $response = Invoke-WebRequest "http://127.0.0.1:5505/html/login.html" -UseBasicParsing -TimeoutSec 2
+                if ($response.StatusCode -eq 200) { $ready = $true; break }
+              } catch { Start-Sleep -Seconds 1 }
+            }
+            if (-not $ready) { throw "Servidor local de QA não iniciou" }
+            node tests/loading-transitions.e2e.cjs
+            if ($LASTEXITCODE -ne 0) { throw "Testes de transição falharam" }
+          } finally { Stop-Process -Id $site.Id -Force -ErrorAction SilentlyContinue }
+      - name: Compilar instalador Windows
+        env:
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         run: npm run dist:win --prefix desktop
-      - name: Gerar checksum SHA-256
+      - name: Verificar assinatura do instalador e executável
+        if: startsWith(github.ref, 'refs/tags/desktop-v')
+        shell: pwsh
+        run: |
+          ./desktop/scripts/verify-signature.ps1 -Installer "desktop/dist/Fluir-Windows-Setup.exe"
+          ./desktop/scripts/verify-signature.ps1 -Installer "desktop/dist/win-unpacked/Fluir.exe"
+      - name: Gerar SHA-256
         shell: pwsh
         run: |
           $hash = (Get-FileHash "desktop/dist/Fluir-Windows-Setup.exe" -Algorithm SHA256).Hash
-          "$hash  Fluir-Windows-Setup.exe" | Out-File -Encoding ascii -FilePath "desktop/dist/SHA256SUMS.txt"
-      - name: Salvar artefato verificável da CI
+          "$hash  Fluir-Windows-Setup.exe" | Out-File -Encoding ascii "desktop/dist/SHA256SUMS.txt"
+      - name: Disponibilizar artefato da CI para QA
         uses: actions/upload-artifact@v4
         with:
           name: Fluir-Windows-QA-Installer
           path: |
             desktop/dist/Fluir-Windows-Setup.exe
             desktop/dist/SHA256SUMS.txt
-          retention-days: 14
+          retention-days: 7
           if-no-files-found: error
-      - name: Publicar release de avaliação (apenas tags)
-        if: startsWith(github.ref, 'refs/tags/desktop-qa-v')
+
+  publish-signed:
+    name: Publicar somente instalador assinado
+    if: startsWith(github.ref, 'refs/tags/desktop-v')
+    needs: windows-installer
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Fluir-Windows-QA-Installer
+          path: release
+      - name: Publicar release com verificação de assinatura concluída
         uses: softprops/action-gh-release@v2
         with:
-          name: "Fluir Windows 0.1.0 | Avaliação"
-          tag_name: ${{ github.ref_name }}
           prerelease: true
           make_latest: false
-          draft: false
           body: |
-            Versão de avaliação do Fluir Desktop para Windows x64.
-            Instalador executável NSIS (Electron), requer conexão com a internet.
-            Ainda não possui assinatura digital; não é distribuição comercial estável.
-            Valide o hash SHA-256 antes de instalar e não insira dados reais em ambientes de QA.
-            Nenhuma mudança foi feita no backend nem na main para este release.
+            Fluir Desktop para Windows 64 bits.
+            Instalador Authenticode verificado no pipeline, com identidade de publicador.
+            A reputação SmartScreen pode continuar em construção em versões novas.
+            O Fluir requer internet e ainda está em avaliação funcional.
           files: |
-            desktop/dist/Fluir-Windows-Setup.exe
-            desktop/dist/SHA256SUMS.txt
+            release/Fluir-Windows-Setup.exe
+            release/SHA256SUMS.txt
           fail_on_unmatched_files: true
