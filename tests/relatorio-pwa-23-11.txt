@@ -1,0 +1,11 @@
+PASS Manifesto abre o login em janela standalone
+PASS Ícones PNG 192, 512, maskable e iOS 180 corretos
+PASS Todas as telas públicas e módulos têm metadados PWA
+PASS Manifesto e ícones servidos com HTTP 200
+PASS Service Worker registra no localhost como origem segura
+PASS Cache offline contém só ativos públicos, não dados pessoais
+PASS Login também registra a PWA e oferece metadados
+PASS Sem conexão, mostra aviso claro, sem tentar carregar dados pessoais
+PASS A conexão recupera a página real de login
+PASS Login com viewport 390 px não cria overflow horizontal
+10 testes aprovados

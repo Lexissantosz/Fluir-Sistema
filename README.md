@@ -1219,7 +1219,7 @@ Entre as limitações atuais estão:
 - Alguns módulos sem API própria
 - Timeline ainda dependente de dados locais
 - Dashboard ainda utilizando dados locais em algumas áreas
-- Aplicativo mobile nativo ainda não iniciado
+- APK Android híbrido de debug compilado; aplicativo de produção ainda não homologado
 - Sistema de idiomas ainda incompleto
 - Notificações reais ainda não implementadas
 
@@ -1262,3 +1262,45 @@ O sistema deverá continuar priorizando:
 - Controle do usuário
 - Integração entre módulos
 - Evolução gradual
+
+---
+
+## Atualização técnica: multiplataforma e QA (23/11/2026)
+
+A descrição anterior do mobile documenta a arquitetura desejada. **O estado atual do código** é mais específico:
+
+| Ambiente | Situação verificada |
+|---|---|
+| Web | HTML/CSS/JavaScript, backend Spring/PostgreSQL |
+| Desktop Windows | **PWA instalável** no Chrome/Edge, não há aplicativo Electron/Tauri |
+| Android | **APK híbrido de debug compilado** usando Capacitor 8 e WebView, ainda sem homologação em aparelho |
+| Android navegador | PWA com manifesto e ícones adequados; testes físicos pendentes |
+| iPhone/iPad | **PWA pelo Safari** preparada; sem compilação iOS nativa, IPA ou App Store |
+| Mobile React | Protótipo independente React 19 / TypeScript / Vite; **não é React Native** |
+| Sessão e CORS | Hotfix na branch de QA; produção continua exigindo homologação e deploy controlado |
+| IA Gemini e Google | Integrações existentes em diferentes estágios; Gemini exige prova de resposta real e Google OAuth está desabilitado na API pública |
+
+O APK debug atualizado foi compilado em 23/11/2026 e documentado com SHA-256, versão Android, permissões e caminhos no arquivo [RELATORIO_APK_ANDROID_23-11-2026.md](docs/RELATORIO_APK_ANDROID_23-11-2026.md).
+
+### Documentação de testes
+
+- [Dossiê técnico multiplataforma](docs/DOSSIE_FLUIR_MULTIPLATAFORMA_23-11-2026.md)
+- [Roteiro de QA separado: Alex, Dawid, iPhone e backend](docs/ROTEIRO_QA_DISPOSITIVOS_23-11-2026.md)
+- [Relatório do APK atualizado](docs/RELATORIO_APK_ANDROID_23-11-2026.md)
+
+### Comandos de validação
+
+```bash
+npm ci
+npm run check:pwa
+npm run prepare:web
+npm run check:web
+npm run android:debug:windows
+npm ci --prefix mobile
+npm run lint --prefix mobile
+npm run build --prefix mobile
+```
+
+Para uma compilação Android limpa, antes do comando Windows rode `npm run android:prepare` uma vez se ainda não existir `android/`. A automação no GitHub está em `.github/workflows/fluir-multiplataforma-qa.yml`, que gera um **APK de debug temporário**, não uma versão de loja.
+
+**Resultados locais:** PWA 10/10 em Chrome e 6/6 estáticos; onboarding de ciclos 21/21; planos 17/17; backend Java 64/64 com PostgreSQL 16 isolado. Os resultados **não** são homologação em aparelhos físicos, nem autorizam deploy ou cobrança.

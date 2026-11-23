@@ -1,0 +1,11 @@
+﻿Fluir - verificacao publica SEM contas/credenciais - 2026-11-23 08:22:17 -03:00
+API: https://fluir-sistema.onrender.com
+GET /api/health/live = HTTP 200
+GET /api/health/ready = HTTP 200
+GET /api/usuarios/teste = HTTP 200
+Google OAuth configurado: False
+O Client ID publico NAO foi gravado no relatorio.
+CORS https://fluir-sistema.vercel.app = HTTP 200; Allow-Origin https://fluir-sistema.vercel.app
+CORS https://fluir-sistema-git-alex-onboarding-planos-personalizados-22-11-lexissantosz.vercel.app = HTTP 403; Allow-Origin (ausente)
+CORS http://127.0.0.1:5505 = HTTP 403; Allow-Origin (ausente)
+CORS https://evil.vercel.app = HTTP 403; Allow-Origin (ausente)

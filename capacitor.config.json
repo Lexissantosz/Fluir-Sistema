@@ -1,0 +1,11 @@
+{
+  "appId": "br.com.fluir.sistema",
+  "appName": "Fluir",
+  "webDir": "www",
+  "android": { "allowMixedContent": false },
+  "server": {
+    "hostname": "localhost",
+    "androidScheme": "https",
+    "appStartPath": "/html/login.html"
+  }
+}

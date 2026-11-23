@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <link rel="apple-touch-icon" sizes="180x180" href="/Assets/brand/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Fluir">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Fluir | Organização da Vida</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#171717">
-  <script>
-    if ("serviceWorker" in navigator && location.protocol === "https:") {
-      window.addEventListener("load", () => navigator.serviceWorker.register("/service-worker.js").catch(() => {}));
-    }
-  </script>
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +19,7 @@
   >
 
   <link rel="stylesheet" href="./css/landing.css" />
+  <script defer src="/js/pwa-register.js"></script>
 </head>
 
 <body>

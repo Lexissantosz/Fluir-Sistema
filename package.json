@@ -1,0 +1,23 @@
+{
+  "name": "fluir-pwa-android",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Empacotamento Android de debug da versão web atual do Fluir",
+  "scripts": {
+    "prepare:web": "node scripts/prepare-web.mjs",
+    "check:web": "node scripts/check-web.mjs",
+    "check:pwa": "node tests/pwa-static.test.cjs",
+    "android:sync": "npm run prepare:web && npm run check:web && cap sync android",
+    "android:prepare": "npm run prepare:web && npm run check:web && cap add android",
+    "android:debug:windows": "node scripts/build-android-windows.cjs",
+    "android:debug:linux": "npm run android:sync && cd android && ./gradlew :app:assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.6.2",
+    "@capacitor/android": "8.6.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.2",
+    "@capacitor/assets": "4.0.0"
+  }
+}

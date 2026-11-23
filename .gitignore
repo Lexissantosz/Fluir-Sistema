@@ -1,3 +1,9 @@
 .idea/
-package-lock.json
 .env
+node_modules/
+www/
+android/
+ios/
+mobile/node_modules/
+mobile/dist/
+!package-lock.json
