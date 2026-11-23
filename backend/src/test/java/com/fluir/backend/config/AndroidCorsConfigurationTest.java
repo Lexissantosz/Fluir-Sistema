@@ -32,4 +32,20 @@ class AndroidCorsConfigurationTest {
         assertFalse(cors.getAllowCredentials());
     }
 
+    @Test
+    void previewsOficiaisAutorizadosMasOutrasContasBloqueadas() {
+        CorsConfigurationSource source = new SecurityConfig().corsConfigurationSource();
+        MockHttpServletRequest request = new MockHttpServletRequest("OPTIONS", "/api/assistente/chat");
+        CorsConfiguration cors = source.getCorsConfiguration(request);
+        assertNotNull(cors);
+        assertEquals("https://fluir-sistema-git-alex-release-assistente-d-e74a9f-lexissantosz.vercel.app",
+            cors.checkOrigin("https://fluir-sistema-git-alex-release-assistente-d-e74a9f-lexissantosz.vercel.app"));
+        assertEquals("https://fluir-sistema-git-alex-hotfix-demo-dashboar-c85cea-lexissantosz.vercel.app",
+            cors.checkOrigin("https://fluir-sistema-git-alex-hotfix-demo-dashboar-c85cea-lexissantosz.vercel.app"));
+        assertNull(cors.checkOrigin("https://projeto-malicioso-outra-conta.vercel.app"));
+        assertNull(cors.checkOrigin("https://fluir-sistema-atacante.vercel.app"));
+        assertNull(cors.checkOrigin("http://fluir-sistema-git-teste-lexissantosz.vercel.app"));
+        assertFalse(cors.getAllowCredentials());
+    }
+
 }

@@ -36,6 +36,11 @@ public class SecurityConfig {
                 "https://localhost", // Capacitor Android
                 "http://localhost"
         ));
+        // Prévia QA apenas do projeto Fluir (não libera outros projetos Vercel).
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://fluir-sistema-git-*-lexissantosz.vercel.app",
+                "https://fluir-sistema-*-lexissantosz.vercel.app"
+        ));
 
         configuration.setAllowedMethods(List.of(
                 "GET",

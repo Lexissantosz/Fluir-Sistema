@@ -1,0 +1,72 @@
+name: Fluir | QA assistente e demonstracao
+on:
+  push:
+    branches:
+      - alex/release-assistente-demo-prod-23-11
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  java-cors:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+      - name: Verificar origens autorizadas e terceiros bloqueados
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/fluir-maven-settings.xml <<'XML'
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.2.0">
+            <mirrors>
+              <mirror><id>maven-central-alternativo</id><mirrorOf>central</mirrorOf>
+              <url>https://repo1.maven.org/maven2</url></mirror>
+            </mirrors>
+          </settings>
+          XML
+          for tentativa in 1 2 3; do
+            if mvn -B -q -s /tmp/fluir-maven-settings.xml -f backend/pom.xml -Dtest=AndroidCorsConfigurationTest test; then
+              exit 0
+            fi
+            echo "Maven Central temporariamente indisponível: tentativa $tentativa"
+            sleep $((tentativa * 4))
+          done
+          exit 1
+  browser-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Playwright de teste
+        run: npm install --no-audit --no-fund --no-save playwright@1.57.0
+      - name: Verificar Chrome do runner
+        run: google-chrome --version
+      - name: Validar sintaxe
+        run: |
+          node --check js/assistant.js
+          node --check js/demo.js
+      - name: Executar QA em navegador
+        run: |
+          python3 -m http.server 5500 --bind 127.0.0.1 --directory . >/tmp/fluir-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:5500/html/demo.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/assistente-demo.e2e.cjs
