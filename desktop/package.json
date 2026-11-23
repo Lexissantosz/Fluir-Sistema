@@ -1,0 +1,44 @@
+{
+  "name": "fluir-desktop",
+  "productName": "Fluir",
+  "version": "0.1.0",
+  "description": "Aplicativo Fluir para Windows",
+  "private": true,
+  "main": "main.cjs",
+  "author": "Equipe Fluir",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --test tests/*.test.cjs",
+    "dist:win": "electron-builder --win nsis --x64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "45.4.1",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "br.com.fluir.desktop",
+    "productName": "Fluir",
+    "asar": true,
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": ["main.cjs", "offline.html", "package.json", "build/icon.ico"],
+    "win": {
+      "target": [{"target":"nsis","arch":["x64"]}],
+      "icon": "build/icon.ico",
+      "artifactName": "Fluir-Windows-Setup.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Fluir",
+      "uninstallDisplayName": "Fluir (Windows)"
+    }
+  }
+}

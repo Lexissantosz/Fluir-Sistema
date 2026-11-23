@@ -1,0 +1,60 @@
+name: "Fluir Desktop | Instalador Windows QA"
+on:
+  push:
+    tags:
+      - "desktop-qa-v*"
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  windows-installer:
+    name: Testar e publicar instalador Windows
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+          cache-dependency-path: "desktop/package-lock.json"
+      - name: Instalar dependências Electron
+        run: npm ci --prefix desktop --no-audit --no-fund
+      - name: Validar configurações de segurança
+        run: npm run check --prefix desktop
+      - name: Compilar instalador Windows x64
+        run: npm run dist:win --prefix desktop
+      - name: Gerar checksum SHA-256
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash "desktop/dist/Fluir-Windows-Setup.exe" -Algorithm SHA256).Hash
+          "$hash  Fluir-Windows-Setup.exe" | Out-File -Encoding ascii -FilePath "desktop/dist/SHA256SUMS.txt"
+      - name: Salvar artefato verificável da CI
+        uses: actions/upload-artifact@v4
+        with:
+          name: Fluir-Windows-QA-Installer
+          path: |
+            desktop/dist/Fluir-Windows-Setup.exe
+            desktop/dist/SHA256SUMS.txt
+          retention-days: 14
+          if-no-files-found: error
+      - name: Publicar release de avaliação (apenas tags)
+        if: startsWith(github.ref, 'refs/tags/desktop-qa-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Fluir Windows 0.1.0 | Avaliação"
+          tag_name: ${{ github.ref_name }}
+          prerelease: true
+          make_latest: false
+          draft: false
+          body: |
+            Versão de avaliação do Fluir Desktop para Windows x64.
+            Instalador executável NSIS (Electron), requer conexão com a internet.
+            Ainda não possui assinatura digital; não é distribuição comercial estável.
+            Valide o hash SHA-256 antes de instalar e não insira dados reais em ambientes de QA.
+            Nenhuma mudança foi feita no backend nem na main para este release.
+          files: |
+            desktop/dist/Fluir-Windows-Setup.exe
+            desktop/dist/SHA256SUMS.txt
+          fail_on_unmatched_files: true
