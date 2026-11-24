@@ -663,6 +663,9 @@ function attachmentMatchesFilter(attachment) {
   if (activeFilter === "all") {
     return true;
   }
+  if (activeFilter === "today") {
+    return attachment.date === getTodayKey();
+  }
 
   return attachment.type === activeFilter;
 }
