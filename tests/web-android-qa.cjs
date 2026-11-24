@@ -94,6 +94,48 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
     if(!await p.locator('.filter-btn[data-filter="today"]').evaluate(el=>el.classList.contains("active")))throw Error("Hoje não ativa filtro");
    });
   }
+  await run("Sono alterna registros de hoje e visão completa",async p=>{
+   await p.goto(BASE+"sleep.html");
+   const period=p.locator("#sleepPeriodBtn");
+   await period.click();
+   if(await period.getAttribute("aria-pressed")!=="true")throw Error("Modo hoje não ativado");
+   await period.click();
+   if(await period.getAttribute("aria-pressed")!=="false")throw Error("Modo semana não restaurado");
+  });
+  await run("Hábitos filtram pendentes hoje e retornam",async p=>{
+   await p.goto(BASE+"habits.html");
+   const period=p.locator("#habitsPeriodBtn");
+   await period.click();
+   if(await p.locator('.filter-btn[data-filter="pending"]').getAttribute("class").then(x=>x.includes("active"))!==true)throw Error("Pendentes hoje não ativados");
+   await period.click();
+   if(!await p.locator('.filter-btn[data-filter="all"]').evaluate(el=>el.classList.contains("active")))throw Error("Filtro original não restaurado");
+  });
+  await run("Água foca os registros do dia",async p=>{
+   await p.goto(BASE+"water.html");
+   await p.locator("#waterTodayBtn").click();
+   if(!await p.locator(".water-summary").evaluate(el=>el.classList.contains("fluir-today-focus")))throw Error("Resumo de hoje não destacado");
+  });
+  await run("Timeline mostra somente eventos reais da data de hoje",async p=>{
+   await p.goto(BASE+"timeline.html");
+   await p.locator("#timelinePeriodBtn").click();
+   if(await p.locator("#timelinePeriodBtn").getAttribute("aria-pressed")!=="true")throw Error("Hoje não ativado");
+   if(await p.locator('.timeline-day:not(.user-created-day):visible').count()>0)throw Error("Evento ilustrativo mostrado como hoje");
+   if(!await p.locator(".fluir-today-empty").isVisible())throw Error("Sem aviso para dia vazio");
+   await p.locator("#timelinePeriodBtn").click();
+   if(await p.locator(".fluir-today-empty").isVisible())throw Error("Aviso não desaparece após restauração");
+  });
+  for(const viewport of [320,430]){
+   await run("Modais móveis em "+viewport+"px sem corte horizontal",async p=>{
+    await p.setViewportSize({width:viewport,height:760});
+    await p.goto(BASE+"finances.html");
+    await p.locator("#newTransactionBtn").click();
+    await p.locator("#financeModal.active").waitFor();
+    const box=await p.locator(".finance-modal").boundingBox();
+    if(!box||box.x<0||box.x+box.width>viewport+1)throw Error("Modal fora da tela em "+viewport+"px: "+JSON.stringify(box));
+    const pos=await p.locator(".finance-modal").evaluate(el=>({scroll:el.scrollHeight,client:el.clientHeight}));
+    if(pos.scroll<=pos.client)throw Error("Formulário não apresenta rolagem interna em "+viewport+"px");
+   });
+  }
   console.log("QA WEB ANDROID: "+passed+" APROVADOS / "+failed+" FALHAS");
   if(failed)process.exitCode=1;
  }finally{await browser.close()}
