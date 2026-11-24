@@ -1007,3 +1007,17 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     align-self:center!important;justify-self:center!important;
   }
 }
+
+/* O filtro Hoje usa os registros reais; grupos não correspondentes somem. */
+body.mobile-ui-ready .timeline-day[hidden],.timeline-day[hidden] {
+  display:none!important;
+}
+.fluir-today-empty[hidden]{display:none!important}
+.fluir-today-empty{
+  margin:14px 0;padding:22px;border:1px solid var(--border);
+  border-radius:16px;background:var(--card-bg);color:var(--muted);
+}
+body.mobile-ui-ready .fluir-today-focus{
+  outline:2px solid var(--text);outline-offset:3px;
+  scroll-margin-top:88px;
+}
