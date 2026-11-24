@@ -5,8 +5,8 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const read = path => readFileSync(resolve(root, path), "utf8");
-const schema = read("supabase/migrations/20261124174853_fluir_auth_and_data_foundation.sql");
-const legacy = read("supabase/migrations/20261124175317_secure_legacy_data_api.sql");
+const schema = read("supabase/migrations/20261124213400_fluir_auth_and_data_foundation.sql");
+const legacy = read("supabase/migrations/20261124213500_secure_legacy_data_api.sql");
 const client = read("mobile/src/infrastructure/supabase.ts");
 const api = read("mobile/src/services/api.ts");
 const app = read("mobile/src/App.tsx");

@@ -99,8 +99,8 @@ Para usuários vindos apenas de Google, validar identidade com OAuth real e vinc
 
 ## 6. Arquivos e escopo já implementados na branch local
 
-- `supabase/migrations/20261124174853_fluir_auth_and_data_foundation.sql`: schema novo, Auth trigger, privilégios, RLS, tarefas/hábitos, onboarding, Storage.
-- `supabase/migrations/20261124175317_secure_legacy_data_api.sql`: contenção dos grants legados (**NÃO APLICADA**).
+- `supabase/migrations/20261124213400_fluir_auth_and_data_foundation.sql`: schema novo, Auth trigger, privilégios, RLS, tarefas/hábitos, onboarding, Storage.
+- `supabase/migrations/20261124213500_secure_legacy_data_api.sql`: contenção dos grants legados (**NÃO APLICADA**).
 - `mobile/src/infrastructure/supabase.ts`: cliente autenticado, sem service role.
 - `mobile/src/services/api.ts`: Auth, senha, sessão, RPC onboarding.
 - `mobile/src/services/tasks.ts`: tarefas sob Auth + RLS.

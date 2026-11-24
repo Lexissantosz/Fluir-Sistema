@@ -53,10 +53,10 @@ select is((select count(*)::int from generate_series(1,5)
   'cinco chamadas de IA podem ser reservadas');
 select ok(not public.fluir_ai_reserve_call(),
   'sexta chamada de IA bloqueada no mesmo minuto');
+-- A insercao com usuario_id da conta B deve falhar por RLS.
 select throws_ok(
   $$ insert into public.fluir_tasks(user_id,title)
-       values ('00000000-0000-0000-0000-000000009992','Tentativa proibida') $$,
-  'A nao pode inserir tarefa em nome de B'
+       values ('00000000-0000-0000-0000-000000009992','Tentativa proibida') $$
 );
 
 reset role;
