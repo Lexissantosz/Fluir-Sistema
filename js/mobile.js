@@ -136,6 +136,12 @@ function getMobileUserData() {
     syncScrollLock();
   }
 
+  function escapeMobileText(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
   function buildTopbar() {
   if (document.querySelector(".mobile-topbar")) return;
 
@@ -145,11 +151,11 @@ function getMobileUserData() {
   topbar.className = "mobile-topbar";
   topbar.innerHTML = `
     <a class="mobile-brand mobile-profile-brand" href="profile.html" aria-label="Ir para o perfil">
-      <span class="mobile-profile-avatar">${user.initial}</span>
+      <span class="mobile-profile-avatar">${escapeMobileText(user.initial)}</span>
 
       <span class="mobile-brand-meta">
-        <strong>${user.name}</strong>
-        <span class="mobile-brand-subtitle">${user.email}</span>
+        <strong>${escapeMobileText(user.name)}</strong>
+        <span class="mobile-brand-subtitle">${escapeMobileText(user.email)}</span>
       </span>
     </a>
 
