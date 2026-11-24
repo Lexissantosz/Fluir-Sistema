@@ -9,6 +9,9 @@ type SettingsScreenProps = {
   onPesoChange: (value: string) => void;
   onAlturaChange: (value: string) => void;
   onToggleModule: (moduleName: keyof Modules) => void;
+  onLogout: () => void;
+  onSave: () => void;
+  isDemo: boolean;
 };
 
 export function SettingsScreen({
@@ -20,6 +23,9 @@ export function SettingsScreen({
   onPesoChange,
   onAlturaChange,
   onToggleModule,
+  onLogout,
+  onSave,
+  isDemo,
 }: SettingsScreenProps) {
   return (
     <section className="module-screen">
@@ -96,6 +102,12 @@ export function SettingsScreen({
           </button>
         </div>
       </div>
+      <button className="primary-button" type="button" onClick={onSave} disabled={isDemo}>
+        Salvar ajustes no Supabase
+      </button>
+      <button className="secondary-button" type="button" onClick={onLogout}>
+        {isDemo ? "Sair da demonstração" : "Sair da conta"}
+      </button>
     </section>
   );
 }
