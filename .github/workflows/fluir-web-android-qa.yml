@@ -30,7 +30,7 @@ jobs:
         run: google-chrome --version
       - name: Validar sintaxe dos scripts modificados
         run: |
-          for f in js/mobile.js js/demo.js js/tasks.js js/dashboard.js js/menstrual-cycle.js js/finances.js js/attachments.js; do
+          for f in js/mobile.js js/demo.js js/tasks.js js/dashboard.js js/menstrual-cycle.js js/finances.js js/attachments.js js/habits.js js/sleep.js js/water.js js/timeline.js; do
             node --check "$f"
           done
       - name: Simular Android sem alterar dados reais
