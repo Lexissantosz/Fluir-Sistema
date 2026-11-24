@@ -335,6 +335,9 @@ function transactionMatchesFilter(transaction) {
   if (activeFilter === "all") {
     return true;
   }
+  if (activeFilter === "today") {
+    return transaction.date === getTodayKey();
+  }
 
   if (activeFilter === "income") {
     return transaction.type === "income";
