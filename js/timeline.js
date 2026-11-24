@@ -1219,3 +1219,25 @@ if (headerPhotoInput) {
 }
 
 renderHeaderProfileDropdown();
+
+/* Período da timeline: a seleção "Hoje" mostra somente o primeiro grupo
+   diário e permite retornar à visão semanal sem alterar registros. */
+(function setupTimelinePeriodControl() {
+  const button = document.getElementById("timelinePeriodBtn");
+  if (!button) return;
+  let todayOnly = false;
+  const firstTitle = document.querySelector(".timeline-day h4");
+  if (firstTitle) {
+    firstTitle.textContent = "Hoje, " + new Date().toLocaleDateString("pt-BR", {
+      day: "numeric", month: "long"
+    });
+  }
+  button.addEventListener("click", () => {
+    todayOnly = !todayOnly;
+    button.setAttribute("aria-pressed", String(todayOnly));
+    button.textContent = todayOnly ? "Hoje · eventos" : "Esta semana · eventos";
+    document.querySelectorAll(".timeline-day").forEach((day, index) => {
+      day.hidden = todayOnly && index !== 0;
+    });
+  });
+})();
