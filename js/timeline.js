@@ -1220,24 +1220,38 @@ if (headerPhotoInput) {
 
 renderHeaderProfileDropdown();
 
-/* Período da timeline: a seleção "Hoje" mostra somente o primeiro grupo
-   diário e permite retornar à visão semanal sem alterar registros. */
+/* O filtro Hoje usa a data real dos registros locais, não os eventos
+   ilustrativos do HTML, que não pertencem ao dia corrente. */
 (function setupTimelinePeriodControl() {
   const button = document.getElementById("timelinePeriodBtn");
-  if (!button) return;
+  const panel = document.querySelector(".timeline-panel");
+  if (!button || !panel) return;
   let todayOnly = false;
-  const firstTitle = document.querySelector(".timeline-day h4");
-  if (firstTitle) {
-    firstTitle.textContent = "Hoje, " + new Date().toLocaleDateString("pt-BR", {
-      day: "numeric", month: "long"
+  const originalLabel = button.textContent.trim();
+  const empty = document.createElement("p");
+  empty.className = "fluir-today-empty";
+  empty.textContent = "Nenhum evento registrado hoje.";
+  empty.hidden = true;
+  panel.appendChild(empty);
+
+  function applyPeriod() {
+    const today = getTodayKey();
+    let hasToday = false;
+    panel.querySelectorAll(".timeline-day").forEach(day => {
+      const isToday = day.classList.contains("user-created-day") &&
+        day.dataset.date === today;
+      if (isToday) hasToday = true;
+      day.hidden = todayOnly && !isToday;
     });
+    empty.hidden = !todayOnly || hasToday;
+    button.setAttribute("aria-pressed", String(todayOnly));
+    button.textContent = todayOnly
+      ? "Hoje · " + new Date().toLocaleDateString("pt-BR")
+      : originalLabel;
   }
+
   button.addEventListener("click", () => {
     todayOnly = !todayOnly;
-    button.setAttribute("aria-pressed", String(todayOnly));
-    button.textContent = todayOnly ? "Hoje · eventos" : "Esta semana · eventos";
-    document.querySelectorAll(".timeline-day").forEach((day, index) => {
-      day.hidden = todayOnly && index !== 0;
-    });
+    applyPeriod();
   });
 })();
