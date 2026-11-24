@@ -96,12 +96,44 @@ function getMobileUserData() {
   };
 }
 
+  let savedScrollY = 0;
+  let scrollLocked = false;
+  const overlaySelectors = [
+    ".attachment-modal-overlay", ".attachment-details-overlay", ".confirm-modal-overlay",
+    ".finance-modal-overlay", ".delete-modal-overlay", ".cycle-modal-overlay",
+    ".task-modal-overlay", ".habit-modal-overlay", ".water-modal-overlay",
+    ".sleep-modal-overlay", ".diary-modal-overlay", ".event-modal-overlay",
+    ".nutrition-modal-overlay", ".health-modal-overlay"
+  ];
+  function syncScrollLock() {
+    const modalActive = overlaySelectors.some(sel => document.querySelector(sel + ".active"));
+    document.body.classList.toggle("mobile-modal-open", modalActive);
+    const lock = modalActive || document.body.classList.contains("mobile-drawer-open");
+    if (lock && !scrollLocked) {
+      savedScrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = "-" + savedScrollY + "px";
+      document.body.style.width = "100%";
+      scrollLocked = true;
+    } else if (!lock && scrollLocked) {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.width = "";
+      scrollLocked = false;
+      window.scrollTo(0, savedScrollY);
+    }
+  }
   function openDrawer() {
+    if (document.body.classList.contains("mobile-modal-open")) return;
     document.body.classList.add("mobile-drawer-open");
+    document.querySelector(".mobile-menu-btn")?.setAttribute("aria-expanded", "true");
+    syncScrollLock();
   }
 
   function closeDrawer() {
     document.body.classList.remove("mobile-drawer-open");
+    document.querySelector(".mobile-menu-btn")?.setAttribute("aria-expanded", "false");
+    syncScrollLock();
   }
 
   function buildTopbar() {
@@ -131,8 +163,8 @@ function getMobileUserData() {
   const menuButton = topbar.querySelector(".mobile-menu-btn");
 
   menuButton.addEventListener("click", () => {
-    const isOpen = document.body.classList.toggle("mobile-drawer-open");
-    menuButton.setAttribute("aria-expanded", String(isOpen));
+    if (document.body.classList.contains("mobile-drawer-open")) closeDrawer();
+    else openDrawer();
   });
 }
 
@@ -207,6 +239,27 @@ function getMobileUserData() {
     buildTopbar();
     buildDrawer();
     buildBottomNav();
+
+    const observer = new MutationObserver(syncScrollLock);
+    overlaySelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => observer.observe(el, {
+        attributes: true, attributeFilter: ["class"]
+      }));
+    });
+    syncScrollLock();
+
+    // O botão de hoje ativa o filtro da data quando o módulo o oferece.
+    document.querySelectorAll(".date-btn:not([id])").forEach(button => {
+      button.addEventListener("click", () => {
+        const todayFilter = document.querySelector('.filter-btn[data-filter="today"]');
+        if (todayFilter) todayFilter.click();
+        else {
+          const today = new Date().toLocaleDateString("pt-BR");
+          button.textContent = "Hoje · " + today;
+          button.setAttribute("aria-label", "Data de hoje: " + today);
+        }
+      });
+    });
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeDrawer();
