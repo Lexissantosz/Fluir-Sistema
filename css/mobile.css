@@ -989,3 +989,21 @@ body.mobile-ui-ready .dashboard-main .task-item time {
   }
   #cyclePresetField[hidden],#cycleIntensityField[hidden]{display:none!important}
 }
+
+/* Ícones com alinhamento óptico consistente nos cartões e anexos. */
+@media (max-width:760px) {
+  body.mobile-ui-ready .summary-card::after {
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    font:700 17px/1 Arial,sans-serif!important;
+    transform:none!important;padding:0 0 2px!important;
+  }
+  body.mobile-ui-ready .attachment-dropzone-icon {
+    display:grid!important;place-items:center!important;
+    font:700 20px/1 Arial,sans-serif!important;
+    transform:none!important;padding:0 0 2px!important;
+  }
+  body.mobile-ui-ready .mobile-drawer-link i,
+  body.mobile-ui-ready .mobile-nav-link i {
+    align-self:center!important;justify-self:center!important;
+  }
+}
