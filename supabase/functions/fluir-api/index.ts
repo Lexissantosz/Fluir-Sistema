@@ -198,6 +198,8 @@ Deno.serve(async request=>{
     if(path==="/usuarios/teste"&&method==="GET")return respond(origin,200,"API Fluir no Supabase funcionando");
     if(path==="/usuarios/google/config"&&method==="GET")
       return respond(origin,200,{habilitado:!!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"),clientId:Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||""});
+    if(path==="/assistente/status"&&method==="GET")
+      return respond(origin,200,{configurado:!!Deno.env.get("FLUIR_GEMINI_API_KEY")});
     if(path==="/usuarios/login"&&method==="POST") {
       const b=await parseBody(request);const email=cleanEmail(b.email);
       if(!email || typeof b.senha!=="string" || b.senha.length>128)return failure(origin,400,"E-mail ou senha inválidos.");
@@ -293,27 +295,36 @@ Deno.serve(async request=>{
         :failure(origin,404,"Tarefa não encontrada.");
     }
     if(path==="/assistente/chat"&&method==="POST"){
+      const b=await parseBody(request);
+      // Consentimento precisa ser confirmado no servidor, não apenas no checkbox.
+      if(b.consentimento!==true)return failure(origin,403,"Autorize o envio da mensagem ao provedor de IA.");
+      if(typeof b.mensagem!=="string" || !b.mensagem.trim() || b.mensagem.length>1200)
+        return failure(origin,400,"Mensagem inválida.");
       const key=Deno.env.get("FLUIR_GEMINI_API_KEY")||"";
       if(!key)return failure(origin,503,"Gemini ainda não configurado no Supabase.");
-      const b=await parseBody(request),message=String(b.mensagem||"").trim();
-      if(!message||message.length>1200)return failure(origin,400,"Mensagem inválida.");
-      // Legacy sessions use the same server-side throttling mechanism as login.
+      const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-3.5-flash-lite";
+      if(!/^[a-z0-9][a-z0-9._-]{2,90}$/.test(model))
+        return failure(origin,503,"Modelo de IA não configurado corretamente.");
       const limiter=await admin.rpc("fluir_legacy_login_reserve",{p_key_hash:await hash("ai:"+user.id)});
       if(limiter.error||limiter.data!==true)return failure(origin,429,"Limite temporário de mensagens atingido.");
-      const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-2.5-flash";
       const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+
         encodeURIComponent(model)+":generateContent",{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
-            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil, respeitando a privacidade. Não afirme ter salvado ou modificado dados da conta."}]},
-            contents:[{role:"user",parts:[{text:message}]}],
+            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil com gentileza, clareza e privacidade. Você não possui autorização nem ferramentas para editar tarefas, registros ou dados de contas. Não afirme ter executado ações, salvado registros ou alterado informações."}]},
+            contents:[{role:"user",parts:[{text:b.mensagem.trim()}]}],
             generationConfig:{maxOutputTokens:400,temperature:0.4}
           }),signal:AbortSignal.timeout(15000)
       });
-      if(!res.ok)return failure(origin,503,"Gemini indisponível nesta tentativa.");
+      if(res.status===429)return failure(origin,429,"O limite do provedor de IA foi atingido. Tente novamente mais tarde.");
+      if(!res.ok){
+        console.error("gemini-status",res.status);
+        return failure(origin,503,"Gemini indisponível nesta tentativa.");
+      }
       const generated=await res.json();
-      const reply=generated?.candidates?.[0]?.content?.parts?.[0]?.text;
-      return typeof reply==="string"&&reply.trim()?respond(origin,200,{resposta:reply.trim().slice(0,2500)})
+      const reply=(generated?.candidates?.[0]?.content?.parts||[])
+        .map((part:{text?:string})=>part.text||"").join("").trim();
+      return reply?respond(origin,200,{resposta:reply.slice(0,2500)})
         :failure(origin,503,"Não foi possível obter uma resposta.");
     }
     return failure(origin,404,"Operação não encontrada.");
