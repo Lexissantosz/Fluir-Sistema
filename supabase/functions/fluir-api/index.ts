@@ -3,6 +3,7 @@
 // New Auth users are linked separately only after identity verification.
 import { createClient } from "npm:@supabase/supabase-js@2.119.0";
 import bcrypt from "npm:bcryptjs@2.4.3";
+import { createRemoteJWKSet, jwtVerify } from "npm:jose@5.10.0";
 
 const url = Deno.env.get("SUPABASE_URL") || "";
 const secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -170,18 +171,25 @@ async function saveOnboarding(user:{id:number;nome:string},request:Request,origi
   }
   return respond(origin,200,{...data,usuarioId:user.id,onboardingConcluido:true,mensagem:"Onboarding salvo com sucesso."});
 }
+// Valida assinatura RS256 nas chaves públicas do Google, além de iss/aud/exp.
+// tokeninfo serve para depuração, não para conferir logins de produção.
+const googlePublicKeys = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 async function googleIdentity(idToken:string) {
   const clientId = Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||"";
-  if(!clientId || !idToken || idToken.length>8192)return null;
-  const res=await fetch("https://oauth2.googleapis.com/tokeninfo?id_token="+encodeURIComponent(idToken),{
-    signal:AbortSignal.timeout(7000)
-  });
-  if(!res.ok)return null;
-  const t=await res.json();
-  if(t.aud!==clientId || !["accounts.google.com","https://accounts.google.com"].includes(t.iss)
-    ||t.email_verified!=="true"||Date.now()/1000>=Number(t.exp))return null;
-  const email=cleanEmail(t.email);
-  return email&&t.sub ? {email,sub:String(t.sub),name:String(t.name||"Usuário").slice(0,100)}:null;
+  if(!clientId || typeof idToken!=="string" || idToken.length<100 || idToken.length>8192)return null;
+  try {
+    const {payload:t} = await jwtVerify(idToken,googlePublicKeys,{
+      audience:clientId,issuer:["accounts.google.com","https://accounts.google.com"],
+      algorithms:["RS256"],clockTolerance:"30 seconds"
+    });
+    const email=cleanEmail(t.email);
+    if(t.email_verified!==true || !email || typeof t.sub!=="string" || t.sub.length>255)
+      return null;
+    return {email,sub:t.sub,name:String(t.name||"Usuário").slice(0,100)};
+  }catch(error){
+    console.warn("google-id-token-invalid",error instanceof Error?error.name:"verification-failed");
+    return null;
+  }
 }
 Deno.serve(async request=>{
   const origin=request.headers.get("origin")||production;
