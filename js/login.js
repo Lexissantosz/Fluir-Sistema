@@ -23,10 +23,10 @@ const showLogin = document.getElementById("showLogin");
 
 const passwordButtons = document.querySelectorAll(".password-toggle");
 
-const API_BASE_URL = "https://fluir-sistema.onrender.com/api/usuarios";
+const API_BASE_URL = "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/usuarios";
 
 const ONBOARDING_API_BASE_URL =
-  "https://fluir-sistema.onrender.com/api/onboarding";
+  "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/onboarding";
 
 // =============================
 // 2. FUNÇÕES AUXILIARES
@@ -564,10 +564,10 @@ if (registerForm) {
       return;
     }
 
-    if (senha.length < 6) {
+    if (senha.length < 8) {
       showMessage(
         registerMessage,
-        "A senha precisa ter pelo menos 6 caracteres.",
+        "A senha precisa ter pelo menos 8 caracteres.",
         "error"
       );
       return;
