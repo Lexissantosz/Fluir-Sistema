@@ -379,7 +379,7 @@ function applySelectedModulesToMenu() {
 // 11. API — TAREFAS
 // =====================================================
 
-const TASKS_API_URL = "https://fluir-sistema.onrender.com/api/tarefas";
+const TASKS_API_URL = "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/tarefas";
 
 function taskAuthHeaders() {
   const current = getCurrentUser();
