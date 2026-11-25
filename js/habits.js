@@ -1186,6 +1186,16 @@ function initHabitsPage() {
 
 initHabitsPage();
 
+const habitsPeriodBtn = document.getElementById("habitsPeriodBtn");
+habitsPeriodBtn?.addEventListener("click", () => {
+  const todayMode = habitsPeriodBtn.getAttribute("aria-pressed") !== "true";
+  habitsPeriodBtn.setAttribute("aria-pressed", String(todayMode));
+  habitsPeriodBtn.textContent = todayMode ? "Hoje · pendentes" : "Esta semana · todos";
+  activeFilter = todayMode ? "pending" : "all";
+  filterButtons.forEach(button => button.classList.toggle("active", button.dataset.filter === activeFilter));
+  renderHabits();
+});
+
 // =====================================================
 // 21. DROPDOWNS DO CABEÇALHO (NOTIFICAÇÕES E PERFIL)
 // =====================================================

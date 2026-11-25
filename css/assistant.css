@@ -30,3 +30,19 @@ body.dark .fluir-assistant-form textarea{background:#272824;color:#fff;border-co
 body.dark .fluir-assistant-consent{color:#e1e1d9}
 @media(max-width:600px){.fluir-assistant-fab{right:16px;bottom:84px;width:54px;height:54px}.fluir-assistant-fab-label{display:none!important}.fluir-assistant-window{right:12px;bottom:146px;width:calc(100vw - 24px);height:min(530px,calc(100dvh - 162px))}}
 @media(prefers-reduced-motion:reduce){.fluir-assistant-fab{transition:none}}
+
+/* Assistente acima da barra inferior do Android */
+@media(max-width:760px) {
+  body.mobile-ui-ready .fluir-assistant-fab {
+    display:grid!important;right:16px!important;
+    bottom:calc(104px + env(safe-area-inset-bottom))!important;z-index:9900
+  }
+  body.mobile-ui-ready .fluir-assistant-window {
+    right:10px;bottom:calc(169px + env(safe-area-inset-bottom));
+    width:calc(100vw - 20px);
+    height:min(530px,calc(100dvh - 185px - env(safe-area-inset-bottom)))
+  }
+  body.mobile-ui-ready.mobile-modal-open .fluir-assistant-window {
+    visibility:hidden!important;pointer-events:none!important
+  }
+}

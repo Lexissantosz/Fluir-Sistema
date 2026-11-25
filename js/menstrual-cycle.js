@@ -44,6 +44,11 @@ const closeCycleModalBtn = document.getElementById("closeCycleModalBtn");
 const saveCycleBtn = document.getElementById("saveCycleBtn");
 
 const cycleTypeSelect = document.getElementById("cycleTypeSelect");
+const cycleIntensityField = document.getElementById("cycleIntensityField");
+const cyclePresetField = document.getElementById("cyclePresetField");
+const cyclePresetSelect = document.getElementById("cyclePresetSelect");
+const cyclePresetLabel = document.getElementById("cyclePresetLabel");
+const cycleTitleLabel = document.getElementById("cycleTitleLabel");
 const cycleIntensitySelect = document.getElementById("cycleIntensitySelect");
 const cycleTitleInput = document.getElementById("cycleTitleInput");
 const cycleNoteInput = document.getElementById("cycleNoteInput");
@@ -659,6 +664,37 @@ function clearCycleInvalidFields() {
 // 18. MODAL — ABRIR / FECHAR
 // =====================================================
 
+const CYCLE_PRESETS = {
+  symptom: ["Cólica", "Inchaço", "Dor de cabeça", "Fraqueza", "Cansaço",
+    "Dor lombar", "Sensibilidade nos seios", "Náusea", "Outro sintoma"],
+  mood: ["Tristeza", "Cansaço", "Irritação", "Alegria", "Animação", "Excitação",
+    "Ansiedade", "Calma", "Outro humor"]
+};
+
+function updateCycleFormForType() {
+  const type = cycleTypeSelect?.value || "period";
+  const preset = CYCLE_PRESETS[type];
+  if (cycleIntensityField) cycleIntensityField.hidden = type !== "period";
+  if (cyclePresetField) cyclePresetField.hidden = !preset;
+  if (cyclePresetSelect) {
+    cyclePresetSelect.replaceChildren(new Option("Selecione...", ""));
+    (preset || []).forEach(label => cyclePresetSelect.add(new Option(label, label)));
+  }
+  if (cyclePresetLabel) cyclePresetLabel.textContent =
+    type === "symptom" ? "Qual sintoma?" : "Como está seu humor?";
+  if (cycleTitleLabel) cycleTitleLabel.textContent =
+    type === "period" ? "Observação sobre a menstruação" :
+    type === "symptom" ? "Detalhe do sintoma (opcional)" :
+    type === "mood" ? "Detalhe do humor (opcional)" : "Observação principal";
+  if (cycleTitleInput) {
+    cycleTitleInput.value = "";
+    cycleTitleInput.placeholder = type === "period" ? "Ex.: início da menstruação" :
+      type === "symptom" ? "Ex.: dor após o almoço" :
+      type === "mood" ? "Ex.: um dia mais tranquilo" : "Descreva este registro";
+  }
+  if (type !== "period" && cycleIntensitySelect) cycleIntensitySelect.value = "nenhum";
+}
+
 function openCycleModal() {
   if (!cycleModal) {
     return;
@@ -687,6 +723,7 @@ function clearCycleModalFields() {
   if (cycleIntensitySelect) cycleIntensitySelect.value = "medio";
   if (cycleTitleInput) cycleTitleInput.value = "";
   if (cycleNoteInput) cycleNoteInput.value = "";
+  updateCycleFormForType();
 
   clearCycleFormMessage();
   clearCycleInvalidFields();
@@ -702,14 +739,20 @@ function saveCycleRecord() {
   clearCycleInvalidFields();
 
   const type = cycleTypeSelect?.value || "other";
-  const intensity = cycleIntensitySelect?.value || "nenhum";
-  const title = cycleTitleInput?.value.trim();
+  const intensity = type === "period" ? (cycleIntensitySelect?.value || "medio") : "nenhum";
+  const selectedPreset = CYCLE_PRESETS[type] ? cyclePresetSelect?.value : "";
+  const writtenTitle = cycleTitleInput?.value.trim() || "";
+  const title = selectedPreset && !selectedPreset.startsWith("Outro")
+    ? (writtenTitle ? selectedPreset + " · " + writtenTitle : selectedPreset)
+    : writtenTitle;
   const note = cycleNoteInput?.value.trim() || "";
 
   if (!title || title.length < 2) {
     cycleTitleInput.classList.add("invalid");
     cycleTitleInput.focus();
-    showCycleFormMessage("Digite uma observação principal válida.");
+    showCycleFormMessage(type === "symptom" || type === "mood"
+      ? "Escolha uma opção ou escreva uma observação."
+      : "Digite uma observação principal válida.");
     return;
   }
 
@@ -801,6 +844,7 @@ function setupFilters() {
 // =====================================================
 
 function setupCycleEvents() {
+  cycleTypeSelect?.addEventListener("change", updateCycleFormForType);
   if (newCycleBtn) {
     newCycleBtn.addEventListener("click", openCycleModal);
   }

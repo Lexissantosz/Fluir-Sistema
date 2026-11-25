@@ -1375,6 +1375,11 @@ async function initTasksPage() {
   await loadTasks();
 
   renderTasks();
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("novo") === "1") {
+    openTaskModal();
+    window.history.replaceState(null, "", window.location.pathname);
+  }
 }
 
 initTasksPage();

@@ -107,6 +107,7 @@ const defaultSetup = {
 // =====================================================
 
 let sleepLogs = [];
+let focusTodayOnly = false;
 
 
 // =====================================================
@@ -376,7 +377,7 @@ function renderSleepLogs() {
 
   sleepList.innerHTML = "";
 
-  sleepLogs.forEach((log) => {
+  sleepLogs.filter(log => !focusTodayOnly || log.date === getTodayKey()).forEach((log) => {
     sleepList.appendChild(createSleepCard(log));
   });
 
@@ -1021,6 +1022,14 @@ function initSleepPage() {
 }
 
 initSleepPage();
+
+const sleepPeriodBtn = document.getElementById("sleepPeriodBtn");
+sleepPeriodBtn?.addEventListener("click", () => {
+  focusTodayOnly = !focusTodayOnly;
+  sleepPeriodBtn.textContent = focusTodayOnly ? "Hoje · ver registros" : "Esta semana · ver todos";
+  sleepPeriodBtn.setAttribute("aria-pressed", String(focusTodayOnly));
+  renderSleepLogs();
+});
 
 // =====================================================
 // 21. DROPDOWNS DO CABEÇALHO (NOTIFICAÇÕES E PERFIL)

@@ -318,7 +318,7 @@
         </select>
       </label>
 
-      <label>
+      <label id="cycleIntensityField">
         <span>Fluxo / intensidade</span>
         <select id="cycleIntensitySelect">
           <option value="leve">Leve</option>
@@ -328,8 +328,13 @@
         </select>
       </label>
 
+      <label id="cyclePresetField" hidden>
+        <span id="cyclePresetLabel">Selecione uma opção</span>
+        <select id="cyclePresetSelect"></select>
+      </label>
+
       <label>
-        <span>Sintoma ou observação principal</span>
+        <span id="cycleTitleLabel">Observação principal</span>
         <input 
           type="text" 
           id="cycleTitleInput"

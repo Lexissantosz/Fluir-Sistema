@@ -942,6 +942,17 @@ function initWaterPage() {
 
 initWaterPage();
 
+const waterTodayBtn = document.getElementById("waterTodayBtn");
+waterTodayBtn?.addEventListener("click", () => {
+  const summary = document.querySelector(".water-summary");
+  if (!summary) return;
+  waterTodayBtn.textContent = "Hoje · " + new Date().toLocaleDateString("pt-BR");
+  summary.scrollIntoView({ behavior: "smooth", block: "start" });
+  summary.classList.remove("fluir-today-focus");
+  void summary.offsetWidth;
+  summary.classList.add("fluir-today-focus");
+});
+
 // =====================================================
 // 21. DROPDOWNS DO CABEÇALHO (NOTIFICAÇÕES E PERFIL)
 // =====================================================
