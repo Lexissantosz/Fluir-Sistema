@@ -3,7 +3,7 @@
   "use strict";
   if(document.getElementById("fluirAssistantButton"))return;
   const demo=document.body.dataset.fluirDemo==="true";
-  const API="https://fluir-sistema.onrender.com/api/assistente/chat";
+  const API="https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/assistente/chat";
   const button=document.createElement("button");
   button.id="fluirAssistantButton";
   button.className="fluir-assistant-fab";
