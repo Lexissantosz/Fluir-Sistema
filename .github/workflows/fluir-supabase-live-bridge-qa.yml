@@ -1,0 +1,56 @@
+name: Fluir | Supabase Edge API bridge QA
+on:
+  push:
+    branches: [alex/release-vercel-supabase-unificado-25-11]
+    paths:
+      - "supabase/functions/fluir-api/**"
+      - "js/login.js"
+      - "js/setup.js"
+      - "js/tasks.js"
+      - "js/assistant.js"
+      - ".github/workflows/fluir-supabase-live-bridge-qa.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  edge-api-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate frontend JavaScript
+        run: |
+          for file in js/login.js js/setup.js js/tasks.js js/assistant.js; do
+            node --check "$file"
+          done
+          if grep -n 'fluir-sistema.onrender.com/api' js/login.js js/setup.js js/tasks.js js/assistant.js; then
+            echo "ERROR: Frontend still calls Render."
+            exit 1
+          fi
+      - name: Check Edge API without account mutations
+        env:
+          BASE: https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api
+          ORIGIN: https://fluir-sistema.vercel.app
+        run: |
+          set -euo pipefail
+          test_code() {
+            expected="$1"; shift
+            actual="$(curl -sS --max-time 22 -o /tmp/edge-response -w '%{http_code}' "$@")"
+            echo "Expected HTTP=$expected; actual=$actual"
+            if [ "$actual" != "$expected" ]; then
+              head -c 500 /tmp/edge-response
+              exit 1
+            fi
+          }
+          test_code 200 -H "Origin: $ORIGIN" "$BASE/usuarios/teste"
+          grep -q "API Fluir no Supabase funcionando" /tmp/edge-response
+          test_code 200 -H "Origin: $ORIGIN" "$BASE/usuarios/google/config"
+          test_code 401 -H "Origin: $ORIGIN" "$BASE/tarefas/usuario/1"
+          test_code 401 -H "Origin: $ORIGIN" "$BASE/onboarding/usuario/1"
+          test_code 400 -H "Origin: $ORIGIN" -H 'Content-Type: application/json' \
+            -d '{invalid_json' "$BASE/usuarios/login"
+          test_code 204 -X OPTIONS -H "Origin: $ORIGIN" \
+            -H "Access-Control-Request-Method: POST" "$BASE/usuarios/login"
+          echo 'EDGE BRIDGE SMOKE PASSED'
