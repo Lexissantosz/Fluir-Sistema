@@ -6,8 +6,8 @@ Esta pasta não cria uma aplicação implantada nem substitui o Java por si só.
 
 ## Migrations
 
-1. `20261124213400_fluir_auth_and_data_foundation.sql`: novas estruturas UUID do Auth, perfis, papéis protegidos, onboarding, tarefas/hábitos, ponte de registros e buckets privados.
-2. `20261124213500_secure_legacy_data_api.sql`: revoga acesso anônimo às tabelas antigas e ativa RLS com vínculo verificado entre Supabase Auth UUID e ID legado inteiro.
+1. `20261125191326_fluir_auth_and_data_foundation.sql`: novas estruturas UUID do Auth, perfis, papéis protegidos, onboarding, tarefas/hábitos, ponte de registros e buckets privados.
+2. `20261125192500_secure_legacy_data_api.sql`: revoga acesso anônimo às tabelas antigas e ativa RLS com vínculo verificado entre Supabase Auth UUID e ID legado inteiro.
 
 **Pré-requisito:** essas migrations foram concebidas para a base Fluir existente, cuja tabela `public.usuarios` já existe. Um projeto Supabase vazio precisa receber um schema *de desenvolvimento* equivalente antes de aplicá-las. Não executar diretamente em banco recém-criado sem resolver essa dependência.
 
