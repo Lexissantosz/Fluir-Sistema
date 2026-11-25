@@ -1,0 +1,61 @@
+name: Fluir | Gemini real - teste de integracao
+on:
+  push:
+    branches: [alex/qa-gemini-real-25-11]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gemini-live-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Testar chave protegida e resposta real com uma conta QA
+        env:
+          API: https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api
+          ORIGIN: https://fluir-sistema.vercel.app
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,urllib.request,urllib.error,uuid,secrets
+          root=os.environ["API"]
+          hdr={"Content-Type":"application/json","Origin":os.environ["ORIGIN"]}
+          def req(path,method="GET",data=None,token=None):
+            h=dict(hdr)
+            if token:h["Authorization"]="Bearer "+token
+            payload=json.dumps(data).encode() if data is not None else None
+            request=urllib.request.Request(root+path,method=method,data=payload,headers=h)
+            try:
+              with urllib.request.urlopen(request,timeout=28) as response:
+                raw=response.read()
+                return response.status,json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as error:
+              raw=error.read()
+              return error.code,json.loads(raw) if raw else {}
+          status,conf=req("/assistente/status")
+          assert status==200, f"status indisponível: {status}"
+          assert conf.get("configurado") is True, "chave Gemini ainda nao disponivel como segredo no Supabase"
+          print("PASS: segredo Gemini reconhecido pela Edge Function")
+          email="qa-gemini-"+uuid.uuid4().hex+"@example.invalid"
+          password="QAonly-"+secrets.token_urlsafe(24)
+          status,auth=req("/usuarios/cadastro","POST",{"nome":"Fluir Teste Gemini","email":email,"senha":password})
+          assert status==200, f"cadastro tecnico: HTTP {status}"
+          assert isinstance(auth.get("token"),str) and len(auth["token"])>32
+          token=auth["token"]
+          print("PASS: sessao tecnica isolada criada")
+          status,deny=req("/assistente/chat","POST",{"mensagem":"Responda: teste."},token)
+          assert status==403, f"sem consentimento deveria ser 403 e foi {status}"
+          print("PASS: consentimento obrigatorio no backend")
+          status,result=req("/assistente/chat","POST",{"mensagem":"Responda em português com uma única frase breve de saudação ao usuário do Fluir.", "consentimento":True},token)
+          print("STATUS DA RESPOSTA GEMINI:",status)
+          if status!=200:
+            print("DIAGNOSTICO SEM SEGREDOS:",str(result.get("mensagem","Falha desconhecida"))[:250])
+            raise AssertionError(f"Gemini não respondeu com sucesso: HTTP {status}")
+          text=result.get("resposta")
+          assert isinstance(text,str) and text.strip(), "IA retornou resposta vazia"
+          print("PASS: Gemini devolveu texto real; tamanho",len(text),"caracteres")
+          print("PASS: fluxo completo de IA, chave protegida e autenticação")
+          PY
