@@ -11,17 +11,16 @@ O usuário autorizou promover para oficial a arquitetura Vercel (site) + Supabas
 - O frontend principal passou a usar a URL da função Supabase para login, cadastro, onboarding, tarefas e assistente. A Vercel criou uma prévia do branch.
 - GitHub CI de rota pública da Edge e de fluxo não autenticado passou; QA Web Android passou 16/16 em Chrome simulado.
 
-## BLOQUEIO QUE IMPEDE PROMOÇÃO OFICIAL
-A Data API do projeto Supabase `xqzxfhodhmlgneudubjm` está DESATIVADA no Dashboard.
-- Edge REST `fluir_legacy_login_reserve` retorna 503 / PGRST002.
-- PostgreSQL log: `schema "pg_pgrst_no_exposed_schemas" does not exist`.
-- Source: https://supabase.com/kb/troubleshooting/schema-pg_pgrst_no_exposed_schemas-does-not-exist
-- SQL de configuração role `authenticator` foi revertido e deve permanecer gerenciado pelo Supabase.
-- **Ação necessária do usuário:** abrir https://supabase.com/dashboard/project/xqzxfhodhmlgneudubjm/integrations/data_api/settings ; ativar Data API, expor `public`, manter RLS; salvar. Não incluir `auth` ou `storage` como exposed schemas.
-- Conector Supabase conectado não oferece mutação dessa configuração de projeto, então a ação no Dashboard é necessária.
+## Data API corrigida e QA real aprovado
+- O usuário ativou a Data API do Supabase em 25/11/2026.
+- Execução https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/45683952040: 11/11 fluxos reais aprovados, incluindo cadastro, login, onboarding, tarefas e bloqueio entre usuários.
+- Extensão do teste https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/45686902545: 12/12 verificações aprovadas.
+- O diagnóstico confirmou que login Google permanece sem integração e Gemini retorna HTTP 503 (requer configurar os segredos e validar).
+- QA Web Android https://github.com/Lexissantosz/Fluir-Sistema/actions/runs/45686917518 aprovado.
+- Supabase Auth nativo ainda não tem usuários; a ponte das contas antigas está ativa e autentica no Supabase via Edge, com sessões legadas verificadas no banco. Não chamar a migração de Supabase Auth concluída.
 
 ## Próximas verificações obrigatórias
-1. Reexecutar workflow `fluir-supabase-live-e2e.yml` (cadastro/login real com conta técnica, onboarding, tarefas e bloqueio entre usuários). Até aqui falhou na primeira requisição devido à Data API desligada. NÃO aprovar migração antes do sucesso.
+1. Aprovado: workflow `fluir-supabase-live-e2e.yml` com cadastro/login, onboarding, tarefas e bloqueio entre usuários; repetir após mudanças de autenticação.
 2. Verificar e, se necessário, configurar no Supabase Secrets `FLUIR_GEMINI_API_KEY` e `FLUIR_GOOGLE_CLIENT_ID`; não publicar os valores. Testar Gemini e Google realmente.
 3. Verificar preservação de contas existentes e registros locais, não misturar usuários, testar desktop/Android e política de RLS.
 4. Revisar PR #44, habilitar release somente após testes. A versão com ponte customizada de sessões antigas é TRANSITÓRIA; conversão completa Supabase Auth ainda falta.
