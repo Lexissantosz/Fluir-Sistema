@@ -1,0 +1,97 @@
+name: Fluir | QA real Supabase + Vercel (conta técnica isolada)
+on:
+  push:
+    branches: [alex/release-vercel-supabase-unificado-25-11]
+    paths:
+      - "supabase/functions/fluir-api/**"
+      - "js/login.js"
+      - "js/setup.js"
+      - "js/tasks.js"
+      - ".github/workflows/fluir-supabase-live-e2e.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  authenticated-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Teste real sem senha ou token em logs
+        shell: bash
+        env:
+          BASE: https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api
+          ORIGIN: https://fluir-sistema.vercel.app
+        run: |
+          set -euo pipefail
+          export EMAIL="qa-fluir-$(date +%s)-$(openssl rand -hex 5)@example.invalid"
+          export PASSWORD="QATeste-$(openssl rand -hex 16)!89"
+          export BASE ORIGIN
+          python3 - <<'PY'
+          import json,os,urllib.request,urllib.error
+          base=os.environ["BASE"]
+          headers={"Content-Type":"application/json","Origin":os.environ["ORIGIN"]}
+          def call(path,method="GET",data=None,token=None):
+            h=dict(headers)
+            if token: h["Authorization"]="Bearer "+token
+            req=urllib.request.Request(base+path,
+               headers=h,method=method,data=json.dumps(data).encode() if data is not None else None)
+            try:
+              with urllib.request.urlopen(req,timeout=28) as r:
+                raw=r.read()
+                return r.status,json.loads(raw) if raw else {}
+            except urllib.error.HTTPError as e:
+              raw=e.read()
+              return e.code,json.loads(raw) if raw else {}
+          def check(desc,actual,expected):
+            if actual!=expected: raise AssertionError(f"{desc}: esperado {expected}, obtido {actual}")
+            print("PASS",desc)
+          email=os.environ["EMAIL"]
+          password=os.environ["PASSWORD"]
+          s,u=call("/usuarios/cadastro","POST",{"nome":"Fluir QA","email":email,"senha":password})
+          check("Cadastro autentico",s,200)
+          user_id=u.get("id")
+          assert isinstance(user_id,int) and user_id>0
+          assert isinstance(u.get("token"),str) and len(u["token"])>32
+          s,l=call("/usuarios/login","POST",{"email":email,"senha":password})
+          check("Login com senha BCrypt",s,200)
+          assert l["id"]==user_id and isinstance(l["token"],str)
+          token=l["token"]
+          s,r=call("/onboarding/usuario/"+str(user_id),token=token)
+          check("Onboarding antes do cadastro",s,400)
+          setup={"usuarioId":user_id,"nome":"Fluir QA",
+                 "modulos":{"tasks":True,"habits":True,"water":True,"timeline":True}}
+          s,r=call("/onboarding/salvar","POST",setup,token=token)
+          check("Salvar onboarding",s,200)
+          s,r=call("/onboarding/usuario/"+str(user_id),token=token)
+          check("Ler onboarding",s,200)
+          assert r["onboardingConcluido"] is True
+          s,r=call("/tarefas","POST",{"usuarioId":user_id,"titulo":"Tarefa QA de integracao","categoria":"QA"},token=token)
+          check("Criar tarefa",s,200)
+          task_id=r["id"]
+          s,r=call("/tarefas/usuario/"+str(user_id),token=token)
+          check("Listar tarefas reais",s,200)
+          assert any(i["id"]==task_id for i in r)
+          s,r=call("/tarefas/"+str(task_id)+"/status?concluida=true","PUT",token=token)
+          check("Concluir tarefa",s,200)
+          assert r["concluida"] is True
+          s,r=call("/tarefas/"+str(task_id),"DELETE",token=token)
+          check("Remover APENAS tarefa criada pelo QA",s,204)
+          s,r=call("/tarefas/usuario/"+str(user_id+1),token=token)
+          check("Negar consulta cruzada",s,403)
+          s,r=call("/tarefas/usuario/"+str(user_id),token="token-invalido")
+          check("Negar token invalido",s,401)
+          s,config=call("/usuarios/google/config")
+          check("Configuração pública do Google sem segredos",s,200)
+          print("INTEGRACAO GOOGLE:", "ATIVA" if config.get("habilitado") is True else "PENDENTE")
+          s,ai=call("/assistente/chat","POST",{"mensagem":"Responda apenas: Olá."},token=token)
+          if s==200 and isinstance(ai.get("resposta"),str) and ai["resposta"].strip():
+            print("INTEGRACAO GEMINI: ATIVA")
+          elif s==503:
+            print("INTEGRACAO GEMINI: PENDENTE (HTTP 503)")
+          else:
+            raise AssertionError(f"Resposta inesperada no assistente: HTTP {s}")
+          print("QA real concluido; conta técnica isolada mantida para auditoria.")
+          PY

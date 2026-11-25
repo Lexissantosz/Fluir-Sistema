@@ -1543,7 +1543,7 @@ async function finishSetup() {
     };
 
     const response = await fetch(
-      "https://fluir-sistema.onrender.com/api/onboarding/salvar",
+      "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/onboarding/salvar",
       {
         method: "POST",
         headers: {

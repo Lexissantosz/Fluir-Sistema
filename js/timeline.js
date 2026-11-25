@@ -1219,3 +1219,39 @@ if (headerPhotoInput) {
 }
 
 renderHeaderProfileDropdown();
+
+/* O filtro Hoje usa a data real dos registros locais, não os eventos
+   ilustrativos do HTML, que não pertencem ao dia corrente. */
+(function setupTimelinePeriodControl() {
+  const button = document.getElementById("timelinePeriodBtn");
+  const panel = document.querySelector(".timeline-panel");
+  if (!button || !panel) return;
+  let todayOnly = false;
+  const originalLabel = button.textContent.trim();
+  const empty = document.createElement("p");
+  empty.className = "fluir-today-empty";
+  empty.textContent = "Nenhum evento registrado hoje.";
+  empty.hidden = true;
+  panel.appendChild(empty);
+
+  function applyPeriod() {
+    const today = getTodayKey();
+    let hasToday = false;
+    panel.querySelectorAll(".timeline-day").forEach(day => {
+      const isToday = day.classList.contains("user-created-day") &&
+        day.dataset.date === today;
+      if (isToday) hasToday = true;
+      day.hidden = todayOnly && !isToday;
+    });
+    empty.hidden = !todayOnly || hasToday;
+    button.setAttribute("aria-pressed", String(todayOnly));
+    button.textContent = todayOnly
+      ? "Hoje · " + new Date().toLocaleDateString("pt-BR")
+      : originalLabel;
+  }
+
+  button.addEventListener("click", () => {
+    todayOnly = !todayOnly;
+    applyPeriod();
+  });
+})();

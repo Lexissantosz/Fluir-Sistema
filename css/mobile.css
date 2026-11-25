@@ -916,3 +916,108 @@ body.mobile-ui-ready .dashboard-main .task-item time {
     white-space: normal;
   }
 }
+
+/* QA Web Android | isolamento de rolagem, modais e ajustes visuais */
+@media (max-width:760px) {
+  body.mobile-ui-ready :where(.settings-grid,.reset-grid) {
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:14px!important
+  }
+  body.mobile-ui-ready :where(.settings-grid,.reset-grid)>*,body.mobile-ui-ready .settings-card {
+    min-width:0!important;width:100%!important;max-width:100%!important
+  }
+  body.mobile-ui-ready .settings-grid :where(input,select,button,.segmented-control,.select-row) {
+    min-width:0;max-width:100%
+  }
+  body.mobile-ui-ready .settings-grid :where(.setting-row,.select-row,.sync-row) {
+    min-width:0;flex-wrap:wrap;gap:12px
+  }
+  .mobile-drawer-overlay {overscroll-behavior:none;touch-action:none}
+  .mobile-drawer {
+    position:absolute;top:0;bottom:0;right:0;height:100dvh;max-height:100dvh;
+    overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;touch-action:pan-y;
+    padding-bottom:calc(32px + env(safe-area-inset-bottom))
+  }
+  .mobile-drawer-link{min-width:0;max-width:100%}
+  .mobile-drawer-link i,.mobile-nav-link i,.mobile-more-btn i {
+    display:block;width:22px!important;height:22px!important;
+    flex:0 0 22px;margin:0!important;padding:0!important;
+    line-height:0!important;transform:none!important
+  }
+  body.mobile-ui-ready :where(.ui-icon,.page-icon::before,.title-icon::before){
+    vertical-align:middle;transform:none
+  }
+  body.mobile-ui-ready :where(
+    .attachment-modal-overlay,.attachment-details-overlay,.confirm-modal-overlay,
+    .finance-modal-overlay,.delete-modal-overlay,.cycle-modal-overlay,
+    .task-modal-overlay,.habit-modal-overlay,.water-modal-overlay,
+    .sleep-modal-overlay,.diary-modal-overlay,.event-modal-overlay,
+    .nutrition-modal-overlay,.health-modal-overlay
+  ){
+    position:fixed!important;inset:0!important;z-index:12000!important;
+    width:100vw!important;height:100dvh!important;max-height:100dvh!important;
+    overflow:hidden!important;
+    padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))!important;
+    align-items:center!important;justify-content:center!important;
+    overscroll-behavior:none
+  }
+  body.mobile-ui-ready :where(
+    .attachment-modal,.attachment-details-modal,.confirm-modal,
+    .finance-modal,.delete-modal,.cycle-modal,.task-modal,.habit-modal,
+    .water-modal,.sleep-modal,.diary-modal,.event-modal,.nutrition-modal,.health-modal
+  ){
+    box-sizing:border-box!important;width:100%!important;
+    max-width:min(420px,100%)!important;min-width:0!important;height:auto!important;
+    max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y;
+    padding:22px 18px calc(30px + env(safe-area-inset-bottom))!important;border-radius:22px!important
+  }
+  body.mobile-ui-ready :where(.attachment-modal,.finance-modal,.cycle-modal) :where(input,select,textarea) {
+    width:100%!important;min-width:0!important;box-sizing:border-box!important
+  }
+  body.mobile-ui-ready :where(.attachment-modal,.finance-modal,.cycle-modal) :where(label,.modal-form,.modal-form > *){
+    min-width:0!important;max-width:100%!important
+  }
+  body.mobile-ui-ready .finance-modal :where(.modal-form,.finance-modal-actions),
+  body.mobile-ui-ready .attachment-modal .attachment-modal-actions {
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:12px!important
+  }
+  body.mobile-ui-ready :where(.finance-modal-actions,.attachment-modal-actions) button {width:100%}
+  body.mobile-ui-ready.mobile-modal-open :where(.mobile-bottom-nav,.mobile-topbar,.fluir-assistant-fab){
+    visibility:hidden!important;pointer-events:none!important
+  }
+  #cyclePresetField[hidden],#cycleIntensityField[hidden]{display:none!important}
+}
+
+/* Ícones com alinhamento óptico consistente nos cartões e anexos. */
+@media (max-width:760px) {
+  body.mobile-ui-ready .summary-card::after {
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    font:700 17px/1 Arial,sans-serif!important;
+    transform:none!important;padding:0 0 2px!important;
+  }
+  body.mobile-ui-ready .attachment-dropzone-icon {
+    display:grid!important;place-items:center!important;
+    font:700 20px/1 Arial,sans-serif!important;
+    transform:none!important;padding:0 0 2px!important;
+  }
+  body.mobile-ui-ready .mobile-drawer-link i,
+  body.mobile-ui-ready .mobile-nav-link i {
+    align-self:center!important;justify-self:center!important;
+  }
+}
+
+/* O filtro Hoje usa os registros reais; grupos não correspondentes somem. */
+body.mobile-ui-ready .timeline-day[hidden],.timeline-day[hidden] {
+  display:none!important;
+}
+.fluir-today-empty[hidden]{display:none!important}
+.fluir-today-empty{
+  margin:14px 0;padding:22px;border:1px solid var(--border);
+  border-radius:16px;background:var(--card-bg);color:var(--muted);
+}
+body.mobile-ui-ready .fluir-today-focus{
+  outline:2px solid var(--text);outline-offset:3px;
+  scroll-margin-top:88px;
+}

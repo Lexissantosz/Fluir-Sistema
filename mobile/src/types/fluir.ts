@@ -6,10 +6,11 @@ export type Screen =
   | "tasks"
   | "habits"
   | "water"
+  | "assistant"
   | "settings";
   
 export type User = {
-  id: number;
+  id: string;
   nome: string;
   email: string;
 };
@@ -27,7 +28,7 @@ export type Modules = {
 };
 
 export type OnboardingData = {
-  usuarioId: number;
+  usuarioId: string;
   nome: string;
   apelido: string;
   pronomes: string;
@@ -67,8 +68,8 @@ primeiroHabito: {
 };
 
 export type LoginResponse = {
-  id?: number;
-  nome?: string;
-  email?: string;
+  id: string;
+  nome: string;
+  email: string;
   mensagem?: string;
 };

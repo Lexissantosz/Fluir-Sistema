@@ -9,6 +9,7 @@ type OnboardingScreenProps = {
   metaAgua: number;
   modulos: Modules;
   carregando: boolean;
+  aviso: string;
   firstTask: string;
 firstHabit: string;
 waterMode: string;
@@ -33,6 +34,7 @@ export function OnboardingScreen({
   metaAgua,
   modulos,
   carregando,
+  aviso,
   firstTask,
   firstHabit,
   waterMode,
@@ -324,6 +326,8 @@ export function OnboardingScreen({
           )}
         </>
       )}
+
+      {aviso && <p role="status" className="login-note">{aviso}</p>}
 
       <div className="onboarding-actions-mobile">
         {step > 1 && (

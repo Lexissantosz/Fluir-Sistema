@@ -16,6 +16,20 @@ let water=1250;
 const goal=2000;
 let current="dashboard";
 const screen=document.getElementById("demoScreen");
+function showDemoGate(){
+ let gate=document.getElementById("fluirDemoGate");
+ if(gate)gate.remove();
+ gate=document.createElement("div");
+ gate.id="fluirDemoGate";gate.className="demo-gate-overlay";
+ gate.setAttribute("role","presentation");
+ gate.innerHTML='<section class="demo-gate" role="alertdialog" aria-modal="true" aria-label="Ação indisponível na demonstração"><h2>Apenas demonstração</h2><p>Você pode conhecer as telas e recursos do Fluir, mas não criar, modificar ou salvar informações neste modo. Entre ou crie uma conta para registrar seus próprios dados.</p><div class="demo-gate-actions"><button type="button" class="demo-gate-close">Entendi</button><a href="login.html">Entrar no Fluir</a></div></section>';
+ const close=()=>{gate.remove();document.removeEventListener("keydown",onEscape)};
+ function onEscape(e){if(e.key==="Escape")close()}
+ gate.querySelector(".demo-gate-close").addEventListener("click",close);
+ gate.addEventListener("click",e=>{if(e.target===gate)close()});
+ document.addEventListener("keydown",onEscape);
+ document.body.appendChild(gate);gate.querySelector(".demo-gate-close").focus();
+}
 const title=document.getElementById("demoHeading");
 const subtitle=document.getElementById("demoSubtitle");
 const heading={
@@ -33,14 +47,14 @@ function card(title,content){const x=elem("article","demo-card");if(title)x.appe
 function button(text,fn,kind="secondary"){const b=elem("button",kind==="primary"?"demo-primary":"demo-secondary",text);b.type="button";b.addEventListener("click",fn);return b}
 function fraction(items){return items.filter(x=>x.done).length+"/"+items.length}
 function percent(){return Math.round((tasks.filter(x=>x.done).length+habits.filter(x=>x.done).length)/(tasks.length+habits.length)*100)}
-function rows(items){const list=elem("div","demo-rows");for(const item of items){const label=elem("label","demo-row"+(item.done?" done":""));const check=elem("input");check.type="checkbox";check.checked=item.done;const txt=elem("span","demo-row-text");txt.appendChild(elem("strong","",item.title));txt.appendChild(elem("small","",item.category));check.addEventListener("change",()=>{item.done=check.checked;render()});label.append(check,txt);list.append(label)}return list}
-function panelRows(label,items,view){const inner=elem("div");inner.appendChild(elem("p","demo-desc",view==="tasks"?"Atividades que você pode marcar como concluídas.":"Constância é mais importante que perfeição."));inner.appendChild(rows(items));const wrap=card(label,inner);const actions=elem("div","demo-actions");actions.appendChild(button("Ver módulo",()=>navigate(view)));wrap.appendChild(actions);return wrap}
-function waterVisual(){const container=elem("div","demo-water");const ring=elem("div","demo-ring");ring.style.setProperty("--water-progress",Math.min(water/goal*100,100)+"%");const middle=elem("div");middle.appendChild(elem("strong","",water+" ml"));middle.appendChild(elem("small","","Meta: "+goal+" ml"));ring.appendChild(middle);container.appendChild(ring);const actions=elem("div");actions.appendChild(elem("p","demo-desc","Registros ilustrativos desta demonstração."));const buttons=elem("div","demo-actions");buttons.append(button("+ 250 ml",()=>{water=Math.min(10000,water+250);render()},"primary"),button("− 250 ml",()=>{water=Math.max(0,water-250);render()}));actions.appendChild(buttons);container.appendChild(actions);return container}
+function rows(items){const list=elem("div","demo-rows");for(const item of items){const label=elem("label","demo-row"+(item.done?" done":""));const check=elem("input");check.type="checkbox";check.checked=item.done;const txt=elem("span","demo-row-text");txt.appendChild(elem("strong","",item.title));txt.appendChild(elem("small","",item.category));check.addEventListener("change",()=>{check.checked=item.done;showDemoGate()});label.append(check,txt);list.append(label)}return list}
+function panelRows(label,items,view){const inner=elem("div");inner.appendChild(elem("p","demo-desc",view==="tasks"?"Atividades que você pode marcar como concluídas.":"Constância é mais importante que perfeição."));inner.appendChild(rows(items));const wrap=card(label,inner);const actions=elem("div","demo-actions");actions.appendChild(button("Ver módulo",()=>navigate(view)));actions.appendChild(button(view==="tasks"?"Nova tarefa":"Novo hábito",showDemoGate,"primary"));wrap.appendChild(actions);return wrap}
+function waterVisual(){const container=elem("div","demo-water");const ring=elem("div","demo-ring");ring.style.setProperty("--water-progress",Math.min(water/goal*100,100)+"%");const middle=elem("div");middle.appendChild(elem("strong","",water+" ml"));middle.appendChild(elem("small","","Meta: "+goal+" ml"));ring.appendChild(middle);container.appendChild(ring);const actions=elem("div");actions.appendChild(elem("p","demo-desc","Registros ilustrativos desta demonstração."));const buttons=elem("div","demo-actions");buttons.append(button("+ 250 ml",showDemoGate,"primary"),button("− 250 ml",showDemoGate));actions.appendChild(buttons);container.appendChild(actions);return container}
 function metric(label,number,detail){const c=elem("article","demo-card demo-kpi");c.append(elem("h3","",label),elem("strong","",number),elem("small","",detail));return c}
 function dashboard(){const k=elem("div","demo-kpis");k.append(metric("Tarefas",fraction(tasks),"concluídas hoje"),metric("Hábitos",fraction(habits),"marcados hoje"),metric("Água",water+" ml","de "+goal+" ml"),metric("Progresso",percent()+"%","da demonstração"));screen.appendChild(k);
 const row=elem("div","demo-grid");row.append(panelRows("Tarefas de hoje",tasks,"tasks"),card("Hidratação",waterVisual()));screen.appendChild(row);
 const bottom=elem("div","demo-grid");bottom.append(panelRows("Hábitos ativos",habits,"habits"),card("Sua jornada",elem("p","demo-desc","O Fluir combina diferentes áreas da vida em um único lugar. Nesta prévia, os exemplos são fictícios e não são salvos no servidor.")));screen.appendChild(bottom)}
-function singleList(name,items){const box=card(name,rows(items));box.insertBefore(elem("p","demo-desc","Altere os exemplos. Ao atualizar a página, a demonstração será reiniciada."),box.querySelector(".demo-rows"));screen.appendChild(box)}
+function singleList(name,items){const box=card(name,rows(items));box.insertBefore(elem("p","demo-desc","Os exemplos são somente para visualização. Criação e edição exigem uma conta."),box.querySelector(".demo-rows"));const actions=elem("div","demo-actions");actions.appendChild(button(name.includes("Tarefas")?"Nova tarefa":"Novo hábito",showDemoGate,"primary"));box.appendChild(actions);screen.appendChild(box)}
 function simpleList(name,entries,note){const list=elem("ul","demo-list");for(const [left,right] of entries){const li=elem("li");li.append(elem("strong","",left),elem("small","",right));list.append(li)}const c=card(name,list);if(note)c.appendChild(elem("p","demo-info",note));screen.appendChild(c)}
 function render(){
  screen.replaceChildren();

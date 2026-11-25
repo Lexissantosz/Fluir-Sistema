@@ -11,6 +11,7 @@ const drawerItems: { label: string; screen: Screen }[] = [
   { label: "Tarefas", screen: "tasks" },
   { label: "Hábitos", screen: "habits" },
   { label: "Água", screen: "water" },
+  { label: "Assistente IA", screen: "assistant" },
   { label: "Configurações", screen: "settings" },
 ];
 

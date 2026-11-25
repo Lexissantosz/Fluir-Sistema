@@ -1,0 +1,45 @@
+name: Fluir | QA Web Android
+on:
+  push:
+    branches:
+      - alex/correcao-web-android-24-11
+  pull_request:
+    branches: [main]
+    paths:
+      - "html/**"
+      - "js/**"
+      - "css/**"
+      - "tests/web-android-qa.cjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android-web-chrome:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Instalar Playwright para QA
+        run: npm install --no-audit --no-fund --no-save playwright@1.57.0
+      - name: Verificar Chrome
+        run: google-chrome --version
+      - name: Validar sintaxe dos scripts modificados
+        run: |
+          for f in js/mobile.js js/demo.js js/tasks.js js/dashboard.js js/menstrual-cycle.js js/finances.js js/attachments.js js/habits.js js/sleep.js js/water.js js/timeline.js; do
+            node --check "$f"
+          done
+      - name: Simular Android sem alterar dados reais
+        run: |
+          python3 -m http.server 5500 --bind 127.0.0.1 --directory . > /tmp/fluir-mobile-http.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:5500/html/demo.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/web-android-qa.cjs
