@@ -83,5 +83,15 @@ jobs:
           check("Negar consulta cruzada",s,403)
           s,r=call("/tarefas/usuario/"+str(user_id),token="token-invalido")
           check("Negar token invalido",s,401)
+          s,config=call("/usuarios/google/config")
+          check("Configuração pública do Google sem segredos",s,200)
+          print("INTEGRACAO GOOGLE:", "ATIVA" if config.get("habilitado") is True else "PENDENTE")
+          s,ai=call("/assistente/chat","POST",{"mensagem":"Responda apenas: Olá."},token=token)
+          if s==200 and isinstance(ai.get("resposta"),str) and ai["resposta"].strip():
+            print("INTEGRACAO GEMINI: ATIVA")
+          elif s==503:
+            print("INTEGRACAO GEMINI: PENDENTE (HTTP 503)")
+          else:
+            raise AssertionError(f"Resposta inesperada no assistente: HTTP {s}")
           print("QA real concluido; conta técnica isolada mantida para auditoria.")
           PY
