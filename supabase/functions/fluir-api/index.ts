@@ -191,7 +191,9 @@ Deno.serve(async request=>{
     "Access-Control-Allow-Headers":"authorization,content-type,apikey,x-client-info","Vary":"Origin"
   }});
   try {
-    const path=new URL(request.url).pathname.split("/functions/v1/fluir-api")[1]||"";
+    const pathname = new URL(request.url).pathname;
+    // Supabase Edge Runtime may pass either the full gateway path or a rewritten path.
+    const path = pathname.replace(/^\/(?:functions\/v1\/)?fluir-api(?=\/|$)/, "") || "/";
     const method=request.method;
     if(path==="/usuarios/teste"&&method==="GET")return respond(origin,200,"API Fluir no Supabase funcionando");
     if(path==="/usuarios/google/config"&&method==="GET")
