@@ -118,7 +118,7 @@ Deno.serve(async (request) => {
       VALID_TONES.has(profile.communication_tone)
     ? profile.communication_tone : "calmo";
   const geminiKey = Deno.env.get("FLUIR_GEMINI_API_KEY") ?? "";
-  const model = Deno.env.get("FLUIR_AI_MODEL") || "gemini-2.5-flash";
+  const model = Deno.env.get("FLUIR_AI_MODEL") || "gemini-3.5-flash-lite";
   if (!geminiKey || !/^[a-zA-Z0-9._-]{2,90}$/.test(model)) {
     return responseJson({ mensagem: "IA não configurada neste ambiente." }, 503, origin);
   }

@@ -3,6 +3,7 @@
 // New Auth users are linked separately only after identity verification.
 import { createClient } from "npm:@supabase/supabase-js@2.119.0";
 import bcrypt from "npm:bcryptjs@2.4.3";
+import { createRemoteJWKSet, jwtVerify } from "npm:jose@5.10.0";
 
 const url = Deno.env.get("SUPABASE_URL") || "";
 const secret = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -170,18 +171,25 @@ async function saveOnboarding(user:{id:number;nome:string},request:Request,origi
   }
   return respond(origin,200,{...data,usuarioId:user.id,onboardingConcluido:true,mensagem:"Onboarding salvo com sucesso."});
 }
+// Valida assinatura RS256 nas chaves públicas do Google, além de iss/aud/exp.
+// tokeninfo serve para depuração, não para conferir logins de produção.
+const googlePublicKeys = createRemoteJWKSet(new URL("https://www.googleapis.com/oauth2/v3/certs"));
 async function googleIdentity(idToken:string) {
   const clientId = Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||"";
-  if(!clientId || !idToken || idToken.length>8192)return null;
-  const res=await fetch("https://oauth2.googleapis.com/tokeninfo?id_token="+encodeURIComponent(idToken),{
-    signal:AbortSignal.timeout(7000)
-  });
-  if(!res.ok)return null;
-  const t=await res.json();
-  if(t.aud!==clientId || !["accounts.google.com","https://accounts.google.com"].includes(t.iss)
-    ||t.email_verified!=="true"||Date.now()/1000>=Number(t.exp))return null;
-  const email=cleanEmail(t.email);
-  return email&&t.sub ? {email,sub:String(t.sub),name:String(t.name||"Usuário").slice(0,100)}:null;
+  if(!clientId || typeof idToken!=="string" || idToken.length<100 || idToken.length>8192)return null;
+  try {
+    const {payload:t} = await jwtVerify(idToken,googlePublicKeys,{
+      audience:clientId,issuer:["accounts.google.com","https://accounts.google.com"],
+      algorithms:["RS256"],clockTolerance:"30 seconds"
+    });
+    const email=cleanEmail(t.email);
+    if(t.email_verified!==true || !email || typeof t.sub!=="string" || t.sub.length>255)
+      return null;
+    return {email,sub:t.sub,name:String(t.name||"Usuário").slice(0,100)};
+  }catch(error){
+    console.warn("google-id-token-invalid",error instanceof Error?error.name:"verification-failed");
+    return null;
+  }
 }
 Deno.serve(async request=>{
   const origin=request.headers.get("origin")||production;
@@ -198,6 +206,8 @@ Deno.serve(async request=>{
     if(path==="/usuarios/teste"&&method==="GET")return respond(origin,200,"API Fluir no Supabase funcionando");
     if(path==="/usuarios/google/config"&&method==="GET")
       return respond(origin,200,{habilitado:!!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"),clientId:Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||""});
+    if(path==="/assistente/status"&&method==="GET")
+      return respond(origin,200,{configurado:!!Deno.env.get("FLUIR_GEMINI_API_KEY")});
     if(path==="/usuarios/login"&&method==="POST") {
       const b=await parseBody(request);const email=cleanEmail(b.email);
       if(!email || typeof b.senha!=="string" || b.senha.length>128)return failure(origin,400,"E-mail ou senha inválidos.");
@@ -293,27 +303,36 @@ Deno.serve(async request=>{
         :failure(origin,404,"Tarefa não encontrada.");
     }
     if(path==="/assistente/chat"&&method==="POST"){
+      const b=await parseBody(request);
+      // Consentimento precisa ser confirmado no servidor, não apenas no checkbox.
+      if(b.consentimento!==true)return failure(origin,403,"Autorize o envio da mensagem ao provedor de IA.");
+      if(typeof b.mensagem!=="string" || !b.mensagem.trim() || b.mensagem.length>1200)
+        return failure(origin,400,"Mensagem inválida.");
       const key=Deno.env.get("FLUIR_GEMINI_API_KEY")||"";
       if(!key)return failure(origin,503,"Gemini ainda não configurado no Supabase.");
-      const b=await parseBody(request),message=String(b.mensagem||"").trim();
-      if(!message||message.length>1200)return failure(origin,400,"Mensagem inválida.");
-      // Legacy sessions use the same server-side throttling mechanism as login.
+      const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-3.5-flash-lite";
+      if(!/^[a-z0-9][a-z0-9._-]{2,90}$/.test(model))
+        return failure(origin,503,"Modelo de IA não configurado corretamente.");
       const limiter=await admin.rpc("fluir_legacy_login_reserve",{p_key_hash:await hash("ai:"+user.id)});
       if(limiter.error||limiter.data!==true)return failure(origin,429,"Limite temporário de mensagens atingido.");
-      const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-2.5-flash";
       const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+
         encodeURIComponent(model)+":generateContent",{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
-            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil, respeitando a privacidade. Não afirme ter salvado ou modificado dados da conta."}]},
-            contents:[{role:"user",parts:[{text:message}]}],
+            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil com gentileza, clareza e privacidade. Você não possui autorização nem ferramentas para editar tarefas, registros ou dados de contas. Não afirme ter executado ações, salvado registros ou alterado informações."}]},
+            contents:[{role:"user",parts:[{text:b.mensagem.trim()}]}],
             generationConfig:{maxOutputTokens:400,temperature:0.4}
           }),signal:AbortSignal.timeout(15000)
       });
-      if(!res.ok)return failure(origin,503,"Gemini indisponível nesta tentativa.");
+      if(res.status===429)return failure(origin,429,"O limite do provedor de IA foi atingido. Tente novamente mais tarde.");
+      if(!res.ok){
+        console.error("gemini-status",res.status);
+        return failure(origin,503,"Gemini indisponível nesta tentativa.");
+      }
       const generated=await res.json();
-      const reply=generated?.candidates?.[0]?.content?.parts?.[0]?.text;
-      return typeof reply==="string"&&reply.trim()?respond(origin,200,{resposta:reply.trim().slice(0,2500)})
+      const reply=(generated?.candidates?.[0]?.content?.parts||[])
+        .map((part:{text?:string})=>part.text||"").join("").trim();
+      return reply?respond(origin,200,{resposta:reply.slice(0,2500)})
         :failure(origin,503,"Não foi possível obter uma resposta.");
     }
     return failure(origin,404,"Operação não encontrada.");

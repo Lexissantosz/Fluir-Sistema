@@ -1,0 +1,79 @@
+name: Fluir | QA IA e Google
+on:
+  push:
+    branches: [alex/ia-google-configuracao-segura-25-11]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'js/assistant.js'
+      - 'js/google-identity.js'
+      - 'supabase/functions/fluir-api/**'
+      - 'supabase/functions/fluir-assistant-chat/**'
+      - 'html/login.html'
+      - 'html/profile.html'
+      - 'tests/google-ia-ui.cjs'
+      - '.github/workflows/fluir-ia-google-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  security-and-api:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Validar sintaxe e tipos
+        run: |
+          node --check js/google-identity.js
+          node --check js/assistant.js
+          node --check js/login.js
+          node --check js/profile.js
+          deno check supabase/functions/fluir-api/index.ts
+      - name: Contratos de consentimento e verificação Google
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const edge = fs.readFileSync('supabase/functions/fluir-api/index.ts','utf8');
+          const ai = fs.readFileSync('js/assistant.js','utf8');
+          const google = fs.readFileSync('js/google-identity.js','utf8');
+          assert.match(edge,/b\.consentimento!==true/);
+          assert.match(ai,/mensagem:message,consentimento:true/);
+          assert.match(edge,/jwtVerify\(idToken,googlePublicKeys/);
+          assert.match(edge,/algorithms:\["RS256"\]/);
+          assert.doesNotMatch(edge,/tokeninfo\?id_token/);
+          assert.match(edge,/FLUIR_GEMINI_API_KEY/);
+          assert.match(edge,/gemini-3\.5-flash-lite/);
+          assert.match(google,/google\/vincular/);
+          assert.match(google,/data\.habilitado !== true/);
+          assert.match(google,/https:\/\/accounts\.google\.com\/gsi\/client/);
+          console.log("Contratos de autenticação e IA aprovados");
+          JS
+      - name: API pública real sem credenciais
+        env:
+          BASE: https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api
+          ORIGIN: https://fluir-sistema.vercel.app
+        run: |
+          set -euo pipefail
+          for path in usuarios/google/config assistente/status; do
+            status="$(curl -sS --max-time 20 -o /tmp/fluir-status -w '%{http_code}' -H "Origin: $ORIGIN" "$BASE/$path")"
+            test "$status" = 200 || { echo "Falha $path: HTTP $status"; exit 1; }
+            python3 -m json.tool /tmp/fluir-status >/dev/null
+            echo "PASS GET /$path"
+          done
+          status="$(curl -sS --max-time 20 -o /tmp/fluir-status -w '%{http_code}' -X POST -H "Origin: $ORIGIN" -H 'Content-Type: application/json' -d '{"idToken":"invalid"}' "$BASE/usuarios/google")"
+          test "$status" = 401 || test "$status" = 503
+          echo "PASS Google sem credencial válida: HTTP $status"
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund --no-save playwright@1.57.0
+      - run: node tests/google-ia-ui.cjs

@@ -2042,3 +2042,15 @@ body.dark .preview {
   transform: translateY(-1px);
   background: var(--card-bg);
 }
+
+/* Google Identity Services: somente exibir após a configuração no servidor. */
+.google-signin-mount[hidden]{display:none!important}
+.google-signin-mount{
+  display:flex;
+  width:100%;
+  min-height:44px;
+  justify-content:center;
+  margin:14px 0 4px;
+  overflow:hidden;
+}
+.google-signin-mount iframe{max-width:100%}
