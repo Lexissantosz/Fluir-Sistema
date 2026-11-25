@@ -116,7 +116,7 @@
       const response=await fetch(API,{
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-        body:JSON.stringify({mensagem:message}),
+        body:JSON.stringify({mensagem:message,consentimento:true}),
         cache:"no-store",
         signal:controller.signal
       });
@@ -127,6 +127,8 @@
         say("O servidor não reconheceu a sessão. Faça login novamente. Seus dados não foram apagados.","error");
       }else if(response.status===403){
         say("O servidor recusou esta operação. Confira a permissão e o ambiente de testes.","error");
+      }else if(response.status===429){
+        say(data.mensagem||"O assistente atingiu o limite de mensagens por enquanto. Tente mais tarde.","error");
       }else if(response.status===503){
         say(data.mensagem||"A IA generativa ainda não está configurada ou está indisponível neste ambiente.","error");
       }else{
