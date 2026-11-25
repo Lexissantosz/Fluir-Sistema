@@ -1,7 +1,5 @@
 name: Fluir | Gemini real - teste de integracao
 on:
-  push:
-    branches: [alex/qa-gemini-real-25-11]
   workflow_dispatch:
 permissions:
   contents: read
