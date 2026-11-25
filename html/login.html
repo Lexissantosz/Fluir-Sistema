@@ -217,6 +217,7 @@
           <p class="form-message" id="loginMessage"></p>
 
           <button class="primary" type="submit">Entrar</button>
+          <div id="googleLoginMount" class="google-signin-mount" hidden aria-label="Entrar com Google"></div>
 
           <a href="demo.html" class="secondary demo-link" aria-label="Explorar demonstração do dashboard sem cadastro nem onboarding">
   Explorar demonstração
@@ -239,7 +240,7 @@
           <h2>Criar conta</h2>
           
           <p class="backend-note">
-  Cadastro em fase de integração com o banco de dados.
+  Sua conta fica protegida e seus dados permanecem privados.
 </p>
 
           <p class="form-description">
@@ -326,6 +327,7 @@
           <p class="form-message" id="registerMessage"></p>
 
           <button class="primary" type="submit">Cadastrar</button>
+          <div id="googleRegisterMount" class="google-signin-mount" hidden aria-label="Cadastrar com Google"></div>
 
           <p class="switch">
             Já tem uma conta?
@@ -384,5 +386,6 @@
   <!-- JS separado -->
   <script src="../js/transition.js"></script>
   <script src="../js/login.js"></script>
+  <script src="../js/google-identity.js"></script>
 </body>
 </html>
