@@ -121,7 +121,7 @@
       const { response, data } = await request("/google/config");
       if (!response.ok || data.habilitado !== true ||
           typeof data.clientId !== "string" ||
-          !/^[0-9-]+\.apps\.googleusercontent\.com$/.test(data.clientId)) return;
+          !/^[A-Za-z0-9_-]+\.apps\.googleusercontent\.com$/.test(data.clientId)) return;
       if (isProfile) {
         const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
         if (!current?.token) return;
