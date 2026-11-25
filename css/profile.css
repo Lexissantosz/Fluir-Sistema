@@ -987,3 +987,14 @@ body.dark .icon-btn {
     text-align: left;
   }
 }
+
+/* Vinculação Google, sem confundir com funções de segurança simuladas. */
+.google-signin-mount[hidden]{display:none!important}
+.google-signin-mount{
+  display:flex;justify-content:flex-start;min-height:44px;
+  margin:10px 0 8px;max-width:100%;overflow:hidden;
+}
+.google-signin-mount iframe{max-width:100%}
+.google-link-message{font-size:13px;line-height:1.5;color:var(--muted);margin:0 0 12px}
+.google-link-message[data-state="error"]{color:var(--danger)}
+.google-link-message[data-state="success"]{color:var(--success)}
