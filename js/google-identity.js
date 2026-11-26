@@ -133,14 +133,35 @@
         auto_select: false,
         callback: credentialReceived
       });
-      for (const mount of [loginTarget, registerTarget, linkTarget]) {
-        if (!mount) continue;
-        mount.hidden = false;
+      const mounts = [loginTarget, registerTarget, linkTarget].filter(Boolean);
+      const renderedWidths = new WeakMap();
+      function render(mount) {
+        const available = mount.clientWidth || loginTarget?.clientWidth ||
+          registerTarget?.clientWidth || 280;
+        const width = Math.min(400, Math.floor(available));
+        if (width <= 0 || renderedWidths.get(mount) === width) return;
+        renderedWidths.set(mount, width);
+        mount.replaceChildren();
         window.google.accounts.id.renderButton(mount, {
           type: "standard", theme: "outline", size: "large",
-          shape: "rectangular", text: isProfile ? "continue_with" : "signin_with",
-          width: 280
+          shape: "rectangular",
+          text: isProfile ? "continue_with" :
+            mount === registerTarget ? "signup_with" : "signin_with",
+          logo_alignment: "left",
+          width: String(width)
         });
+      }
+      for (const mount of mounts) {
+        mount.hidden = false;
+        render(mount);
+      }
+      if (typeof ResizeObserver !== "undefined") {
+        const observer = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            if (entry.target.clientWidth > 0) render(entry.target);
+          }
+        });
+        mounts.forEach(mount => observer.observe(mount));
       }
     } catch (error) {
       // Não bloquear o acesso normal por e-mail e senha quando o Google falhar.

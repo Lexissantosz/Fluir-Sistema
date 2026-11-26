@@ -18,7 +18,7 @@ const server = http.createServer((req,res)=>{
 const api = "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api";
 const googleMock =
   "window.google={accounts:{id:{initialize(opts){window.__googleCallback=opts.callback},"+
-  "renderButton(mount){const b=document.createElement('button');b.textContent='Google QA';mount.append(b);}}}};";
+  "renderButton(mount,opts){const b=document.createElement('button');b.textContent='Google QA';b.dataset.googleText=opts.text;b.style.width=opts.width+'px';mount.append(b);}}}};";
 async function routeGoogle(page,enabled){
   await page.route(api+"/usuarios/google/config",route=>route.fulfill({
     status:200,contentType:"application/json",body:JSON.stringify({
@@ -51,6 +51,18 @@ async function routeGoogle(page,enabled){
     await page.goto(url+"/html/login.html",{waitUntil:"domcontentloaded"});
     await page.locator("#googleLoginMount button").waitFor();
     assert.equal(await page.locator("#googleRegisterMount button").count(),1);
+    assert.equal(await page.locator("#googleLoginMount button").getAttribute("data-google-text"),"signin_with");
+    await page.locator("#showRegister").click();
+    await page.locator("#googleRegisterMount button").waitFor();
+    assert.equal(await page.locator("#googleRegisterMount button").getAttribute("data-google-text"),"signup_with");
+    for (const width of [390,1280]) {
+      await page.setViewportSize({width,height:844});
+      await page.waitForFunction(()=> {
+        const m=document.querySelector("#googleRegisterMount");
+        return m.firstElementChild?.style.width === Math.min(400,m.clientWidth)+"px";
+      });
+    }
+    await page.locator("#showLogin").click();
     await page.evaluate(()=>window.__googleCallback({credential:"token-google-invalido"}));
     await page.locator("#loginMessage").getByText("Token Google inválido").waitFor();
     assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
