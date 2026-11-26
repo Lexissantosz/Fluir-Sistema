@@ -66,6 +66,23 @@ async function routeGoogle(page,enabled){
     await page.evaluate(()=>window.__googleCallback({credential:"token-google-invalido"}));
     await page.locator("#loginMessage").getByText("Token Google inválido").waitFor();
     assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+    await page.locator("#showRegister").click();
+    await page.route(api+"/usuarios/google",route=>route.fulfill({
+      status:409,contentType:"application/json",body:JSON.stringify({mensagem:"Existing account"})
+    }));
+    await page.evaluate(()=>window.__googleCallback({credential:"existing-account"}));
+    await page.locator("#registerMessage").getByText(/Escolha outra conta Google/).waitFor();
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+    await page.route(api+"/usuarios/google",route=>route.fulfill({
+      status:200,contentType:"application/json",body:JSON.stringify({id:778,nome:"Google QA",email:"new@example.invalid",token:"abc12345678901234567890123456789012345678"})
+    }));
+    await page.route(api+"/onboarding/usuario/778",route=>route.fulfill({
+      status:200,contentType:"application/json",body:JSON.stringify({usuarioId:778,onboardingConcluido:false})
+    }));
+    await page.evaluate(()=>window.__googleCallback({credential:"new-google-account"}));
+    await page.waitForURL("**/setup.html");
+    assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem("fluir-user")).id),778);
+    console.log("PASS: Existing email guidance and new Google signup onboarding (mocked)");
     console.log("PASS: Google disponível quando configurado e token inválido rejeitado");
     await page.close();
 
