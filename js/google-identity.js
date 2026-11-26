@@ -73,7 +73,14 @@
         body: JSON.stringify({ idToken: result.credential })
       });
       if (!response.ok) {
-        message(data.mensagem || "O Google não pôde autenticar sua conta.", true);
+        if (response.status === 409) {
+          const isRegister = registerTarget?.closest("form")?.classList.contains("active");
+          message(isRegister
+            ? "Este e-mail já tem uma conta no Fluir. Escolha outra conta Google para cadastrar ou entre com sua senha e vincule o Google no Perfil."
+            : "Este e-mail já tem uma conta no Fluir. Entre com sua senha uma vez e vincule o Google no Perfil para os próximos acessos.", true);
+        } else {
+          message(data.mensagem || "O Google não pôde autenticar sua conta.", true);
+        }
         return;
       }
       if (!data?.id || typeof data.token !== "string" || data.token.length < 20) {
