@@ -2054,3 +2054,8 @@ body.dark .preview {
   overflow:hidden;
 }
 .google-signin-mount iframe{max-width:100%}
+
+/* Acesso permanente aos documentos legais e ao contato do Fluir. */
+.fluir-legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 20px;margin:8px auto 24px;padding:12px 20px;max-width:960px;text-align:center;font:500 12px Manrope,system-ui,sans-serif}
+.fluir-legal-links a{color:inherit;text-decoration:underline;text-underline-offset:3px;opacity:.75}
+.fluir-legal-links a:hover,.fluir-legal-links a:focus-visible{opacity:1}
