@@ -30,7 +30,12 @@
   close.className="fluir-assistant-close";
   close.setAttribute("aria-label","Fechar assistente");
   close.textContent="✕";
-  header.append(heading,close);
+  const reset=document.createElement("button");
+  reset.type="button";
+  reset.className="fluir-assistant-reset";
+  reset.setAttribute("aria-label","Limpar conversa e contexto da IA");
+  reset.textContent="Limpar";
+  header.append(heading,reset,close);
   const note=document.createElement("p");
   note.className="fluir-assistant-note";
   note.textContent=demo?"Esta é uma demonstração com respostas ilustrativas. Não utiliza Gemini nem envia mensagens.":"Ao confirmar, sua mensagem será enviada à API do Fluir e ao provedor Gemini. Não compartilhe dados sensíveis.";
@@ -52,7 +57,7 @@
   consentInput.type="checkbox";
   consentInput.required=true;
   const consentText=document.createElement("span");
-  consentText.textContent=demo?"Entendi que esta resposta é simulada.":"Autorizo o envio desta mensagem à API e ao serviço de IA.";
+  consentText.textContent=demo?"Entendi que esta resposta é simulada.":"Autorizo o envio desta mensagem e do contexto recente da conversa à API do Fluir e ao Gemini.";
   consent.append(consentInput,consentText);
   const send=document.createElement("button");
   send.type="submit";
@@ -63,6 +68,7 @@
   document.body.append(button,panel);
   let busy=false;
   let controller=null;
+  let history=[]; // Somente na memória da página; nunca no localStorage.
   function say(message,author){
     const bubble=document.createElement("div");
     bubble.className="fluir-assistant-bubble";
@@ -97,6 +103,15 @@
   }
   button.addEventListener("click",()=>panel.hidden?open():hide());
   close.addEventListener("click",hide);
+  reset.addEventListener("click",()=>{
+    if(busy)return;
+    history=[];
+    feed.replaceChildren();
+    input.value="";
+    consentInput.checked=false;
+    say("Conversa limpa. As próximas mensagens não enviarão o contexto anterior.");
+    input.focus();
+  });
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.hidden)hide()});
   form.addEventListener("submit",async e=>{
     e.preventDefault();
@@ -109,20 +124,21 @@
     if(demo){say(fakeAnswer(message));return}
     const token=getToken();
     if(!token){say("Para usar a IA real, entre em uma conta de testes primeiro. A demonstração não autentica usuários.","error");return}
-    busy=true;send.disabled=true;send.textContent="Respondendo...";
+    busy=true;send.disabled=true;reset.disabled=true;send.textContent="Respondendo...";
     controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),25000);
     try{
       const response=await fetch(API,{
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-        body:JSON.stringify({mensagem:message,consentimento:true}),
+        body:JSON.stringify({mensagem:message,consentimento:true,historico:history}),
         cache:"no-store",
         signal:controller.signal
       });
       const data=await response.json().catch(()=>({}));
       if(response.ok&&typeof data.resposta==="string"&&data.resposta.trim()){
         say(data.resposta);
+        history=[...history,{role:"user",text:message.slice(0,800)},{role:"model",text:data.resposta.slice(0,800)}].slice(-6);
       }else if(response.status===401){
         say("O servidor não reconheceu a sessão. Faça login novamente. Seus dados não foram apagados.","error");
       }else if(response.status===403){
@@ -138,7 +154,7 @@
       const info=err?.name==="AbortError"?"A IA demorou para responder.":"Falha de conexão com a API. Verifique a rede e a liberação de CORS da prévia.";
       say(info,"error");
     }finally{
-      clearTimeout(timer);controller=null;busy=false;send.disabled=false;send.textContent="Enviar mensagem";
+      clearTimeout(timer);controller=null;busy=false;send.disabled=false;reset.disabled=false;send.textContent="Enviar mensagem";
     }
   });
   window.FluirAssistant={isDemo:demo};

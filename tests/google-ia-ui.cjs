@@ -95,7 +95,39 @@ async function routeGoogle(page,enabled){
     assert.equal(sent.mensagem,"Como organizar meu dia?");
     console.log("PASS: Consentimento explícito enviado à API e erro de IA visível");
     await page.close();
-    console.log("4 cenários Google e IA aprovados no Chrome");
+
+    // Conversa real: o histórico somente acompanha mensagens autorizadas nesta aba.
+    page=await browser.newPage({viewport:{width:390,height:844}});
+    await page.addInitScript(()=>{
+      sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
+      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+    });
+    const requests=[];
+    await page.route(api+"/assistente/chat",route=>{
+      requests.push(JSON.parse(route.request().postData()));
+      return route.fulfill({status:200,contentType:"application/json",
+        body:JSON.stringify({resposta:requests.length===1?"Vamos estudar matemática.":"Vamos começar com um exemplo."})});
+    });
+    await page.goto(url+"/html/dashboard.html",{waitUntil:"domcontentloaded"});
+    await page.locator("#fluirAssistantButton").click();
+    async function ask(msg){
+      await page.locator(".fluir-assistant-form textarea").fill(msg);
+      await page.locator(".fluir-assistant-consent input").check();
+      await page.locator(".fluir-assistant-form button[type=submit]").click();
+      await page.waitForFunction(()=>document.querySelector(".fluir-assistant-send").disabled===false);
+    }
+    await ask("Quero estudar matemática.");
+    assert.deepEqual(requests[0].historico,[]);
+    await ask("Me dá um exemplo disso.");
+    assert.equal(requests[1].historico.length,2);
+    assert.equal(requests[1].historico[0].text,"Quero estudar matemática.");
+    assert.equal(requests[1].historico[1].text,"Vamos estudar matemática.");
+    await page.locator(".fluir-assistant-reset").click();
+    await ask("Agora quero falar de água.");
+    assert.deepEqual(requests[2].historico,[]);
+    console.log("PASS: Histórico curto, consentimento e limpeza da conversa no celular");
+    await page.close();
+    console.log("5 cenários Google e IA aprovados no Chrome");
   } finally {
     await browser.close(); server.close();
   }

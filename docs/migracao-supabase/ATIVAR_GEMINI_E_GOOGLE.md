@@ -1,9 +1,9 @@
 # Fluir | Integração real de Gemini e Google
-Atualizado em 25/11/2026.
+Atualizado em 26/11/2026.
 
 ## Preparação técnica concluída
-- Edge Function `fluir-api` V3 no Supabase. O status da função e os endpoints públicos são testados no CI.
-- IA só aceita `POST /assistente/chat` depois de sessão autenticada, consentimento explícito no corpo e validação do tamanho da mensagem. Limite temporário por conta no servidor.
+- Edge Function `fluir-api` V4 no Supabase. O status da função e os endpoints públicos são testados no CI.
+- IA só aceita `POST /assistente/chat` depois de sessão autenticada, consentimento explícito no corpo e validação do tamanho da mensagem. Limite temporário por conta no servidor. Aceita até 6 mensagens anteriores em ordem alternada, com validação de formato e limite de 800 caracteres por item; não persiste histórico no servidor.
 - Modelo padrão: `gemini-3.5-flash-lite` (o `gemini-2.5-flash` foi descontinuado para novos usuários). É possível configurar `FLUIR_AI_MODEL` sem alterar código, mas apenas valores reconhecidos pela API.
 - Verificação do Google ID Token com assinatura RS256 via JWKS oficial, audience igual ao Client ID, emissor Google e expiração, nunca confiar no token sem verificar.
 - Botões oficiais Google Identity Services são exibidos só se `FLUIR_GOOGLE_CLIENT_ID` estiver configurado; sem ele, login com senha segue disponível. Vínculo no Perfil exige sessão ativa e mesmo e-mail.
@@ -23,8 +23,11 @@ Atualizado em 25/11/2026.
 3. Salvar o Client ID (não o Client Secret) no Supabase Secrets com a chave `FLUIR_GOOGLE_CLIENT_ID`.
 4. Verificar que `/usuarios/google/config` retorna `habilitado:true`, testar botão na página oficial (não usar credenciais reais no CI) e registrar origem, callback e vínculo com conta legada existente.
 
-## Situação
-- Nenhuma das duas credenciais foi criada/recebida pelo ChatGPT.
+## Situação verificada em 26/11/2026
+- Gemini: `FLUIR_GEMINI_API_KEY` já está configurado no Supabase; resposta real autenticada validada no GitHub Actions em 25/11/2026. O assistente mantém contexto curto somente na memória da aba e permite limpá-lo.
+- Google: ainda falta criar o Client ID OAuth Web no projeto Google Cloud `Fluir Sistema`; sem esse identificador no segredo `FLUIR_GOOGLE_CLIENT_ID`, a API informa `habilitado:false` e os botões permanecem ocultos.
+- E-mail oficial criado: `fluirsistema@gmail.com`. Para selecioná-lo como suporte no OAuth, conecte-se ao Google Cloud por essa conta após conceder acesso ao projeto. Preserve a conta original como administradora.
+- Na etapa Público, escolha **Externo** (não Personal, que limita o app à conta criadora). Registre `https://fluir-sistema.vercel.app` nas origens JavaScript autorizadas do cliente Web; outro hostname exige registro separado.
 - Não configurar segredo em repositório GitHub nem Vercel: a função consome as variáveis no Supabase.
 - A versão Web usa uma ponte de identidade legada no Supabase e não é uma migração completa para Supabase Auth.
 - Sem chave, a IA indica configuração pendente e não simula uma resposta como se viesse do Gemini.

@@ -308,6 +308,16 @@ Deno.serve(async request=>{
       if(b.consentimento!==true)return failure(origin,403,"Autorize o envio da mensagem ao provedor de IA.");
       if(typeof b.mensagem!=="string" || !b.mensagem.trim() || b.mensagem.length>1200)
         return failure(origin,400,"Mensagem inválida.");
+      // Contexto curto e efêmero: validado e enviado somente com consentimento.
+      const history = b.historico === undefined ? [] : b.historico;
+      if(!Array.isArray(history) || history.length>6 || history.length%2!==0)
+        return failure(origin,400,"Histórico de conversa inválido.");
+      for(let i=0;i<history.length;i++){
+        const item=history[i];
+        if(!item || typeof item!=="object" || item.role!==(i%2===0?"user":"model") ||
+           typeof item.text!=="string" || !item.text.trim() || item.text.length>800)
+          return failure(origin,400,"Histórico de conversa inválido.");
+      }
       const key=Deno.env.get("FLUIR_GEMINI_API_KEY")||"";
       if(!key)return failure(origin,503,"Gemini ainda não configurado no Supabase.");
       const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-3.5-flash-lite";
@@ -320,7 +330,8 @@ Deno.serve(async request=>{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
             systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil com gentileza, clareza e privacidade. Você não possui autorização nem ferramentas para editar tarefas, registros ou dados de contas. Não afirme ter executado ações, salvado registros ou alterado informações."}]},
-            contents:[{role:"user",parts:[{text:b.mensagem.trim()}]}],
+            contents:[...history.map((item:{role:"user"|"model";text:string})=>({role:item.role,parts:[{text:item.text.trim()}]})),
+              {role:"user",parts:[{text:b.mensagem.trim()}]}],
             generationConfig:{maxOutputTokens:400,temperature:0.4}
           }),signal:AbortSignal.timeout(15000)
       });
