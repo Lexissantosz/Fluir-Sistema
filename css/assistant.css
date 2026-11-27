@@ -48,3 +48,168 @@ body.dark .fluir-assistant-consent{color:#e1e1d9}
     visibility:hidden!important;pointer-events:none!important
   }
 }
+
+
+/* =====================================================
+   TEMAS CAFÉ — ASSISTENTE FLUIR
+   Mantém FAB, janela, mensagens e formulário alinhados
+   com Café com Leite e Café Espresso.
+   ===================================================== */
+
+body.theme-cafe-light .fluir-assistant-fab,
+body.theme-cafe-light .fluir-assistant-fab .fluir-assistant-fab-label {
+  border-color: #7a5138;
+  background: #4a2b1d;
+  color: #fff5e6;
+}
+
+body.theme-cafe-light .fluir-assistant-fab:focus-visible,
+body.theme-cafe-light .fluir-assistant-window button:focus-visible,
+body.theme-cafe-light .fluir-assistant-window textarea:focus-visible {
+  outline-color: #b98c68;
+}
+
+body.theme-cafe-light .fluir-assistant-window {
+  background: #fff8ec;
+  color: #3b2418;
+  border-color: rgba(92, 57, 37, 0.22);
+  box-shadow: 0 20px 65px rgba(79, 45, 28, 0.22);
+}
+
+body.theme-cafe-light .fluir-assistant-top {
+  background: #4a2b1d;
+  color: #fff5e6;
+}
+
+body.theme-cafe-light .fluir-assistant-top small {
+  color: #e8cdb5;
+}
+
+body.theme-cafe-light .fluir-assistant-close,
+body.theme-cafe-light .fluir-assistant-reset {
+  border-color: #876048;
+  color: #fff5e6;
+}
+
+body.theme-cafe-light .fluir-assistant-note {
+  background: #f3e3cd;
+  color: #6f4e3c;
+  border-color: rgba(92, 57, 37, 0.14);
+}
+
+body.theme-cafe-light .fluir-assistant-bubble {
+  background: #f2e5d4;
+  color: #3b2418;
+}
+
+body.theme-cafe-light .fluir-assistant-bubble[data-author="user"] {
+  background: #4a2b1d;
+  color: #fff5e6;
+}
+
+body.theme-cafe-light .fluir-assistant-bubble[data-author="error"] {
+  background: #fbe7dc;
+  color: #8a3d25;
+}
+
+body.theme-cafe-light .fluir-assistant-form {
+  border-color: rgba(92, 57, 37, 0.16);
+}
+
+body.theme-cafe-light .fluir-assistant-form textarea {
+  background: #fffaf2;
+  color: #3b2418;
+  border-color: rgba(92, 57, 37, 0.28);
+}
+
+body.theme-cafe-light .fluir-assistant-consent {
+  color: #6f4e3c;
+}
+
+body.theme-cafe-light .fluir-assistant-consent input {
+  accent-color: #4a2b1d;
+}
+
+body.theme-cafe-light .fluir-assistant-send {
+  background: #4a2b1d;
+  color: #fff5e6;
+}
+
+body.theme-cafe-dark .fluir-assistant-fab,
+body.theme-cafe-dark .fluir-assistant-fab .fluir-assistant-fab-label {
+  border-color: #8f654c;
+  background: #2d1912;
+  color: #f7e8d5;
+}
+
+body.theme-cafe-dark .fluir-assistant-fab:focus-visible,
+body.theme-cafe-dark .fluir-assistant-window button:focus-visible,
+body.theme-cafe-dark .fluir-assistant-window textarea:focus-visible {
+  outline-color: #d3a77f;
+}
+
+body.theme-cafe-dark .fluir-assistant-window {
+  background: #321e16;
+  color: #f7e8d5;
+  border-color: rgba(247, 232, 213, 0.18);
+  box-shadow: 0 20px 70px rgba(12, 6, 3, 0.58);
+}
+
+body.theme-cafe-dark .fluir-assistant-top {
+  background: #24150f;
+  color: #f7e8d5;
+}
+
+body.theme-cafe-dark .fluir-assistant-top small {
+  color: #d2b39a;
+}
+
+body.theme-cafe-dark .fluir-assistant-close,
+body.theme-cafe-dark .fluir-assistant-reset {
+  border-color: #76513d;
+  color: #f7e8d5;
+}
+
+body.theme-cafe-dark .fluir-assistant-note {
+  background: #40261c;
+  color: #e5c8ad;
+  border-color: rgba(247, 232, 213, 0.14);
+}
+
+body.theme-cafe-dark .fluir-assistant-bubble {
+  background: #4b2d21;
+  color: #f7e8d5;
+}
+
+body.theme-cafe-dark .fluir-assistant-bubble[data-author="user"] {
+  background: #f0d1ad;
+  color: #2b1811;
+}
+
+body.theme-cafe-dark .fluir-assistant-bubble[data-author="error"] {
+  background: #5a2c22;
+  color: #ffd3c2;
+}
+
+body.theme-cafe-dark .fluir-assistant-form {
+  border-color: rgba(247, 232, 213, 0.14);
+}
+
+body.theme-cafe-dark .fluir-assistant-form textarea {
+  background: #2a1812;
+  color: #f7e8d5;
+  border-color: #76513d;
+}
+
+body.theme-cafe-dark .fluir-assistant-consent {
+  color: #d9bea8;
+}
+
+body.theme-cafe-dark .fluir-assistant-consent input {
+  accent-color: #f0d1ad;
+}
+
+body.theme-cafe-dark .fluir-assistant-send {
+  background: #f0d1ad;
+  color: #2b1811;
+}
