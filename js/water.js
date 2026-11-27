@@ -205,7 +205,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -216,7 +216,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -265,7 +265,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadWaterData() {
-  const saved = localStorage.getItem("fluir-water");
+  const saved = FluirStorage.getItem("fluir-water");
 
   /*
     Agora a meta padrão é em ml.
@@ -330,7 +330,7 @@ function loadWaterData() {
 }
 
 function saveWaterData() {
-  localStorage.setItem("fluir-water", JSON.stringify(waterData));
+  FluirStorage.setItem("fluir-water", JSON.stringify(waterData));
 }
 
 
@@ -594,7 +594,7 @@ function renderMiniTimeline() {
     item.innerHTML = `
       <time>${date}</time>
       <p>
-        <strong>Água registrada</strong>
+        <strong>${window.FluirI18n.t("Água registrada")}</strong>
         ${Number(amountMl).toLocaleString("pt-BR")} ml no dia.
       </p>
     `;
@@ -728,7 +728,7 @@ function showWaterFormMessage(message, type = "error") {
     return;
   }
 
-  waterFormMessage.textContent = message;
+  waterFormMessage.textContent = window.FluirI18n.t(message);
   waterFormMessage.className = `water-form-message show ${type}`;
 }
 
@@ -946,7 +946,7 @@ const waterTodayBtn = document.getElementById("waterTodayBtn");
 waterTodayBtn?.addEventListener("click", () => {
   const summary = document.querySelector(".water-summary");
   if (!summary) return;
-  waterTodayBtn.textContent = "Hoje · " + new Date().toLocaleDateString("pt-BR");
+  waterTodayBtn.textContent = window.FluirI18n.t("Hoje · ") + new Date().toLocaleDateString("pt-BR");
   summary.scrollIntoView({ behavior: "smooth", block: "start" });
   summary.classList.remove("fluir-today-focus");
   void summary.offsetWidth;
@@ -1003,14 +1003,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

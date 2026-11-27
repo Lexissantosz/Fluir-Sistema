@@ -91,7 +91,7 @@ const defaultSetup = {
       return onboardingCompleted === "true";
     }
 
-    const setup = localStorage.getItem("fluir-setup");
+    const setup = FluirStorage.getItem("fluir-setup");
 
     if (!setup) {
       return false;
@@ -119,7 +119,7 @@ function protectDashboardAccess() {
 
 function getStorageJSON(key, fallback) {
   try {
-    const value = localStorage.getItem(key);
+    const value = FluirStorage.getItem(key);
 
     if (!value) {
       return fallback;
@@ -133,7 +133,7 @@ function getStorageJSON(key, fallback) {
 }
 
 function setStorageJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  FluirStorage.setItem(key, JSON.stringify(value));
 }
 
 function escapeHTML(value) {
@@ -191,7 +191,7 @@ function getSavedSetup() {
 
   const usuario = readJSON(sessionStorage, "fluir-user");
   const onboarding = readJSON(sessionStorage, "fluir-onboarding");
-  const salvo = readJSON(localStorage, "fluir-setup");
+  const salvo = readJSON(FluirStorage, "fluir-setup");
 
   const pertenceAoUsuario = (dados) =>
     usuario?.id != null &&
@@ -303,7 +303,7 @@ const setupData = getSavedSetup();
 ===================================================== */
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -330,7 +330,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -346,7 +346,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName} `;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -357,7 +357,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -621,72 +621,30 @@ function updateDashboardRealData() {
    Aqui fica a parte do quadradinho que finalmente funciona.
 ===================================================== */
 
-function getDefaultDashboardTasks() {
-  return [
-    {
-      id: "demo-task-1",
-      title: "Revisar proposta do projeto",
-      category: "Trabalho",
-      time: "09:00",
-      completed: false
-    },
-    {
-      id: "demo-task-2",
-      title: "Responder e-mails importantes",
-      category: "Trabalho",
-      time: "11:00",
-      completed: false
-    },
-    {
-      id: "demo-task-3",
-      title: "Estudar capítulo 4",
-      category: "Estudos",
-      time: "14:00",
-      completed: false
-    },
-    {
-      id: "demo-task-4",
-      title: "Treino de força",
-      category: "Saúde",
-      time: "18:00",
-      completed: true
-    },
-    {
-      id: "demo-task-5",
-      title: "Ler 20 páginas",
-      category: "Pessoal",
-      time: "20:30",
-      completed: true
-    }
-  ];
+const dashboardTasksAPI = "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/tarefas";
+let dashboardTasksState = [];
+function dashboardSession() {
+  try { return JSON.parse(sessionStorage.getItem("fluir-user") || "null"); } catch { return null; }
 }
-
-function getDashboardTasks() {
-  const realTasks = getStorageJSON("fluir-tasks", []);
-
-  if (Array.isArray(realTasks) && realTasks.length) {
-    return {
-      source: "real",
-      tasks: realTasks.slice(0, 5).map((task, index) => {
-        return {
-          id: task.id || `real-task-${index}`,
-          title: task.title || "Tarefa sem título",
-          category: task.category || task.type || "Tarefa",
-          time: task.time || task.hour || "",
-          completed: Boolean(task.completed)
-        };
-      })
-    };
+async function loadDashboardTasks() {
+  const user = dashboardSession();
+  const list = document.getElementById("dashboardTaskList");
+  if (!user?.id || !user?.token || !list) return;
+  try {
+    const response = await fetch(dashboardTasksAPI + "/usuario/" + encodeURIComponent(user.id), {
+      headers: { Authorization: "Bearer " + user.token }, cache: "no-store"
+    });
+    if (!response.ok) throw new Error("Tasks unavailable");
+    const data = await response.json();
+    if (!Array.isArray(data) || dashboardSession()?.token !== user.token) return;
+    dashboardTasksState = data.map(t => ({id:t.id,title:t.titulo,category:t.categoria,time:t.horario,completed:!!t.concluida,date:t.dataTarefa}));
+    updateTasksDashboardData();
+  } catch {
+    list.textContent = window.FluirI18n.t("Não foi possível carregar suas tarefas. Atualize a página para tentar novamente.");
   }
-
-  const savedDemoTasks = getStorageJSON("fluir-dashboard-demo-tasks", null);
-
-  return {
-    source: "demo",
-    tasks: Array.isArray(savedDemoTasks) && savedDemoTasks.length
-      ? savedDemoTasks
-      : getDefaultDashboardTasks()
-  };
+}
+function getDashboardTasks() {
+  return {source:"real",tasks:dashboardTasksState.filter(t=>!t.date || t.date===getTodayKey()).slice(0,5)};
 }
 
 function updateTasksDashboardData() {
@@ -701,8 +659,8 @@ function updateTasksDashboardData() {
   if (!dashboardTasks.tasks.length) {
     tasksPanel.innerHTML = `
       <div class="empty-dashboard-mini">
-        <strong>Nenhuma tarefa ainda</strong>
-        <p>Crie uma tarefa para começar a organizar o dia.</p>
+        <strong>${window.FluirI18n.t("Nenhuma tarefa ainda")}</strong>
+        <p>${window.FluirI18n.t("Crie uma tarefa para começar a organizar o dia.")}</p>
       </div>
     `;
 
@@ -741,7 +699,9 @@ function setupTasksInteraction() {
     return;
   }
 
-  taskList.addEventListener("click", (event) => {
+  if (taskList.dataset.bound) return;
+  taskList.dataset.bound = "true";
+  taskList.addEventListener("click", async (event) => {
     const taskItem = event.target.closest(".task-item");
 
     if (!taskItem || !taskList.contains(taskItem)) {
@@ -765,7 +725,7 @@ function setupTasksInteraction() {
     }
 
     applyTaskVisual(taskItem);
-    saveTaskChange(taskItem);
+    await saveTaskChange(taskItem);
     updateTasksSummary();
     updateFocusProgress();
   });
@@ -781,59 +741,28 @@ function applyTaskVisual(taskItem) {
   taskItem.classList.toggle("task-done", checkbox.checked);
 }
 
-function saveTaskChange(taskItem) {
+async function saveTaskChange(taskItem) {
+  const user = dashboardSession();
   const checkbox = taskItem.querySelector('input[type="checkbox"]');
-  const text = taskItem.querySelector("span");
-
-  if (!checkbox || !text) {
-    return;
-  }
-
-  const taskId = taskItem.dataset.taskId;
-  const taskSource = taskItem.dataset.taskSource;
-
-  if (taskSource === "real") {
-    const tasks = getStorageJSON("fluir-tasks", []);
-
-    const updatedTasks = tasks.map((task, index) => {
-      const currentId = task.id || `real-task-${index}`;
-
-      if (String(currentId) === String(taskId) || task.title === text.textContent.trim()) {
-        return {
-          ...task,
-          completed: checkbox.checked
-        };
-      }
-
-      return task;
+  const task = dashboardTasksState.find(t=>String(t.id)===taskItem.dataset.taskId);
+  if (!user?.token || !checkbox || !task) return;
+  if (taskItem.dataset.saving) { checkbox.checked = task.completed; applyTaskVisual(taskItem); return; }
+  taskItem.dataset.saving = "true";
+  const desired = checkbox.checked;
+  checkbox.disabled = true;
+  try {
+    const response = await fetch(dashboardTasksAPI + "/" + encodeURIComponent(task.id) + "/status?concluida=" + desired, {
+      method:"PUT", headers:{Authorization:"Bearer "+user.token}
     });
-
-    setStorageJSON("fluir-tasks", updatedTasks);
-    return;
+    if (!response.ok) throw new Error("Task update failed");
+    task.completed = desired;
+  } catch { alert(window.FluirI18n.t("Não foi possível atualizar a tarefa.")); }
+  finally {
+    checkbox.checked = task.completed;
+    checkbox.disabled = false;
+    delete taskItem.dataset.saving;
+    applyTaskVisual(taskItem);
   }
-
-  const demoTasks = [];
-
-  document.querySelectorAll("#dashboardTaskList .task-item").forEach((item) => {
-    const itemCheckbox = item.querySelector('input[type="checkbox"]');
-    const itemTitle = item.querySelector("span");
-    const itemCategory = item.querySelector("small");
-    const itemTime = item.querySelector("time");
-
-    if (!itemCheckbox || !itemTitle) {
-      return;
-    }
-
-    demoTasks.push({
-      id: item.dataset.taskId,
-      title: itemTitle.textContent.trim(),
-      category: itemCategory ? itemCategory.textContent.trim() : "Tarefa",
-      time: itemTime ? itemTime.textContent.trim() : "",
-      completed: itemCheckbox.checked
-    });
-  });
-
-  setStorageJSON("fluir-dashboard-demo-tasks", demoTasks);
 }
 
 function updateTasksSummary() {
@@ -857,7 +786,7 @@ function updateTasksSummary() {
   }
 
   if (textElement) {
-    textElement.textContent = `${completed} de ${total} concluídas`;
+    textElement.textContent = window.FluirI18n.fmt("{done} de {total} concluídas",{done:completed,total});
   }
 
   if (progressElement) {
@@ -912,10 +841,20 @@ function updateFocusProgress() {
    13. HÁBITOS
 ===================================================== */
 
+function renderDashboardTimeline() {
+  const list = document.querySelector(".timeline-list");
+  const entries = getStorageJSON("fluir-timeline-events", []);
+  if (!list || !Array.isArray(entries) || !entries.length) return;
+  list.innerHTML = entries.slice(0,5).map(e=>`<div class="timeline-item"><time>${escapeHTML(e.time || "")}</time><div><strong>${escapeHTML(e.title || "Evento")}</strong><p>${escapeHTML(e.description || "")}</p></div></div>`).join("");
+}
 function updateHabitsDashboardData() {
   const habits = getStorageJSON("fluir-habits", []);
   const todayKey = getTodayKey();
 
+  const habitTable = document.querySelector(".habit-table");
+  if (habitTable && Array.isArray(habits) && habits.length) {
+    habitTable.innerHTML = habits.slice(0,5).map(h=>`<div class="habit-row"><span>${escapeHTML(h.title || "Hábito")}</span><p>${Array.isArray(h.completedDates) && h.completedDates.includes(todayKey) ? "✓" : "○"}</p><strong>${Array.isArray(h.completedDates) && h.completedDates.includes(todayKey) ? "1/1" : "0/1"}</strong></div>`).join("");
+  }
   const total = Array.isArray(habits) ? habits.length : 0;
 
   const completedToday = Array.isArray(habits)
@@ -934,7 +873,7 @@ function updateHabitsDashboardData() {
     const progress = card.querySelector(".mini-progress span");
 
     if (strong) strong.textContent = String(completedToday);
-    if (small) small.textContent = `${completedToday} de ${total} concluídos`;
+    if (small) small.textContent = window.FluirI18n.fmt("{done} de {total} concluídos",{done:completedToday,total});
     if (progress) progress.style.width = `${percent}%`;
   }
 }
@@ -945,7 +884,7 @@ function updateHabitsDashboardData() {
 ===================================================== */
 
 function updateSleepDashboardData() {
-  const sleepEntries = getStorageJSON("fluir-sleep", []);
+  const sleepEntries = getStorageJSON("fluir-sleep-logs", []);
   const card = document.querySelector('[data-module-card="sleep"]');
   const panel = document.querySelector('[data-module-panel="sleep"]');
 
@@ -954,7 +893,7 @@ function updateSleepDashboardData() {
     : null;
 
   const sleepText = lastEntry?.duration || lastEntry?.hours || "0h";
-  const sleepSmall = lastEntry ? "último registro" : "sem registro";
+  const sleepSmall = window.FluirI18n.t(lastEntry ? "último registro" : "sem registro");
 
   if (card) {
     const strong = card.querySelector("strong");
@@ -1011,7 +950,7 @@ function updateWaterDashboardData() {
     const dots = card.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (small) small.textContent = `de ${waterGoal}ml`;
+    if (small) small.textContent = window.FluirI18n.fmt("de {n} ml",{n:waterGoal});
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -1022,7 +961,7 @@ function updateWaterDashboardData() {
     const dots = panel.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (p) p.textContent = `de ${waterGoal}ml`;
+    if (p) p.textContent = window.FluirI18n.fmt("de {n} ml",{n:waterGoal});
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -1087,7 +1026,7 @@ function updateFinancesDashboardData() {
     const small = card.querySelector("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (small) small.textContent = "saldo atual";
+    if (small) small.textContent = window.FluirI18n.t("saldo atual");
   }
 
   if (panel) {
@@ -1096,10 +1035,10 @@ function updateFinancesDashboardData() {
     const smallItems = panel.querySelectorAll("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (p) p.textContent = "Saldo atual";
+    if (p) p.textContent = window.FluirI18n.t("Saldo atual");
 
-    if (smallItems[0]) smallItems[0].textContent = `Entrada ${formatCurrency(income)}`;
-    if (smallItems[1]) smallItems[1].textContent = `Saída - ${formatCurrency(expense)}`;
+    if (smallItems[0]) smallItems[0].textContent = window.FluirI18n.t("Entrada")+" "+formatCurrency(income);
+    if (smallItems[1]) smallItems[1].textContent = window.FluirI18n.t("Saída")+" - "+formatCurrency(expense);
   }
 }
 
@@ -1143,7 +1082,7 @@ function updateDiaryDashboardData() {
     if (small) {
       small.textContent = todayEntries.length === 1
         ? "entrada hoje"
-        : "entradas hoje";
+        : window.FluirI18n.t("entradas hoje");
     }
   }
 
@@ -1153,7 +1092,7 @@ function updateDiaryDashboardData() {
     if (p) {
       p.textContent = entries.length
         ? entries[entries.length - 1].text || entries[entries.length - 1].content || "Última entrada registrada."
-        : "Nenhuma entrada no diário ainda.";
+        : window.FluirI18n.t("Nenhuma entrada no diário ainda.");
     }
   }
 }
@@ -1179,14 +1118,14 @@ function updateRecentEventsDashboardData() {
     return;
   }
 
-  const events = getStorageJSON("fluir-events", []);
+  const events = getStorageJSON("fluir-timeline-events", []);
 
   if (!Array.isArray(events) || !events.length) {
     eventList.innerHTML = `
       <article>
-        <span>Hoje</span>
-        <strong>Nenhum evento recente</strong>
-        <p>Os registros dos módulos aparecerão aqui.</p>
+        <span>${window.FluirI18n.t("Hoje")}</span>
+        <strong>${window.FluirI18n.t("Nenhum evento recente")}</strong>
+        <p>${window.FluirI18n.t("Os registros dos módulos aparecerão aqui.")}</p>
       </article>
     `;
 
@@ -1210,7 +1149,7 @@ function updateRecentEventsDashboardData() {
 ===================================================== */
 
 function showSetupNoticeIfNeeded() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (savedSetup) {
     return;
@@ -1235,6 +1174,8 @@ function initDashboard() {
   setupNavigation();
 
   updateDashboardRealData();
+  loadDashboardTasks();
+  renderDashboardTimeline();
   setupDashboardCardLinks();
 
   applyFinancePreferences();
@@ -1298,14 +1239,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

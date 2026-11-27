@@ -684,3 +684,24 @@ body.dark #themeBtn span {
 .event-item[data-type="water"] .event-icon {
   --context-icon: url("../Assets/icons/navigation/droplets.svg");
 }
+
+/* Center the masked symbol independently of legacy text nodes and grid tracks. */
+:is(.page-icon,.title-icon,.heading-icon) {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box;
+  font-size: 0 !important;
+  line-height: 0 !important;
+}
+:is(.page-icon,.title-icon,.heading-icon)::before {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

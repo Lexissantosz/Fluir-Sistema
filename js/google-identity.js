@@ -19,7 +19,7 @@
     if (isProfile) {
       const status = document.getElementById("googleLinkMessage");
       if (status) {
-        status.textContent = value;
+        status.textContent = window.FluirI18n.t(value);
         status.dataset.state = error ? "error" : "success";
       }
     } else if (typeof showMessage === "function") {
@@ -63,6 +63,7 @@
         sessionStorage.setItem("fluir-user", JSON.stringify({ ...saved, ...data }));
         message("Conta Google vinculada com segurança. Você já pode entrar com o Google.");
         linkTarget.hidden = true;
+        window.dispatchEvent(new Event("fluir:google-linked"));
         return;
       }
 
@@ -88,6 +89,7 @@
         return;
       }
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
       sessionStorage.removeItem("fluir-onboarding-completed");
       try {
         const completed = await hasCompletedOnboarding(data);
@@ -123,6 +125,55 @@
     });
   }
 
+  async function initializeNativeGoogle(clientId) {
+    const plugin = window.Capacitor?.Plugins?.GoogleSignIn;
+    if (!plugin || typeof plugin.initialize !== "function" || typeof plugin.signIn !== "function") {
+      message("O login Google nativo não está disponível nesta versão. Use e-mail e senha ou a versão web.", true);
+      return;
+    }
+    await plugin.initialize({ clientId });
+    const tr = value => window.FluirI18n?.t?.(value) || value;
+    const buttons = [];
+    let nativeBusy = false;
+    for (const mount of [loginTarget, registerTarget, linkTarget].filter(Boolean)) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "fluir-native-google-button";
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.setAttribute("viewBox","0 0 48 48");icon.setAttribute("aria-hidden","true");icon.setAttribute("width","20");icon.setAttribute("height","20");
+      for(const [fill,d] of [
+        ["#4285F4","M43.61 24.46c0-1.36-.12-2.66-.35-3.92H24v7.42h11.04c-.48 2.45-1.86 4.53-3.93 5.92v4.92h6.36c3.72-3.43 6.14-8.47 6.14-14.34z"],
+        ["#34A853","M24 44c5.34 0 9.82-1.77 13.09-4.8l-6.36-4.92c-1.76 1.18-4.02 1.88-6.73 1.88-5.16 0-9.53-3.48-11.1-8.16H6.34v5.08A20 20 0 0 0 24 44z"],
+        ["#FBBC05","M12.9 28a12 12 0 0 1 0-8v-5.08H6.34a20 20 0 0 0 0 18.16L12.9 28z"],
+        ["#EA4335","M24 11.84c2.91 0 5.52 1 7.58 2.96l5.69-5.69A19.2 19.2 0 0 0 24 4 20 20 0 0 0 6.34 14.92L12.9 20C14.47 15.32 18.84 11.84 24 11.84z"]
+      ]){const p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("fill",fill);p.setAttribute("d",d);icon.append(p);}
+      const label=document.createElement("span");label.textContent=tr(isProfile ? "Vincular conta Google" : mount === registerTarget ? "Cadastrar com Google" : "Entrar com Google");
+      button.append(icon,label);
+      button.addEventListener("click", async () => {
+        if (nativeBusy || busy) return;
+        nativeBusy = true;
+        buttons.forEach(item => { item.disabled = true; });
+        try {
+          const result = await plugin.signIn();
+          if (typeof result?.idToken !== "string" || !result.idToken) {
+            message(tr("O Google não retornou uma identidade válida."), true);
+            return;
+          }
+          await credentialReceived({ credential: result.idToken });
+        } catch (error) {
+          // Do not expose credential material or raw provider errors.
+          message(tr("Não foi possível concluir o login Google no aplicativo. Tente novamente ou use a versão web."), true);
+        } finally {
+          nativeBusy = false;
+          buttons.forEach(item => { item.disabled = false; });
+        }
+      });
+      buttons.push(button);
+      mount.replaceChildren(button);
+      mount.hidden = false;
+    }
+  }
+
   async function initialize() {
     try {
       const { response, data } = await request("/google/config");
@@ -132,6 +183,14 @@
       if (isProfile) {
         const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
         if (!current?.token) return;
+        const status = await fetch(base.replace(/\/usuarios$/, "/conta/seguranca"), {headers:{Authorization:"Bearer "+current.token},cache:"no-store"});
+        if (!status.ok || (await status.json()).google?.vinculado !== false) return;
+      }
+      // Google web sign-in is not supported inside an Android WebView.
+      // The native SDK obtains an ID token for the same web client audience.
+      if (window.Capacitor?.getPlatform?.() === "android") {
+        await initializeNativeGoogle(data.clientId);
+        return;
       }
       await loadGoogleScript();
       window.google.accounts.id.initialize({
@@ -154,6 +213,7 @@
           shape: "rectangular",
           text: isProfile ? "continue_with" :
             mount === registerTarget ? "signup_with" : "signin_with",
+          locale: window.FluirI18n.language==="en-US"?"en":window.FluirI18n.language==="es"?"es":"pt_BR",
           logo_alignment: "left",
           width: String(width)
         });

@@ -33,14 +33,14 @@
 
         <div>
           <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
+          <p>${window.FluirI18n.t("Sistema de Organização da Vida")}</p>
         </div>
       </div>
     `;
   }
 
   function getActiveModuleKeys() {
-    const savedSetup = localStorage.getItem("fluir-setup");
+    const savedSetup = FluirStorage.getItem("fluir-setup");
 
     if (!savedSetup) {
       return null;
@@ -127,13 +127,13 @@
             ${ariaCurrent}
         >
             <span aria-hidden="true"></span>
-            ${item.label}
+            ${window.FluirI18n.t(item.label)}
         </a>
         `;
     }).join("");
 
     return `
-        <nav class="sidebar-nav" aria-label="Navegação principal">
+        <nav class="sidebar-nav" aria-label="${window.FluirI18n.t("Navegação principal")}">
         ${links}
         </nav>
     `;

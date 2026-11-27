@@ -1488,3 +1488,5 @@ body.dark .form-message.success {
     width: 100%;
   }
 }
+
+.fluir-language-picker{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:8px}.fluir-language-picker select{font:inherit;padding:6px;border:1px solid #aaa;border-radius:7px;background:transparent;color:inherit}.fluir-language-picker option{color:#171717;background:#fff}

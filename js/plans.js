@@ -171,7 +171,7 @@ let selectedPlanToConfirm = null;
 
 function getStorageJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -179,7 +179,7 @@ function getStorageJSON(key, fallback) {
 }
 
 function saveStorageJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  FluirStorage.setItem(key, JSON.stringify(value));
 }
 
 
@@ -190,7 +190,7 @@ function saveStorageJSON(key, value) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -229,7 +229,7 @@ function updateUserArea() {
   const name = getDisplayName();
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${name}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:name});
   }
 
   if (avatarBtn) {
@@ -273,7 +273,7 @@ function hideDisabledModules() {
 // =====================================================
 
 function getCurrentPlan() {
-  return localStorage.getItem("fluir-current-plan") || "Gratuito";
+  return FluirStorage.getItem("fluir-current-plan") || "Gratuito";
 }
 
 function getCurrentPlanConfig() {
@@ -293,7 +293,7 @@ function saveCurrentPlan(planName) {
     - fluir-plan-access: permissões do plano
     - fluir-plan-status: status de assinatura
   */
-  localStorage.setItem("fluir-current-plan", plan.name);
+  FluirStorage.setItem("fluir-current-plan", plan.name);
   saveStorageJSON("fluir-plan-access", plan.permissions);
 
   saveStorageJSON("fluir-plan-status", {
@@ -322,10 +322,10 @@ function updateCurrentPlanUI() {
     const planName = button.dataset.plan;
 
     if (planName === currentPlan) {
-      button.textContent = "Plano atual";
+      button.textContent = window.FluirI18n.t("Plano atual");
       button.classList.add("current-plan");
     } else {
-      button.textContent = "Escolher plano";
+      button.textContent = window.FluirI18n.t("Escolher plano");
       button.classList.remove("current-plan");
     }
   });
@@ -360,7 +360,7 @@ function updatePrices(type) {
   });
 
   pricePeriods.forEach((period) => {
-    period.textContent = type === "yearly" ? "/ano" : "/mês";
+    period.textContent = window.FluirI18n.t(type === "yearly" ? "/ano" : "/mês");
   });
 }
 
@@ -474,7 +474,7 @@ function showTemporaryFeedback(message) {
   const feedback = document.createElement("div");
 
   feedback.className = "floating-feedback";
-  feedback.textContent = message;
+  feedback.textContent = window.FluirI18n.t(message);
 
   document.body.appendChild(feedback);
 
@@ -599,17 +599,18 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {
+  const setupData = getSetupData();
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
   const displayName = nickname || name || "Você";

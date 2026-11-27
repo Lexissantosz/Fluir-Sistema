@@ -37,7 +37,7 @@ function showMessage(element, message, type) {
     return;
   }
 
-  element.textContent = message;
+  element.textContent = window.FluirI18n.t(message);
   element.className = `form-message ${type}`;
 }
 
@@ -51,7 +51,7 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
 
   try {
     const salvo = JSON.parse(
-      localStorage.getItem("fluir-setup") || "null"
+      FluirStorage.getItem("fluir-setup") || "null"
     );
 
     const pertenceAoUsuario =
@@ -143,7 +143,7 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
     atualizadoEm: new Date().toISOString()
   };
 
-  localStorage.setItem(
+  FluirStorage.setItem(
     "fluir-setup",
     JSON.stringify(setup)
   );
@@ -248,7 +248,7 @@ function showVerificationRetry(usuario) {
   retryOnboardingButton = document.createElement("button");
   retryOnboardingButton.type = "button";
   retryOnboardingButton.className = "secondary";
-  retryOnboardingButton.textContent = "Tentar carregar preferências novamente";
+  retryOnboardingButton.textContent = window.FluirI18n.t("Tentar carregar preferências novamente");
   loginMessage.insertAdjacentElement("afterend", retryOnboardingButton);
   retryOnboardingButton.addEventListener("click", async () => {
     retryOnboardingButton.disabled = true;
@@ -287,7 +287,7 @@ function setButtonLoading(button, isLoading, loadingText, normalText) {
   }
 
   button.disabled = isLoading;
-  button.textContent = isLoading ? loadingText : normalText;
+  button.textContent = window.FluirI18n.t(isLoading ? loadingText : normalText);
 }
 
 async function readResponse(response) {
@@ -312,7 +312,7 @@ async function readResponse(response) {
 // =============================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -376,7 +376,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -481,6 +481,7 @@ if (loginForm) {
 
       // A consulta de onboarding é autenticada; a sessão deve existir antes dela.
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
       sessionStorage.removeItem("fluir-onboarding-completed");
 
       let onboardingConcluido;
@@ -631,6 +632,7 @@ if (registerForm) {
       sessionStorage.removeItem("fluir-onboarding");
       sessionStorage.setItem("fluir-onboarding-completed", "false");
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
 
       showMessage(
         registerMessage,

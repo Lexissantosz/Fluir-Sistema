@@ -15,7 +15,9 @@ const productionSecondary = "https://fluir-sistema-lexissantosz.vercel.app";
 const allowed = (Deno.env.get("FLUIR_ALLOWED_ORIGINS") || "").split(",").map(s => s.trim()).filter(Boolean);
 
 function originAllowed(origin: string) {
-  if (origin === production || origin === productionSecondary || allowed.includes(origin)) return true;
+  // Capacitor Android serves bundled web assets at this exact HTTPS origin.
+  // Origin permission is not account authorization; private routes still require currentUser.
+  if (origin === "https://localhost" || origin === production || origin === productionSecondary || allowed.includes(origin)) return true;
   // Previews bound to our exact project/team, not an arbitrary vercel.app hostname.
   return /^https:\/\/fluir-sistema-[a-z0-9-]+-lexissantosz\.vercel\.app$/.test(origin);
 }
@@ -44,10 +46,16 @@ function newToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
-async function issueSession(user: {id:number; nome:string; email:string}, origin: string, provider = "senha") {
+function deviceLabel(request:Request){
+  const ua=request.headers.get("user-agent")||"";
+  const os=/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Macintosh|Mac OS/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"Dispositivo não identificado";
+  const browser=/Edg\//i.test(ua)?"Edge":/OPR\//i.test(ua)?"Opera":/Firefox|FxiOS/i.test(ua)?"Firefox":/Chrome|CriOS/i.test(ua)?"Chrome":/Safari/i.test(ua)?"Safari":"Navegador não identificado";
+  return os+" · "+browser;
+}
+async function issueSession(user: {id:number; nome:string; email:string}, origin: string, request:Request, provider = "senha") {
   const token = newToken();
   const { error } = await admin.from("sessoes_login").insert({
-    token_hash: await hash(token), usuario_id: user.id,
+    token_hash: await hash(token), usuario_id: user.id, dispositivo:deviceLabel(request), ultimo_acesso:new Date().toISOString(),
     criado_em: new Date().toISOString(), expira_em: new Date(Date.now() + 12*3600*1000).toISOString(),
   });
   if (error) return failure(origin, 503, "Não foi possível criar uma sessão segura.");
@@ -62,8 +70,12 @@ async function currentUser(request: Request) {
   if (!token || token.length > 8192) return null;
   if (/^[A-Za-z0-9_-]{40,100}$/.test(token)) {
     const { data: session, error } = await admin.from("sessoes_login")
-      .select("usuario_id,expira_em").eq("token_hash", await hash(token)).maybeSingle();
+      .select("usuario_id,expira_em,ultimo_acesso").eq("token_hash", await hash(token)).maybeSingle();
     if (error || !session || Date.parse(session.expira_em) <= Date.now()) return null;
+    if(!session.ultimo_acesso||Date.now()-Date.parse(session.ultimo_acesso)>60000){
+      await admin.from("sessoes_login").update({ultimo_acesso:new Date().toISOString(),dispositivo:deviceLabel(request)})
+        .eq("usuario_id",session.usuario_id).eq("token_hash",await hash(token));
+    }
     const { data: user } = await admin.from("usuarios").select("id,nome,email").eq("id",session.usuario_id).maybeSingle();
     return user || null;
   }
@@ -84,6 +96,63 @@ async function loginLimiter(email: string) {
 function cleanEmail(input: unknown) {
   const value = String(input || "").trim().toLowerCase();
   return value.length<=120 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? value : "";
+}
+// Transactional mail uses a dedicated sender account and gmail.send scope.
+// Configure only in Edge Function secrets, never in the browser or repository.
+const mailSender = "fluirsistema@gmail.com";
+function mailConfigured() {
+  return !!(Deno.env.get("FLUIR_MAIL_CLIENT_ID") && Deno.env.get("FLUIR_MAIL_CLIENT_SECRET") && Deno.env.get("FLUIR_MAIL_REFRESH_TOKEN"));
+}
+function mailAddress(value: unknown) {
+  const email=cleanEmail(value);
+  return /^[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,63}$/.test(email)?email:"";
+}
+function base64Bytes(bytes: Uint8Array) {
+  return btoa(String.fromCharCode(...bytes));
+}
+function recoveryCode() {
+  return base64Bytes(crypto.getRandomValues(new Uint8Array(12))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+}
+async function sendFluirMail(to: string, subject: string, body: string) {
+  if (!mailConfigured() || !mailAddress(to) || /[\r\n]/.test(subject)) throw new Error("mail_configuration");
+  const oauth = await fetch("https://oauth2.googleapis.com/token", {
+    method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:new URLSearchParams({
+      client_id:Deno.env.get("FLUIR_MAIL_CLIENT_ID")!,
+      client_secret:Deno.env.get("FLUIR_MAIL_CLIENT_SECRET")!,
+      refresh_token:Deno.env.get("FLUIR_MAIL_REFRESH_TOKEN")!,grant_type:"refresh_token"
+    }),signal:AbortSignal.timeout(12000)
+  });
+  if(!oauth.ok) throw new Error("mail_oauth");
+  const data=await oauth.json();
+  if(typeof data.access_token!=="string")throw new Error("mail_oauth");
+  const mime=["From: Fluir <"+mailSender+">","To: "+to,
+    "Subject: =?UTF-8?B?"+base64Bytes(encoder.encode(subject))+"?=",
+    "MIME-Version: 1.0","Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64","",base64Bytes(encoder.encode(body)).match(/.{1,76}/g)?.join("\r\n")||""
+  ].join("\r\n");
+  const sent=await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send",{
+    method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+data.access_token},
+    body:JSON.stringify({raw:base64Bytes(encoder.encode(mime)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"")}),
+    signal:AbortSignal.timeout(12000)
+  });
+  if(!sent.ok)throw new Error("mail_delivery");
+}
+async function issueRecovery(email: string) {
+  const code=recoveryCode();
+  const codeHash=await hash("fluir-reset:"+email+":"+code);
+  const {data,error}=await admin.rpc("fluir_password_recovery_issue",{p_email:email,p_hash:codeHash});
+  if(error)throw new Error("recovery_issue");
+  if(data!==true)return;
+  try{
+    await sendFluirMail(email,"Fluir | Redefinição de senha",
+      "Olá!\n\nRecebemos uma solicitação para redefinir a senha da sua conta Fluir.\n\nSeu código: "+code+
+      "\n\nCopie o código na tela de recuperação do Fluir. Ele é válido por 15 minutos e pode ser usado apenas uma vez. Não compartilhe este código.\n\nSe você não solicitou a recuperação, ignore este e-mail. Sua senha não foi alterada.\n\nEquipe Fluir");
+  } catch {
+    // Permit a retry after provider failure. Only invalidate the exact unsent code.
+    await admin.from("fluir_password_recovery").delete().eq("code_hash",codeHash);
+    throw new Error("recovery_delivery");
+  }
 }
 function publicTask(task: Record<string,unknown>) {
   return {
@@ -208,13 +277,40 @@ Deno.serve(async request=>{
       return respond(origin,200,{habilitado:!!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"),clientId:Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||""});
     if(path==="/assistente/status"&&method==="GET")
       return respond(origin,200,{configurado:!!Deno.env.get("FLUIR_GEMINI_API_KEY")});
+    if(path==="/usuarios/senha/solicitar"&&method==="POST"){
+      if(!mailConfigured())return failure(origin,503,"O envio de recuperação ainda não está disponível. Tente mais tarde.");
+      const b=await parseBody(request),email=mailAddress(b.email);
+      if(!email)return failure(origin,400,"Digite um e-mail válido.");
+      // Pilot quota limits mail abuse; independent from normal login attempts.
+      if(!await loginLimiter("reset:global"))return failure(origin,429,"Muitas solicitações. Tente em 15 minutos.");
+      if(await loginLimiter("reset:request:"+email)){
+        const work=issueRecovery(email).catch(()=>console.error("Password recovery delivery failed"));
+        // Respond uniformly without revealing whether the email is registered.
+        const runtime=(globalThis as unknown as {EdgeRuntime?:{waitUntil(p:Promise<unknown>):void}}).EdgeRuntime;
+        if(runtime?.waitUntil)runtime.waitUntil(work);else await work;
+      }
+      return respond(origin,202,{mensagem:"Se houver uma conta elegível, enviaremos um código ao e-mail informado. Confira também o spam."});
+    }
+    if(path==="/usuarios/senha/redefinir"&&method==="POST"){
+      const b=await parseBody(request),email=mailAddress(b.email);
+      const code=typeof b.codigo==="string"?b.codigo.trim():"";
+      const password=typeof b.senha==="string"?b.senha.trim():"";
+      if(!email||!/^[A-Za-z0-9_-]{16}$/.test(code)||password.length<8||encoder.encode(password).length>72)
+        return failure(origin,400,"Confira o código e use uma senha de 8 caracteres ou mais (até 72 bytes).");
+      if(!await loginLimiter("reset:confirm:"+email))return failure(origin,429,"Muitas tentativas. Tente em 15 minutos.");
+      const codeHash=await hash("fluir-reset:"+email+":"+code);
+      const {data,error}=await admin.rpc("fluir_password_recovery_consume",{p_email:email,p_hash:codeHash,p_password_hash:await bcrypt.hash(password,11)});
+      if(error)return failure(origin,503,"Não foi possível redefinir a senha agora.");
+      if(data!==true)return failure(origin,400,"Código inválido, expirado ou já utilizado.");
+      return respond(origin,200,{mensagem:"Senha redefinida. Entre novamente com sua nova senha."});
+    }
     if(path==="/usuarios/login"&&method==="POST") {
       const b=await parseBody(request);const email=cleanEmail(b.email);
       if(!email || typeof b.senha!=="string" || b.senha.length>128)return failure(origin,400,"E-mail ou senha inválidos.");
       if(!await loginLimiter(email))return failure(origin,429,"Muitas tentativas. Aguarde 15 minutos.");
       const {data:u}=await admin.from("usuarios").select("id,nome,email,senha").eq("email",email).maybeSingle();
       if(!u || !await bcrypt.compare(b.senha,u.senha))return failure(origin,401,"E-mail ou senha inválidos.");
-      return await issueSession(u,origin);
+      return await issueSession(u,origin,request);
     }
     if(path==="/usuarios/cadastro"&&method==="POST"){
       const b=await parseBody(request);const email=cleanEmail(b.email);const name=String(b.nome||"").trim();
@@ -227,7 +323,7 @@ Deno.serve(async request=>{
         .insert({nome:name,email,senha:hashed}).select("id,nome,email").single();
       if(error)return failure(origin,error.code==="23505"?409:503,
         error.code==="23505"?"Este e-mail já está cadastrado.":"Não foi possível criar a conta.");
-      return await issueSession(u,origin);
+      return await issueSession(u,origin,request);
     }
     if(path==="/usuarios/google"&&method==="POST"){
       if(!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"))return failure(origin,503,"Login Google ainda não configurado.");
@@ -244,18 +340,60 @@ Deno.serve(async request=>{
         if(error||!newUser)return failure(origin,503,"Não foi possível criar o acesso Google.");
         u=newUser;
       }
-      return await issueSession(u,origin,"google");
+      return await issueSession(u,origin,request,"google");
     }
     const user=await currentUser(request);
     if(!user)return failure(origin,401,"Sessão inválida ou expirada.");
+    // The legacy web client uses random session tokens backed by database rows.
+    // Never expose a bearer token or its stored hash in session listings.
+    if(path==="/conta/seguranca"&&method==="GET"){
+      const {data:account,error}=await admin.from("usuarios").select("id,nome,email,google_sub").eq("id",user.id).single();
+      if(error||!account)return failure(origin,503,"Account unavailable.");
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      const ownHash=await hash(token);
+      const sessions=await admin.from("sessoes_login").select("token_hash,criado_em,expira_em,dispositivo,ultimo_acesso")
+        .eq("usuario_id",user.id).gt("expira_em",new Date().toISOString()).order("criado_em",{ascending:false});
+      if(sessions.error)return failure(origin,503,"Sessions unavailable.");
+      const list=await Promise.all((sessions.data||[]).map(async row=>({
+        id:await hash("public-session:"+row.token_hash), atual:row.token_hash===ownHash,
+        criadoEm:row.criado_em, expiraEm:row.expira_em, dispositivo:row.dispositivo||null, ultimoAcesso:row.ultimo_acesso||null
+      })));
+      return respond(origin,200,{google:{vinculado:!!account.google_sub,nome:account.nome,email:account.email},sessoes:list,doisFatores:false});
+    }
+    if(path==="/conta/logout"&&method==="POST"){
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      if(!/^[A-Za-z0-9_-]{40,100}$/.test(token))return failure(origin,400,"Unsupported session type.");
+      const {error}=await admin.from("sessoes_login").delete().eq("usuario_id",user.id).eq("token_hash",await hash(token));
+      if(error)return failure(origin,503,"Unable to revoke session.");
+      return respond(origin,200,{encerrada:true});
+    }
+    const revokeSession=/^\/conta\/sessoes\/([a-f0-9]{64})$/.exec(path);
+    if(revokeSession&&method==="DELETE"){
+      const rows=await admin.from("sessoes_login").select("token_hash").eq("usuario_id",user.id).gt("expira_em",new Date().toISOString());
+      if(rows.error)return failure(origin,503,"Sessions unavailable.");
+      for(const row of rows.data||[]){
+        if(await hash("public-session:"+row.token_hash)!==revokeSession[1])continue;
+        const {error}=await admin.from("sessoes_login").delete().eq("usuario_id",user.id).eq("token_hash",row.token_hash);
+        if(error)return failure(origin,503,"Unable to revoke session.");
+        return respond(origin,200,{encerrada:true});
+      }
+      return failure(origin,404,"Session not found.");
+    }
     if(path==="/usuarios/google/vincular"&&method==="POST"){
       const b=await parseBody(request),g=await googleIdentity(b.idToken);
       if(!g || g.email!==user.email.toLowerCase())return failure(origin,403,"Conta Google não corresponde ao seu e-mail.");
       const {data:existing}=await admin.from("usuarios").select("id").eq("google_sub",g.sub).maybeSingle();
       if(existing&&existing.id!==user.id)return failure(origin,409,"Conta Google já vinculada a outro usuário.");
-      const {error}=await admin.from("usuarios").update({google_sub:g.sub}).eq("id",user.id);
+      const {data:owner, error:ownerError}=await admin.from("usuarios").select("google_sub").eq("id",user.id).single();
+      if(ownerError||!owner)return failure(origin,503,"Account unavailable.");
+      if(owner.google_sub&&owner.google_sub!==g.sub)return failure(origin,409,"Já existe outra identidade Google vinculada a esta conta.");
+      const change=admin.from("usuarios").update({google_sub:g.sub}).eq("id",user.id);
+      const result=await (owner.google_sub===null?change.is("google_sub",null):change.eq("google_sub",owner.google_sub)).select("id").maybeSingle();
+      const error=result.error;
+      if(!error&&!result.data)return failure(origin,409,"Google link changed; retry.");
       if(error)return failure(origin,503,"Não foi possível vincular o Google.");
-      return await issueSession(user,origin,"google");
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      return respond(origin,200,{id:user.id,nome:user.nome,email:user.email,token,provedor:"google",emailVerificado:true});
     }
     const onboardingGet=/^\/onboarding\/usuario\/(\d+)$/.exec(path);
     if(onboardingGet && method==="GET"){
@@ -318,6 +456,13 @@ Deno.serve(async request=>{
            typeof item.text!=="string" || !item.text.trim() || item.text.length>800)
           return failure(origin,400,"Histórico de conversa inválido.");
       }
+      let zone = "America/Sao_Paulo";
+      if(typeof b.fusoHorario==="string" && b.fusoHorario.length<=80){
+        try{new Intl.DateTimeFormat("en-US",{timeZone:b.fusoHorario});zone=b.fusoHorario}catch{/* fallback */}
+      }
+      const dateParts = new Intl.DateTimeFormat("en-CA",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit",weekday:"long"}).formatToParts(new Date());
+      const datePart = (type:string)=>dateParts.find(p=>p.type===type)?.value||"";
+      const today = datePart("year")+"-"+datePart("month")+"-"+datePart("day");
       const key=Deno.env.get("FLUIR_GEMINI_API_KEY")||"";
       if(!key)return failure(origin,503,"Gemini ainda não configurado no Supabase.");
       const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-3.5-flash-lite";
@@ -329,10 +474,18 @@ Deno.serve(async request=>{
         encodeURIComponent(model)+":generateContent",{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
-            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil com gentileza, clareza e privacidade. Você não possui autorização nem ferramentas para editar tarefas, registros ou dados de contas. Não afirme ter executado ações, salvado registros ou alterado informações."}]},
+            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda no idioma do usuário, com clareza e privacidade. Quando a mensagem pedir explicitamente CRIAR uma tarefa, hábito ou entrada no diário, proponha UMA ação estruturada, para confirmação do usuário; nunca diga que salvou algo. Para hábitos informe os dias da semana (0 domingo até 6 sábado, todos os sete se diário); se a frequência for incerta, pergunte. Para tarefas informe título, descrição opcional, data ISO YYYY-MM-DD e hora HH:mm se especificada. Para diário preserve o sentido do relato em texto e título curto. Se faltarem detalhes essenciais ou o usuário só quiser conversar, use tipo nenhum. Não invente datas, não proponha apagar, editar, consultar ou expor registros. Responda em JSON conforme o esquema. A data local atual do usuário é "+today+" ("+datePart("weekday")+", fuso "+zone+"). Use essa referência para hoje, amanhã e dias da semana. Se o pedido não indicar data, deixe data vazia para o formulário sugerir hoje. Não invente ano ou mês."}]},
             contents:[...history.map((item:{role:"user"|"model";text:string})=>({role:item.role,parts:[{text:item.text.trim()}]})),
               {role:"user",parts:[{text:b.mensagem.trim()}]}],
-            generationConfig:{maxOutputTokens:400,temperature:0.4}
+            generationConfig:{maxOutputTokens:1200,temperature:0.3,responseMimeType:"application/json",responseJsonSchema:{
+              type:"object",properties:{
+                resposta:{type:"string"},acao:{type:"object",properties:{
+                  tipo:{type:"string",enum:["nenhum","tarefa","habito","diario"]},
+                  titulo:{type:"string"},texto:{type:"string"},data:{type:"string"},hora:{type:"string"},
+                  dias:{type:"array",items:{type:"integer",minimum:0,maximum:6}}
+                },required:["tipo"]}
+              },required:["resposta","acao"]
+            }}
           }),signal:AbortSignal.timeout(15000)
       });
       if(res.status===429)return failure(origin,429,"O limite do provedor de IA foi atingido. Tente novamente mais tarde.");
@@ -343,8 +496,23 @@ Deno.serve(async request=>{
       const generated=await res.json();
       const reply=(generated?.candidates?.[0]?.content?.parts||[])
         .map((part:{text?:string})=>part.text||"").join("").trim();
-      return reply?respond(origin,200,{resposta:reply.slice(0,2500)})
-        :failure(origin,503,"Não foi possível obter uma resposta.");
+      if(!reply)return failure(origin,503,"Não foi possível obter uma resposta.");
+      let output;
+      try{output=JSON.parse(reply)}catch{return failure(origin,503,"A IA retornou um formato inesperado.")}
+      if(typeof output?.resposta!=="string"||!output.resposta.trim())return failure(origin,503,"Resposta inválida.");
+      const candidate=output.acao;
+      const titulo=typeof candidate?.titulo==="string"?candidate.titulo.trim().slice(0,150):"";
+      const texto=typeof candidate?.texto==="string"?candidate.texto.trim().slice(0,1200):"";
+      const data=typeof candidate?.data==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(candidate.data)&&!isNaN(Date.parse(candidate.data))&&new Date(candidate.data+"T00:00:00Z").toISOString().slice(0,10)===candidate.data?candidate.data:"";
+      const hora=typeof candidate?.hora==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(candidate.hora)?candidate.hora:"";
+      const dias=Array.isArray(candidate?.dias)?[...new Set<number>(candidate.dias.filter((d:unknown)=>Number.isInteger(d)&&Number(d)>=0&&Number(d)<=6))].sort():[];
+      let acao=null;
+      if(titulo.length>=2){
+        if(candidate.tipo==="tarefa")acao={tipo:"tarefa",titulo,texto:texto.slice(0,500),data,hora};
+        if(candidate.tipo==="habito"&&dias.length)acao={tipo:"habito",titulo,texto:texto.slice(0,500),dias};
+        if(candidate.tipo==="diario"&&texto.length>=5)acao={tipo:"diario",titulo,texto};
+      }
+      return respond(origin,200,{resposta:output.resposta.slice(0,2500),acao});
     }
     return failure(origin,404,"Operação não encontrada.");
   } catch(e) {

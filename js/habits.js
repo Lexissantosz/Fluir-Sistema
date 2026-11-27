@@ -268,7 +268,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -279,7 +279,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -328,10 +328,10 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadHabits() {
-  const savedHabits = localStorage.getItem("fluir-habits");
+  const savedHabits = FluirStorage.getItem("fluir-habits");
 
   if (!savedHabits) {
-    habits = [...defaultHabits];
+    habits = [];
     saveHabits();
     return;
   }
@@ -340,13 +340,13 @@ function loadHabits() {
     habits = JSON.parse(savedHabits);
   } catch (error) {
     console.warn("Erro ao ler hábitos salvos:", error);
-    habits = [...defaultHabits];
+    habits = [];
     saveHabits();
   }
 }
 
 function saveHabits() {
-  localStorage.setItem("fluir-habits", JSON.stringify(habits));
+  FluirStorage.setItem("fluir-habits", JSON.stringify(habits));
 }
 
 
@@ -556,7 +556,7 @@ function updateHabitListSubtitle(visibleCount) {
   }
 
   const subtitles = {
-    all: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} ativo${visibleCount === 1 ? "" : "s"}.`,
+    all: window.FluirI18n.fmt(visibleCount===1?"{n} hábito ativo.":"{n} hábitos ativos.",{n:visibleCount}),
     pending: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"} hoje.`,
     completed: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} concluído${visibleCount === 1 ? "" : "s"} hoje.`,
     highStreak: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} com boa sequência.`
@@ -628,7 +628,7 @@ function updateSidebarProgress() {
 
   if (sidebarHabitText) {
     if (total === 0) {
-      sidebarHabitText.textContent = "Nenhum hábito registrado ainda.";
+      sidebarHabitText.textContent = window.FluirI18n.t("Nenhum hábito registrado ainda.");
       return;
     }
 
@@ -655,7 +655,7 @@ function renderFocusMiniList() {
 
   if (pendingHabits.length === 0) {
     if (focusRecommendation) {
-      focusRecommendation.textContent = "Você concluiu seus hábitos de hoje. Continue com calma.";
+      focusRecommendation.textContent = window.FluirI18n.t("Você concluiu seus hábitos de hoje. Continue com calma.");
     }
 
     focusMiniList.innerHTML = `
@@ -669,7 +669,7 @@ function renderFocusMiniList() {
   }
 
   if (focusRecommendation) {
-    focusRecommendation.textContent = "Comece pelos hábitos que ajudam a manter sua sequência.";
+    focusRecommendation.textContent = window.FluirI18n.t("Comece pelos hábitos que ajudam a manter sua sequência.");
   }
 
   pendingHabits.forEach((habit) => {
@@ -720,7 +720,7 @@ function renderWeekGrid() {
 
   if (weekText) {
     if (total === 0) {
-      weekText.textContent = "Crie seu primeiro hábito para começar a acompanhar sua semana.";
+      weekText.textContent = window.FluirI18n.t("Crie seu primeiro hábito para começar a acompanhar sua semana.");
       return;
     }
 
@@ -749,7 +749,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma ação ainda</strong>
+          <strong>${window.FluirI18n.t("Nenhuma ação ainda")}</strong>
           Crie seu primeiro hábito.
         </p>
       </div>
@@ -784,7 +784,7 @@ function showHabitFormMessage(message, type = "error") {
     return;
   }
 
-  habitFormMessage.textContent = message;
+  habitFormMessage.textContent = window.FluirI18n.t(message);
   habitFormMessage.className = `habit-form-message show ${type}`;
 }
 
@@ -925,7 +925,7 @@ function saveNewHabit() {
     }
 
     if (habitDaysFeedback) {
-      habitDaysFeedback.textContent = "Selecione ao menos um dia da semana.";
+      habitDaysFeedback.textContent = window.FluirI18n.t("Selecione ao menos um dia da semana.");
     }
 
     showHabitFormMessage("Selecione os dias em que o hábito vai se repetir.");
@@ -1246,14 +1246,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

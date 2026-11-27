@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <!-- Configurações básicas da página -->
@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="../css/mobile.css" />
   <link rel="stylesheet" href="../css/icons.css" />
   <link rel="stylesheet" href="../css/assistant.css" />
+  <script src="../js/account-storage.js"></script>
 </head>
 
 <body>
@@ -266,52 +267,7 @@
             <h3><span class="module-icon icon-timeline" aria-hidden="true"></span> Timeline</h3>
           </div>
 
-          <div class="timeline-list">
-            <div class="timeline-item">
-              <time>08:00</time>
-
-              <div>
-                <strong>Acordei</strong>
-                <p>Dormi bem e me sinto disposto.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>09:15</time>
-
-              <div>
-                <strong>Café da manhã</strong>
-                <p>Aveia com frutas e café.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>11:30</time>
-
-              <div>
-                <strong>Reunião de alinhamento</strong>
-                <p>Projeto Fluir — sprint semanal.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>15:45</time>
-
-              <div>
-                <strong>Caminhada</strong>
-                <p>20 minutos ao ar livre.</p>
-              </div>
-            </div>
-
-            <div class="timeline-item">
-              <time>21:30</time>
-
-              <div>
-                <strong>Diário emocional</strong>
-                <p>Reflexão sobre o dia.</p>
-              </div>
-            </div>
-          </div>
+          <div class="timeline-list"><p class="empty-dashboard-mini">Nenhum evento registrado ainda.</p></div>
 
           <a class="panel-link" href="timeline.html">
             Ver linha do tempo completa →
@@ -330,31 +286,7 @@
             <a class="small-btn" href="habits.html">Ver todos</a>
           </div>
 
-          <div class="habit-table">
-            <div class="habit-row">
-              <span>Meditar 10 min</span>
-              <p>● ● ● ● ○ ○ ●</p>
-              <strong>5/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Ler diariamente</span>
-              <p>● ● ● ● ● ○ ●</p>
-              <strong>6/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Treinar</span>
-              <p>● ● ● ○ ○ ○ ●</p>
-              <strong>3/7</strong>
-            </div>
-
-            <div class="habit-row">
-              <span>Beber 2L de água</span>
-              <p>● ● ● ● ○ ● ●</p>
-              <strong>5/7</strong>
-            </div>
-          </div>
+          <div class="habit-table"><p class="empty-dashboard-mini">Nenhum hábito registrado ainda.</p></div>
         </article>
 
         <!-- Cards laterais -->
@@ -433,6 +365,8 @@
   </main>
 
   <!-- Catálogo compartilhado das áreas do Fluir -->
+  <script src="../js/i18n-dictionary.js"></script>
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
 
   <!-- Sidebar compartilhada -->
@@ -442,5 +376,6 @@
   <script src="../js/dashboard.js"></script>
   <script src="../js/mobile.js"></script>
   <script src="../js/assistant.js"></script>
+  <script src="../js/account-security.js"></script>
 </body>
 </html>

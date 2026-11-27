@@ -66,7 +66,7 @@ let activeFilter = "all";
 
 function getStorageJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -81,7 +81,7 @@ function getStorageJSON(key, fallback) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -120,7 +120,7 @@ function updateUserArea() {
   const name = getDisplayName();
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${name}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:name});
   }
 
   if (avatarBtn) {
@@ -433,7 +433,7 @@ function renderSummary(achievements) {
   const next = achievements.find((item) => !item.unlocked);
 
   if (nextAchievement) {
-    nextAchievement.textContent = next ? next.title : "Tudo liberado";
+    nextAchievement.textContent = window.FluirI18n.t(next ? next.title : "Tudo liberado");
   }
 
   if (featuredTitle && featuredText) {
@@ -486,8 +486,8 @@ function renderAchievements() {
 
         <div class="achievement-icon">${achievement.icon}</div>
 
-        <h3>${escapeHTML(achievement.title)}</h3>
-        <p>${escapeHTML(achievement.description)}</p>
+        <h3>${escapeHTML(window.FluirI18n.t(achievement.title))}</h3>
+        <p>${escapeHTML(window.FluirI18n.t(achievement.description))}</p>
 
         <div class="achievement-progress">
           <small>${Math.min(achievement.current, achievement.target)} de ${achievement.target}</small>
@@ -553,11 +553,11 @@ function openAchievementModal(achievement) {
   const percent = Math.round(achievement.progress * 100);
 
   if (modalSymbol) modalSymbol.textContent = achievement.icon;
-  if (modalTitle) modalTitle.textContent = achievement.title;
-  if (modalDescription) modalDescription.textContent = achievement.description;
+  if (modalTitle) modalTitle.textContent = window.FluirI18n.t(achievement.title);
+  if (modalDescription) modalDescription.textContent = window.FluirI18n.t(achievement.description);
 
   if (modalProgressText) {
-    modalProgressText.textContent = `${Math.min(achievement.current, achievement.target)} de ${achievement.target} concluído`;
+    modalProgressText.textContent = window.FluirI18n.fmt("{done} de {total} concluído",{done:Math.min(achievement.current,achievement.target),total:achievement.target});
   }
 
   if (modalProgressFill) {
@@ -664,14 +664,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

@@ -14,9 +14,12 @@
   >
 
   <link rel="stylesheet" href="./css/landing.css" />
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#f8f8f6">
+  <link rel="apple-touch-icon" href="./Assets/brand/fluir-touch-icon.png">
 </head>
 
-<body>
+<body class="landing-page">
   <header class="landing-header">
     <a href="index.html" class="brand">
       <div class="brand-icon">
@@ -48,19 +51,13 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <span class="tag">Web, mobile e desktop planejados</span>
-
         <h1>Organize sua rotina, seus hábitos e seu bem-estar em um só lugar.</h1>
 
-        <p>
-  O Fluir é uma plataforma de organização pessoal criada para reunir tarefas,
-  hábitos, hidratação, finanças, sono, perfil e bem-estar em um só ambiente,
-  com versão web e expansão planejada para aplicativos mobile e desktop.
-</p>
+        <p>Reúna tarefas, hábitos, saúde, finanças e registros pessoais em um espaço que se adapta à sua rotina. Comece pelo navegador ou instale a versão web no seu dispositivo.</p>
 
         <div class="hero-actions">
           <a href="html/login.html" class="primary-button">Acessar sistema</a>
-          <a href="#funcionalidades" class="secondary-button">Ver funcionalidades</a>
+          <a href="html/demo.html" class="secondary-button">Explorar demonstração</a>
         </div>
       </div>
 
@@ -72,6 +69,7 @@
             <span></span>
           </div>
 
+          <p class="mockup-caption">Visão ilustrativa do dashboard</p>
           <div class="mockup-grid">
             <article>
               <small>Tarefas</small>
@@ -97,56 +95,33 @@
       </div>
     </section>
 
-    <section class="section" id="sobre">
-      <div class="section-title">
-        <span>Sobre o projeto</span>
-        <h2>Um sistema para acompanhar a vida com mais clareza.</h2>
-      </div>
-
-      <p class="section-text">
-        O Fluir foi desenvolvido como um sistema de organização pessoal.
-        A proposta é centralizar recursos do dia a dia em uma interface limpa,
-        com versão web e adaptação para dispositivos móveis.
-      </p>
+    <section class="section about-section" id="sobre">
+      <div class="section-title"><span>Sobre o Fluir</span><h2>Seu dia, do seu jeito.</h2></div>
+      <p class="section-text">Escolha as áreas que fazem sentido para você. O Fluir reúne ferramentas de organização pessoal em uma interface limpa, com registros individuais e preferências personalizáveis.</p>
     </section>
-
     <section class="section" id="funcionalidades">
-      <div class="section-title">
-        <span>Funcionalidades</span>
-        <h2>O que o sistema oferece</h2>
+      <div class="section-title"><span>Funcionalidades</span><h2>Um espaço para cada parte da sua rotina.</h2></div>
+      <article class="assistant-feature">
+        <div><span class="feature-kicker">Assistente Fluir · Em validação</span><h3>Organize sua vida também por conversa.</h3><p>Com autorização, o assistente usa o Gemini para responder e propor tarefas, hábitos e entradas no diário. Você confere os detalhes antes de salvar.</p><a class="secondary-button" href="html/login.html">Conhecer o assistente</a></div>
+        <div class="assistant-example" aria-label="Exemplo ilustrativo de conversa"><span>Exemplo ilustrativo</span><p>Quero criar o hábito de ler todos os dias.</p><p>Proposta: leitura diária, de domingo a sábado. Confira antes de salvar.</p></div>
+      </article>
+      <div class="cards feature-cards">
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/layout-dashboard.svg" alt="" width="24" height="24"></span><h3>Dashboard</h3><p>Sua rotina em uma visão só, com atalhos e indicadores dos módulos ativados.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/history.svg" alt="" width="24" height="24"></span><h3>Timeline</h3><p>Acompanhe os acontecimentos registrados e filtre por data e categoria.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/list-check.svg" alt="" width="24" height="24"></span><h3>Tarefas</h3><p>Organize pendências, prioridades e horários de atividades.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/repeat-2.svg" alt="" width="24" height="24"></span><h3>Hábitos</h3><p>Escolha dias da semana e acompanhe sua constância.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/droplets.svg" alt="" width="24" height="24"></span><h3>Hidratação</h3><p>Registre a água consumida e acompanhe sua meta diária.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/moon-star.svg" alt="" width="24" height="24"></span><h3>Sono</h3><p>Registre noites de descanso, duração e qualidade do sono.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/wallet.svg" alt="" width="24" height="24"></span><h3>Finanças</h3><p>Organize entradas, despesas, dívidas e metas.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/notebook-pen.svg" alt="" width="24" height="24"></span><h3>Diário emocional</h3><p>Guarde pensamentos, sentimentos e registros de humor.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/apple.svg" alt="" width="24" height="24"></span><h3>Alimentação</h3><p>Registre refeições e acompanhe sua rotina alimentar.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/dumbbell.svg" alt="" width="24" height="24"></span><h3>Saúde física</h3><p>Registre treinos, sintomas, medidas e disposição.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/calendar-heart.svg" alt="" width="24" height="24"></span><h3>Ciclo menstrual</h3><p>Acompanhe registros do ciclo, sintomas e estimativas.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/paperclip.svg" alt="" width="24" height="24"></span><h3>Anexos</h3><p>Organize arquivos, notas, imagens e referências importantes.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/trophy.svg" alt="" width="24" height="24"></span><h3>Conquistas</h3><p>Visualize marcos e progresso da sua rotina.</p></article>
+        <article class="card feature-card"><span class="feature-icon"><img src="Assets/icons/navigation/settings.svg" alt="" width="24" height="24"></span><h3>Perfil e configurações</h3><p>Escolha os módulos, personalize a interface e gerencie suas sessões.</p></article>
       </div>
-
-      <div class="cards">
-        <article class="card">
-          <h3>Tarefas</h3>
-          <p>Criação e acompanhamento de atividades importantes da rotina.</p>
-        </article>
-
-        <article class="card">
-          <h3>Hábitos</h3>
-          <p>Controle de hábitos pessoais com foco em constância e progresso.</p>
-        </article>
-
-        <article class="card">
-          <h3>Hidratação</h3>
-          <p>Registro de consumo de água e acompanhamento diário.</p>
-        </article>
-
-        <article class="card">
-          <h3>Finanças</h3>
-          <p>Organização de entradas, saídas e metas financeiras.</p>
-        </article>
-
-        <article class="card">
-          <h3>Sono</h3>
-          <p>Acompanhamento da rotina de descanso e qualidade do sono.</p>
-        </article>
-
-        <article class="card">
-          <h3>Perfil</h3>
-          <p>Área de usuário com informações pessoais e preferências.</p>
-        </article>
-      </div>
+      <p class="feature-disclaimer">Recursos em evolução. Alguns registros ficam no navegador; sincronização completa, pagamentos e integrações adicionais ainda estão em desenvolvimento.</p>
     </section>
 
     <section class="section versions" id="versoes">
@@ -157,37 +132,42 @@
 
   <div class="version-grid">
     <article>
+      <span class="version-status">Disponível</span>
       <h3>Sistema Web</h3>
-      <p>
-        Versão acessível pelo navegador, ideal para uso em computadores,
-        notebooks, tablets e celulares, com acesso direto pela internet.
-      </p>
+      <p>Acesse o Fluir pelo navegador em computadores, tablets e celulares, sem instalar nada.</p>
+      <a class="version-action version-action-primary" href="html/login.html">Acessar o Fluir <span aria-hidden="true">↗</span></a>
     </article>
-
     <article>
+      <span class="version-status">APK nativo em homologação</span>
       <h3>App Android</h3>
-      <p>
-        Aplicativo mobile planejado para celulares Android, com interface
-        própria para uso diário no celular.
-      </p>
+      <p>Instale o aplicativo Android pelo arquivo APK fornecido pela equipe. A versão de testes ainda não está disponível para download público.</p>
+      <button class="version-action" type="button" disabled>Baixar APK · em validação</button>
+      <small class="version-note">Não é necessário instalar pelo menu do navegador.</small>
     </article>
-
     <article>
+      <span class="version-status">Versão web instalável</span>
       <h3>App iOS</h3>
-      <p>
-        Versão futura para iPhone, mantendo a mesma proposta do Fluir
-        em um aplicativo adaptado ao sistema iOS.
-      </p>
+      <p>Adicione o Fluir à Tela de Início do iPhone pelo Safari. Não precisa baixar um APK.</p>
+      <button class="version-action version-action-primary" type="button" data-install-platform="ios">Instalar no iPhone</button>
+      <small class="version-note">Aplicativo nativo ainda não publicado.</small>
     </article>
-
     <article>
-      <h3>Desktop Futuro</h3>
-      <p>
-        Versão planejada para computadores, com foco em uma experiência
-        mais completa para uso em tela grande.
-      </p>
+      <span class="version-status">Versão web instalável</span>
+      <h3>Desktop</h3>
+      <p>Abra o Fluir em uma janela própria no computador, pelo Chrome ou Edge.</p>
+      <button class="version-action version-action-primary" type="button" data-install-platform="desktop">Instalar no computador</button>
+      <button class="version-action" type="button" disabled>Baixar .exe · em validação</button>
     </article>
   </div>
+  <dialog id="platformInstallDialog" class="platform-install-dialog" aria-labelledby="platformInstallTitle">
+    <h3 id="platformInstallTitle"></h3>
+    <p id="platformInstallDescription"></p>
+    <ol id="platformInstallSteps"></ol>
+    <div class="platform-dialog-actions">
+      <a class="version-action version-action-primary" href="html/login.html">Abrir Fluir</a>
+      <form method="dialog"><button class="version-action" type="submit">Fechar</button></form>
+    </div>
+  </dialog>
 </section>
 
     <section class="cta">
@@ -199,9 +179,11 @@
 
   <footer>
     <p>Fluir — Sistema de Organização da Vida</p>
-    <p><a href="html/privacidade.html">Política de Privacidade</a> · <a href="html/termos.html">Termos de Uso</a> · <a href="mailto:fluirsistema@gmail.com">Contato</a></p>
+    <p><a href="html/privacidade.html">Política de Privacidade</a> · <a href="html/termos.html">Termos de Uso</a> · <a href="html/contato.html">Contato</a></p>
   </footer>
 
   <script src="js/landing.js"></script>
+  <script src="js/platform-install.js"></script>
+<script src="js/pwa-register.js"></script>
 </body>
 </html>

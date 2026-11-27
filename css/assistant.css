@@ -48,3 +48,12 @@ body.dark .fluir-assistant-consent{color:#e1e1d9}
     visibility:hidden!important;pointer-events:none!important
   }
 }
+
+.fluir-assistant-consent[hidden]{display:none!important}.fluir-assistant-bubble>button{margin-top:8px;margin-right:6px}
+
+/* Botao de cancelar das propostas: contraste em tema claro e escuro. */
+.fluir-assistant-bubble .fluir-assistant-reset{color:#171817;background:#fff;border:1px solid #767872;font-size:13px;font-weight:700;padding:10px 14px;min-height:40px;margin-left:0}
+body.dark .fluir-assistant-bubble .fluir-assistant-reset{color:#fff;background:#252622;border-color:#a1a39c}
+.fluir-assistant-bubble .fluir-assistant-reset:focus-visible{outline:3px solid #879e9e;outline-offset:2px}
+
+.fluir-assistant-date-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:8px;margin:10px 0}.fluir-assistant-date-fields label{display:grid;gap:4px;min-width:0;font-size:12px;font-weight:700}.fluir-assistant-date-fields input{box-sizing:border-box;width:100%;min-width:0;padding:8px;border:1px solid #aaa;border-radius:8px;background:transparent;color:inherit;font:inherit}

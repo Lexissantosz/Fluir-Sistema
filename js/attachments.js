@@ -155,7 +155,7 @@ const ATTACHMENT_FILES_STORE = "files";
 function openAttachmentsDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(
-      ATTACHMENTS_DB_NAME,
+      FluirStorage.databaseName(ATTACHMENTS_DB_NAME),
       ATTACHMENTS_DB_VERSION
     );
 
@@ -429,7 +429,7 @@ function isValidImageReference(value) {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -451,7 +451,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -475,7 +475,7 @@ function applySavedTheme() {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -502,7 +502,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -521,7 +521,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -532,7 +532,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -581,7 +581,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadAttachments() {
-  const saved = localStorage.getItem("fluir-attachments");
+  const saved = FluirStorage.getItem("fluir-attachments");
 
   if (!saved) {
     attachments = [];
@@ -599,7 +599,7 @@ function loadAttachments() {
 }
 
 function saveAttachments() {
-  localStorage.setItem("fluir-attachments", JSON.stringify(attachments));
+  FluirStorage.setItem("fluir-attachments", JSON.stringify(attachments));
 }
 
 
@@ -608,11 +608,11 @@ function saveAttachments() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createAttachmentTimelineEvent(title, description) {
@@ -1246,11 +1246,11 @@ function updateEmptyState(visibleCount) {
   const content = emptyTexts[activeFilter] || emptyTexts.all;
 
   if (emptyStateTitle) {
-    emptyStateTitle.textContent = content.title;
+    emptyStateTitle.textContent = window.FluirI18n.t(content.title);
   }
 
   if (emptyStateText) {
-    emptyStateText.textContent = content.text;
+    emptyStateText.textContent = window.FluirI18n.t(content.text);
   }
 }
 
@@ -1301,7 +1301,7 @@ function updateSummaryCards() {
 
   if (sidebarAttachmentText) {
     if (total === 0) {
-      sidebarAttachmentText.textContent = "Nenhum anexo registrado ainda.";
+      sidebarAttachmentText.textContent = window.FluirI18n.t("Nenhum anexo registrado ainda.");
       return;
     }
 
@@ -1332,7 +1332,7 @@ function renderCategoryList() {
   if (entries.length === 0) {
     categoryList.innerHTML = `
       <div class="category-item">
-        <span>Nenhuma categoria</span>
+        <span>${window.FluirI18n.t("Nenhuma categoria")}</span>
         <strong>0</strong>
       </div>
     `;
@@ -1407,7 +1407,7 @@ function showAttachmentFormMessage(message, type = "error") {
     return;
   }
 
-  attachmentFormMessage.textContent = message;
+  attachmentFormMessage.textContent = window.FluirI18n.t(message);
   attachmentFormMessage.className = `attachment-form-message show ${type}`;
 }
 
@@ -1478,7 +1478,7 @@ function showAttachmentUploadMessage(message) {
     return;
   }
 
-  attachmentUploadMessage.textContent = message;
+  attachmentUploadMessage.textContent = window.FluirI18n.t(message);
   attachmentUploadMessage.classList.add("show");
 }
 
@@ -1690,15 +1690,15 @@ function updateAttachmentTypeFields() {
 
   if (type === "file") {
     if (attachmentUploadLabel) {
-      attachmentUploadLabel.textContent = "Arquivo";
+      attachmentUploadLabel.textContent = window.FluirI18n.t("Arquivo");
     }
 
     if (attachmentDropzoneTitle) {
-      attachmentDropzoneTitle.textContent = "Clique para selecionar";
+      attachmentDropzoneTitle.textContent = window.FluirI18n.t("Clique para selecionar");
     }
 
     if (attachmentDropzoneText) {
-      attachmentDropzoneText.textContent = "ou arraste o arquivo até aqui";
+      attachmentDropzoneText.textContent = window.FluirI18n.t("ou arraste o arquivo até aqui");
     }
 
     if (attachmentFileInput) {
@@ -1709,20 +1709,20 @@ function updateAttachmentTypeFields() {
 
     if (attachmentAcceptedTypes) {
       attachmentAcceptedTypes.textContent =
-       "Aceitos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT, RTF, ODT, ODS, PPT, PPTX, ZIP, RAR e 7Z";
+       window.FluirI18n.t("Aceitos: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT, RTF, ODT, ODS, PPT, PPTX, ZIP, RAR e 7Z");
   }
 
   if (type === "image") {
     if (attachmentUploadLabel) {
-      attachmentUploadLabel.textContent = "Imagem";
+      attachmentUploadLabel.textContent = window.FluirI18n.t("Imagem");
     }
 
     if (attachmentDropzoneTitle) {
-      attachmentDropzoneTitle.textContent = "Clique para selecionar uma imagem";
+      attachmentDropzoneTitle.textContent = window.FluirI18n.t("Clique para selecionar uma imagem");
     }
 
     if (attachmentDropzoneText) {
-      attachmentDropzoneText.textContent = "ou arraste a imagem até aqui";
+      attachmentDropzoneText.textContent = window.FluirI18n.t("ou arraste a imagem até aqui");
     }
 
     if (attachmentFileInput) {
@@ -1731,7 +1731,7 @@ function updateAttachmentTypeFields() {
 
     if (attachmentAcceptedTypes) {
       attachmentAcceptedTypes.textContent =
-        "Aceitos: PNG, JPG, JPEG, GIF, WEBP e SVG";
+        window.FluirI18n.t("Aceitos: PNG, JPG, JPEG, GIF, WEBP e SVG");
     }
   }
 }
@@ -1781,7 +1781,7 @@ function openAttachmentModal(attachment = null) {
     }
 
     if (saveAttachmentBtn) {
-      saveAttachmentBtn.textContent = "Salvar alterações";
+      saveAttachmentBtn.textContent = window.FluirI18n.t("Salvar alterações");
     }
   } else {
   if (attachmentTypeSelect) {
@@ -1789,7 +1789,7 @@ function openAttachmentModal(attachment = null) {
   }
 
   if (saveAttachmentBtn) {
-    saveAttachmentBtn.textContent = "Salvar anexo";
+    saveAttachmentBtn.textContent = window.FluirI18n.t("Salvar anexo");
   }
 }
 
@@ -2511,14 +2511,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

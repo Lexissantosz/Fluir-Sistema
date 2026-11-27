@@ -70,7 +70,7 @@ const profileFormMessage = document.getElementById("profileFormMessage");
 
 function getStorageJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -78,7 +78,7 @@ function getStorageJSON(key, fallback) {
 }
 
 function saveStorageJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  FluirStorage.setItem(key, JSON.stringify(value));
 }
 
 
@@ -88,7 +88,7 @@ function saveStorageJSON(key, value) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -98,7 +98,7 @@ function applySavedTheme() {
     }
 
     if (themePreference) {
-      themePreference.textContent = "Escuro";
+      themePreference.textContent = window.FluirI18n.t("Escuro");
     }
   } else {
     body.classList.remove("dark");
@@ -108,7 +108,7 @@ function applySavedTheme() {
     }
 
     if (themePreference) {
-      themePreference.textContent = "Claro";
+      themePreference.textContent = window.FluirI18n.t("Claro");
     }
   }
 }
@@ -119,7 +119,7 @@ if (themeBtn) {
 
     const isDarkMode = body.classList.contains("dark");
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
 
     applySavedTheme();
   });
@@ -195,7 +195,7 @@ function renderProfile() {
   const initial = getInitial(displayName);
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (profileName) {
@@ -207,7 +207,7 @@ function renderProfile() {
   }
 
   if (profilePhrase) {
-    profilePhrase.textContent = "Um dia de cada vez, com calma e clareza.";
+    profilePhrase.textContent = window.FluirI18n.t("Um dia de cada vez, com calma e clareza.");
   }
 
   if (profileInitial) {
@@ -224,9 +224,11 @@ function renderProfile() {
   if (infoName) infoName.textContent = user.name;
   if (infoEmail) infoEmail.textContent = user.email;
   if (infoNickname) infoNickname.textContent = user.nickname;
-  if (infoPronouns) infoPronouns.textContent = user.pronouns;
-  if (infoAge) infoAge.textContent = user.age;
-  if (infoTone) infoTone.textContent = formatTone(user.tone);
+  if (infoPronouns) infoPronouns.textContent = user.pronouns === "Não informado" ? window.FluirI18n.t("Não informado") : user.pronouns;
+  if (infoAge) infoAge.textContent = user.age === "Não informado" ? window.FluirI18n.t("Não informado") : user.age;
+  if (infoTone) infoTone.textContent = window.FluirI18n.t(formatTone(user.tone));
+  const languageLabel = document.getElementById("profileLanguage");
+  if (languageLabel) languageLabel.textContent = ({"pt-BR":"Português (Brasil)","en-US":"English",es:"Español"})[window.FluirI18n.language] || "Português (Brasil)";
 
   if (aboutText) {
     aboutText.textContent = profile.about;
@@ -322,7 +324,7 @@ function renderRecentActivity() {
   if (!activityList) return;
 
   if (!events.length) {
-    activityList.innerHTML = "<p>Nenhuma atividade recente encontrada.</p>";
+    activityList.innerHTML = "<p>"+window.FluirI18n.t("Nenhuma atividade recente encontrada.")+"</p>";
     return;
   }
 
@@ -415,7 +417,7 @@ function saveProfileChanges() {
 function showProfileMessage(message) {
   if (!profileFormMessage) return;
 
-  profileFormMessage.textContent = message;
+  profileFormMessage.textContent = window.FluirI18n.t(message);
 }
 
 function clearProfileMessage() {

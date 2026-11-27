@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="../css/mobile.css" />
   <link rel="stylesheet" href="../css/icons.css" />
   <link rel="stylesheet" href="../css/assistant.css" />
+  <script src="../js/account-storage.js"></script>
 </head>
 
 <body>
@@ -184,8 +185,8 @@
         </div>
 
         <div class="timeline-actions">
-          <button class="date-btn" type="button" id="timelinePeriodBtn" aria-pressed="false">
-            <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> 20 — 26 de maio
+          <button class="date-btn" type="button" id="timelinePeriodBtn" aria-label="Alterar período da timeline">
+            <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> <span id="timelinePeriodLabel">Todos os dias</span>
           </button>
 
           <button class="primary-btn" type="button" id="newEventBtn">
@@ -225,205 +226,7 @@
           <!-- ===================================================== -->
           <!-- DIA: HOJE -->
           <!-- ===================================================== -->
-          <div class="timeline-day">
-            <h4>Hoje, 24 de maio</h4>
-
-            <div class="event-list">
-
-              <div class="event-item" data-type="sleep">
-                <time>06:00</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">☼</div>
-
-                <div class="event-content">
-                  <strong>Acordei</strong>
-                  <p>Início de um novo dia. Respirei fundo e agradeci.</p>
-                </div>
-
-                <span class="event-tag">Sono</span>
-              </div>
-
-              <div class="event-item" data-type="health">
-                <time>06:15</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">☕</div>
-
-                <div class="event-content">
-                  <strong>Café da manhã</strong>
-                  <p>Aveia com frutas e café.</p>
-                </div>
-
-                <span class="event-tag">Saúde</span>
-              </div>
-
-              <div class="event-item" data-type="tasks">
-                <time>08:30</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">✓</div>
-
-                <div class="event-content">
-                  <strong>Tarefa concluída</strong>
-                  <p>Revisar proposta do projeto.</p>
-                </div>
-
-                <span class="event-tag">Tarefas</span>
-              </div>
-
-              <div class="event-item" data-type="health">
-                <time>12:30</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">✦</div>
-
-                <div class="event-content">
-                  <strong>Treino de força</strong>
-                  <p>Treino finalizado.</p>
-                </div>
-
-                <span class="event-tag">Saúde</span>
-              </div>
-
-              <div class="event-item" data-type="health">
-                <time>15:45</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">♢</div>
-
-                <div class="event-content">
-                  <strong>1250ml de água</strong>
-                  <p>Meta diária alcançada.</p>
-                </div>
-
-                <span class="event-tag">Saúde</span>
-              </div>
-
-              <div class="event-item" data-type="diary">
-                <time>21:30</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">▤</div>
-
-                <div class="event-content">
-                  <strong>Entrada no diário</strong>
-                  <p>Reflexão sobre o dia.</p>
-                </div>
-
-                <span class="event-tag">Diário</span>
-              </div>
-
-              <div class="event-item" data-type="attachments">
-                <time>22:10</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">⌁</div>
-
-                <div class="event-content">
-                  <strong>Anexo salvo</strong>
-                  <p>Contrato do cliente.pdf</p>
-                </div>
-
-                <span class="event-tag">Anexos</span>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ===================================================== -->
-          <!-- DIA: ONTEM -->
-          <!-- ===================================================== -->
-          <div class="timeline-day">
-            <h4>Ontem, 23 de maio</h4>
-
-            <div class="event-list">
-
-              <div class="event-item" data-type="tasks">
-                <time>09:00</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">✓</div>
-
-                <div class="event-content">
-                  <strong>Tarefa concluída</strong>
-                  <p>Estudar capítulo 4 — Marketing.</p>
-                </div>
-
-                <span class="event-tag">Tarefas</span>
-              </div>
-
-              <div class="event-item" data-type="health">
-                <time>14:00</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">♢</div>
-
-                <div class="event-content">
-                  <strong>1000ml de água</strong>
-                  <p>Continuei me hidratando.</p>
-                </div>
-
-                <span class="event-tag">Saúde</span>
-              </div>
-
-              <div class="event-item" data-type="finances">
-                <time>19:20</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">$</div>
-
-                <div class="event-content">
-                  <strong>Pagamento recebido</strong>
-                  <p>Cliente Projeto Alfa.</p>
-                </div>
-
-                <span class="event-value">R$ 1.250</span>
-                <span class="event-tag">Finanças</span>
-              </div>
-
-              <div class="event-item" data-type="diary">
-                <time>21:45</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">▤</div>
-
-                <div class="event-content">
-                  <strong>Entrada no diário</strong>
-                  <p>Gratidão pelas pequenas vitórias.</p>
-                </div>
-
-                <span class="event-tag">Diário</span>
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ===================================================== -->
-          <!-- DIA: ESTA SEMANA -->
-          <!-- ===================================================== -->
-          <div class="timeline-day">
-            <h4>Esta semana</h4>
-
-            <div class="event-list">
-
-              <div class="event-item" data-type="tasks">
-                <time>22/05</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">✓</div>
-
-                <div class="event-content">
-                  <strong>Tarefa concluída</strong>
-                  <p>Enviar relatório semanal.</p>
-                </div>
-
-                <span class="event-tag">Tarefas</span>
-              </div>
-
-              <div class="event-item" data-type="attachments">
-                <time>21/05</time>
-                <span class="event-dot"></span>
-                <div class="event-icon">⌁</div>
-
-                <div class="event-content">
-                  <strong>Anexo salvo</strong>
-                  <p>Relatório financeiro Q1.xlsx</p>
-                </div>
-
-                <span class="event-tag">Anexos</span>
-              </div>
-
-            </div>
-          </div>
+          <p id="timelineEmptyState" class="reminder-empty">Nenhum evento registrado ainda.</p>
 
           <button class="load-more-btn" id="loadMoreEventsBtn" type="button">
             Carregar mais eventos ↓
@@ -443,35 +246,7 @@
             </div>
 
             <div class="stats-grid">
-              <div>
-                <strong>7</strong>
-                <span>eventos</span>
-              </div>
-
-              <div>
-                <strong>5</strong>
-                <span>tarefas</span>
-              </div>
-
-              <div>
-                <strong>5/5</strong>
-                <span>água</span>
-              </div>
-
-              <div>
-                <strong>1</strong>
-                <span>treino</span>
-              </div>
-
-              <div>
-                <strong>1</strong>
-                <span>entrada</span>
-              </div>
-
-              <div>
-                <strong>1</strong>
-                <span>anexo</span>
-              </div>
+              <div><strong id="timelineTodayCount">0</strong><span>eventos hoje</span></div>
             </div>
 
             <div class="quote-box">
@@ -508,32 +283,7 @@
               <h4>Humor recente</h4>
             </div>
 
-            <div class="mood-row">
-              <div>
-                <span>☹</span>
-                <small>20/05</small>
-              </div>
-
-              <div>
-                <span>☹</span>
-                <small>21/05</small>
-              </div>
-
-              <div>
-                <span>☻</span>
-                <small>22/05</small>
-              </div>
-
-              <div>
-                <span>☻</span>
-                <small>23/05</small>
-              </div>
-
-              <div class="active">
-                <span>☺</span>
-                <small>24/05</small>
-              </div>
-            </div>
+            <p class="reminder-empty">Nenhum histórico de humor disponível.</p>
 
             <p class="mood-question">Como você está hoje?</p>
 
@@ -612,6 +362,8 @@
     </div>
   </div>
 
+  <script src="../js/i18n-dictionary.js"></script>
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
   <!-- JS da Timeline -->
@@ -619,5 +371,6 @@
   <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
   <script src="../js/assistant.js"></script>
+  <script src="../js/account-security.js"></script>
 </body>
 </html>

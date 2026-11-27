@@ -60,7 +60,7 @@ const periodBtnLabel = document.getElementById("periodBtnLabel");
 const periodDropdown = document.getElementById("periodDropdown");
 const periodOptions = document.querySelectorAll(".period-option");
 
-let activePeriod = "today";
+let activePeriod = "all";
 
 const newTaskBtn = document.getElementById("newTaskBtn");
 const taskModal = document.getElementById("taskModal");
@@ -176,6 +176,7 @@ const defaultTasks = [
 // =====================================================
 
 let tasks = [];
+let taskLoadVersion = 0;
 let activeFilter = "all";
 
 
@@ -184,7 +185,7 @@ let activeFilter = "all";
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -276,7 +277,7 @@ function taskMatchesPeriod(task) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -303,7 +304,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -319,7 +320,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -330,7 +331,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -411,6 +412,7 @@ function mapTaskFromApi(task) {
 
 async function loadTasks() {
   const user = getCurrentUser();
+  const version = ++taskLoadVersion;
 
   if (!user?.id) {
     console.error("Usuário não encontrado na sessão.");
@@ -419,7 +421,7 @@ async function loadTasks() {
   }
 
   try {
-    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`, { headers: taskAuthHeaders() });
+    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`, { headers: taskAuthHeaders(), cache: "no-store" });
 
     if (!response.ok) {
       throw new Error("Não foi possível carregar as tarefas.");
@@ -427,10 +429,12 @@ async function loadTasks() {
 
     const data = await response.json();
 
+    if (version !== taskLoadVersion || getCurrentUser()?.token !== user.token) return;
+    if (!Array.isArray(data)) throw new Error("Invalid task list");
     tasks = data.map(mapTaskFromApi);
   } catch (error) {
+    if (version !== taskLoadVersion || getCurrentUser()?.token !== user.token) return;
     console.error("Erro ao carregar tarefas:", error);
-    tasks = [];
   }
 }
 
@@ -441,11 +445,11 @@ async function loadTasks() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createTaskTimelineEvent(title, description) {
@@ -472,7 +476,7 @@ function getPriorityLabel(priority) {
     high: "Alta"
   };
 
-  return labels[priority] || "Média";
+  return window.FluirI18n.t(labels[priority] || "Média");
 }
 
 function getPriorityClass(priority) {
@@ -583,22 +587,22 @@ function createTaskCard(task) {
     <input 
       type="checkbox" 
       ${task.completed ? "checked" : ""} 
-      aria-label="Marcar tarefa como concluída"
+      aria-label="${escapeHTML(window.FluirI18n.t("Marcar tarefa como concluída"))}"
     >
 
     <div class="task-info">
       <strong>${escapeHTML(task.title)}</strong>
-      <p>${escapeHTML(task.description || "Sem observação.")}</p>
+      <p>${escapeHTML(task.description || window.FluirI18n.t("Sem observação."))}</p>
 
       <div class="task-meta">
-        <span>${escapeHTML(task.category || "Pessoal")}</span>
+        <span>${escapeHTML(window.FluirI18n.t(task.category || "Pessoal"))}</span>
         <span class="${getPriorityClass(task.priority)}">${getPriorityLabel(task.priority)}</span>
-        <span>${task.time ? escapeHTML(task.time) : "Sem horário"}</span>
+        <span>${task.time ? escapeHTML(task.time) : window.FluirI18n.t("Sem horário")}</span>
       </div>
     </div>
 
     <div class="task-actions">
-      <button class="task-action-btn delete-task-btn" type="button" title="Excluir tarefa">
+      <button class="task-action-btn delete-task-btn" type="button" title="${escapeHTML(window.FluirI18n.t("Excluir tarefa"))}">
         ×
       </button>
     </div>
@@ -641,15 +645,14 @@ function updateTaskListSubtitle(visibleCount) {
   }
 
     const subtitles = {
-    all: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} no total.`,
-    pending: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"}.`,
-    completed: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} concluída${visibleCount === 1 ? "" : "s"}.`,
-    high: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} de alta prioridade.`,
-    today: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} para hoje.`,
-    overdue: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} atrasada${visibleCount === 1 ? "" : "s"}.`
+    all: ["{n} tarefa no total.","{n} tarefas no total."],
+    pending: ["{n} tarefa pendente.","{n} tarefas pendentes."],
+    completed: ["{n} tarefa concluída.","{n} tarefas concluídas."],
+    high: ["{n} tarefa de alta prioridade.","{n} tarefas de alta prioridade."],
+    today: ["{n} tarefa para hoje.","{n} tarefas para hoje."],
+    overdue: ["{n} tarefa atrasada.","{n} tarefas atrasadas."]
   };
-
-  taskListSubtitle.textContent = subtitles[activeFilter] || subtitles.all;
+  taskListSubtitle.textContent = window.FluirI18n.fmt((subtitles[activeFilter]||subtitles.all)[visibleCount===1?0:1],{n:visibleCount});
 }
 
 
@@ -658,10 +661,11 @@ function updateTaskListSubtitle(visibleCount) {
 // =====================================================
 
 function updateSummaryCards() {
-  const total = tasks.length;
-  const completed = tasks.filter((task) => task.completed).length;
-  const pending = tasks.filter((task) => !task.completed).length;
-  const high = tasks.filter((task) => task.priority === "high" && !task.completed).length;
+  const scopedTasks = tasks.filter(taskMatchesPeriod);
+  const total = scopedTasks.length;
+  const completed = scopedTasks.filter((task) => task.completed).length;
+  const pending = scopedTasks.filter((task) => !task.completed).length;
+  const high = scopedTasks.filter((task) => task.priority === "high" && !task.completed).length;
 
   if (totalTasks) {
     totalTasks.textContent = total;
@@ -701,11 +705,11 @@ function updateSidebarProgress() {
 
   if (sidebarTaskText) {
     if (total === 0) {
-      sidebarTaskText.textContent = "Nenhuma tarefa registrada ainda.";
+      sidebarTaskText.textContent = window.FluirI18n.t("Nenhuma tarefa registrada ainda.");
       return;
     }
 
-    sidebarTaskText.textContent = `${completed} de ${total} tarefa${total === 1 ? "" : "s"} concluída${completed === 1 ? "" : "s"}.`;
+    sidebarTaskText.textContent = window.FluirI18n.fmt(total===1?"{done} de {total} tarefa concluída.":"{done} de {total} tarefas concluídas.",{done:completed,total});
   }
 }
 
@@ -736,13 +740,13 @@ function renderFocusMiniList() {
 
   if (importantTasks.length === 0) {
     if (focusRecommendation) {
-      focusRecommendation.textContent = "Você concluiu suas pendências principais. Respire um pouco.";
+      focusRecommendation.textContent = window.FluirI18n.t("Você concluiu suas pendências principais. Respire um pouco.");
     }
 
     focusMiniList.innerHTML = `
       <div class="focus-mini-item">
         <strong>Nada urgente agora</strong>
-        <span>Ótimo momento para revisar ou descansar.</span>
+        <span>${window.FluirI18n.t("Ótimo momento para revisar ou descansar.")}</span>
       </div>
     `;
 
@@ -750,7 +754,7 @@ function renderFocusMiniList() {
   }
 
   if (focusRecommendation) {
-    focusRecommendation.textContent = "Comece pelas tarefas mais importantes ou mais sensíveis ao tempo.";
+    focusRecommendation.textContent = window.FluirI18n.t("Comece pelas tarefas mais importantes ou mais sensíveis ao tempo.");
   }
 
   importantTasks.forEach((task) => {
@@ -796,7 +800,7 @@ function renderCategoryList() {
   if (entries.length === 0) {
     categoryList.innerHTML = `
       <div class="category-item">
-        <span>Nenhuma categoria</span>
+        <span>${window.FluirI18n.t("Nenhuma categoria")}</span>
         <strong>0</strong>
       </div>
     `;
@@ -838,7 +842,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma ação ainda</strong>
+          <strong>${window.FluirI18n.t("Nenhuma ação ainda")}</strong>
           Crie sua primeira tarefa.
         </p>
       </div>
@@ -873,7 +877,7 @@ function showTaskFormMessage(message, type = "error") {
     return;
   }
 
-  taskFormMessage.textContent = message;
+  taskFormMessage.textContent = window.FluirI18n.t(message);
   taskFormMessage.className = `task-form-message show ${type}`;
 }
 
@@ -980,7 +984,7 @@ async function saveNewTask() {
   try {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = true;
-      saveTaskBtn.textContent = "Salvando...";
+      saveTaskBtn.textContent = window.FluirI18n.t("Salvando...");
     }
 
     const response = await fetch(TASKS_API_URL, {
@@ -1026,7 +1030,7 @@ async function saveNewTask() {
   } finally {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = false;
-      saveTaskBtn.textContent = "Salvar tarefa";
+      saveTaskBtn.textContent = window.FluirI18n.t("Salvar tarefa");
     }
   }
 }
@@ -1070,7 +1074,7 @@ async function toggleTaskCompleted(taskId) {
   } catch (error) {
     console.error("Erro ao atualizar tarefa:", error);
 
-    alert("Não foi possível atualizar a tarefa.");
+    alert(window.FluirI18n.t("Não foi possível atualizar a tarefa."));
 
     renderTasks();
   }
@@ -1113,7 +1117,7 @@ async function deleteTask(taskId) {
   } catch (error) {
     console.error("Erro ao excluir tarefa:", error);
 
-    alert("Não foi possível excluir a tarefa.");
+    alert(window.FluirI18n.t("Não foi possível excluir a tarefa."));
   }
 }
 
@@ -1175,7 +1179,7 @@ async function clearCompletedTasks() {
     renderTasks();
 
     alert(
-      "Não foi possível limpar todas as tarefas concluídas."
+      window.FluirI18n.t("Não foi possível limpar todas as tarefas concluídas.")
     );
   }
 }
@@ -1382,4 +1386,23 @@ async function initTasksPage() {
   }
 }
 
+window.addEventListener("fluir:task-created", event => {
+  const { task, userId } = event.detail || {};
+  if (!task?.id || String(getCurrentUser()?.id) !== String(userId)) return;
+  const created = mapTaskFromApi(task);
+  ++taskLoadVersion;
+  tasks = [created, ...tasks.filter(item => String(item.id) !== String(created.id))];
+  if (!taskMatchesFilter(created)) {
+    activeFilter = "all";
+    activePeriod = "all";
+    filterButtons.forEach(button => button.classList.toggle("active", button.dataset.filter === "all"));
+    periodOptions.forEach(option => {
+      const selected = option.dataset.period === "all";
+      option.classList.toggle("active", selected);
+      if (selected && periodBtnLabel) periodBtnLabel.textContent = option.textContent;
+    });
+  }
+  renderTasks();
+  loadTasks().then(renderTasks);
+});
 initTasksPage();

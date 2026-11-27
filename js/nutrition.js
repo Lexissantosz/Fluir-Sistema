@@ -203,7 +203,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -214,7 +214,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -263,7 +263,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadMeals() {
-  const saved = localStorage.getItem("fluir-nutrition");
+  const saved = FluirStorage.getItem("fluir-nutrition");
 
   if (!saved) {
     meals = [];
@@ -281,7 +281,7 @@ function loadMeals() {
 }
 
 function saveMeals() {
-  localStorage.setItem("fluir-nutrition", JSON.stringify(meals));
+  FluirStorage.setItem("fluir-nutrition", JSON.stringify(meals));
 }
 
 
@@ -458,7 +458,7 @@ function updateMealSubtitle(visibleCount) {
   }
 
   const texts = {
-    all: `${visibleCount} refeição${visibleCount === 1 ? "" : "ões"} no total.`,
+    all: window.FluirI18n.fmt(visibleCount===1?"{n} refeição no total.":"{n} refeições no total.",{n:visibleCount}),
     breakfast: `${visibleCount} registro${visibleCount === 1 ? "" : "s"} de café da manhã.`,
     lunch: `${visibleCount} registro${visibleCount === 1 ? "" : "s"} de almoço.`,
     dinner: `${visibleCount} registro${visibleCount === 1 ? "" : "s"} de jantar.`,
@@ -507,7 +507,7 @@ function updateSummaryCards() {
 
   if (sidebarNutritionText) {
     if (todayList.length === 0) {
-      sidebarNutritionText.textContent = "Nenhuma refeição registrada ainda.";
+      sidebarNutritionText.textContent = window.FluirI18n.t("Nenhuma refeição registrada ainda.");
       return;
     }
 
@@ -556,7 +556,7 @@ function renderWeekGrid() {
   const weekCount = meals.filter((meal) => weekKeys.includes(meal.date)).length;
 
   if (weekText) {
-    weekText.textContent = `${weekCount} refeição${weekCount === 1 ? "" : "ões"} registrada${weekCount === 1 ? "" : "s"} nesta semana.`;
+    weekText.textContent = window.FluirI18n.fmt(weekCount===1?"{n} refeição registrada nesta semana.":"{n} refeições registradas nesta semana.",{n:weekCount});
   }
 }
 
@@ -579,7 +579,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma refeição</strong>
+          <strong>${window.FluirI18n.t("Nenhuma refeição")}</strong>
           Registre sua primeira refeição.
         </p>
       </div>
@@ -614,7 +614,7 @@ function showNutritionFormMessage(message, type = "error") {
     return;
   }
 
-  nutritionFormMessage.textContent = message;
+  nutritionFormMessage.textContent = window.FluirI18n.t(message);
   nutritionFormMessage.className = `nutrition-form-message show ${type}`;
 }
 
@@ -891,14 +891,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

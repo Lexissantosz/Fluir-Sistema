@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="../css/mobile.css" />
   <link rel="stylesheet" href="../css/icons.css" />
   <link rel="stylesheet" href="../css/assistant.css" />
+  <script src="../js/account-storage.js"></script>
 </head>
 
 <body>
@@ -188,11 +189,12 @@
                 <div class="tasks-actions">
           <div class="period-wrapper">
             <button class="date-btn" type="button" id="periodBtn">
-              <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> <span id="periodBtnLabel">Hoje</span>
+              <span class="ui-icon ui-icon-calendar" aria-hidden="true"></span> <span id="periodBtnLabel">Todos os dias</span>
             </button>
 
             <div class="period-dropdown" id="periodDropdown">
-              <button type="button" class="period-option active" data-period="today">Hoje</button>
+              <button type="button" class="period-option active" data-period="all">Todos os dias</button>
+              <button type="button" class="period-option" data-period="today">Hoje</button>
               <button type="button" class="period-option" data-period="week">Esta semana</button>
               <button type="button" class="period-option" data-period="month">Este mês</button>
             </div>
@@ -417,6 +419,8 @@
     </div>
   </div>
 
+  <script src="../js/i18n-dictionary.js"></script>
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
   <!-- JS da tela de tarefas -->
@@ -424,5 +428,6 @@
   <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
   <script src="../js/assistant.js"></script>
+  <script src="../js/account-security.js"></script>
 </body>
 </html>

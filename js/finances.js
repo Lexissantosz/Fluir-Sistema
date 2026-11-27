@@ -155,7 +155,7 @@ function escapeHTML(value) {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -177,7 +177,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -204,7 +204,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -220,7 +220,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -231,7 +231,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -280,7 +280,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadTransactions() {
-  const saved = localStorage.getItem("fluir-finances");
+  const saved = FluirStorage.getItem("fluir-finances");
 
   if (!saved) {
     transactions = [];
@@ -298,7 +298,7 @@ function loadTransactions() {
 }
 
 function saveTransactions() {
-  localStorage.setItem("fluir-finances", JSON.stringify(transactions));
+  FluirStorage.setItem("fluir-finances", JSON.stringify(transactions));
 }
 
 
@@ -307,11 +307,11 @@ function saveTransactions() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createFinanceTimelineEvent(title, description) {
@@ -571,7 +571,7 @@ function updateTransactionSubtitle(visibleCount) {
   }
 
   const texts = {
-    all: `${visibleCount} lançamento${visibleCount === 1 ? "" : "s"} no total.`,
+    all: window.FluirI18n.fmt(visibleCount===1?"{n} lançamento no total.":"{n} lançamentos no total.",{n:visibleCount}),
     income: `${visibleCount} entrada${visibleCount === 1 ? "" : "s"} registrada${visibleCount === 1 ? "" : "s"}.`,
     expense: `${visibleCount} saída${visibleCount === 1 ? "" : "s"} registrada${visibleCount === 1 ? "" : "s"}.`,
     fixed: `${visibleCount} lançamento${visibleCount === 1 ? "" : "s"} fixo${visibleCount === 1 ? "" : "s"}.`,
@@ -631,7 +631,7 @@ function updateSummaryCards() {
 
   if (sidebarFinanceText) {
     if (transactions.length === 0) {
-      sidebarFinanceText.textContent = "Nenhum lançamento ainda.";
+      sidebarFinanceText.textContent = window.FluirI18n.t("Nenhum lançamento ainda.");
       return;
     }
 
@@ -666,7 +666,7 @@ function renderCategoryList() {
   if (entries.length === 0) {
     categoryList.innerHTML = `
       <div class="category-item">
-        <span>Nenhuma categoria</span>
+        <span>${window.FluirI18n.t("Nenhuma categoria")}</span>
         <strong>R$ 0</strong>
       </div>
     `;
@@ -706,7 +706,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhum lançamento</strong>
+          <strong>${window.FluirI18n.t("Nenhum lançamento")}</strong>
           Registre sua primeira entrada ou saída.
         </p>
       </div>
@@ -747,7 +747,7 @@ function showFinanceFormMessage(message, type = "error") {
     return;
   }
 
-  financeFormMessage.textContent = message;
+  financeFormMessage.textContent = window.FluirI18n.t(message);
   financeFormMessage.className = `finance-form-message show ${type}`;
 }
 
@@ -1268,14 +1268,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

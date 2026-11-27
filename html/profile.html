@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="../css/mobile.css" />
   <link rel="stylesheet" href="../css/icons.css" />
   <link rel="stylesheet" href="../css/assistant.css" />
+  <script src="../js/account-storage.js"></script>
 </head>
 
 <body>
@@ -154,7 +155,7 @@
 
           <div class="info-list">
             <p><strong>Tema preferido</strong> <span id="themePreference">Claro</span></p>
-            <p><strong>Idioma</strong> <span>Português (Brasil)</span></p>
+            <p><strong>Idioma</strong> <span id="profileLanguage">Português (Brasil)</span></p>
             <p><strong>Lembretes</strong> <span>Ativados</span></p>
             <p><strong>Visualização inicial</strong> <span>Dashboard</span></p>
           </div>
@@ -163,22 +164,13 @@
         <article class="profile-card">
           <h3><span>▣</span> Segurança da conta</h3>
 
+          <div id="googleAccountCard" class="fluir-account-card" aria-live="polite">Consultando conta Google...</div>
           <div id="googleProfileMount" class="google-signin-mount" hidden aria-label="Vincular conta Google"></div>
           <p id="googleLinkMessage" class="google-link-message" aria-live="polite"></p>
-          <button class="profile-row-btn" type="button">
-            <span>Alterar senha</span>
-            <strong>›</strong>
-          </button>
-
-          <button class="profile-row-btn" type="button">
-            <span>Verificação em duas etapas</span>
-            <strong>Ativada ›</strong>
-          </button>
-
-          <button class="profile-row-btn" type="button">
-            <span>Sessões ativas</span>
-            <strong>2 dispositivos ›</strong>
-          </button>
+          <div class="profile-row-btn"><span>Verificação em duas etapas</span><strong>Não disponível</strong></div>
+          <div class="profile-row-btn"><span>Sessões ativas</span><strong id="fluirSessionCount">Consultando...</strong></div>
+          <div id="fluirSessionList" aria-live="polite"></div>
+          <button class="profile-row-btn" type="button" data-fluir-logout><span>Sair da conta</span><strong>↪</strong></button>
         </article>
 
         <article class="profile-card wide">
@@ -290,6 +282,8 @@
     </div>
   </div>
 
+  <script src="../js/i18n-dictionary.js"></script>
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
   <script src="../js/profile.js"></script>
@@ -297,5 +291,6 @@
   <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
   <script src="../js/assistant.js"></script>
+  <script src="../js/account-security.js"></script>
 </body>
 </html>

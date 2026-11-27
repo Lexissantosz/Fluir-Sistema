@@ -53,7 +53,7 @@ window.addEventListener("pageshow", (event) => {
   if (event.persisted && isFinishingSetup) {
     isFinishingSetup = false;
     nextBtn.disabled = false;
-    nextBtn.textContent = "Finalizar";
+    nextBtn.textContent = window.FluirI18n.t("Finalizar");
   }
 });
 
@@ -138,7 +138,7 @@ function showFormMessage(message, type = "error") {
     return;
   }
 
-  formMessage.textContent = message;
+  formMessage.textContent = window.FluirI18n.t(message);
   formMessage.className = `form-message show ${type}`;
 }
 
@@ -341,7 +341,7 @@ const stepTitles = {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -368,7 +368,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -451,9 +451,9 @@ function updateStepView() {
   backBtn.disabled = currentStep === 1;
 
   if (currentStep === totalSteps) {
-    nextBtn.textContent = "Finalizar";
+    nextBtn.textContent = window.FluirI18n.t("Finalizar");
   } else {
-    nextBtn.textContent = "Continuar";
+    nextBtn.textContent = window.FluirI18n.t("Continuar");
   }
 
   updateMiniCards();
@@ -608,7 +608,7 @@ function generateModuleQuestions() {
 function createTasksQuestions() {
   return `
     <div class="question-block" data-module="tasks">
-      <h4>Tarefas</h4>
+      <h4>${window.FluirI18n.t("Tarefas")}</h4>
       <p class="question-block-description">
         Vamos ajustar como você quer organizar pendências, prioridades e lembretes.
       </p>
@@ -618,10 +618,10 @@ function createTasksQuestions() {
           <span>Como prefere visualizar suas tarefas?</span>
           <select data-pref="tasks.preferredView">
             <option value="">Selecione</option>
-            <option value="hoje">Hoje</option>
-            <option value="semana">Semana</option>
-            <option value="prioridade">Prioridade</option>
-            <option value="projeto">Projeto</option>
+            <option value="hoje">${window.FluirI18n.t("Hoje")}</option>
+            <option value="semana">${window.FluirI18n.t("Semana")}</option>
+            <option value="prioridade">${window.FluirI18n.t("Prioridade")}</option>
+            <option value="projeto">${window.FluirI18n.t("Projeto")}</option>
           </select>
         </label>
 
@@ -660,7 +660,7 @@ function createTasksQuestions() {
 function createHabitsQuestions() {
   return `
     <div class="question-block" data-module="habits">
-      <h4>Hábitos</h4>
+      <h4>${window.FluirI18n.t("Hábitos")}</h4>
       <p class="question-block-description">
         Escolha hábitos que você quer acompanhar com constância.
       </p>
@@ -682,7 +682,7 @@ function createHabitsQuestions() {
             <option value="">Selecione</option>
             <option value="3">3 vezes por semana</option>
             <option value="5">5 vezes por semana</option>
-            <option value="7">Todos os dias</option>
+            <option value="7">${window.FluirI18n.t("Todos os dias")}</option>
             <option value="personalizado">Personalizado depois</option>
           </select>
         </label>
@@ -713,7 +713,7 @@ function createHabitsQuestions() {
 function createSleepQuestions() {
   return `
     <div class="question-block" data-module="sleep">
-      <h4>Sono</h4>
+      <h4>${window.FluirI18n.t("Sono")}</h4>
       <p class="question-block-description">
         Defina sua meta de sono e como deseja acompanhar sua rotina noturna.
       </p>
@@ -776,7 +776,7 @@ function createSleepQuestions() {
 function createWaterQuestions() {
   return `
     <div class="question-block" data-module="water">
-      <h4>Água</h4>
+      <h4>${window.FluirI18n.t("Água")}</h4>
       <p class="question-block-description">
         Configure sua meta diária de hidratação.
       </p>
@@ -831,7 +831,7 @@ function createWaterQuestions() {
 function createFinancesQuestions() {
   return `
     <div class="question-block" data-module="finances">
-      <h4>Finanças</h4>
+      <h4>${window.FluirI18n.t("Finanças")}</h4>
       <p class="question-block-description">
         Informe dados básicos para organizar renda, gastos, dívidas e metas.
       </p>
@@ -898,7 +898,7 @@ function createFinancesQuestions() {
 function createDiaryQuestions() {
   return `
     <div class="question-block" data-module="diary">
-      <h4>Diário emocional</h4>
+      <h4>${window.FluirI18n.t("Diário emocional")}</h4>
       <p class="question-block-description">
         Configure como deseja registrar pensamentos, sentimentos e humor.
       </p>
@@ -908,7 +908,7 @@ function createDiaryQuestions() {
           <span>Com que frequência quer escrever?</span>
           <select data-pref="diary.frequency">
             <option value="">Selecione</option>
-            <option value="todos-os-dias">Todos os dias</option>
+            <option value="todos-os-dias">${window.FluirI18n.t("Todos os dias")}</option>
             <option value="algumas-vezes">Algumas vezes por semana</option>
             <option value="quando-eu-quiser">Só quando eu quiser</option>
           </select>
@@ -955,7 +955,7 @@ function createDiaryQuestions() {
 function createNutritionQuestions() {
   return `
     <div class="question-block" data-module="nutrition">
-      <h4>Alimentação</h4>
+      <h4>${window.FluirI18n.t("Alimentação")}</h4>
       <p class="question-block-description">
         Essas informações ajudam a montar uma área alimentar mais útil para sua rotina.
       </p>
@@ -1013,7 +1013,7 @@ function createNutritionQuestions() {
 function createPhysicalHealthQuestions() {
   return `
     <div class="question-block" data-module="physicalHealth">
-      <h4>Saúde física</h4>
+      <h4>${window.FluirI18n.t("Saúde física")}</h4>
       <p class="question-block-description">
         Configure acompanhamento de treinos, dores, disposição e evolução.
       </p>
@@ -1049,7 +1049,7 @@ function createPhysicalHealthQuestions() {
             <option value="corrida">Corrida</option>
             <option value="caminhada">Caminhada</option>
             <option value="alongamento">Alongamento</option>
-            <option value="outro">Outro</option>
+            <option value="outro">${window.FluirI18n.t("Outro")}</option>
           </select>
         </label>
 
@@ -1101,7 +1101,7 @@ function createMenstrualCycleQuestions() {
 
   return `
     <div class="question-block" data-module="menstrualCycle">
-      <h4>Ciclo menstrual</h4>
+      <h4>${window.FluirI18n.t("Ciclo menstrual")}</h4>
 
       <p class="question-block-description">
         ${introText}
@@ -1151,7 +1151,7 @@ function createMenstrualCycleQuestions() {
             <option value="">Selecione</option>
             <option value="fortes">Fortes</option>
             <option value="moderadas">Moderadas</option>
-            <option value="leves">Leves</option>
+            <option value="leves">${window.FluirI18n.t("Leves")}</option>
             <option value="nao">Não</option>
           </select>
         </label>
@@ -1223,7 +1223,7 @@ function createMenstrualCycleQuestions() {
 function createAttachmentsQuestions() {
   return `
     <div class="question-block" data-module="attachments">
-      <h4>Anexos</h4>
+      <h4>${window.FluirI18n.t("Anexos")}</h4>
       <p class="question-block-description">
         Escolha que tipos de arquivos pretende guardar no Fluir.
       </p>
@@ -1366,7 +1366,7 @@ function generateReview() {
 
   reviewBox.innerHTML = `
     <div class="review-section">
-      <h4>Sobre você</h4>
+      <h4>${window.FluirI18n.t("Sobre você")}</h4>
       <p>
         Nome: <strong>${setupData.user.name || "Não informado"}</strong><br>
         Como quer ser chamado(a): <strong>${displayName}</strong><br>
@@ -1485,7 +1485,7 @@ async function finishSetup() {
 
   isFinishingSetup = true;
   nextBtn.disabled = true;
-  nextBtn.textContent = "Salvando...";
+  nextBtn.textContent = window.FluirI18n.t("Salvando...");
 
   collectUserData();
   collectSelectedModules();
@@ -1575,10 +1575,10 @@ async function finishSetup() {
     setupData.atualizadoEm = new Date().toISOString();
 
     // Mantemos localmente porque outras telas ainda dependem disso.
-    localStorage.setItem("fluir-setup", JSON.stringify(setupData));
+    FluirStorage.setItem("fluir-setup", JSON.stringify(setupData));
     sessionStorage.setItem("fluir-onboarding", JSON.stringify(data));
     sessionStorage.setItem("fluir-onboarding-completed", "true");
-    seedExampleContent();
+
 
     setupSaved = true;
 
@@ -1593,7 +1593,7 @@ async function finishSetup() {
     if (!setupSaved) {
       isFinishingSetup = false;
       nextBtn.disabled = false;
-      nextBtn.textContent = "Finalizar";
+      nextBtn.textContent = window.FluirI18n.t("Finalizar");
     }
   }
 }
@@ -1604,60 +1604,6 @@ async function finishSetup() {
 // e só na primeira vez (não duplica se já existir algo).
 // =====================================================
 
-function getTodayKeyForSeed() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function seedExampleContent() {
-  if (setupData.modules.tasks) {
-    const existingTasks = JSON.parse(localStorage.getItem("fluir-tasks") || "[]");
-
-    if (existingTasks.length === 0) {
-      const exampleTask = {
-        id: Date.now(),
-        title: "Toque aqui para concluir sua primeira tarefa",
-        description: "Essa é só um exemplo — pode apagar quando quiser.",
-        category: "Pessoal",
-        priority: "medium",
-        time: "",
-        completed: false,
-        date: getTodayKeyForSeed(),
-        createdAt: new Date().toISOString()
-      };
-
-      existingTasks.unshift(exampleTask);
-      localStorage.setItem("fluir-tasks", JSON.stringify(existingTasks));
-    }
-  }
-
-  if (setupData.modules.habits) {
-    const existingHabits = JSON.parse(localStorage.getItem("fluir-habits") || "[]");
-
-    if (existingHabits.length === 0) {
-      const exampleHabit = {
-        id: Date.now() + 1,
-        title: "Beber um copo de água",
-        description: "Marque quando completar — esse hábito é só um exemplo.",
-        category: "Saúde",
-        weeklyGoal: 7,
-        weekDays: [0, 1, 2, 3, 4, 5, 6],
-        streak: 0,
-        completedDates: [],
-        createdAt: new Date().toISOString()
-      };
-
-      existingHabits.unshift(exampleHabit);
-      localStorage.setItem("fluir-habits", JSON.stringify(existingHabits));
-    }
-  }
-}
-
-
-// =====================================================
 // 32. INICIALIZAR TELA
 // =====================================================
 
@@ -1670,7 +1616,7 @@ updateStepView();
 
 function openSuccessModal() {
   if (!successModal) {
-    alert("Configuração inicial salva! Depois vamos levar você para o dashboard.");
+    alert(window.FluirI18n.t("Configuração inicial salva! Depois vamos levar você para o dashboard."));
     return;
   }
 

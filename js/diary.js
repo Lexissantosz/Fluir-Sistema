@@ -155,7 +155,7 @@ function escapeHTML(value) {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -177,7 +177,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -204,7 +204,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -220,7 +220,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -231,7 +231,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -280,7 +280,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadDiaryEntries() {
-  const saved = localStorage.getItem("fluir-diary");
+  const saved = FluirStorage.getItem("fluir-diary");
 
   if (!saved) {
     diaryEntries = [];
@@ -298,7 +298,7 @@ function loadDiaryEntries() {
 }
 
 function saveDiaryEntries() {
-  localStorage.setItem("fluir-diary", JSON.stringify(diaryEntries));
+  FluirStorage.setItem("fluir-diary", JSON.stringify(diaryEntries));
 }
 
 
@@ -307,11 +307,11 @@ function saveDiaryEntries() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createDiaryTimelineEvent(title, description) {
@@ -500,7 +500,7 @@ function updateSummaryCards() {
 
   if (sidebarDiaryText) {
     if (total === 0) {
-      sidebarDiaryText.textContent = "Nenhuma entrada ainda.";
+      sidebarDiaryText.textContent = window.FluirI18n.t("Nenhuma entrada ainda.");
       return;
     }
 
@@ -531,7 +531,7 @@ function renderMoodRow() {
     `;
 
     if (moodText) {
-      moodText.textContent = "Seus registros de humor aparecerão aqui.";
+      moodText.textContent = window.FluirI18n.t("Seus registros de humor aparecerão aqui.");
     }
 
     return;
@@ -609,7 +609,7 @@ function showDiaryFormMessage(message, type = "error") {
     return;
   }
 
-  diaryFormMessage.textContent = message;
+  diaryFormMessage.textContent = window.FluirI18n.t(message);
   diaryFormMessage.className = `diary-form-message show ${type}`;
 }
 
@@ -893,14 +893,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

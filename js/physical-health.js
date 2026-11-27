@@ -154,7 +154,7 @@ function escapeHTML(value) {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -176,7 +176,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -203,7 +203,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -219,7 +219,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -230,7 +230,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -279,7 +279,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadHealthRecords() {
-  const saved = localStorage.getItem("fluir-physical-health");
+  const saved = FluirStorage.getItem("fluir-physical-health");
 
   if (!saved) {
     healthRecords = [];
@@ -297,7 +297,7 @@ function loadHealthRecords() {
 }
 
 function saveHealthRecords() {
-  localStorage.setItem("fluir-physical-health", JSON.stringify(healthRecords));
+  FluirStorage.setItem("fluir-physical-health", JSON.stringify(healthRecords));
 }
 
 
@@ -306,11 +306,11 @@ function saveHealthRecords() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createHealthTimelineEvent(title, description) {
@@ -502,11 +502,11 @@ function updateSummaryCards() {
 
   if (sidebarHealthText) {
     if (todayList.length === 0) {
-      sidebarHealthText.textContent = "Nenhum registro físico ainda.";
+      sidebarHealthText.textContent = window.FluirI18n.t("Nenhum registro físico ainda.");
       return;
     }
 
-    sidebarHealthText.textContent = `${todayList.length} registro${todayList.length === 1 ? "" : "s"} físico${todayList.length === 1 ? "" : "s"} hoje.`;
+    sidebarHealthText.textContent = window.FluirI18n.fmt(todayList.length===1?"{n} registro físico hoje.":"{n} registros físicos hoje.",{n:todayList.length});
   }
 }
 
@@ -541,7 +541,7 @@ function renderWeekGrid() {
   }).length;
 
   if (weekText) {
-    weekText.textContent = `${weekCount} registro${weekCount === 1 ? "" : "s"} físico${weekCount === 1 ? "" : "s"} nesta semana.`;
+    weekText.textContent = window.FluirI18n.fmt(weekCount===1?"{n} registro físico nesta semana.":"{n} registros físicos nesta semana.",{n:weekCount});
   }
 }
 
@@ -564,7 +564,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhum registro</strong>
+          <strong>${window.FluirI18n.t("Nenhum registro")}</strong>
           Registre algo sobre seu corpo.
         </p>
       </div>
@@ -599,7 +599,7 @@ function showHealthFormMessage(message, type = "error") {
     return;
   }
 
-  healthFormMessage.textContent = message;
+  healthFormMessage.textContent = window.FluirI18n.t(message);
   healthFormMessage.className = `health-form-message show ${type}`;
 }
 
@@ -876,14 +876,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

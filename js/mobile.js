@@ -23,24 +23,16 @@
     "plans.html"
   ]);
 
-  const navItems = [
-    { href: "dashboard.html", icon: "", label: "Início" },
-    { href: "timeline.html", icon: "", label: "Linha" },
-    { href: "tasks.html", icon: "", label: "Tarefas" },
-    { href: "habits.html", icon: "", label: "Hábitos" },
-    { href: "sleep.html", icon: "", label: "Sono" },
-    { href: "water.html", icon: "", label: "Água" },
-    { href: "finances.html", icon: "", label: "Finanças" },
-    { href: "diary.html", icon: "", label: "Diário" },
-    { href: "nutrition.html", icon: "", label: "Alimentação" },
-    { href: "physical-health.html", icon: "", label: "Saúde física" },
-    { href: "menstrual-cycle.html", icon: "", label: "Ciclo menstrual" },
-    { href: "attachments.html", icon: "", label: "Anexos" },
-    { href: "achievements.html", icon: "", label: "Conquistas" },
-    { href: "settings.html", icon: "", label: "Configurações" },
-    { href: "profile.html", icon: "", label: "Perfil" },
-    { href: "plans.html", icon: "", label: "Planos" }
-  ];
+  function getNavItems() {
+    const setup = getStorageJSON("fluir-setup", {});
+    const saved = setup.modules || setup.activeModules;
+    const selected = Array.isArray(saved) ? new Set(saved) :
+      saved && typeof saved === "object" ? new Set(Object.keys(saved).filter(k => saved[k] === true)) : null;
+    return window.FluirSections.getAll().filter(section =>
+      section.type === window.FluirSections.TYPES.CORE || selected === null || selected.has(section.key)
+    ).map(section => ({href:section.href,icon:"",label:section.key === "dashboard" ? "Início" : section.key === "timeline" ? "Timeline" : section.label,
+      type:section.type,key:section.key}));
+  }
 
   function currentFileName() {
     const file = window.location.pathname.split("/").pop();
@@ -64,7 +56,7 @@
 
   function getStorageJSON(key, fallback = {}) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -165,6 +157,7 @@ function getMobileUserData() {
   `;
 
   document.body.prepend(topbar);
+  topbar.querySelectorAll("[aria-label]").forEach(e=>e.setAttribute("aria-label",window.FluirI18n.t(e.getAttribute("aria-label"))));
 
   const menuButton = topbar.querySelector(".mobile-menu-btn");
 
@@ -183,8 +176,8 @@ function getMobileUserData() {
       <aside class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu do sistema">
         <div class="mobile-drawer-head">
           <div>
-            <strong>Menu</strong>
-            <span>Escolha uma área do Fluir</span>
+            <strong>${window.FluirI18n.t("Menu")}</strong>
+            <span>${window.FluirI18n.t("Escolha uma área do Fluir")}</span>
           </div>
           <button class="mobile-drawer-close" type="button" aria-label="Fechar menu"></button>
         </div>
@@ -194,11 +187,11 @@ function getMobileUserData() {
 
     const drawerNav = overlay.querySelector(".mobile-drawer-nav");
 
-    navItems.forEach((item) => {
+    getNavItems().forEach((item) => {
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-drawer-link${isCurrent(item.href) ? " active" : ""}`;
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      link.innerHTML = `<i>${item.icon}</i><span>${window.FluirI18n.t(item.label)}</span>`;
       drawerNav.appendChild(link);
     });
 
@@ -214,24 +207,26 @@ function getMobileUserData() {
   function buildBottomNav() {
     if (document.querySelector(".mobile-bottom-nav")) return;
 
-    const bottomItems = navItems.slice(0, 4);
-    const extraItems = navItems.slice(4).map((item) => item.href);
+    const navItems = getNavItems();
+    const primary = navItems.filter(item => ["dashboard","timeline"].includes(item.key) || item.type === window.FluirSections.TYPES.MODULE);
+    const bottomItems = primary.slice(0, 4);
+    const extraItems = navItems.filter(item => !bottomItems.includes(item)).map(item => item.href);
     const bottomNav = document.createElement("nav");
     bottomNav.className = "mobile-bottom-nav";
-    bottomNav.setAttribute("aria-label", "Navegação principal mobile");
+    bottomNav.setAttribute("aria-label", window.FluirI18n.t("Navegação principal mobile"));
 
     bottomItems.forEach((item) => {
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-nav-link${isCurrent(item.href) ? " active" : ""}`;
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      link.innerHTML = `<i>${item.icon}</i><span>${window.FluirI18n.t(item.label)}</span>`;
       bottomNav.appendChild(link);
     });
 
     const moreButton = document.createElement("button");
     moreButton.type = "button";
     moreButton.className = `mobile-more-btn${extraItems.includes(currentFileName()) ? " active" : ""}`;
-    moreButton.innerHTML = `<i></i><span>Mais</span>`;
+    moreButton.innerHTML = `<i></i><span>${window.FluirI18n.t("Mais")}</span>`;
     moreButton.addEventListener("click", openDrawer);
     bottomNav.appendChild(moreButton);
 
@@ -261,7 +256,7 @@ function getMobileUserData() {
         if (todayFilter) todayFilter.click();
         else {
           const today = new Date().toLocaleDateString("pt-BR");
-          button.textContent = "Hoje · " + today;
+          button.textContent = window.FluirI18n.t("Hoje · ") + today;
           button.setAttribute("aria-label", "Data de hoje: " + today);
         }
       });

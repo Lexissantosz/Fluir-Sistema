@@ -89,9 +89,12 @@ async function routeGoogle(page,enabled){
     page=await browser.newPage();
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     await routeGoogle(page,true);
+    await page.route(api+"/conta/seguranca",route=>route.fulfill({
+      status:200,contentType:"application/json",body:JSON.stringify({google:{vinculado:false},sessoes:[]})
+    }));
     await page.route(api+"/usuarios/google/vincular",route=>route.fulfill({
       status:409,contentType:"application/json",body:JSON.stringify({mensagem:"Conta Google já vinculada a outro usuário."})
     }));
@@ -105,7 +108,7 @@ async function routeGoogle(page,enabled){
     page=await browser.newPage({viewport:{width:1200,height:850}});
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     let sent=null;
     await page.route(api+"/assistente/chat",async route=>{
@@ -125,11 +128,72 @@ async function routeGoogle(page,enabled){
     console.log("PASS: Consentimento explícito enviado à API e erro de IA visível");
     await page.close();
 
+    // Android bridge: synthetic token and mocked transport, no live Google account.
+    page=await browser.newPage({viewport:{width:390,height:844}});
+    await page.addInitScript(()=>{
+      window.Capacitor={getPlatform:()=>"android",Plugins:{GoogleSignIn:{
+        initialize:async opts=>{window.__nativeInit=opts},
+        signIn:async()=>({idToken:"synthetic-native-token"})
+      }}};
+    });
+    let webGoogleLoaded=false,nativeRequest=null;
+    await page.route("https://accounts.google.com/gsi/client",route=>{webGoogleLoaded=true;return route.abort()});
+    await page.route(api+"/usuarios/google/config",route=>route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({habilitado:true,clientId:"12345-test.apps.googleusercontent.com"})}));
+    await page.route(api+"/usuarios/google",route=>{
+      nativeRequest=JSON.parse(route.request().postData());
+      return route.fulfill({status:401,contentType:"application/json",body:JSON.stringify({mensagem:"Token Google inválido"})});
+    });
+    await page.goto(url+"/html/login.html",{waitUntil:"domcontentloaded"});
+    await page.locator("#googleLoginMount .fluir-native-google-button").waitFor();
+    assert.equal(await page.locator("#googleLoginMount svg path").count(),4);
+    assert.equal(await page.locator(".page>.preview").isVisible(),false);
+    await page.locator("#googleLoginMount .fluir-native-google-button").click();
+    await page.locator("#loginMessage").getByText("Token Google inválido").waitFor();
+    assert.equal(nativeRequest.idToken,"synthetic-native-token");
+    assert.equal(await page.evaluate(()=>window.__nativeInit.clientId),"12345-test.apps.googleusercontent.com");
+    assert.equal(webGoogleLoaded,false);
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+    await page.locator("#showRegister").click();
+    await page.locator("#googleRegisterMount .fluir-native-google-button").waitFor();
+    console.log("PASS: Android native SDK route, no web popup, backend rejection respected (mocked)");
+    await page.close();
+
+    page=await browser.newPage({viewport:{width:390,height:844}});
+    let demoApi=0;
+    await page.route(api+"/**",route=>{demoApi++;return route.abort()});
+    await page.goto(url+"/html/demo.html");
+    for(const width of [320,390,480,768,1280]){
+      await page.setViewportSize({width,height:844});
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"demo overflow "+width);
+      assert(await page.locator(".demo-top-actions select").isVisible());
+    }
+    await page.setViewportSize({width:390,height:844});
+    const initial=await page.evaluate(()=>({local:{...localStorage},session:{...sessionStorage}}));
+    await page.locator('.demo-mobile-nav [data-demo-view="tasks"]').click();
+    const tasksBefore=await page.locator(".demo-row").count();
+    await page.getByRole("button",{name:"Nova tarefa",exact:true}).click();
+    await page.locator("#demoTaskPreview").waitFor();
+    assert.equal(await page.locator("#fluirDemoGate").count(),0);
+    await page.locator("#demoTaskForm input[name=title]").fill("QA tarefa");
+    await page.locator("#demoTaskForm select[name=category]").selectOption({label:"Estudos"});
+    await page.getByRole("button",{name:"Salvar tarefa",exact:true}).click();
+    await page.locator("#fluirDemoGate").waitFor();
+    assert.equal(await page.locator("#demoTaskPreview").count(),0);
+    await page.getByRole("button",{name:"Entendi",exact:true}).click();
+    assert.equal(await page.locator(".demo-row").count(),tasksBefore);
+    assert.deepEqual(await page.evaluate(()=>({local:{...localStorage},session:{...sessionStorage}})),initial);
+    assert.equal(demoApi,0);
+    await page.getByRole("button",{name:"Nova tarefa",exact:true}).click();
+    await page.locator("[data-preview-cancel]").click();
+    assert.equal(await page.locator("#demoTaskPreview").count(),0);
+    console.log("PASS: task preview, save blocked, cancellation, no storage or API, toolbar responsive");
+    await page.close();
+
     // Conversa real: o histórico somente acompanha mensagens autorizadas nesta aba.
     page=await browser.newPage({viewport:{width:390,height:844}});
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     const requests=[];
     await page.route(api+"/assistente/chat",route=>{
@@ -141,7 +205,7 @@ async function routeGoogle(page,enabled){
     await page.locator("#fluirAssistantButton").click();
     async function ask(msg){
       await page.locator(".fluir-assistant-form textarea").fill(msg);
-      await page.locator(".fluir-assistant-consent input").check();
+      if(await page.locator(".fluir-assistant-consent input").isVisible())await page.locator(".fluir-assistant-consent input").check();
       await page.locator(".fluir-assistant-form button[type=submit]").click();
       await page.waitForFunction(()=>document.querySelector(".fluir-assistant-send").disabled===false);
     }
