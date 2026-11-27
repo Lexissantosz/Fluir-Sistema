@@ -1000,3 +1000,8 @@ body.dark .icon-btn {
 .google-link-message[data-state="success"]{color:var(--success)}
 
 .fluir-account-card{border:1px solid var(--border,#ddd);border-radius:12px;padding:12px;margin:8px 0;overflow-wrap:anywhere}.fluir-account-card p{font-size:.82rem;margin:5px 0}.fluir-account-card button{padding:8px 12px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;cursor:pointer}
+
+/* Native Google uses the Android credential picker, not an embedded web popup. */
+.fluir-native-google-button{box-sizing:border-box;display:flex;align-items:center;justify-content:center;min-height:44px;width:100%;max-width:400px;padding:10px 14px;border:1px solid #777;border-radius:9px;background:#fff;color:#171717;font:inherit;font-size:14px;font-weight:700;cursor:pointer;margin:0 auto}
+.fluir-native-google-button:disabled{opacity:.65;cursor:wait}
+.fluir-native-google-button:focus-visible{outline:2px solid #777;outline-offset:3px}
