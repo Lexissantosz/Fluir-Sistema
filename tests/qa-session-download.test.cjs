@@ -27,7 +27,7 @@ test("APK link restricted to preview and valid expiry",async()=>{
  process.env.VERCEL_ENV="production";process.env.FLUIR_QA_APK_URL="https://fluir-sistema-example-lexissantosz.vercel.app/Fluir-QA-Android-test.apk?_vercel_share=synthetic";process.env.FLUIR_QA_APK_EXPIRES_AT=String(Math.floor(Date.now()/1000)+3600);
  let r=await request(download,{method:"HEAD"});assert.equal(r.statusCode,404);
  process.env.VERCEL_ENV="preview";r=await request(download,{method:"HEAD"});assert.equal(r.statusCode,204);
- r=await request(download);assert.equal(r.statusCode,302);assert.equal(r.headers.location,process.env.FLUIR_QA_APK_URL);
+ r=await request(download);assert.equal(r.statusCode,302);assert.equal(new URL(r.headers.location).pathname,"/");assert.equal(new URL(r.headers.location).searchParams.get("_vercel_share"),"synthetic");
  process.env.FLUIR_QA_APK_EXPIRES_AT="1";r=await request(download);assert.equal(r.statusCode,404);
  process.env.FLUIR_QA_APK_EXPIRES_AT=String(Math.floor(Date.now()/1000)+3600);process.env.FLUIR_QA_APK_URL="https://evil.example/Fluir-QA-Android-test.apk?_vercel_share=synthetic";r=await request(download);assert.equal(r.statusCode,404);
  }finally{for(const k of ["VERCEL_ENV","FLUIR_QA_APK_URL","FLUIR_QA_APK_EXPIRES_AT"]){if(orig[k]===undefined)delete process.env[k];else process.env[k]=orig[k];}}

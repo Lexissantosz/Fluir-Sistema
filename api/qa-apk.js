@@ -11,5 +11,6 @@ module.exports = function handler(req,res) {
     if(url.protocol!=="https:"||!/^fluir-sistema-[a-z0-9]+-lexissantosz\.vercel\.app$/.test(url.hostname)||!/^\/Fluir-QA-Android-[A-Za-z0-9-]+\.apk$/.test(url.pathname)||!url.searchParams.has("_vercel_share")||url.username||url.password||url.port||!Number.isFinite(Number(process.env.FLUIR_QA_APK_EXPIRES_AT)))throw Error("invalid");
   }catch {res.statusCode=404;return res.end();}
   if(req.method==="HEAD"){res.statusCode=204;return res.end();}
-  res.statusCode=302;res.setHeader("Location",url.href);return res.end();
+  // Authorize the separate preview origin on its landing page before downloading.
+  url.pathname="/";res.statusCode=302;res.setHeader("Location",url.href);return res.end();
 };
