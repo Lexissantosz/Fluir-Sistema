@@ -233,9 +233,13 @@ function clearVerificationRetry() {
   retryOnboardingButton?.remove();
   retryOnboardingButton = null;
 }
-function completeAuthenticatedLogin(completed) {
+async function completeAuthenticatedLogin(completed, restored = false) {
   clearVerificationRetry();
   sessionStorage.setItem("fluir-onboarding-completed", String(completed));
+  if (!restored && window.FluirRemember) {
+    const user=JSON.parse(sessionStorage.getItem("fluir-user")||"null");
+    if(user) await window.FluirRemember.save(user,Boolean(document.getElementById("rememberSession")?.checked&&!registerForm?.classList.contains("active")));
+  }
   showMessage(loginMessage, "Login realizado com sucesso.", "success");
   window.FluirTransition.navigate(
     completed ? "dashboard.html" : "setup.html",
@@ -261,7 +265,7 @@ function showVerificationRetry(usuario) {
         return;
       }
       const completed = await hasCompletedOnboarding(usuario);
-      completeAuthenticatedLogin(completed);
+      await completeAuthenticatedLogin(completed);
     } catch (error) {
       if (error?.code === "AUTH_REJECTED") {
         sessionStorage.removeItem("fluir-user");
@@ -408,6 +412,7 @@ let loginPending = false;
 if (loginForm) {
   loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
+    window.FluirRemember?.cancel();
     if (loginPending) return;
 
     const emailInput = loginForm.querySelector('input[type="email"]');
@@ -502,7 +507,7 @@ if (loginForm) {
         }
         return;
       }
-      completeAuthenticatedLogin(onboardingConcluido);
+      await completeAuthenticatedLogin(onboardingConcluido);
 
     } catch (error) {
       showMessage(
@@ -530,6 +535,7 @@ let registrationPending = false;
 if (registerForm) {
   registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
+    window.FluirRemember?.cancel();
     if (registrationPending) return;
 
     const nomeInput = registerForm.querySelector('input[type="text"]');
@@ -641,6 +647,7 @@ if (registerForm) {
         "success"
       );
 
+      await window.FluirRemember?.save(data,false);
       registerForm.reset();
 
       redirecting = true;
@@ -675,3 +682,21 @@ if (registerForm) {
 // =============================
 
 applySavedTheme();
+(function resumeRememberedWebSession(){
+  const remember=window.FluirRemember, checkbox=document.getElementById("rememberSession");
+  if(!remember?.supported()){if(checkbox)checkbox.closest(".remember").hidden=true;return;}
+  for(const form of [loginForm,registerForm])form?.addEventListener("pointerdown",()=>remember.cancel(),{once:true,capture:true});
+  (async()=>{
+    const user=await remember.restore();
+    if(!user)return;
+    if(checkbox)checkbox.checked=true;
+    sessionStorage.setItem("fluir-user",JSON.stringify(user));
+    const current=()=>{try{return JSON.parse(sessionStorage.getItem("fluir-user")||"null")?.token===user.token}catch{return false}};
+    try{const completed=await hasCompletedOnboarding(user);if(current())await completeAuthenticatedLogin(completed,true);}
+    catch(error){
+      if(!current())return;
+      if(error?.code==="AUTH_REJECTED"){sessionStorage.removeItem("fluir-user");await remember.clear();showMessage(loginMessage,"Sessão rejeitada pelo servidor. Faça login novamente.","error");}
+      else{showMessage(loginMessage,"Ainda não foi possível consultar as preferências. Sua sessão foi mantida; tente novamente.","error");showVerificationRetry(user);}
+    }
+  })();
+})();

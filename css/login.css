@@ -2070,3 +2070,5 @@ body.dark .preview {
 /* Compact authentication on small screens and Android's embedded browser. */
 @media(max-width:850px){.page>.preview{display:none!important}.page{grid-template-rows:auto auto;min-height:0}.fluir-legal-links .fluir-language-picker{display:inline-flex;align-items:center;gap:8px;flex:1 1 100%;justify-content:center}.fluir-legal-links select{min-height:40px;border:1px solid #bdbdbd;border-radius:10px;padding:8px 12px;font:inherit;background:var(--card-bg,#fff);color:var(--text,#171717)}}
 .fluir-native-google-button{position:relative;padding-inline:40px}.fluir-native-google-button svg{position:absolute;left:14px;flex:none;width:20px;height:20px}
+
+.remember[hidden]{display:none!important}

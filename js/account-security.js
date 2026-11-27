@@ -8,14 +8,18 @@
   const r=await fetch(base+path,{method,headers:{Authorization:"Bearer "+user.token},cache:"no-store",signal:AbortSignal.timeout(12000)});
   if(!r.ok){const error=Error("HTTP "+r.status);error.status=r.status;throw error}return r.json();
  }
- function clearLocal(){
+ async function clearLocal(){
+  if(location.protocol==="https:"&&!["android","ios"].includes(window.Capacitor?.getPlatform?.())){
+   try{localStorage.setItem("fluir:remember-restore-blocked","1")}catch{}
+   try{await fetch("/api/remember-session",{method:"DELETE",credentials:"same-origin",cache:"no-store",signal:AbortSignal.timeout(5000)})}catch{}
+  }
   for(const key of ["fluir-user","fluir-onboarding","fluir-onboarding-completed"])sessionStorage.removeItem(key);
   window.google?.accounts?.id?.disableAutoSelect?.();
   location.replace("login.html");
  }
  async function logout(){
-  try{await call("/logout","POST");clearLocal()}
-  catch(error){if(error.status===401){clearLocal();return}if(confirm(window.FluirI18n.t("Não foi possível encerrar a sessão no servidor. Sair apenas deste navegador?")))clearLocal()}
+  try{await call("/logout","POST");await clearLocal()}
+  catch(error){if(error.status===401){await clearLocal();return}if(confirm(window.FluirI18n.t("Não foi possível encerrar a sessão no servidor. Sair apenas deste navegador?")))await clearLocal()}
  }
  function addLogout(container,cls){
   if(!container||container.querySelector("[data-fluir-logout]"))return;
@@ -58,7 +62,7 @@
   if(!session()?.token)return;
   addLogout(document.querySelector(".profile-dropdown"),"profile-dropdown-row");
   addLogout(document.querySelector(".mobile-drawer-nav"),"mobile-drawer-link");
-  document.addEventListener("click",e=>{if(e.target.closest("[data-fluir-logout]")){e.preventDefault();logout()}});
+  document.addEventListener("click",e=>{if(e.target.closest("[data-fluir-logout]")){e.preventDefault();e.stopPropagation();logout()}},true);
   window.addEventListener("fluir:google-linked",refresh);
   const consentStatus=document.getElementById("fluirAIConsentStatus");
   const revoke=document.getElementById("fluirAIRevoke");

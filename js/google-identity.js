@@ -54,6 +54,7 @@
   }
 
   async function credentialReceived(result) {
+    window.FluirRemember?.cancel();
     if (busy) return;
     clearProviderTimer();
     if (!result?.credential || typeof result.credential !== "string") {
@@ -111,7 +112,7 @@
       sessionStorage.removeItem("fluir-onboarding-completed");
       try {
         const completed = await hasCompletedOnboarding(data);
-        completeAuthenticatedLogin(completed);
+        await completeAuthenticatedLogin(completed);
       } catch (error) {
         if (error?.code === "AUTH_REJECTED") {
           sessionStorage.removeItem("fluir-user");

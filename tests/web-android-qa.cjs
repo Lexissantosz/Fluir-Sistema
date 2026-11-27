@@ -15,7 +15,7 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
    sessionStorage.setItem("fluir-onboarding-completed","true");
   });
   const page=await ctx.newPage();
-  await page.route("https://fluir-sistema.onrender.com/**",r=>r.fulfill({
+  await page.route("https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/**",r=>r.fulfill({
     status:200,headers:{"Content-Type":"application/json","Access-Control-Allow-Origin":"*"},body:"[]"}));
   try{await fn(page);console.log("PASS: "+name);passed++}
   catch(e){console.error("FAIL: "+name+" | "+e.message);failed++}
@@ -119,14 +119,33 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
    await p.locator("#waterTodayBtn").click();
    if(!await p.locator(".water-summary").evaluate(el=>el.classList.contains("fluir-today-focus")))throw Error("Resumo de hoje não destacado");
   });
-  await run("Timeline mostra somente eventos reais da data de hoje",async p=>{
+  await run("Timeline filtra datas e categorias reais e exibe estado vazio",async p=>{
+   await p.addInitScript(()=>{
+    const now=new Date(), start=new Date(now), other=new Date(now), previous=new Date(now);
+    start.setDate(now.getDate()-((now.getDay()+6)%7));
+    other.setDate(now.getDate()+(now.getDay()===0?-1:1));
+    previous.setDate(start.getDate()-1); previous.setMonth(start.getMonth()); previous.setFullYear(start.getFullYear());
+    previous.setTime(start.getTime()); previous.setDate(start.getDate()-7);
+    const date=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+    const events=[{title:"QA hoje tarefa",category:"tasks",date:date(now),time:"09:00"},{title:"QA hoje agua",category:"health",date:date(now),time:"10:00"},{title:"QA semana",category:"habits",date:date(other),time:"11:00"},{title:"QA anterior",category:"tasks",date:date(previous),time:"12:00"}];
+    localStorage.setItem("fluir:account:998:fluir-timeline-events",JSON.stringify(events));
+   });
    await p.goto(BASE+"timeline.html");
-   await p.locator("#timelinePeriodBtn").click();
-   if(await p.locator("#timelinePeriodBtn").getAttribute("aria-pressed")!=="true")throw Error("Hoje não ativado");
-   if(await p.locator('.timeline-day:not(.user-created-day):visible').count()>0)throw Error("Evento ilustrativo mostrado como hoje");
-   if(!await p.locator(".fluir-today-empty").isVisible())throw Error("Sem aviso para dia vazio");
-   await p.locator("#timelinePeriodBtn").click();
-   if(await p.locator(".fluir-today-empty").isVisible())throw Error("Aviso não desaparece após restauração");
+   const button=p.locator("#timelinePeriodBtn"), empty=p.locator("#timelineEmptyState");
+   const visible=()=>p.locator(".event-item:visible strong").allTextContents();
+   await p.locator(".event-item").filter({hasText:"QA hoje tarefa"}).waitFor();
+   if(await button.getAttribute("data-period")!=="all")throw Error("Período inicial incorreto");
+   if((await visible()).length!==4)throw Error("Todos: "+JSON.stringify(await visible()));
+   await button.click();
+   if(await button.getAttribute("data-period")!=="today")throw Error("Hoje não ativado");
+   const today=await visible();if(today.length!==2||!today.includes("QA hoje tarefa")||!today.includes("QA hoje agua"))throw Error("Hoje: "+JSON.stringify(today));
+   await p.locator('[data-filter="tasks"]').click();if(JSON.stringify(await visible())!==JSON.stringify(["QA hoje tarefa"]))throw Error("Categoria + hoje");
+   await p.locator('[data-filter="finances"]').click();if(!await empty.isVisible()||(await visible()).length)throw Error("Estado vazio incorreto");
+   await p.locator('[data-filter="all"]').click();await button.click();
+   if(await button.getAttribute("data-period")!=="week")throw Error("Semana não ativada");
+   const week=await visible();if(week.length!==3||week.includes("QA anterior"))throw Error("Semana: "+JSON.stringify(week));
+   await button.click();if(await button.getAttribute("data-period")!=="all"||(await visible()).length!==4)throw Error("Todos não restaurado");
+   if(await empty.isVisible())throw Error("Aviso não desaparece");
   });
   for(const viewport of [320,430]){
    await run("Modais móveis em "+viewport+"px sem corte horizontal",async p=>{
