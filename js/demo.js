@@ -30,6 +30,19 @@ function showDemoGate(){
  document.addEventListener("keydown",onEscape);
  document.body.appendChild(gate);gate.querySelector(".demo-gate-close").focus();
 }
+// Preview the real task creation fields, but never persist or transmit input.
+function showTaskPreview(){
+ const previous=document.getElementById("demoTaskPreview");if(previous)previous.remove();
+ const dialog=document.createElement("dialog");dialog.id="demoTaskPreview";dialog.className="demo-task-preview";
+ dialog.setAttribute("aria-labelledby","demoTaskPreviewTitle");
+ dialog.innerHTML='<form id="demoTaskForm"><h2 id="demoTaskPreviewTitle">Nova tarefa</h2><p>Experimente o formulário. Nenhuma informação será salva na demonstração.</p><label>Título da tarefa<input name="title" required maxlength="150" placeholder="Ex: estudar"></label><label>Categoria<select name="category"><option>Pessoal</option><option>Trabalho</option><option>Estudos</option><option>Casa</option><option>Saúde</option><option>Projetos</option></select></label><label>Prioridade<select name="priority"><option>Baixa</option><option>Média</option><option>Alta</option></select></label><label>Horário opcional<input name="time" type="time"></label><label>Observação opcional<input name="description" maxlength="500"></label><div class="demo-task-actions"><button type="button" class="demo-secondary" data-preview-cancel>Cancelar</button><button type="submit" class="demo-primary">Salvar tarefa</button></div></form>';
+ const close=()=>{dialog.close();dialog.remove()};
+ dialog.addEventListener("close",()=>dialog.remove());
+ dialog.querySelector("[data-preview-cancel]").addEventListener("click",close);
+ dialog.querySelector("form").addEventListener("submit",event=>{event.preventDefault();close();showDemoGate()});
+ dialog.addEventListener("click",event=>{if(event.target===dialog)close()});
+ document.body.append(dialog);window.FluirI18n?.translateTree(dialog);dialog.showModal();
+}
 const title=document.getElementById("demoHeading");
 const subtitle=document.getElementById("demoSubtitle");
 const heading={
@@ -48,13 +61,13 @@ function button(text,fn,kind="secondary"){const b=elem("button",kind==="primary"
 function fraction(items){return items.filter(x=>x.done).length+"/"+items.length}
 function percent(){return Math.round((tasks.filter(x=>x.done).length+habits.filter(x=>x.done).length)/(tasks.length+habits.length)*100)}
 function rows(items){const list=elem("div","demo-rows");for(const item of items){const label=elem("label","demo-row"+(item.done?" done":""));const check=elem("input");check.type="checkbox";check.checked=item.done;const txt=elem("span","demo-row-text");txt.appendChild(elem("strong","",item.title));txt.appendChild(elem("small","",item.category));check.addEventListener("change",()=>{check.checked=item.done;showDemoGate()});label.append(check,txt);list.append(label)}return list}
-function panelRows(label,items,view){const inner=elem("div");inner.appendChild(elem("p","demo-desc",view==="tasks"?"Atividades que você pode marcar como concluídas.":"Constância é mais importante que perfeição."));inner.appendChild(rows(items));const wrap=card(label,inner);const actions=elem("div","demo-actions");actions.appendChild(button("Ver módulo",()=>navigate(view)));actions.appendChild(button(view==="tasks"?"Nova tarefa":"Novo hábito",showDemoGate,"primary"));wrap.appendChild(actions);return wrap}
+function panelRows(label,items,view){const inner=elem("div");inner.appendChild(elem("p","demo-desc",view==="tasks"?"Atividades que você pode marcar como concluídas.":"Constância é mais importante que perfeição."));inner.appendChild(rows(items));const wrap=card(label,inner);const actions=elem("div","demo-actions");actions.appendChild(button("Ver módulo",()=>navigate(view)));actions.appendChild(button(view==="tasks"?"Nova tarefa":"Novo hábito",view==="tasks"?showTaskPreview:showDemoGate,"primary"));wrap.appendChild(actions);return wrap}
 function waterVisual(){const container=elem("div","demo-water");const ring=elem("div","demo-ring");ring.style.setProperty("--water-progress",Math.min(water/goal*100,100)+"%");const middle=elem("div");middle.appendChild(elem("strong","",water+" ml"));middle.appendChild(elem("small","","Meta: "+goal+" ml"));ring.appendChild(middle);container.appendChild(ring);const actions=elem("div");actions.appendChild(elem("p","demo-desc","Registros ilustrativos desta demonstração."));const buttons=elem("div","demo-actions");buttons.append(button("+ 250 ml",showDemoGate,"primary"),button("− 250 ml",showDemoGate));actions.appendChild(buttons);container.appendChild(actions);return container}
 function metric(label,number,detail){const c=elem("article","demo-card demo-kpi");c.append(elem("h3","",label),elem("strong","",number),elem("small","",detail));return c}
 function dashboard(){const k=elem("div","demo-kpis");k.append(metric("Tarefas",fraction(tasks),"concluídas hoje"),metric("Hábitos",fraction(habits),"marcados hoje"),metric("Água",water+" ml","de "+goal+" ml"),metric("Progresso",percent()+"%","da demonstração"));screen.appendChild(k);
 const row=elem("div","demo-grid");row.append(panelRows("Tarefas de hoje",tasks,"tasks"),card("Hidratação",waterVisual()));screen.appendChild(row);
 const bottom=elem("div","demo-grid");bottom.append(panelRows("Hábitos ativos",habits,"habits"),card("Sua jornada",elem("p","demo-desc","O Fluir combina diferentes áreas da vida em um único lugar. Nesta prévia, os exemplos são fictícios e não são salvos no servidor.")));screen.appendChild(bottom)}
-function singleList(name,items){const box=card(name,rows(items));box.insertBefore(elem("p","demo-desc","Os exemplos são somente para visualização. Criação e edição exigem uma conta."),box.querySelector(".demo-rows"));const actions=elem("div","demo-actions");actions.appendChild(button(name.includes("Tarefas")?"Nova tarefa":"Novo hábito",showDemoGate,"primary"));box.appendChild(actions);screen.appendChild(box)}
+function singleList(name,items){const box=card(name,rows(items));box.insertBefore(elem("p","demo-desc","Os exemplos são somente para visualização. Criação e edição exigem uma conta."),box.querySelector(".demo-rows"));const actions=elem("div","demo-actions");actions.appendChild(button(name.includes("Tarefas")?"Nova tarefa":"Novo hábito",items===tasks?showTaskPreview:showDemoGate,"primary"));box.appendChild(actions);screen.appendChild(box)}
 function simpleList(name,entries,note){const list=elem("ul","demo-list");for(const [left,right] of entries){const li=elem("li");li.append(elem("strong","",left),elem("small","",right));list.append(li)}const c=card(name,list);if(note)c.appendChild(elem("p","demo-info",note));screen.appendChild(c)}
 function render(){
  screen.replaceChildren();
