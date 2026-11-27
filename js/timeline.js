@@ -382,7 +382,20 @@ function updateLoadMoreButton(totalEligibleEvents, visibleEligibleEvents) {
   loadMoreEventsBtn.textContent = window.FluirI18n.t("Atualizar eventos ↻");
 }
 
+let timelinePeriod = "all";
+function timelineDateBounds() {
+  const now = new Date(), start = new Date(now), end = new Date(now);
+  start.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  end.setDate(start.getDate() + 6);
+  return {today:getTodayKey(),start:toLocalDateKey(start),end:toLocalDateKey(end)};
+}
+function matchesTimelinePeriod(date, bounds) {
+  if (timelinePeriod === "today") return date === bounds.today;
+  if (timelinePeriod === "week") return !!date && date >= bounds.start && date <= bounds.end;
+  return true;
+}
 function applyTimelineVisibility() {
+  const bounds = timelineDateBounds();
   const activeFilter = getActiveTimelineFilter();
   const allEvents = Array.from(getAllEventItems());
 
@@ -395,7 +408,7 @@ function applyTimelineVisibility() {
     const matchesFilter = eventMatchesFilter(eventType, activeFilter);
     const matchesModule = eventMatchesActiveModules(eventType);
 
-    if (!matchesFilter || !matchesModule) {
+    if (!matchesFilter || !matchesModule || !matchesTimelinePeriod(event.dataset.date, bounds)) {
       event.classList.add("hidden-event");
       return;
     }
@@ -413,7 +426,13 @@ function applyTimelineVisibility() {
   updateDayCounters();
   updateLoadMoreButton(eligibleEvents, visibleEligibleEvents);
   const empty = document.getElementById("timelineEmptyState");
-  if (empty) empty.hidden = eligibleEvents > 0;
+  if (empty) {
+    empty.hidden = eligibleEvents > 0;
+    empty.textContent = window.FluirI18n.t(timelinePeriod === "today" ? "Nenhum evento registrado hoje." : timelinePeriod === "week" ? "Nenhum evento neste período." : "Nenhum evento registrado ainda.");
+  }
+  document.querySelectorAll(".timeline-day").forEach(day => {
+    day.hidden = !day.querySelector(".event-item:not(.hidden-event)");
+  });
   const count = document.getElementById("timelineTodayCount");
   if (count) count.textContent = String(allEvents.filter(event => event.dataset.date === getTodayKey()).length);
 }
@@ -1224,38 +1243,24 @@ if (headerPhotoInput) {
 
 renderHeaderProfileDropdown();
 
-/* O filtro Hoje usa a data real dos registros locais, não os eventos
-   ilustrativos do HTML, que não pertencem ao dia corrente. */
+/* Period and category filters use the same visibility calculation. */
 (function setupTimelinePeriodControl() {
   const button = document.getElementById("timelinePeriodBtn");
-  const panel = document.querySelector(".timeline-panel");
-  if (!button || !panel) return;
-  let todayOnly = false;
-  const originalLabel = button.textContent.trim();
-  const empty = document.createElement("p");
-  empty.className = "fluir-today-empty";
-  empty.textContent = window.FluirI18n.t("Nenhum evento registrado hoje.");
-  empty.hidden = true;
-  panel.appendChild(empty);
-
-  function applyPeriod() {
-    const today = getTodayKey();
-    let hasToday = false;
-    panel.querySelectorAll(".timeline-day").forEach(day => {
-      const isToday = day.classList.contains("user-created-day") &&
-        day.dataset.date === today;
-      if (isToday) hasToday = true;
-      day.hidden = todayOnly && !isToday;
-    });
-    empty.hidden = !todayOnly || hasToday;
-    button.setAttribute("aria-pressed", String(todayOnly));
-    button.textContent = todayOnly
-      ? "Hoje · " + new Date().toLocaleDateString("pt-BR")
-      : originalLabel;
+  const label = document.getElementById("timelinePeriodLabel");
+  if (!button || !label) return;
+  const tr = value => window.FluirI18n.t(value);
+  const format = date => new Date(date+"T12:00:00").toLocaleDateString(document.documentElement.lang||"pt-BR",{day:"2-digit",month:"2-digit"});
+  function render() {
+    const bounds = timelineDateBounds();
+    label.textContent = timelinePeriod === "today" ? tr("Hoje")+" · "+format(bounds.today) :
+      timelinePeriod === "week" ? format(bounds.start)+" – "+format(bounds.end) : tr("Todos os dias");
+    button.dataset.period = timelinePeriod;
+    applyTimelineVisibility();
   }
-
   button.addEventListener("click", () => {
-    todayOnly = !todayOnly;
-    applyPeriod();
+    timelinePeriod = ({all:"today",today:"week",week:"all"})[timelinePeriod];
+    visibleEventLimit = EVENTS_PER_LOAD;
+    render();
   });
+  render();
 })();
