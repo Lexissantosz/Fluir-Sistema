@@ -504,7 +504,7 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
 </main>
 <footer class="footer">
  <div class="footer-left"><span>FLUIR / APRESENTAÇÃO</span><div class="progress-track"><div class="progress" id="progress"></div></div><span id="currentTitle">Capa</span></div>
- <div class="bottomright"><button class="button secondary small" id="notesButton" type="button" aria-label="Mostrar roteiro">Roteiro [N]</button><span class="footer-counter" id="counter">01 / 13</span><button class="navbutton" type="button" id="prev" aria-label="Slide anterior">←</button><button class="navbutton" type="button" id="next" aria-label="Próximo slide">→</button></div>
+ <div class="bottomright"><button class="button secondary small" id="notesButton" type="button" aria-label="Mostrar roteiro">Roteiro [N]</button><span class="footer-counter" id="counter">01 / 13</span><button class="navbutton" type="button" id="prev" aria-label="Slide anterior" onclick="fallbackSlide(-1)">←</button><button class="navbutton" type="button" id="next" aria-label="Próximo slide" onclick="fallbackSlide(1)">→</button></div>
 </footer>
 </div>
 <aside class="notes" id="notesPanel" aria-live="polite"><h3 id="notesTitle">Roteiro</h3><p id="notesText"></p></aside>
@@ -514,6 +514,28 @@ body.night .slide[data-title="Mockup interativo"] .detail-list .paper.dark p{col
  <div class="overlay-hint">Ambiente demonstrativo. Não utilizar credenciais ou dados pessoais reais.</div>
 </div>
 <script>
+function fallbackSlide(delta){
+ var slides=Array.prototype.slice.call(document.querySelectorAll(".slide"));
+ if(!slides.length)return;
+ var current=slides.findIndex(function(slide){return slide.classList.contains("active")});
+ if(current<0)current=0;
+ var target=Math.max(0,Math.min(slides.length-1,current+delta));
+ slides.forEach(function(slide,i){slide.classList.toggle("active",i===target)});
+ var counter=document.getElementById("counter");
+ var progress=document.getElementById("progress");
+ var title=document.getElementById("currentTitle");
+ var notesTitle=document.getElementById("notesTitle");
+ var notesText=document.getElementById("notesText");
+ var prev=document.getElementById("prev");
+ var next=document.getElementById("next");
+ if(counter)counter.textContent=String(target+1).padStart(2,"0")+" / "+String(slides.length).padStart(2,"0");
+ if(progress)progress.style.width=((target+1)/slides.length*100)+"%";
+ if(title)title.textContent=slides[target].dataset.title||"Apresentação";
+ if(notesTitle)notesTitle.textContent="Slide "+(target+1)+" · "+(slides[target].dataset.title||"");
+ if(notesText)notesText.textContent=slides[target].dataset.notes||"";
+ if(prev)prev.disabled=target===0;
+ if(next)next.disabled=target===slides.length-1;
+}
 (function () {
 "use strict";
 var slides=Array.from(document.querySelectorAll(".slide"));
