@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Fluir | Recuperar senha</title>
+<link rel="stylesheet" href="../css/recovery.css">
+</head>
+<body>
+<main class="recovery">
+<a class="brand" href="login.html"><img src="../Assets/brand/fluir-symbol.svg" alt="" width="38" height="38">Fluir</a>
+<section class="card" aria-labelledby="recoveryTitle">
+<div class="eyebrow" id="recoveryStep">Etapa 1 de 2</div>
+<h1 id="recoveryTitle">Recuperar senha</h1>
+<p id="recoveryIntro">Informe o e-mail da sua conta. Enviaremos um código de recuperação, se ela estiver cadastrada.</p>
+<form id="requestForm">
+<label for="email">E-mail</label>
+<input id="email" type="email" required autocomplete="email" maxlength="120" placeholder="seu@email.com">
+<button type="submit">Enviar código</button>
+</form>
+<form id="resetForm" hidden>
+<label for="code">Código recebido por e-mail</label>
+<input id="code" type="text" required autocomplete="one-time-code" autocapitalize="off" spellcheck="false" minlength="16" maxlength="16">
+<label for="password">Nova senha</label>
+<input id="password" type="password" required minlength="8" maxlength="72" autocomplete="new-password">
+<label for="confirm">Confirmar nova senha</label>
+<input id="confirm" type="password" required minlength="8" maxlength="72" autocomplete="new-password">
+<button type="submit">Redefinir senha</button>
+<button type="button" class="secondary" id="resend">Solicitar outro código</button>
+<button type="button" class="secondary" id="changeEmail">Alterar e-mail</button>
+</form>
+<p id="message" role="status" aria-live="polite" hidden></p>
+<a class="back" href="login.html">Voltar ao login</a>
+</section>
+<p class="foot">Nunca compartilhe seu código de recuperação. Ele expira em 15 minutos.</p>
+</main>
+<script src="../js/recovery.js"></script>
+</body>
+</html>
