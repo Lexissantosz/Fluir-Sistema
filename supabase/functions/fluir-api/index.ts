@@ -370,6 +370,13 @@ Deno.serve(async request=>{
            typeof item.text!=="string" || !item.text.trim() || item.text.length>800)
           return failure(origin,400,"Histórico de conversa inválido.");
       }
+      let zone = "America/Sao_Paulo";
+      if(typeof b.fusoHorario==="string" && b.fusoHorario.length<=80){
+        try{new Intl.DateTimeFormat("en-US",{timeZone:b.fusoHorario});zone=b.fusoHorario}catch{/* fallback */}
+      }
+      const dateParts = new Intl.DateTimeFormat("en-CA",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit",weekday:"long"}).formatToParts(new Date());
+      const datePart = (type:string)=>dateParts.find(p=>p.type===type)?.value||"";
+      const today = datePart("year")+"-"+datePart("month")+"-"+datePart("day");
       const key=Deno.env.get("FLUIR_GEMINI_API_KEY")||"";
       if(!key)return failure(origin,503,"Gemini ainda não configurado no Supabase.");
       const model=Deno.env.get("FLUIR_AI_MODEL")||"gemini-3.5-flash-lite";
@@ -381,7 +388,7 @@ Deno.serve(async request=>{
         encodeURIComponent(model)+":generateContent",{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
-            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda no idioma do usuário, com clareza e privacidade. Quando a mensagem pedir explicitamente CRIAR uma tarefa, hábito ou entrada no diário, proponha UMA ação estruturada, para confirmação do usuário; nunca diga que salvou algo. Para hábitos informe os dias da semana (0 domingo até 6 sábado, todos os sete se diário); se a frequência for incerta, pergunte. Para tarefas informe título, descrição opcional, data ISO YYYY-MM-DD e hora HH:mm se especificada. Para diário preserve o sentido do relato em texto e título curto. Se faltarem detalhes essenciais ou o usuário só quiser conversar, use tipo nenhum. Não invente datas, não proponha apagar, editar, consultar ou expor registros. Responda em JSON conforme o esquema."}]},
+            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda no idioma do usuário, com clareza e privacidade. Quando a mensagem pedir explicitamente CRIAR uma tarefa, hábito ou entrada no diário, proponha UMA ação estruturada, para confirmação do usuário; nunca diga que salvou algo. Para hábitos informe os dias da semana (0 domingo até 6 sábado, todos os sete se diário); se a frequência for incerta, pergunte. Para tarefas informe título, descrição opcional, data ISO YYYY-MM-DD e hora HH:mm se especificada. Para diário preserve o sentido do relato em texto e título curto. Se faltarem detalhes essenciais ou o usuário só quiser conversar, use tipo nenhum. Não invente datas, não proponha apagar, editar, consultar ou expor registros. Responda em JSON conforme o esquema. A data local atual do usuário é "+today+" ("+datePart("weekday")+", fuso "+zone+"). Use essa referência para hoje, amanhã e dias da semana. Se o pedido não indicar data, deixe data vazia para o formulário sugerir hoje. Não invente ano ou mês."}]},
             contents:[...history.map((item:{role:"user"|"model";text:string})=>({role:item.role,parts:[{text:item.text.trim()}]})),
               {role:"user",parts:[{text:b.mensagem.trim()}]}],
             generationConfig:{maxOutputTokens:1200,temperature:0.3,responseMimeType:"application/json",responseJsonSchema:{
@@ -410,7 +417,7 @@ Deno.serve(async request=>{
       const candidate=output.acao;
       const titulo=typeof candidate?.titulo==="string"?candidate.titulo.trim().slice(0,150):"";
       const texto=typeof candidate?.texto==="string"?candidate.texto.trim().slice(0,1200):"";
-      const data=typeof candidate?.data==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(candidate.data)&&!isNaN(Date.parse(candidate.data))?candidate.data:"";
+      const data=typeof candidate?.data==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(candidate.data)&&!isNaN(Date.parse(candidate.data))&&new Date(candidate.data+"T00:00:00Z").toISOString().slice(0,10)===candidate.data?candidate.data:"";
       const hora=typeof candidate?.hora==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(candidate.hora)?candidate.hora:"";
       const dias=Array.isArray(candidate?.dias)?[...new Set<number>(candidate.dias.filter((d:unknown)=>Number.isInteger(d)&&Number(d)>=0&&Number(d)<=6))].sort():[];
       let acao=null;
