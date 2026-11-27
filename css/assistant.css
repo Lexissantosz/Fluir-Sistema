@@ -50,3 +50,8 @@ body.dark .fluir-assistant-consent{color:#e1e1d9}
 }
 
 .fluir-assistant-consent[hidden]{display:none!important}.fluir-assistant-bubble>button{margin-top:8px;margin-right:6px}
+
+/* Botao de cancelar das propostas: contraste em tema claro e escuro. */
+.fluir-assistant-bubble .fluir-assistant-reset{color:#171817;background:#fff;border:1px solid #767872;font-size:13px;font-weight:700;padding:10px 14px;min-height:40px;margin-left:0}
+body.dark .fluir-assistant-bubble .fluir-assistant-reset{color:#fff;background:#252622;border-color:#a1a39c}
+.fluir-assistant-bubble .fluir-assistant-reset:focus-visible{outline:3px solid #879e9e;outline-offset:2px}
