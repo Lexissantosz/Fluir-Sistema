@@ -621,46 +621,6 @@ function updateDashboardRealData() {
    Aqui fica a parte do quadradinho que finalmente funciona.
 ===================================================== */
 
-function getDefaultDashboardTasks() {
-  return [
-    {
-      id: "demo-task-1",
-      title: "Revisar proposta do projeto",
-      category: "Trabalho",
-      time: "09:00",
-      completed: false
-    },
-    {
-      id: "demo-task-2",
-      title: "Responder e-mails importantes",
-      category: "Trabalho",
-      time: "11:00",
-      completed: false
-    },
-    {
-      id: "demo-task-3",
-      title: "Estudar capítulo 4",
-      category: "Estudos",
-      time: "14:00",
-      completed: false
-    },
-    {
-      id: "demo-task-4",
-      title: "Treino de força",
-      category: "Saúde",
-      time: "18:00",
-      completed: true
-    },
-    {
-      id: "demo-task-5",
-      title: "Ler 20 páginas",
-      category: "Pessoal",
-      time: "20:30",
-      completed: true
-    }
-  ];
-}
-
 function getDashboardTasks() {
   const realTasks = getStorageJSON("fluir-tasks", []);
 
@@ -679,14 +639,7 @@ function getDashboardTasks() {
     };
   }
 
-  const savedDemoTasks = getStorageJSON("fluir-dashboard-demo-tasks", null);
-
-  return {
-    source: "demo",
-    tasks: Array.isArray(savedDemoTasks) && savedDemoTasks.length
-      ? savedDemoTasks
-      : getDefaultDashboardTasks()
-  };
+  return { source: "real", tasks: [] };
 }
 
 function updateTasksDashboardData() {
