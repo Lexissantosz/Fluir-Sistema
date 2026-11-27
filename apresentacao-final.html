@@ -568,6 +568,42 @@ document.addEventListener("keydown",function(e){
  else if(e.key.toLowerCase()==="n"){notesPanel.classList.toggle("open")}
  else if(e.key==="Escape"){notesPanel.classList.remove("open")}
 });
+
+/* Navegação adicional para apresentação em celular, touch e mouse. */
+var stage=document.querySelector(".stage");
+if(stage){
+ stage.addEventListener("click",function(e){
+   if(overlay.classList.contains("open"))return;
+   if(e.target.closest("a,button,input,textarea,select,[data-open-experience]"))return;
+   go(1);
+ });
+
+ var touchStartX=null;
+ var touchStartY=null;
+
+ stage.addEventListener("touchstart",function(e){
+   if(!e.touches||e.touches.length!==1)return;
+   touchStartX=e.touches[0].clientX;
+   touchStartY=e.touches[0].clientY;
+ },{passive:true});
+
+ stage.addEventListener("touchend",function(e){
+   if(touchStartX===null||touchStartY===null)return;
+   var touch=e.changedTouches&&e.changedTouches[0];
+   if(!touch){touchStartX=null;touchStartY=null;return}
+
+   var dx=touch.clientX-touchStartX;
+   var dy=touch.clientY-touchStartY;
+
+   touchStartX=null;
+   touchStartY=null;
+
+   if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy))return;
+   if(dx<0)go(1);
+   else go(-1);
+ },{passive:true});
+}
+
 show(0);
 })();
 </script>
