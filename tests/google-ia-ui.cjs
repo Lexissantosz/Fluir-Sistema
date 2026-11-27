@@ -144,6 +144,9 @@ async function routeGoogle(page,enabled){
       return route.fulfill({status:401,contentType:"application/json",body:JSON.stringify({mensagem:"Token Google inválido"})});
     });
     await page.goto(url+"/html/login.html",{waitUntil:"domcontentloaded"});
+    await page.locator("#googleLoginMount .fluir-native-google-button").waitFor();
+    assert.equal(await page.locator("#googleLoginMount svg path").count(),4);
+    assert.equal(await page.locator(".page>.preview").isVisible(),false);
     await page.locator("#googleLoginMount .fluir-native-google-button").click();
     await page.locator("#loginMessage").getByText("Token Google inválido").waitFor();
     assert.equal(nativeRequest.idToken,"synthetic-native-token");
@@ -153,6 +156,37 @@ async function routeGoogle(page,enabled){
     await page.locator("#showRegister").click();
     await page.locator("#googleRegisterMount .fluir-native-google-button").waitFor();
     console.log("PASS: Android native SDK route, no web popup, backend rejection respected (mocked)");
+    await page.close();
+
+    page=await browser.newPage({viewport:{width:390,height:844}});
+    let demoApi=0;
+    await page.route(api+"/**",route=>{demoApi++;return route.abort()});
+    await page.goto(url+"/html/demo.html");
+    for(const width of [320,390,480,768,1280]){
+      await page.setViewportSize({width,height:844});
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"demo overflow "+width);
+      assert(await page.locator(".demo-top-actions select").isVisible());
+    }
+    await page.setViewportSize({width:390,height:844});
+    const initial=await page.evaluate(()=>({local:{...localStorage},session:{...sessionStorage}}));
+    await page.locator('.demo-mobile-nav [data-demo-view="tasks"]').click();
+    const tasksBefore=await page.locator(".demo-row").count();
+    await page.getByRole("button",{name:"Nova tarefa",exact:true}).click();
+    await page.locator("#demoTaskPreview").waitFor();
+    assert.equal(await page.locator("#fluirDemoGate").count(),0);
+    await page.locator("#demoTaskForm input[name=title]").fill("QA tarefa");
+    await page.locator("#demoTaskForm select[name=category]").selectOption({label:"Estudos"});
+    await page.getByRole("button",{name:"Salvar tarefa",exact:true}).click();
+    await page.locator("#fluirDemoGate").waitFor();
+    assert.equal(await page.locator("#demoTaskPreview").count(),0);
+    await page.getByRole("button",{name:"Entendi",exact:true}).click();
+    assert.equal(await page.locator(".demo-row").count(),tasksBefore);
+    assert.deepEqual(await page.evaluate(()=>({local:{...localStorage},session:{...sessionStorage}})),initial);
+    assert.equal(demoApi,0);
+    await page.getByRole("button",{name:"Nova tarefa",exact:true}).click();
+    await page.locator("[data-preview-cancel]").click();
+    assert.equal(await page.locator("#demoTaskPreview").count(),0);
+    console.log("PASS: task preview, save blocked, cancellation, no storage or API, toolbar responsive");
     await page.close();
 
     // Conversa real: o histórico somente acompanha mensagens autorizadas nesta aba.
