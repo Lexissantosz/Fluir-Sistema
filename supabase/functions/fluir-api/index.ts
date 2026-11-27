@@ -15,7 +15,9 @@ const productionSecondary = "https://fluir-sistema-lexissantosz.vercel.app";
 const allowed = (Deno.env.get("FLUIR_ALLOWED_ORIGINS") || "").split(",").map(s => s.trim()).filter(Boolean);
 
 function originAllowed(origin: string) {
-  if (origin === production || origin === productionSecondary || allowed.includes(origin)) return true;
+  // Capacitor Android serves bundled web assets at this exact HTTPS origin.
+  // Origin permission is not account authorization; private routes still require currentUser.
+  if (origin === "https://localhost" || origin === production || origin === productionSecondary || allowed.includes(origin)) return true;
   // Previews bound to our exact project/team, not an arbitrary vercel.app hostname.
   return /^https:\/\/fluir-sistema-[a-z0-9-]+-lexissantosz\.vercel\.app$/.test(origin);
 }
