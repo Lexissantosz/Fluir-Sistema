@@ -142,10 +142,33 @@
           <div class="setting-row">
             <span>Tema</span>
 
-            <div class="segmented-control">
+            <div class="segmented-control theme-control">
               <button class="theme-option" data-theme="light" type="button">Claro</button>
               <button class="theme-option" data-theme="dark" type="button">Escuro</button>
+              <button class="theme-option" data-theme="cafe-light" data-secret-theme="true" type="button" hidden>Café com Leite</button>
+              <button class="theme-option" data-theme="cafe-dark" data-secret-theme="true" type="button" hidden>Café Espresso</button>
             </div>
+          </div>
+
+          <div class="secret-theme-unlock" aria-labelledby="secretThemeTitle">
+            <div class="secret-theme-copy">
+              <strong id="secretThemeTitle">Código de tema</strong>
+              <small>Algumas aparências especiais só aparecem depois de serem desbloqueadas.</small>
+            </div>
+
+            <div class="secret-code-form">
+              <input
+                type="text"
+                id="secretThemeCode"
+                placeholder="Digite um código"
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="secretThemeMessage"
+              />
+              <button type="button" id="unlockSecretThemeBtn">Desbloquear</button>
+            </div>
+
+            <p class="secret-theme-message" id="secretThemeMessage" aria-live="polite"></p>
           </div>
 
           <div class="setting-row">
