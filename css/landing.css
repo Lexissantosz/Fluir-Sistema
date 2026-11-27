@@ -366,14 +366,17 @@ footer {
 .version-grid article{display:flex;flex-direction:column;gap:10px}
 .version-grid article p{flex:1;margin:0 0 8px}
 .version-status{align-self:flex-start;color:inherit;font-size:11px;font-weight:700;letter-spacing:.02em;opacity:.7}
-.version-action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;min-height:44px;padding:10px 14px;border:1px solid #d5dad7;border-radius:10px;background:transparent;color:#1a211d;font:inherit;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;text-align:center}
-.version-action-primary{background:#19231d;color:#fff;border-color:#19231d}
+.version-action{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;min-height:44px;padding:10px 14px;border:1px solid #dedede;border-radius:10px;background:transparent;color:#171717;font:inherit;font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;text-align:center}
+.version-action-primary{background:#171717;color:#fff;border-color:#171717}
 .version-action:disabled{opacity:.65;cursor:default}
 .version-note{font-size:12px;opacity:.7}
-.platform-install-dialog{color:#19231d;background:#fff;border:1px solid #d5dad7;border-radius:20px;padding:26px;width:min(460px,calc(100% - 32px));max-height:85vh;overflow:auto;margin:auto;box-sizing:border-box}
-.platform-install-dialog::backdrop{background:#14231c80}
+.platform-install-dialog{color:#171717;background:#fff;border:1px solid #dedede;border-radius:20px;padding:26px;width:min(460px,calc(100% - 32px));max-height:85vh;overflow:auto;margin:auto;box-sizing:border-box}
+.platform-install-dialog::backdrop{background:#17171780}
 .platform-install-dialog h3{margin:0 0 12px}
 .platform-install-dialog ol{padding-left:22px;line-height:1.7}
 .platform-dialog-actions{display:flex;gap:10px;align-items:center;margin-top:20px}
 .platform-dialog-actions form{margin:0;flex:1}
 .platform-dialog-actions>a{flex:1}
+.version-action-primary:hover:not(:disabled){background:#333;border-color:#333}
+.version-action:focus-visible{outline:2px solid #171717;outline-offset:3px}
+.version-grid article{min-width:0}
