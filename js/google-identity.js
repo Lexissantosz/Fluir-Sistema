@@ -125,6 +125,46 @@
     });
   }
 
+  async function initializeNativeGoogle(clientId) {
+    const plugin = window.Capacitor?.Plugins?.GoogleSignIn;
+    if (!plugin || typeof plugin.initialize !== "function" || typeof plugin.signIn !== "function") {
+      message("O login Google nativo não está disponível nesta versão. Use e-mail e senha ou a versão web.", true);
+      return;
+    }
+    await plugin.initialize({ clientId });
+    const tr = value => window.FluirI18n?.t?.(value) || value;
+    const buttons = [];
+    let nativeBusy = false;
+    for (const mount of [loginTarget, registerTarget, linkTarget].filter(Boolean)) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "fluir-native-google-button";
+      button.textContent = tr(isProfile ? "Vincular conta Google" : mount === registerTarget ? "Cadastrar com Google" : "Entrar com Google");
+      button.addEventListener("click", async () => {
+        if (nativeBusy || busy) return;
+        nativeBusy = true;
+        buttons.forEach(item => { item.disabled = true; });
+        try {
+          const result = await plugin.signIn();
+          if (typeof result?.idToken !== "string" || !result.idToken) {
+            message(tr("O Google não retornou uma identidade válida."), true);
+            return;
+          }
+          await credentialReceived({ credential: result.idToken });
+        } catch (error) {
+          // Do not expose credential material or raw provider errors.
+          message(tr("Não foi possível concluir o login Google no aplicativo. Tente novamente ou use a versão web."), true);
+        } finally {
+          nativeBusy = false;
+          buttons.forEach(item => { item.disabled = false; });
+        }
+      });
+      buttons.push(button);
+      mount.replaceChildren(button);
+      mount.hidden = false;
+    }
+  }
+
   async function initialize() {
     try {
       const { response, data } = await request("/google/config");
@@ -136,6 +176,12 @@
         if (!current?.token) return;
         const status = await fetch(base.replace(/\/usuarios$/, "/conta/seguranca"), {headers:{Authorization:"Bearer "+current.token},cache:"no-store"});
         if (!status.ok || (await status.json()).google?.vinculado !== false) return;
+      }
+      // Google web sign-in is not supported inside an Android WebView.
+      // The native SDK obtains an ID token for the same web client audience.
+      if (window.Capacitor?.getPlatform?.() === "android") {
+        await initializeNativeGoogle(data.clientId);
+        return;
       }
       await loadGoogleScript();
       window.google.accounts.id.initialize({
