@@ -132,15 +132,27 @@
     const info=document.createElement("p");
     const names=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
     info.textContent=action.tipo==="habito"?(action.dias||[]).map(d=>names[d]).join(", "):action.tipo==="tarefa"?[action.data||localDate(),action.hora||"",action.texto||""].filter(Boolean).join(" · "):action.texto||"";
+    let dateInput=null,timeInput=null;
+    if(action.tipo==="tarefa"){
+      const fields=document.createElement("div");fields.className="fluir-assistant-date-fields";
+      const dateLabel=document.createElement("label");dateLabel.textContent=tr("Data");
+      dateInput=document.createElement("input");dateInput.type="date";dateInput.required=true;dateInput.value=action.data||localDate();dateLabel.append(dateInput);
+      const timeLabel=document.createElement("label");timeLabel.textContent=tr("Horário opcional");
+      timeInput=document.createElement("input");timeInput.type="time";timeInput.value=action.hora||"";timeLabel.append(timeInput);
+      fields.append(dateLabel,timeLabel);box.append(heading,info,fields);
+      info.textContent=action.texto||"";
+    }
     const save=document.createElement("button");save.type="button";save.className="fluir-assistant-send";save.textContent=tr("Confirmar e salvar");
     const cancel=document.createElement("button");cancel.type="button";cancel.className="fluir-assistant-reset";cancel.textContent=tr("Cancelar");
     cancel.addEventListener("click",()=>{save.remove();cancel.remove();info.textContent=tr("Ação cancelada.")});
     save.addEventListener("click",async()=>{
+      if(dateInput){if(!dateInput.reportValidity())return;action={...action,data:dateInput.value,hora:timeInput.value};}
       save.disabled=true;cancel.disabled=true;
+      if(dateInput){dateInput.disabled=true;timeInput.disabled=true;}
       try{await executeAction(action,account);save.remove();cancel.remove();const status=document.createElement("p");status.textContent=tr("Registro salvo com sucesso.");box.append(status)}
-      catch(e){save.disabled=false;cancel.disabled=false;say(e.message||"Não foi possível salvar.","error")}
+      catch(e){save.disabled=false;cancel.disabled=false;if(dateInput){dateInput.disabled=false;timeInput.disabled=false;}say(e.message||"Não foi possível salvar.","error")}
     });
-    box.append(heading,info,save,cancel);feed.append(box);feed.scrollTop=feed.scrollHeight;
+    if(!dateInput)box.append(heading,info);box.append(save,cancel);feed.append(box);feed.scrollTop=feed.scrollHeight;
   }
   function fakeAnswer(message){
     const m=message.toLocaleLowerCase("pt-BR");
@@ -201,7 +213,7 @@
       const response=await fetch(API,{
         method:"POST",
         headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-        body:JSON.stringify({mensagem:message,consentimento:true,historico:history}),
+        body:JSON.stringify({mensagem:message,consentimento:true,historico:history,fusoHorario:Intl.DateTimeFormat().resolvedOptions().timeZone}),
         cache:"no-store",
         signal:controller.signal
       });
