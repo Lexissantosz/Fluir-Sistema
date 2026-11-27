@@ -128,6 +128,33 @@ async function routeGoogle(page,enabled){
     console.log("PASS: Consentimento explícito enviado à API e erro de IA visível");
     await page.close();
 
+    // Android bridge: synthetic token and mocked transport, no live Google account.
+    page=await browser.newPage({viewport:{width:390,height:844}});
+    await page.addInitScript(()=>{
+      window.Capacitor={getPlatform:()=>"android",Plugins:{GoogleSignIn:{
+        initialize:async opts=>{window.__nativeInit=opts},
+        signIn:async()=>({idToken:"synthetic-native-token"})
+      }}};
+    });
+    let webGoogleLoaded=false,nativeRequest=null;
+    await page.route("https://accounts.google.com/gsi/client",route=>{webGoogleLoaded=true;return route.abort()});
+    await page.route(api+"/usuarios/google/config",route=>route.fulfill({status:200,contentType:"application/json",body:JSON.stringify({habilitado:true,clientId:"12345-test.apps.googleusercontent.com"})}));
+    await page.route(api+"/usuarios/google",route=>{
+      nativeRequest=JSON.parse(route.request().postData());
+      return route.fulfill({status:401,contentType:"application/json",body:JSON.stringify({mensagem:"Token Google inválido"})});
+    });
+    await page.goto(url+"/html/login.html",{waitUntil:"domcontentloaded"});
+    await page.locator("#googleLoginMount .fluir-native-google-button").click();
+    await page.locator("#loginMessage").getByText("Token Google inválido").waitFor();
+    assert.equal(nativeRequest.idToken,"synthetic-native-token");
+    assert.equal(await page.evaluate(()=>window.__nativeInit.clientId),"12345-test.apps.googleusercontent.com");
+    assert.equal(webGoogleLoaded,false);
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+    await page.locator("#showRegister").click();
+    await page.locator("#googleRegisterMount .fluir-native-google-button").waitFor();
+    console.log("PASS: Android native SDK route, no web popup, backend rejection respected (mocked)");
+    await page.close();
+
     // Conversa real: o histórico somente acompanha mensagens autorizadas nesta aba.
     page=await browser.newPage({viewport:{width:390,height:844}});
     await page.addInitScript(()=>{
