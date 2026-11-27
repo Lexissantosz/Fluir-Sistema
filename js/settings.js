@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadUserProfile();
   hideDisabledModules();
 
+  setupSecretThemeUnlock();
   setupThemeOptions();
   setupFontOptions();
   setupDensityOptions();
@@ -42,17 +43,79 @@ function getStorageJSON(key, fallback = {}) {
 
 
 /* ===================================================== */
-/* 3. TEMA CLARO / ESCURO */
-/* O tema continua salvo em fluir-theme */
+/* 3. TEMAS */
+/* Claro e escuro continuam públicos. Os cafés são secretos. */
 /* ===================================================== */
+
+const SECRET_THEME_STORAGE_KEY = "fluir-unlocked-themes";
+
+const SECRET_THEME_CODES = {
+  "FLUIR-LATTE": {
+    theme: "cafe-light",
+    name: "Café com Leite"
+  },
+  "FLUIR-ESPRESSO": {
+    theme: "cafe-dark",
+    name: "Café Espresso"
+  }
+};
+
+function getUnlockedThemes() {
+  const savedThemes = getStorageJSON(SECRET_THEME_STORAGE_KEY, []);
+
+  return Array.isArray(savedThemes) ? savedThemes : [];
+}
+
+function saveUnlockedThemes(themes) {
+  localStorage.setItem(
+    SECRET_THEME_STORAGE_KEY,
+    JSON.stringify([...new Set(themes)])
+  );
+}
+
+function isThemeAvailable(theme) {
+  if (theme === "light" || theme === "dark") {
+    return true;
+  }
+
+  return getUnlockedThemes().includes(theme);
+}
+
+function applyTheme(theme) {
+  const safeTheme = isThemeAvailable(theme) ? theme : "light";
+
+  document.body.classList.remove(
+    "dark",
+    "theme-cafe-light",
+    "theme-cafe-dark"
+  );
+
+  if (safeTheme === "dark" || safeTheme === "cafe-dark") {
+    document.body.classList.add("dark");
+  }
+
+  if (safeTheme === "cafe-light") {
+    document.body.classList.add("theme-cafe-light");
+  }
+
+  if (safeTheme === "cafe-dark") {
+    document.body.classList.add("theme-cafe-dark");
+  }
+
+  if (safeTheme !== theme) {
+    localStorage.setItem("fluir-theme", safeTheme);
+  }
+
+  return safeTheme;
+}
 
 function applySavedTheme() {
   const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const activeTheme = applyTheme(savedTheme);
 
-  document.body.classList.toggle("dark", savedTheme === "dark");
-
-  updateThemeButtons(savedTheme);
-  updateThemeStatusIcon(savedTheme);
+  refreshSecretThemeOptions();
+  updateThemeButtons(activeTheme);
+  updateThemeStatusIcon(activeTheme);
 }
 
 function setupThemeOptions() {
@@ -62,14 +125,83 @@ function setupThemeOptions() {
     button.addEventListener("click", () => {
       const selectedTheme = button.dataset.theme;
 
+      if (!isThemeAvailable(selectedTheme)) {
+        return;
+      }
+
       localStorage.setItem("fluir-theme", selectedTheme);
 
-      document.body.classList.toggle("dark", selectedTheme === "dark");
+      const activeTheme = applyTheme(selectedTheme);
 
-      updateThemeButtons(selectedTheme);
-      updateThemeStatusIcon(selectedTheme);
+      updateThemeButtons(activeTheme);
+      updateThemeStatusIcon(activeTheme);
     });
   });
+}
+
+function refreshSecretThemeOptions() {
+  const unlockedThemes = new Set(getUnlockedThemes());
+
+  document.querySelectorAll("[data-secret-theme='true']").forEach((button) => {
+    button.hidden = !unlockedThemes.has(button.dataset.theme);
+  });
+}
+
+function setupSecretThemeUnlock() {
+  const codeInput = document.getElementById("secretThemeCode");
+  const unlockButton = document.getElementById("unlockSecretThemeBtn");
+  const message = document.getElementById("secretThemeMessage");
+
+  if (!codeInput || !unlockButton || !message) {
+    return;
+  }
+
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.classList.remove("success", "error");
+    message.classList.add(type);
+  }
+
+  function unlockTheme() {
+    const normalizedCode = codeInput.value.trim().toUpperCase();
+    const reward = SECRET_THEME_CODES[normalizedCode];
+
+    if (!reward) {
+      showMessage("Código não reconhecido. Confira e tente novamente.", "error");
+      return;
+    }
+
+    const unlockedThemes = getUnlockedThemes();
+
+    if (unlockedThemes.includes(reward.theme)) {
+      showMessage(`${reward.name} já está desbloqueado em Aparência.`, "success");
+      codeInput.value = "";
+      refreshSecretThemeOptions();
+      return;
+    }
+
+    unlockedThemes.push(reward.theme);
+    saveUnlockedThemes(unlockedThemes);
+    refreshSecretThemeOptions();
+
+    showMessage(
+      `Tema desbloqueado: ${reward.name}. Ele já está disponível em Aparência.`,
+      "success"
+    );
+
+    codeInput.value = "";
+  }
+
+  unlockButton.addEventListener("click", unlockTheme);
+
+  codeInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      unlockTheme();
+    }
+  });
+
+  refreshSecretThemeOptions();
 }
 
 function updateThemeButtons(activeTheme) {
@@ -85,8 +217,17 @@ function updateThemeStatusIcon(activeTheme) {
 
   if (!themeStatusBtn) return;
 
-  themeStatusBtn.textContent = activeTheme === "dark" ? "☾" : "☼";
-  themeStatusBtn.title = activeTheme === "dark" ? "Tema escuro ativo" : "Tema claro ativo";
+  const themeLabels = {
+    light: "Tema claro ativo",
+    dark: "Tema escuro ativo",
+    "cafe-light": "Café com Leite ativo",
+    "cafe-dark": "Café Espresso ativo"
+  };
+
+  const darkTheme = activeTheme === "dark" || activeTheme === "cafe-dark";
+
+  themeStatusBtn.textContent = darkTheme ? "☾" : "☼";
+  themeStatusBtn.title = themeLabels[activeTheme] || "Tema ativo";
 }
 
 
