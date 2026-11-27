@@ -31,6 +31,17 @@ const server=http.createServer((req,res)=>{
  },keys);
  assert.deepEqual(await b.evaluate(keys=>keys.map(k=>FluirStorage.getItem(k)),keys),keys.map(()=>null));
  assert.notEqual(await a.evaluate(()=>FluirStorage.databaseName("fluir-attachments-db")),await b.evaluate(()=>FluirStorage.databaseName("fluir-attachments-db")));
+ // Persist a synthetic file in A's database and prove that B cannot read it.
+ await a.goto(base+"attachments.html");
+ await b.goto(base+"attachments.html");
+ const fileId=await a.evaluate(async()=>{
+   const record=await saveAttachmentFileToDatabase(new File(["SYNTHETIC_QA_A"],"qa-private.txt",{type:"text/plain"}),123);
+   return record.id;
+ });
+ assert.equal(await b.evaluate(id=>getAttachmentFileFromDatabase(id),fileId),null);
+ assert.equal(await a.evaluate(async id=>(await getAttachmentFileFromDatabase(id)).blob.text(),fileId),"SYNTHETIC_QA_A");
+ await a.evaluate(id=>deleteAttachmentFileFromDatabase(id),fileId);
+ console.log("PASS: actual synthetic IndexedDB file isolated across accounts");
  await b.goto(base+"dashboard.html");
  await b.locator("#dashboardTaskList").getByText("Nenhuma tarefa ainda").waitFor();
  assert.equal(await b.getByText("PRIVATE_A",{exact:true}).count(),0);
