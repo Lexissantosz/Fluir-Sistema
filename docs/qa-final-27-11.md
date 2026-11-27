@@ -9,3 +9,5 @@
 - Pendências: homologação da versão final em celular real, verificação pública Google, migração dos dados locais para nuvem e instalação definitiva assinada.
 
 Não publicar na main antes da aprovação da equipe.
+
+Observação final: o APK final foi compilado e verificado, mas o link compartilhado do hospedeiro final redirecionou para autenticação Vercel em uma sessão limpa. O botão de download direto foi temporariamente desabilitado para não entregar um link inválido. Distribuição pelo WhatsApp da equipe.
