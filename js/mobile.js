@@ -64,7 +64,7 @@
 
   function getStorageJSON(key, fallback = {}) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;

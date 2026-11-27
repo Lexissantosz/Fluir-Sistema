@@ -328,10 +328,10 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadHabits() {
-  const savedHabits = localStorage.getItem("fluir-habits");
+  const savedHabits = FluirStorage.getItem("fluir-habits");
 
   if (!savedHabits) {
-    habits = [...defaultHabits];
+    habits = [];
     saveHabits();
     return;
   }
@@ -340,13 +340,13 @@ function loadHabits() {
     habits = JSON.parse(savedHabits);
   } catch (error) {
     console.warn("Erro ao ler hábitos salvos:", error);
-    habits = [...defaultHabits];
+    habits = [];
     saveHabits();
   }
 }
 
 function saveHabits() {
-  localStorage.setItem("fluir-habits", JSON.stringify(habits));
+  FluirStorage.setItem("fluir-habits", JSON.stringify(habits));
 }
 
 
@@ -1246,14 +1246,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

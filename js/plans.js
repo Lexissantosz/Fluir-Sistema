@@ -171,7 +171,7 @@ let selectedPlanToConfirm = null;
 
 function getStorageJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -179,7 +179,7 @@ function getStorageJSON(key, fallback) {
 }
 
 function saveStorageJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  FluirStorage.setItem(key, JSON.stringify(value));
 }
 
 
@@ -190,7 +190,7 @@ function saveStorageJSON(key, value) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -273,7 +273,7 @@ function hideDisabledModules() {
 // =====================================================
 
 function getCurrentPlan() {
-  return localStorage.getItem("fluir-current-plan") || "Gratuito";
+  return FluirStorage.getItem("fluir-current-plan") || "Gratuito";
 }
 
 function getCurrentPlanConfig() {
@@ -293,7 +293,7 @@ function saveCurrentPlan(planName) {
     - fluir-plan-access: permissões do plano
     - fluir-plan-status: status de assinatura
   */
-  localStorage.setItem("fluir-current-plan", plan.name);
+  FluirStorage.setItem("fluir-current-plan", plan.name);
   saveStorageJSON("fluir-plan-access", plan.permissions);
 
   saveStorageJSON("fluir-plan-status", {
@@ -599,14 +599,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

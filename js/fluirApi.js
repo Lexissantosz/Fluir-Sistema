@@ -13,7 +13,7 @@ const FluirAPI = {
   // ---------------------------------------------------
   _getJSON(key, fallback) {
     try {
-      const raw = localStorage.getItem(key);
+      const raw = FluirStorage.getItem(key);
       return raw ? JSON.parse(raw) : fallback;
     } catch (error) {
       console.warn(`Erro ao ler ${key}:`, error);
@@ -22,7 +22,7 @@ const FluirAPI = {
   },
 
   _setJSON(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    FluirStorage.setItem(key, JSON.stringify(value));
   },
 
   // ---------------------------------------------------
@@ -41,11 +41,11 @@ const FluirAPI = {
   // TEMA (claro/escuro)
   // ---------------------------------------------------
   getTheme() {
-    return localStorage.getItem("fluir-theme") || "light";
+    return FluirStorage.getItem("fluir-theme") || "light";
   },
 
   saveTheme(theme) {
-    localStorage.setItem("fluir-theme", theme);
+    FluirStorage.setItem("fluir-theme", theme);
   },
 
   // ---------------------------------------------------

@@ -89,7 +89,7 @@ async function routeGoogle(page,enabled){
     page=await browser.newPage();
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     await routeGoogle(page,true);
     await page.route(api+"/usuarios/google/vincular",route=>route.fulfill({
@@ -105,7 +105,7 @@ async function routeGoogle(page,enabled){
     page=await browser.newPage({viewport:{width:1200,height:850}});
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     let sent=null;
     await page.route(api+"/assistente/chat",async route=>{
@@ -129,7 +129,7 @@ async function routeGoogle(page,enabled){
     page=await browser.newPage({viewport:{width:390,height:844}});
     await page.addInitScript(()=>{
       sessionStorage.setItem("fluir-user",JSON.stringify({id:777,nome:"Fluir QA",email:"qa@example.invalid",token:"abc12345678901234567890123456789012345678"}));
-      localStorage.setItem("fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
+      localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,onboardingConcluido:true,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     const requests=[];
     await page.route(api+"/assistente/chat",route=>{

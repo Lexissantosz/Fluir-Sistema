@@ -70,7 +70,7 @@ const profileFormMessage = document.getElementById("profileFormMessage");
 
 function getStorageJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -78,7 +78,7 @@ function getStorageJSON(key, fallback) {
 }
 
 function saveStorageJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  FluirStorage.setItem(key, JSON.stringify(value));
 }
 
 
@@ -88,7 +88,7 @@ function saveStorageJSON(key, value) {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -119,7 +119,7 @@ if (themeBtn) {
 
     const isDarkMode = body.classList.contains("dark");
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
 
     applySavedTheme();
   });

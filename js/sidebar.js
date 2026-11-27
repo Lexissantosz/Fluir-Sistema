@@ -40,7 +40,7 @@
   }
 
   function getActiveModuleKeys() {
-    const savedSetup = localStorage.getItem("fluir-setup");
+    const savedSetup = FluirStorage.getItem("fluir-setup");
 
     if (!savedSetup) {
       return null;

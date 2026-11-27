@@ -155,7 +155,7 @@ const ATTACHMENT_FILES_STORE = "files";
 function openAttachmentsDatabase() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(
-      ATTACHMENTS_DB_NAME,
+      FluirStorage.databaseName(ATTACHMENTS_DB_NAME),
       ATTACHMENTS_DB_VERSION
     );
 
@@ -429,7 +429,7 @@ function isValidImageReference(value) {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -451,7 +451,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -475,7 +475,7 @@ function applySavedTheme() {
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -502,7 +502,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -581,7 +581,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadAttachments() {
-  const saved = localStorage.getItem("fluir-attachments");
+  const saved = FluirStorage.getItem("fluir-attachments");
 
   if (!saved) {
     attachments = [];
@@ -599,7 +599,7 @@ function loadAttachments() {
 }
 
 function saveAttachments() {
-  localStorage.setItem("fluir-attachments", JSON.stringify(attachments));
+  FluirStorage.setItem("fluir-attachments", JSON.stringify(attachments));
 }
 
 
@@ -608,11 +608,11 @@ function saveAttachments() {
 // =====================================================
 
 function saveTimelineEvent(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 function createAttachmentTimelineEvent(title, description) {
@@ -2511,14 +2511,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

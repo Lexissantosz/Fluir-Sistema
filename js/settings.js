@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function getStorageJSON(key, fallback = {}) {
   try {
-    return JSON.parse(localStorage.getItem(key)) || fallback;
+    return JSON.parse(FluirStorage.getItem(key)) || fallback;
   } catch (error) {
     console.warn(`Erro ao ler ${key}:`, error);
     return fallback;
@@ -47,7 +47,7 @@ function getStorageJSON(key, fallback = {}) {
 /* ===================================================== */
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme") || "light";
+  const savedTheme = FluirStorage.getItem("fluir-theme") || "light";
 
   document.body.classList.toggle("dark", savedTheme === "dark");
 
@@ -62,7 +62,7 @@ function setupThemeOptions() {
     button.addEventListener("click", () => {
       const selectedTheme = button.dataset.theme;
 
-      localStorage.setItem("fluir-theme", selectedTheme);
+      FluirStorage.setItem("fluir-theme", selectedTheme);
 
       document.body.classList.toggle("dark", selectedTheme === "dark");
 
@@ -237,7 +237,7 @@ function setupTabs() {
 /* ===================================================== */
 
 function setupFontOptions() {
-  const savedFontSize = localStorage.getItem("fluir-font-size") || "medium";
+  const savedFontSize = FluirStorage.getItem("fluir-font-size") || "medium";
   const fontButtons = document.querySelectorAll(".font-option");
 
   updateButtonGroup(fontButtons, savedFontSize, "font");
@@ -246,7 +246,7 @@ function setupFontOptions() {
     button.addEventListener("click", () => {
       const selectedFontSize = button.dataset.font;
 
-      localStorage.setItem("fluir-font-size", selectedFontSize);
+      FluirStorage.setItem("fluir-font-size", selectedFontSize);
       updateButtonGroup(fontButtons, selectedFontSize, "font");
 
       document.body.dataset.fontSize = selectedFontSize;
@@ -263,7 +263,7 @@ function setupFontOptions() {
 /* ===================================================== */
 
 function setupDensityOptions() {
-  const savedDensity = localStorage.getItem("fluir-layout-density") || "comfortable";
+  const savedDensity = FluirStorage.getItem("fluir-layout-density") || "comfortable";
   const densityButtons = document.querySelectorAll(".density-option");
 
   updateButtonGroup(densityButtons, savedDensity, "density");
@@ -272,7 +272,7 @@ function setupDensityOptions() {
     button.addEventListener("click", () => {
       const selectedDensity = button.dataset.density;
 
-      localStorage.setItem("fluir-layout-density", selectedDensity);
+      FluirStorage.setItem("fluir-layout-density", selectedDensity);
       updateButtonGroup(densityButtons, selectedDensity, "density");
 
       document.body.dataset.layoutDensity = selectedDensity;
@@ -344,7 +344,7 @@ function setupResetButtons() {
 
       if (!confirmed) return;
 
-      localStorage.removeItem(storageKey);
+      FluirStorage.removeItem(storageKey);
 
       alert("Dados apagados com sucesso.");
     });
@@ -370,14 +370,14 @@ function setupSelectSave(selectId, storageKey) {
 
   if (!select) return;
 
-  const savedValue = localStorage.getItem(storageKey);
+  const savedValue = FluirStorage.getItem(storageKey);
 
   if (savedValue) {
     select.value = savedValue;
   }
 
   select.addEventListener("change", () => {
-    localStorage.setItem(storageKey, select.value);
+    FluirStorage.setItem(storageKey, select.value);
   });
 }
 
@@ -386,14 +386,14 @@ function setupCheckboxSaves() {
 
   checkboxes.forEach((checkbox, index) => {
     const storageKey = `fluir-setting-toggle-${index}`;
-    const savedValue = localStorage.getItem(storageKey);
+    const savedValue = FluirStorage.getItem(storageKey);
 
     if (savedValue !== null) {
       checkbox.checked = savedValue === "true";
     }
 
     checkbox.addEventListener("change", () => {
-      localStorage.setItem(storageKey, String(checkbox.checked));
+      FluirStorage.setItem(storageKey, String(checkbox.checked));
     });
   });
 }
@@ -491,7 +491,7 @@ function setupQuickSetupEditor() {
     currentSetup.onboardingConcluido = true;
     currentSetup.atualizadoEm = new Date().toISOString();
 
-    localStorage.setItem("fluir-setup", JSON.stringify(currentSetup));
+    FluirStorage.setItem("fluir-setup", JSON.stringify(currentSetup));
 
     if (message) {
       message.textContent = "Configurações salvas com sucesso.";

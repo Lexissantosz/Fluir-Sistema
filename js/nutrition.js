@@ -263,7 +263,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadMeals() {
-  const saved = localStorage.getItem("fluir-nutrition");
+  const saved = FluirStorage.getItem("fluir-nutrition");
 
   if (!saved) {
     meals = [];
@@ -281,7 +281,7 @@ function loadMeals() {
 }
 
 function saveMeals() {
-  localStorage.setItem("fluir-nutrition", JSON.stringify(meals));
+  FluirStorage.setItem("fluir-nutrition", JSON.stringify(meals));
 }
 
 
@@ -891,14 +891,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

@@ -93,7 +93,7 @@ const defaultSetup = {
 // =====================================================
 
 function getSavedSetup() {
-  const savedSetup = localStorage.getItem("fluir-setup");
+  const savedSetup = FluirStorage.getItem("fluir-setup");
 
   if (!savedSetup) {
     return defaultSetup;
@@ -115,7 +115,7 @@ const setupData = getSavedSetup();
 // =====================================================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -142,7 +142,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 
@@ -565,7 +565,7 @@ function formatReminderDateLabel(dateKey) {
 }
 
 function getUpcomingReminders(limit = 3) {
-  const savedTasks = JSON.parse(localStorage.getItem("fluir-tasks")) || [];
+  const savedTasks = JSON.parse(FluirStorage.getItem("fluir-tasks")) || [];
   const todayKey = getTodayKey();
 
   return savedTasks
@@ -620,7 +620,7 @@ function formatOverdueLabel(dateKey) {
 }
 
 function getOverdueReminders(limit = 3) {
-  const savedTasks = JSON.parse(localStorage.getItem("fluir-tasks")) || [];
+  const savedTasks = JSON.parse(FluirStorage.getItem("fluir-tasks")) || [];
   const todayKey = getTodayKey();
 
   return savedTasks
@@ -661,11 +661,11 @@ function renderOverdueReminders() {
 // =====================================================
 
 function saveEventToLocalStorage(eventData) {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   savedEvents.unshift(eventData);
 
-  localStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
+  FluirStorage.setItem("fluir-timeline-events", JSON.stringify(savedEvents));
 }
 
 
@@ -849,7 +849,7 @@ function addEventToTimeline(eventData) {
 // =====================================================
 
 function loadSavedTimelineEvents() {
-  const savedEvents = JSON.parse(localStorage.getItem("fluir-timeline-events")) || [];
+  const savedEvents = JSON.parse(FluirStorage.getItem("fluir-timeline-events")) || [];
 
   if (!savedEvents.length) {
     return;
@@ -1155,14 +1155,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

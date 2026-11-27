@@ -51,7 +51,7 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
 
   try {
     const salvo = JSON.parse(
-      localStorage.getItem("fluir-setup") || "null"
+      FluirStorage.getItem("fluir-setup") || "null"
     );
 
     const pertenceAoUsuario =
@@ -143,7 +143,7 @@ function hydrateSetupFromOnboarding(usuario, onboarding) {
     atualizadoEm: new Date().toISOString()
   };
 
-  localStorage.setItem(
+  FluirStorage.setItem(
     "fluir-setup",
     JSON.stringify(setup)
   );
@@ -312,7 +312,7 @@ async function readResponse(response) {
 // =============================
 
 function applySavedTheme() {
-  const savedTheme = localStorage.getItem("fluir-theme");
+  const savedTheme = FluirStorage.getItem("fluir-theme");
 
   if (savedTheme === "dark") {
     body.classList.add("dark");
@@ -376,7 +376,7 @@ if (themeBtn) {
       ? "<span>☼</span> Claro"
       : "<span>☾</span> Escuro";
 
-    localStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
+    FluirStorage.setItem("fluir-theme", isDarkMode ? "dark" : "light");
   });
 }
 

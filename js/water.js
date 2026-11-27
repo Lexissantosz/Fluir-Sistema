@@ -265,7 +265,7 @@ function applySelectedModulesToMenu() {
 // =====================================================
 
 function loadWaterData() {
-  const saved = localStorage.getItem("fluir-water");
+  const saved = FluirStorage.getItem("fluir-water");
 
   /*
     Agora a meta padrão é em ml.
@@ -330,7 +330,7 @@ function loadWaterData() {
 }
 
 function saveWaterData() {
-  localStorage.setItem("fluir-water", JSON.stringify(waterData));
+  FluirStorage.setItem("fluir-water", JSON.stringify(waterData));
 }
 
 
@@ -1003,14 +1003,14 @@ if (notifDropdown) {
 
 function getHeaderProfile() {
   try {
-    return JSON.parse(localStorage.getItem("fluir-profile")) || {};
+    return JSON.parse(FluirStorage.getItem("fluir-profile")) || {};
   } catch (error) {
     return {};
   }
 }
 
 function saveHeaderProfile(profile) {
-  localStorage.setItem("fluir-profile", JSON.stringify(profile));
+  FluirStorage.setItem("fluir-profile", JSON.stringify(profile));
 }
 
 function renderHeaderProfileDropdown() {

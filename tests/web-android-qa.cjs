@@ -10,7 +10,7 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
    const setup={user:{id:998,name:"QA",nickname:"QA",email:"qa@example.invalid"},usuarioId:998,onboardingConcluido:true,
       modules:{tasks:true,habits:true,water:true,menstrualCycle:true,finances:true,attachments:true,diary:true},
       preferences:{water:{dailyGoal:2000}}};
-   localStorage.setItem("fluir-setup",JSON.stringify(setup));
+   localStorage.setItem("fluir:account:"+setup.usuarioId+":fluir-setup",JSON.stringify(setup));
    sessionStorage.setItem("fluir-user",JSON.stringify({id:998,token:"local_qa_token_01234567890123456"}));
    sessionStorage.setItem("fluir-onboarding-completed","true");
   });
