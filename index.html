@@ -14,6 +14,9 @@
   >
 
   <link rel="stylesheet" href="./css/landing.css" />
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#F4F9F6">
+  <link rel="apple-touch-icon" href="./Assets/brand/fluir-touch-icon.png">
 </head>
 
 <body>
@@ -157,37 +160,42 @@
 
   <div class="version-grid">
     <article>
+      <span class="version-status">Disponível</span>
       <h3>Sistema Web</h3>
-      <p>
-        Versão acessível pelo navegador, ideal para uso em computadores,
-        notebooks, tablets e celulares, com acesso direto pela internet.
-      </p>
+      <p>Acesse o Fluir pelo navegador em computadores, tablets e celulares, sem instalar nada.</p>
+      <a class="version-action version-action-primary" href="html/login.html">Acessar o Fluir <span aria-hidden="true">↗</span></a>
     </article>
-
     <article>
+      <span class="version-status">Versão web instalável</span>
       <h3>App Android</h3>
-      <p>
-        Aplicativo mobile planejado para celulares Android, com interface
-        própria para uso diário no celular.
-      </p>
+      <p>Use o Fluir na tela inicial do celular. O APK nativo está em atualização e validação.</p>
+      <button class="version-action version-action-primary" type="button" data-install-platform="android">Instalar no Android</button>
+      <button class="version-action" type="button" disabled>Baixar APK · em validação</button>
     </article>
-
     <article>
+      <span class="version-status">Versão web instalável</span>
       <h3>App iOS</h3>
-      <p>
-        Versão futura para iPhone, mantendo a mesma proposta do Fluir
-        em um aplicativo adaptado ao sistema iOS.
-      </p>
+      <p>Adicione o Fluir à Tela de Início do iPhone pelo Safari. Não precisa baixar um APK.</p>
+      <button class="version-action version-action-primary" type="button" data-install-platform="ios">Instalar no iPhone</button>
+      <small class="version-note">Aplicativo nativo ainda não publicado.</small>
     </article>
-
     <article>
-      <h3>Desktop Futuro</h3>
-      <p>
-        Versão planejada para computadores, com foco em uma experiência
-        mais completa para uso em tela grande.
-      </p>
+      <span class="version-status">Versão web instalável</span>
+      <h3>Desktop</h3>
+      <p>Abra o Fluir em uma janela própria no computador, pelo Chrome ou Edge.</p>
+      <button class="version-action version-action-primary" type="button" data-install-platform="desktop">Instalar no computador</button>
+      <button class="version-action" type="button" disabled>Baixar .exe · em validação</button>
     </article>
   </div>
+  <dialog id="platformInstallDialog" class="platform-install-dialog" aria-labelledby="platformInstallTitle">
+    <h3 id="platformInstallTitle"></h3>
+    <p id="platformInstallDescription"></p>
+    <ol id="platformInstallSteps"></ol>
+    <div class="platform-dialog-actions">
+      <a class="version-action version-action-primary" href="html/login.html">Abrir Fluir</a>
+      <form method="dialog"><button class="version-action" type="submit">Fechar</button></form>
+    </div>
+  </dialog>
 </section>
 
     <section class="cta">
@@ -203,5 +211,7 @@
   </footer>
 
   <script src="js/landing.js"></script>
+  <script src="js/platform-install.js"></script>
+<script src="js/pwa-register.js"></script>
 </body>
 </html>
