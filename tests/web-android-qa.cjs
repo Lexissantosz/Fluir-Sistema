@@ -83,6 +83,10 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
   await run("Demonstração informa bloqueio sem criar tarefa",async p=>{
    await p.goto(BASE+"demo.html");
    await p.getByRole("button",{name:"Nova tarefa"}).first().click();
+   await p.locator("#demoTaskPreview").waitFor();
+   if(await p.locator("#fluirDemoGate").count())throw Error("Demo bloqueou antes de salvar");
+   await p.locator("#demoTaskForm input[name=title]").fill("QA tarefa");
+   await p.getByRole("button",{name:"Salvar tarefa",exact:true}).click();
    await p.locator("#fluirDemoGate").waitFor();
    if(!await p.locator("#fluirDemoGate").getByText("Apenas demonstração").isVisible())throw Error("Aviso não aparece");
    if(await p.evaluate(()=>localStorage.getItem("fluir-dashboard-demo-tasks"))!==null)throw Error("Demo gravou tarefa");

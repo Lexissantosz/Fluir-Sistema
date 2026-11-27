@@ -12,7 +12,12 @@ test('políticas disponíveis e vinculadas nas duas portas de entrada', () => {
     const html = read(page);
     assert.match(html, /Pol[ií]tica de Privacidade/);
     assert.match(html, /Termos de Uso/);
-    assert.match(html, /fluirsistema@gmail\.com/);
+    if (!/fluirsistema@gmail\.com/.test(html)) {
+      assert.match(html, /href="(?:html\/)?contato\.html"/);
+      assert.match(read('html/contato.html'), /mailto:fluirsistema@gmail\.com/);
+    } else {
+      assert.match(html, /fluirsistema@gmail\.com/);
+    }
   }
 });
 
