@@ -233,10 +233,7 @@
             <input type="checkbox" checked />
           </label>
 
-          <label class="toggle-row">
-            <span>Verificação em duas etapas</span>
-            <input type="checkbox" />
-          </label>
+          <div class="setting-row"><span>Verificação em duas etapas</span><small>Não disponível</small></div>
 
           <label class="toggle-row">
             <span>Ocultar valores financeiros</span>
@@ -266,24 +263,29 @@
             <h3>Integrações</h3>
           </div>
 
+          <div class="fluir-settings-google">
+            <div id="googleSettingsAccount" aria-live="polite">Consultando conta Google...</div>
+            <a href="profile.html" class="fluir-settings-account-link">Gerenciar conta Google</a>
+          </div>
+
           <div class="integration-row">
             <span><i class="ui-icon ui-icon-calendar" aria-hidden="true"></i> Google Calendar</span>
-            <button type="button">Conectar</button>
+            <button type="button" disabled>Em preparação</button>
           </div>
 
           <div class="integration-row">
             <span>▧ Notion</span>
-            <button type="button" class="connected">Ativo ✓</button>
+            <button type="button" disabled>Em preparação</button>
           </div>
 
           <div class="integration-row">
             <span><i class="ui-icon ui-icon-cloud" aria-hidden="true"></i> Google Drive</span>
-            <button type="button">Conectar</button>
+            <button type="button" disabled>Em preparação</button>
           </div>
 
           <div class="integration-row">
             <span><i class="ui-icon ui-icon-heart" aria-hidden="true"></i> Apple Health</span>
-            <button type="button">Conectar</button>
+            <button type="button" disabled>Em preparação</button>
           </div>
         </article>
 
@@ -313,7 +315,7 @@
 
           <div class="sync-row">
             <small>Dados armazenados neste navegador</small>
-            <span>Sincronizado ✓</span>
+            <span>Armazenamento local</span>
           </div>
         </article>
       </section>
