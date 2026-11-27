@@ -25,7 +25,7 @@ const server=http.createServer((req,res)=>{
   assert(await page.locator(".hero").evaluate(e=>e.getBoundingClientRect().top)<180,"hero starts too low at "+width);
   const dimensions=await page.locator(".version-grid").evaluate(el=>({width:el.clientWidth,scroll:el.scrollWidth}));
   assert(dimensions.scroll<=dimensions.width+1,"overflow at "+width);
-  for(const platform of ["android","ios","desktop"]){
+  for(const platform of ["ios","desktop"]){
    await page.locator("[data-install-platform='"+platform+"']").click();
    await page.locator("#platformInstallDialog").waitFor({state:"visible"});
    assert.equal(await page.locator("#platformInstallSteps li").count(),3);
@@ -34,6 +34,8 @@ const server=http.createServer((req,res)=>{
   }
  }
  assert.equal(await page.locator(".version-grid button:disabled").count(),2);
+ assert.equal(await page.locator("[data-install-platform=android]").count(),0);
+ assert.match(await page.locator(".version-grid article").nth(1).innerText(), /APK/);
  const manifest=await (await page.request.get(base+"/manifest.webmanifest")).json();
  for(const icon of manifest.icons){assert.equal((await page.request.get(base+icon.src)).status(),200);}
  assert.equal(manifest.start_url,"/html/login.html");

@@ -97,7 +97,7 @@
     try{
       if(type==="habito"&&typeof loadHabits==="function"&&typeof renderHabits==="function"){loadHabits();renderHabits()}
       if(type==="diario"&&typeof loadDiaryEntries==="function"&&typeof renderDiary==="function"){loadDiaryEntries();renderDiary()}
-      if(type==="tarefa"&&typeof loadTasks==="function"&&typeof renderTasks==="function")loadTasks().then(renderTasks);
+      // Task lists receive the confirmed record via fluir:task-created.
       if(typeof updateDashboardRealData==="function"){updateDashboardRealData();if(typeof loadDashboardTasks==="function")loadDashboardTasks();if(typeof renderDashboardTimeline==="function")renderDashboardTimeline()}
       if(typeof reloadTimelineEvents==="function"){reloadTimelineEvents();if(typeof applyTimelineVisibility==="function")applyTimelineVisibility()}
     }catch{}
@@ -111,7 +111,9 @@
       if(!res.ok)throw Error("Não foi possível salvar a tarefa.");
       const saved=await res.json();
       if(!saved?.id)throw Error("O servidor não confirmou o registro.");
+      if(currentAccount()?.token!==account.token)return;
       recordEvent("tasks","Tarefa criada",action.titulo);
+      window.dispatchEvent(new CustomEvent("fluir:task-created",{detail:{task:saved,userId:account.id}}));
     }else if(action.tipo==="habito"){
       const dias=action.dias;
       if(!Array.isArray(dias)||!dias.length||dias.some(d=>!Number.isInteger(d)||d<0||d>6))throw Error("Frequência inválida.");

@@ -3,7 +3,6 @@
  let installEvent=null;
  window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();installEvent=event});
  const help={
-  android:["Instalar no Android","Use a versão web instalável do Fluir.",["Abra o Fluir no Chrome do Android.","Toque no menu ⋮.","Escolha Instalar app ou Adicionar à tela inicial."]],
   ios:["Instalar no iPhone","A versão instalável funciona pelo Safari.",["Abra o Fluir no Safari.","Toque em Compartilhar.","Escolha Adicionar à Tela de Início e confirme."]],
   desktop:["Instalar no computador","Instale a versão web em uma janela própria.",["Abra o Fluir no Chrome ou Microsoft Edge.","No menu do navegador, procure Instalar página como app ou Apps.","Confirme a instalação do Fluir."]]
  };

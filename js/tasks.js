@@ -60,7 +60,7 @@ const periodBtnLabel = document.getElementById("periodBtnLabel");
 const periodDropdown = document.getElementById("periodDropdown");
 const periodOptions = document.querySelectorAll(".period-option");
 
-let activePeriod = "today";
+let activePeriod = "all";
 
 const newTaskBtn = document.getElementById("newTaskBtn");
 const taskModal = document.getElementById("taskModal");
@@ -176,6 +176,7 @@ const defaultTasks = [
 // =====================================================
 
 let tasks = [];
+let taskLoadVersion = 0;
 let activeFilter = "all";
 
 
@@ -411,6 +412,7 @@ function mapTaskFromApi(task) {
 
 async function loadTasks() {
   const user = getCurrentUser();
+  const version = ++taskLoadVersion;
 
   if (!user?.id) {
     console.error("Usuário não encontrado na sessão.");
@@ -419,7 +421,7 @@ async function loadTasks() {
   }
 
   try {
-    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`, { headers: taskAuthHeaders() });
+    const response = await fetch(`${TASKS_API_URL}/usuario/${user.id}`, { headers: taskAuthHeaders(), cache: "no-store" });
 
     if (!response.ok) {
       throw new Error("Não foi possível carregar as tarefas.");
@@ -427,10 +429,12 @@ async function loadTasks() {
 
     const data = await response.json();
 
+    if (version !== taskLoadVersion || getCurrentUser()?.token !== user.token) return;
+    if (!Array.isArray(data)) throw new Error("Invalid task list");
     tasks = data.map(mapTaskFromApi);
   } catch (error) {
+    if (version !== taskLoadVersion || getCurrentUser()?.token !== user.token) return;
     console.error("Erro ao carregar tarefas:", error);
-    tasks = [];
   }
 }
 
@@ -658,10 +662,11 @@ function updateTaskListSubtitle(visibleCount) {
 // =====================================================
 
 function updateSummaryCards() {
-  const total = tasks.length;
-  const completed = tasks.filter((task) => task.completed).length;
-  const pending = tasks.filter((task) => !task.completed).length;
-  const high = tasks.filter((task) => task.priority === "high" && !task.completed).length;
+  const scopedTasks = tasks.filter(taskMatchesPeriod);
+  const total = scopedTasks.length;
+  const completed = scopedTasks.filter((task) => task.completed).length;
+  const pending = scopedTasks.filter((task) => !task.completed).length;
+  const high = scopedTasks.filter((task) => task.priority === "high" && !task.completed).length;
 
   if (totalTasks) {
     totalTasks.textContent = total;
@@ -1382,4 +1387,23 @@ async function initTasksPage() {
   }
 }
 
+window.addEventListener("fluir:task-created", event => {
+  const { task, userId } = event.detail || {};
+  if (!task?.id || String(getCurrentUser()?.id) !== String(userId)) return;
+  const created = mapTaskFromApi(task);
+  ++taskLoadVersion;
+  tasks = [created, ...tasks.filter(item => String(item.id) !== String(created.id))];
+  if (!taskMatchesFilter(created)) {
+    activeFilter = "all";
+    activePeriod = "all";
+    filterButtons.forEach(button => button.classList.toggle("active", button.dataset.filter === "all"));
+    periodOptions.forEach(option => {
+      const selected = option.dataset.period === "all";
+      option.classList.toggle("active", selected);
+      if (selected && periodBtnLabel) periodBtnLabel.textContent = option.textContent;
+    });
+  }
+  renderTasks();
+  loadTasks().then(renderTasks);
+});
 initTasksPage();

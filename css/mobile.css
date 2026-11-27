@@ -1030,3 +1030,19 @@ body.mobile-ui-ready .fluir-today-focus{
  body.mobile-ui-ready .billing-toggle{max-width:100%;min-width:0}
  body.mobile-ui-ready .billing-btn{min-width:0;white-space:normal}
 }
+
+/* Dashboard: centralizar a acao em telas estreitas, sem sobrepor o assistente. */
+@media (max-width: 760px) {
+  body.mobile-ui-ready .dashboard-main [data-module-panel="tasks"] .panel-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  body.mobile-ui-ready .dashboard-main [data-module-panel="tasks"] .panel-header .small-btn {
+    align-self: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 124px;
+  }
+}
