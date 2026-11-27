@@ -13,9 +13,16 @@ const server=http.createServer((req,res)=>{
  const page=await browser.newPage({viewport:{width:1440,height:900}});const errors=[];page.on("pageerror",e=>errors.push(e.message));
  const base="http://127.0.0.1:5515";await page.goto(base);
  assert.equal(await page.locator(".version-grid article").count(),4);
+ assert.equal(await page.locator(".feature-card").count(),14);
+ assert.equal(await page.locator(".hero .tag").count(),0);
+ assert.equal(await page.locator(".assistant-feature").count(),1);
+ for(const img of await page.locator(".feature-card img").evaluateAll(es=>es.map(e=>e.src))){assert.equal((await page.request.get(img)).status(),200,img);}
+ assert.equal((await page.request.get(base+"/html/demo.html")).status(),200);
  assert.equal(await page.locator(".version-grid a").first().getAttribute("href"),"html/login.html");
  for(const width of [1440,390,320]){
   await page.setViewportSize({width,height:850});
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),"page overflow at "+width);
+  assert(await page.locator(".hero").evaluate(e=>e.getBoundingClientRect().top)<180,"hero starts too low at "+width);
   const dimensions=await page.locator(".version-grid").evaluate(el=>({width:el.clientWidth,scroll:el.scrollWidth}));
   assert(dimensions.scroll<=dimensions.width+1,"overflow at "+width);
   for(const platform of ["android","ios","desktop"]){
