@@ -139,7 +139,16 @@
       const button = document.createElement("button");
       button.type = "button";
       button.className = "fluir-native-google-button";
-      button.textContent = tr(isProfile ? "Vincular conta Google" : mount === registerTarget ? "Cadastrar com Google" : "Entrar com Google");
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.setAttribute("viewBox","0 0 48 48");icon.setAttribute("aria-hidden","true");icon.setAttribute("width","20");icon.setAttribute("height","20");
+      for(const [fill,d] of [
+        ["#4285F4","M43.61 24.46c0-1.36-.12-2.66-.35-3.92H24v7.42h11.04c-.48 2.45-1.86 4.53-3.93 5.92v4.92h6.36c3.72-3.43 6.14-8.47 6.14-14.34z"],
+        ["#34A853","M24 44c5.34 0 9.82-1.77 13.09-4.8l-6.36-4.92c-1.76 1.18-4.02 1.88-6.73 1.88-5.16 0-9.53-3.48-11.1-8.16H6.34v5.08A20 20 0 0 0 24 44z"],
+        ["#FBBC05","M12.9 28a12 12 0 0 1 0-8v-5.08H6.34a20 20 0 0 0 0 18.16L12.9 28z"],
+        ["#EA4335","M24 11.84c2.91 0 5.52 1 7.58 2.96l5.69-5.69A19.2 19.2 0 0 0 24 4 20 20 0 0 0 6.34 14.92L12.9 20C14.47 15.32 18.84 11.84 24 11.84z"]
+      ]){const p=document.createElementNS("http://www.w3.org/2000/svg","path");p.setAttribute("fill",fill);p.setAttribute("d",d);icon.append(p);}
+      const label=document.createElement("span");label.textContent=tr(isProfile ? "Vincular conta Google" : mount === registerTarget ? "Cadastrar com Google" : "Entrar com Google");
+      button.append(icon,label);
       button.addEventListener("click", async () => {
         if (nativeBusy || busy) return;
         nativeBusy = true;
