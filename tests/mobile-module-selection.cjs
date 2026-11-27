@@ -28,9 +28,31 @@ const server=http.createServer((req,res)=>{
   await p.setViewportSize({width:390,height:844});
   for(const page of ["timeline","tasks","habits","sleep","water","finances","diary","nutrition","physical-health","menstrual-cycle","attachments","achievements","settings","profile","plans"]){
    await p.goto(base+page+".html");
-   const icons=await p.locator(".page-icon,.title-icon,.heading-icon").evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width>0).map(e=>({display:getComputedStyle(e).display,center:getComputedStyle(e).placeItems,position:getComputedStyle(e,"::before").position})));
-   for(const icon of icons){assert.equal(icon.display,"grid",page);assert.equal(icon.center,"center",page);assert.equal(icon.position,"static",page)}
+   const icons=await p.locator(".page-icon,.title-icon,.heading-icon").evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().width>0).map(e=>({display:getComputedStyle(e).display,center:getComputedStyle(e).placeItems,position:getComputedStyle(e,"::before").position,anchor:getComputedStyle(e).position,left:parseFloat(getComputedStyle(e,"::before").left),top:parseFloat(getComputedStyle(e,"::before").top),width:e.clientWidth,height:e.clientHeight,transform:getComputedStyle(e,"::before").transform})));
+   for(const icon of icons){assert.equal(icon.display,"grid",page);assert.equal(icon.center,"center",page);assert.equal(icon.position,"absolute",page);assert.equal(icon.anchor,"relative",page);assert(Math.abs(icon.left-icon.width/2)<=1,page+" horizontal center");assert(Math.abs(icon.top-icon.height/2)<=1,page+" vertical center");assert.equal(icon.transform,"matrix(1, 0, 0, 1, -11, -11)",page)}
   }
+  await p.goto(base+"timeline.html");
+  assert(await p.locator(".timeline-panel").evaluate(e=>e.getBoundingClientRect().height)<200,"empty timeline too tall");
+  assert.equal(await p.locator("#timelinePeriodLabel").textContent(),"Todos os dias");
+  await p.evaluate(()=>{
+    const today=new Date(), old=new Date(today);old.setDate(old.getDate()-35);
+    const key=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+    FluirStorage.setItem("fluir-timeline-events",JSON.stringify([
+      {id:101,title:"QA hoje",category:"tasks",date:key(today),time:"10:00"},
+      {id:102,title:"QA anterior",category:"tasks",date:key(old),time:"11:00"}
+    ]));
+  });
+  await p.reload();
+  assert.equal(await p.locator(".event-item:not(.hidden-event)").count(),2);
+  await p.locator("#timelinePeriodBtn").click();
+  assert.equal(await p.locator("#timelinePeriodBtn").getAttribute("data-period"),"today");
+  assert.equal(await p.locator(".event-item:not(.hidden-event)").count(),1);
+  await p.locator("#timelinePeriodBtn").click();
+  assert.equal(await p.locator("#timelinePeriodBtn").getAttribute("data-period"),"week");
+  assert.equal(await p.locator(".event-item:not(.hidden-event)").count(),1);
+  await p.locator("#timelinePeriodBtn").click();
+  assert.equal(await p.locator(".event-item:not(.hidden-event)").count(),2);
+  console.log("PASS: compact empty timeline, today/week/all period filters");
   console.log("PASS: mobile and desktop module selection matches at 4 widths; title icon CSS checked across 15 pages");
   await ctx.close();
  }finally{await browser.close();server.close()}
