@@ -97,6 +97,63 @@ function cleanEmail(input: unknown) {
   const value = String(input || "").trim().toLowerCase();
   return value.length<=120 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? value : "";
 }
+// Transactional mail uses a dedicated sender account and gmail.send scope.
+// Configure only in Edge Function secrets, never in the browser or repository.
+const mailSender = "fluirsistema@gmail.com";
+function mailConfigured() {
+  return !!(Deno.env.get("FLUIR_MAIL_CLIENT_ID") && Deno.env.get("FLUIR_MAIL_CLIENT_SECRET") && Deno.env.get("FLUIR_MAIL_REFRESH_TOKEN"));
+}
+function mailAddress(value: unknown) {
+  const email=cleanEmail(value);
+  return /^[a-z0-9._+%-]+@[a-z0-9.-]+\.[a-z]{2,63}$/.test(email)?email:"";
+}
+function base64Bytes(bytes: Uint8Array) {
+  return btoa(String.fromCharCode(...bytes));
+}
+function recoveryCode() {
+  return base64Bytes(crypto.getRandomValues(new Uint8Array(12))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+}
+async function sendFluirMail(to: string, subject: string, body: string) {
+  if (!mailConfigured() || !mailAddress(to) || /[\r\n]/.test(subject)) throw new Error("mail_configuration");
+  const oauth = await fetch("https://oauth2.googleapis.com/token", {
+    method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:new URLSearchParams({
+      client_id:Deno.env.get("FLUIR_MAIL_CLIENT_ID")!,
+      client_secret:Deno.env.get("FLUIR_MAIL_CLIENT_SECRET")!,
+      refresh_token:Deno.env.get("FLUIR_MAIL_REFRESH_TOKEN")!,grant_type:"refresh_token"
+    }),signal:AbortSignal.timeout(12000)
+  });
+  if(!oauth.ok) throw new Error("mail_oauth");
+  const data=await oauth.json();
+  if(typeof data.access_token!=="string")throw new Error("mail_oauth");
+  const mime=["From: Fluir <"+mailSender+">","To: "+to,
+    "Subject: =?UTF-8?B?"+base64Bytes(encoder.encode(subject))+"?=",
+    "MIME-Version: 1.0","Content-Type: text/plain; charset=UTF-8",
+    "Content-Transfer-Encoding: base64","",base64Bytes(encoder.encode(body)).match(/.{1,76}/g)?.join("\r\n")||""
+  ].join("\r\n");
+  const sent=await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send",{
+    method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+data.access_token},
+    body:JSON.stringify({raw:base64Bytes(encoder.encode(mime)).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"")}),
+    signal:AbortSignal.timeout(12000)
+  });
+  if(!sent.ok)throw new Error("mail_delivery");
+}
+async function issueRecovery(email: string) {
+  const code=recoveryCode();
+  const codeHash=await hash("fluir-reset:"+email+":"+code);
+  const {data,error}=await admin.rpc("fluir_password_recovery_issue",{p_email:email,p_hash:codeHash});
+  if(error)throw new Error("recovery_issue");
+  if(data!==true)return;
+  try{
+    await sendFluirMail(email,"Fluir | Redefinição de senha",
+      "Olá!\n\nRecebemos uma solicitação para redefinir a senha da sua conta Fluir.\n\nSeu código: "+code+
+      "\n\nCopie o código na tela de recuperação do Fluir. Ele é válido por 15 minutos e pode ser usado apenas uma vez. Não compartilhe este código.\n\nSe você não solicitou a recuperação, ignore este e-mail. Sua senha não foi alterada.\n\nEquipe Fluir");
+  } catch {
+    // Permit a retry after provider failure. Only invalidate the exact unsent code.
+    await admin.from("fluir_password_recovery").delete().eq("code_hash",codeHash);
+    throw new Error("recovery_delivery");
+  }
+}
 function publicTask(task: Record<string,unknown>) {
   return {
     id:task.id, titulo:task.titulo, descricao:task.descricao||"", categoria:task.categoria||"",
@@ -220,6 +277,33 @@ Deno.serve(async request=>{
       return respond(origin,200,{habilitado:!!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"),clientId:Deno.env.get("FLUIR_GOOGLE_CLIENT_ID")||""});
     if(path==="/assistente/status"&&method==="GET")
       return respond(origin,200,{configurado:!!Deno.env.get("FLUIR_GEMINI_API_KEY")});
+    if(path==="/usuarios/senha/solicitar"&&method==="POST"){
+      if(!mailConfigured())return failure(origin,503,"O envio de recuperação ainda não está disponível. Tente mais tarde.");
+      const b=await parseBody(request),email=mailAddress(b.email);
+      if(!email)return failure(origin,400,"Digite um e-mail válido.");
+      // Pilot quota limits mail abuse; independent from normal login attempts.
+      if(!await loginLimiter("reset:global"))return failure(origin,429,"Muitas solicitações. Tente em 15 minutos.");
+      if(await loginLimiter("reset:request:"+email)){
+        const work=issueRecovery(email).catch(()=>console.error("Password recovery delivery failed"));
+        // Respond uniformly without revealing whether the email is registered.
+        const runtime=(globalThis as unknown as {EdgeRuntime?:{waitUntil(p:Promise<unknown>):void}}).EdgeRuntime;
+        if(runtime?.waitUntil)runtime.waitUntil(work);else await work;
+      }
+      return respond(origin,202,{mensagem:"Se houver uma conta elegível, enviaremos um código ao e-mail informado. Confira também o spam."});
+    }
+    if(path==="/usuarios/senha/redefinir"&&method==="POST"){
+      const b=await parseBody(request),email=mailAddress(b.email);
+      const code=typeof b.codigo==="string"?b.codigo.trim():"";
+      const password=typeof b.senha==="string"?b.senha.trim():"";
+      if(!email||!/^[A-Za-z0-9_-]{16}$/.test(code)||password.length<8||encoder.encode(password).length>72)
+        return failure(origin,400,"Confira o código e use uma senha de 8 caracteres ou mais (até 72 bytes).");
+      if(!await loginLimiter("reset:confirm:"+email))return failure(origin,429,"Muitas tentativas. Tente em 15 minutos.");
+      const codeHash=await hash("fluir-reset:"+email+":"+code);
+      const {data,error}=await admin.rpc("fluir_password_recovery_consume",{p_email:email,p_hash:codeHash,p_password_hash:await bcrypt.hash(password,11)});
+      if(error)return failure(origin,503,"Não foi possível redefinir a senha agora.");
+      if(data!==true)return failure(origin,400,"Código inválido, expirado ou já utilizado.");
+      return respond(origin,200,{mensagem:"Senha redefinida. Entre novamente com sua nova senha."});
+    }
     if(path==="/usuarios/login"&&method==="POST") {
       const b=await parseBody(request);const email=cleanEmail(b.email);
       if(!email || typeof b.senha!=="string" || b.senha.length>128)return failure(origin,400,"E-mail ou senha inválidos.");
