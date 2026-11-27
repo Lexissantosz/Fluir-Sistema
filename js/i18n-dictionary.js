@@ -4840,3 +4840,5 @@ window.FluirLocaleRows.push(...[
   "Hoy ·"
  ]
 ]);
+
+window.FluirLocaleRows.push(["Gerenciar conta Google","Manage Google account","Gestionar cuenta de Google"],["Em preparação","In development","En preparación"],["Armazenamento local","Local storage","Almacenamiento local"],["Dados armazenados neste navegador","Data stored in this browser","Datos guardados en este navegador"]);
