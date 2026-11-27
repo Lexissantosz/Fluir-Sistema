@@ -195,7 +195,7 @@ function renderProfile() {
   const initial = getInitial(displayName);
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (profileName) {
@@ -224,9 +224,11 @@ function renderProfile() {
   if (infoName) infoName.textContent = user.name;
   if (infoEmail) infoEmail.textContent = user.email;
   if (infoNickname) infoNickname.textContent = user.nickname;
-  if (infoPronouns) infoPronouns.textContent = user.pronouns;
-  if (infoAge) infoAge.textContent = user.age;
-  if (infoTone) infoTone.textContent = formatTone(user.tone);
+  if (infoPronouns) infoPronouns.textContent = user.pronouns === "Não informado" ? window.FluirI18n.t("Não informado") : user.pronouns;
+  if (infoAge) infoAge.textContent = user.age === "Não informado" ? window.FluirI18n.t("Não informado") : user.age;
+  if (infoTone) infoTone.textContent = window.FluirI18n.t(formatTone(user.tone));
+  const languageLabel = document.getElementById("profileLanguage");
+  if (languageLabel) languageLabel.textContent = ({"pt-BR":"Português (Brasil)","en-US":"English",es:"Español"})[window.FluirI18n.language] || "Português (Brasil)";
 
   if (aboutText) {
     aboutText.textContent = profile.about;
@@ -322,7 +324,7 @@ function renderRecentActivity() {
   if (!activityList) return;
 
   if (!events.length) {
-    activityList.innerHTML = "<p>Nenhuma atividade recente encontrada.</p>";
+    activityList.innerHTML = "<p>"+window.FluirI18n.t("Nenhuma atividade recente encontrada.")+"</p>";
     return;
   }
 

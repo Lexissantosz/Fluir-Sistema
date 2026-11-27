@@ -125,7 +125,7 @@ function loadUserProfile() {
   const profileAvatar = document.getElementById("profileAvatar");
 
   if (topGreeting) {
-    topGreeting.textContent = `Olá, ${name}`;
+    topGreeting.textContent = window.FluirI18n.fmt("Olá, {name}",{name});
   }
 
   if (profileName) {
@@ -428,7 +428,7 @@ function setupQuickSetupEditor() {
 
     label.append(
       checkbox,
-      document.createTextNode(module.label)
+      document.createTextNode(window.FluirI18n.t(module.label))
     );
 
     modulesList.appendChild(label);

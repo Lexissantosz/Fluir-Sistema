@@ -268,7 +268,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -279,7 +279,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -556,7 +556,7 @@ function updateHabitListSubtitle(visibleCount) {
   }
 
   const subtitles = {
-    all: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} ativo${visibleCount === 1 ? "" : "s"}.`,
+    all: window.FluirI18n.fmt(visibleCount===1?"{n} hábito ativo.":"{n} hábitos ativos.",{n:visibleCount}),
     pending: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"} hoje.`,
     completed: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} concluído${visibleCount === 1 ? "" : "s"} hoje.`,
     highStreak: `${visibleCount} hábito${visibleCount === 1 ? "" : "s"} com boa sequência.`
@@ -749,7 +749,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma ação ainda</strong>
+          <strong>${window.FluirI18n.t("Nenhuma ação ainda")}</strong>
           Crie seu primeiro hábito.
         </p>
       </div>

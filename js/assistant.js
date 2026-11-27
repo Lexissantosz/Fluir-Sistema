@@ -24,7 +24,7 @@
   const title=document.createElement("strong");
   title.textContent=tr("Assistente Fluir");
   const sub=document.createElement("small");
-  sub.textContent=demo?"Simulação interativa":"IA generativa · acesso autenticado";
+  sub.textContent=tr(demo?"Simulação interativa":"IA generativa · acesso autenticado");
   heading.append(title,sub);
   const close=document.createElement("button");
   close.type="button";
@@ -72,14 +72,16 @@
   window.addEventListener("fluir:ai-consent",syncConsent);
   panel.append(header,note,feed,form);
   document.body.append(button,panel);
+  window.FluirI18n?.translateTree(button);
+  window.FluirI18n?.translateTree(panel);
   let busy=false;
   let controller=null;
   let history=[]; // Somente na memória da página; nunca no localStorage.
-  function say(message,author){
+  function say(message,author,system=false){
     const bubble=document.createElement("div");
     bubble.className="fluir-assistant-bubble";
     bubble.dataset.author=author||"assistant";
-    bubble.textContent=String(message);
+    bubble.textContent=system||author==="error"?tr(String(message)):String(message);
     feed.appendChild(bubble);
     feed.scrollTop=feed.scrollHeight;
   }
@@ -130,10 +132,10 @@
   function proposeAction(action,account){
     if(demo||!action||!["tarefa","habito","diario"].includes(action.tipo)||typeof action.titulo!=="string"||!action.titulo.trim())return;
     const box=document.createElement("div");box.className="fluir-assistant-bubble";box.dataset.author="assistant";
-    const heading=document.createElement("strong");heading.textContent=({tarefa:"Nova tarefa",habito:"Novo hábito",diario:"Nova entrada no diário"})[action.tipo]+": "+action.titulo;
+    const heading=document.createElement("strong");heading.textContent=tr(({tarefa:"Nova tarefa",habito:"Novo hábito",diario:"Nova entrada no diário"})[action.tipo])+": "+action.titulo;
     const info=document.createElement("p");
     const names=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-    info.textContent=action.tipo==="habito"?(action.dias||[]).map(d=>names[d]).join(", "):action.tipo==="tarefa"?[action.data||localDate(),action.hora||"",action.texto||""].filter(Boolean).join(" · "):action.texto||"";
+    info.textContent=action.tipo==="habito"?(action.dias||[]).map(d=>tr(names[d])).join(", "):action.tipo==="tarefa"?[action.data||localDate(),action.hora||"",action.texto||""].filter(Boolean).join(" · "):action.texto||"";
     let dateInput=null,timeInput=null;
     if(action.tipo==="tarefa"){
       const fields=document.createElement("div");fields.className="fluir-assistant-date-fields";
@@ -173,7 +175,7 @@
     syncConsent();
     panel.hidden=false;
     button.setAttribute("aria-expanded","true");
-    if(!feed.childElementCount)say(demo?"Bem-vindo à demonstração do assistente. Envie uma pergunta fictícia.":"Olá! Posso ajudar a organizar sua rotina. As respostas dependem da conexão e configuração da IA no servidor.");
+    if(!feed.childElementCount)say(demo?"Bem-vindo à demonstração do assistente. Envie uma pergunta fictícia.":"Olá! Posso ajudar a organizar sua rotina. As respostas dependem da conexão e configuração da IA no servidor.",undefined,true);
     input.focus();
   }
   function hide(){
@@ -189,7 +191,7 @@
     feed.replaceChildren();
     input.value="";
     syncConsent();
-    say("Conversa limpa. As próximas mensagens não enviarão o contexto anterior.");
+    say("Conversa limpa. As próximas mensagens não enviarão o contexto anterior.",undefined,true);
     input.focus();
   });
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!panel.hidden)hide()});
@@ -204,7 +206,7 @@
     say(message,"user");
     input.value="";
     syncConsent();
-    if(demo){say(fakeAnswer(message));return}
+    if(demo){say(fakeAnswer(message),undefined,true);return}
     const account=currentAccount();
     const token=getToken();
     if(!token){say("Para usar a IA real, entre em uma conta de testes primeiro. A demonstração não autentica usuários.","error");return}

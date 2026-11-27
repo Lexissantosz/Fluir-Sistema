@@ -15,7 +15,7 @@
  }
  async function logout(){
   try{await call("/logout","POST");clearLocal()}
-  catch(error){if(error.status===401){clearLocal();return}if(confirm("Não foi possível encerrar a sessão no servidor. Sair apenas deste navegador?"))clearLocal()}
+  catch(error){if(error.status===401){clearLocal();return}if(confirm(window.FluirI18n.t("Não foi possível encerrar a sessão no servidor. Sair apenas deste navegador?")))clearLocal()}
  }
  function addLogout(container,cls){
   if(!container||container.querySelector("[data-fluir-logout]"))return;

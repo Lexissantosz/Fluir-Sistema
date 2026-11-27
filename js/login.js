@@ -287,7 +287,7 @@ function setButtonLoading(button, isLoading, loadingText, normalText) {
   }
 
   button.disabled = isLoading;
-  button.textContent = isLoading ? loadingText : normalText;
+  button.textContent = window.FluirI18n.t(isLoading ? loadingText : normalText);
 }
 
 async function readResponse(response) {

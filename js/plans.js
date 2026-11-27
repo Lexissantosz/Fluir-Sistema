@@ -229,7 +229,7 @@ function updateUserArea() {
   const name = getDisplayName();
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${name}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:name});
   }
 
   if (avatarBtn) {
@@ -360,7 +360,7 @@ function updatePrices(type) {
   });
 
   pricePeriods.forEach((period) => {
-    period.textContent = type === "yearly" ? "/ano" : "/mês";
+    period.textContent = window.FluirI18n.t(type === "yearly" ? "/ano" : "/mês");
   });
 }
 

@@ -346,7 +346,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName} `;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -357,7 +357,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -786,7 +786,7 @@ function updateTasksSummary() {
   }
 
   if (textElement) {
-    textElement.textContent = `${completed} de ${total} concluídas`;
+    textElement.textContent = window.FluirI18n.fmt("{done} de {total} concluídas",{done:completed,total});
   }
 
   if (progressElement) {
@@ -873,7 +873,7 @@ function updateHabitsDashboardData() {
     const progress = card.querySelector(".mini-progress span");
 
     if (strong) strong.textContent = String(completedToday);
-    if (small) small.textContent = `${completedToday} de ${total} concluídos`;
+    if (small) small.textContent = window.FluirI18n.fmt("{done} de {total} concluídos",{done:completedToday,total});
     if (progress) progress.style.width = `${percent}%`;
   }
 }
@@ -893,7 +893,7 @@ function updateSleepDashboardData() {
     : null;
 
   const sleepText = lastEntry?.duration || lastEntry?.hours || "0h";
-  const sleepSmall = lastEntry ? "último registro" : "sem registro";
+  const sleepSmall = window.FluirI18n.t(lastEntry ? "último registro" : "sem registro");
 
   if (card) {
     const strong = card.querySelector("strong");
@@ -950,7 +950,7 @@ function updateWaterDashboardData() {
     const dots = card.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (small) small.textContent = `de ${waterGoal}ml`;
+    if (small) small.textContent = window.FluirI18n.fmt("de {n} ml",{n:waterGoal});
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -961,7 +961,7 @@ function updateWaterDashboardData() {
     const dots = panel.querySelectorAll(".water-dots span");
 
     if (strong) strong.textContent = `${total}ml`;
-    if (p) p.textContent = `de ${waterGoal}ml`;
+    if (p) p.textContent = window.FluirI18n.fmt("de {n} ml",{n:waterGoal});
 
     updateWaterDots(dots, total, waterGoal);
   }
@@ -1037,8 +1037,8 @@ function updateFinancesDashboardData() {
     if (strong) strong.textContent = formatCurrency(balance);
     if (p) p.textContent = window.FluirI18n.t("Saldo atual");
 
-    if (smallItems[0]) smallItems[0].textContent = `Entrada ${formatCurrency(income)}`;
-    if (smallItems[1]) smallItems[1].textContent = `Saída - ${formatCurrency(expense)}`;
+    if (smallItems[0]) smallItems[0].textContent = window.FluirI18n.t("Entrada")+" "+formatCurrency(income);
+    if (smallItems[1]) smallItems[1].textContent = window.FluirI18n.t("Saída")+" - "+formatCurrency(expense);
   }
 }
 
@@ -1082,7 +1082,7 @@ function updateDiaryDashboardData() {
     if (small) {
       small.textContent = todayEntries.length === 1
         ? "entrada hoje"
-        : "entradas hoje";
+        : window.FluirI18n.t("entradas hoje");
     }
   }
 
@@ -1092,7 +1092,7 @@ function updateDiaryDashboardData() {
     if (p) {
       p.textContent = entries.length
         ? entries[entries.length - 1].text || entries[entries.length - 1].content || "Última entrada registrada."
-        : "Nenhuma entrada no diário ainda.";
+        : window.FluirI18n.t("Nenhuma entrada no diário ainda.");
     }
   }
 }

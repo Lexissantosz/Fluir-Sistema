@@ -157,6 +157,7 @@ function getMobileUserData() {
   `;
 
   document.body.prepend(topbar);
+  topbar.querySelectorAll("[aria-label]").forEach(e=>e.setAttribute("aria-label",window.FluirI18n.t(e.getAttribute("aria-label"))));
 
   const menuButton = topbar.querySelector(".mobile-menu-btn");
 
@@ -190,7 +191,7 @@ function getMobileUserData() {
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-drawer-link${isCurrent(item.href) ? " active" : ""}`;
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      link.innerHTML = `<i>${item.icon}</i><span>${window.FluirI18n.t(item.label)}</span>`;
       drawerNav.appendChild(link);
     });
 
@@ -212,13 +213,13 @@ function getMobileUserData() {
     const extraItems = navItems.filter(item => !bottomItems.includes(item)).map(item => item.href);
     const bottomNav = document.createElement("nav");
     bottomNav.className = "mobile-bottom-nav";
-    bottomNav.setAttribute("aria-label", "Navegação principal mobile");
+    bottomNav.setAttribute("aria-label", window.FluirI18n.t("Navegação principal mobile"));
 
     bottomItems.forEach((item) => {
       const link = document.createElement("a");
       link.href = item.href;
       link.className = `mobile-nav-link${isCurrent(item.href) ? " active" : ""}`;
-      link.innerHTML = `<i>${item.icon}</i><span>${item.label}</span>`;
+      link.innerHTML = `<i>${item.icon}</i><span>${window.FluirI18n.t(item.label)}</span>`;
       bottomNav.appendChild(link);
     });
 

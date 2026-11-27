@@ -320,7 +320,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -331,7 +331,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -476,7 +476,7 @@ function getPriorityLabel(priority) {
     high: "Alta"
   };
 
-  return labels[priority] || "Média";
+  return window.FluirI18n.t(labels[priority] || "Média");
 }
 
 function getPriorityClass(priority) {
@@ -587,22 +587,22 @@ function createTaskCard(task) {
     <input 
       type="checkbox" 
       ${task.completed ? "checked" : ""} 
-      aria-label="Marcar tarefa como concluída"
+      aria-label="${escapeHTML(window.FluirI18n.t("Marcar tarefa como concluída"))}"
     >
 
     <div class="task-info">
       <strong>${escapeHTML(task.title)}</strong>
-      <p>${escapeHTML(task.description || "Sem observação.")}</p>
+      <p>${escapeHTML(task.description || window.FluirI18n.t("Sem observação."))}</p>
 
       <div class="task-meta">
-        <span>${escapeHTML(task.category || "Pessoal")}</span>
+        <span>${escapeHTML(window.FluirI18n.t(task.category || "Pessoal"))}</span>
         <span class="${getPriorityClass(task.priority)}">${getPriorityLabel(task.priority)}</span>
-        <span>${task.time ? escapeHTML(task.time) : "Sem horário"}</span>
+        <span>${task.time ? escapeHTML(task.time) : window.FluirI18n.t("Sem horário")}</span>
       </div>
     </div>
 
     <div class="task-actions">
-      <button class="task-action-btn delete-task-btn" type="button" title="Excluir tarefa">
+      <button class="task-action-btn delete-task-btn" type="button" title="${escapeHTML(window.FluirI18n.t("Excluir tarefa"))}">
         ×
       </button>
     </div>
@@ -645,15 +645,14 @@ function updateTaskListSubtitle(visibleCount) {
   }
 
     const subtitles = {
-    all: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} no total.`,
-    pending: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} pendente${visibleCount === 1 ? "" : "s"}.`,
-    completed: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} concluída${visibleCount === 1 ? "" : "s"}.`,
-    high: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} de alta prioridade.`,
-    today: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} para hoje.`,
-    overdue: `${visibleCount} tarefa${visibleCount === 1 ? "" : "s"} atrasada${visibleCount === 1 ? "" : "s"}.`
+    all: ["{n} tarefa no total.","{n} tarefas no total."],
+    pending: ["{n} tarefa pendente.","{n} tarefas pendentes."],
+    completed: ["{n} tarefa concluída.","{n} tarefas concluídas."],
+    high: ["{n} tarefa de alta prioridade.","{n} tarefas de alta prioridade."],
+    today: ["{n} tarefa para hoje.","{n} tarefas para hoje."],
+    overdue: ["{n} tarefa atrasada.","{n} tarefas atrasadas."]
   };
-
-  taskListSubtitle.textContent = subtitles[activeFilter] || subtitles.all;
+  taskListSubtitle.textContent = window.FluirI18n.fmt((subtitles[activeFilter]||subtitles.all)[visibleCount===1?0:1],{n:visibleCount});
 }
 
 
@@ -710,7 +709,7 @@ function updateSidebarProgress() {
       return;
     }
 
-    sidebarTaskText.textContent = `${completed} de ${total} tarefa${total === 1 ? "" : "s"} concluída${completed === 1 ? "" : "s"}.`;
+    sidebarTaskText.textContent = window.FluirI18n.fmt(total===1?"{done} de {total} tarefa concluída.":"{done} de {total} tarefas concluídas.",{done:completed,total});
   }
 }
 
@@ -747,7 +746,7 @@ function renderFocusMiniList() {
     focusMiniList.innerHTML = `
       <div class="focus-mini-item">
         <strong>Nada urgente agora</strong>
-        <span>Ótimo momento para revisar ou descansar.</span>
+        <span>${window.FluirI18n.t("Ótimo momento para revisar ou descansar.")}</span>
       </div>
     `;
 
@@ -843,7 +842,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhuma ação ainda</strong>
+          <strong>${window.FluirI18n.t("Nenhuma ação ainda")}</strong>
           Crie sua primeira tarefa.
         </p>
       </div>

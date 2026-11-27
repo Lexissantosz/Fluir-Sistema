@@ -521,7 +521,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -532,7 +532,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -1246,11 +1246,11 @@ function updateEmptyState(visibleCount) {
   const content = emptyTexts[activeFilter] || emptyTexts.all;
 
   if (emptyStateTitle) {
-    emptyStateTitle.textContent = content.title;
+    emptyStateTitle.textContent = window.FluirI18n.t(content.title);
   }
 
   if (emptyStateText) {
-    emptyStateText.textContent = content.text;
+    emptyStateText.textContent = window.FluirI18n.t(content.text);
   }
 }
 

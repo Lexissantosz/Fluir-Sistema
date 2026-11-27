@@ -19,7 +19,7 @@
     if (isProfile) {
       const status = document.getElementById("googleLinkMessage");
       if (status) {
-        status.textContent = value;
+        status.textContent = window.FluirI18n.t(value);
         status.dataset.state = error ? "error" : "success";
       }
     } else if (typeof showMessage === "function") {
@@ -213,6 +213,7 @@
           shape: "rectangular",
           text: isProfile ? "continue_with" :
             mount === registerTarget ? "signup_with" : "signin_with",
+          locale: window.FluirI18n.language==="en-US"?"en":window.FluirI18n.language==="es"?"es":"pt_BR",
           logo_alignment: "left",
           width: String(width)
         });

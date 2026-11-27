@@ -39,8 +39,8 @@
   }
   function update(title,message) {
     ensure();
-    mainTitle.textContent=String(title || "Preparando seu espaço...");
-    subtitle.textContent=String(message || "Estamos concluindo esta etapa com segurança.");
+    mainTitle.textContent=window.FluirI18n.t(String(title || "Preparando seu espaço..."));
+    subtitle.textContent=window.FluirI18n.t(String(message || "Estamos concluindo esta etapa com segurança."));
   }
   function show(title,message) {
     update(title,message);

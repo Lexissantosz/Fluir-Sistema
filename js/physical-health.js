@@ -219,7 +219,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -230,7 +230,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -506,7 +506,7 @@ function updateSummaryCards() {
       return;
     }
 
-    sidebarHealthText.textContent = `${todayList.length} registro${todayList.length === 1 ? "" : "s"} físico${todayList.length === 1 ? "" : "s"} hoje.`;
+    sidebarHealthText.textContent = window.FluirI18n.fmt(todayList.length===1?"{n} registro físico hoje.":"{n} registros físicos hoje.",{n:todayList.length});
   }
 }
 
@@ -541,7 +541,7 @@ function renderWeekGrid() {
   }).length;
 
   if (weekText) {
-    weekText.textContent = `${weekCount} registro${weekCount === 1 ? "" : "s"} físico${weekCount === 1 ? "" : "s"} nesta semana.`;
+    weekText.textContent = window.FluirI18n.fmt(weekCount===1?"{n} registro físico nesta semana.":"{n} registros físicos nesta semana.",{n:weekCount});
   }
 }
 

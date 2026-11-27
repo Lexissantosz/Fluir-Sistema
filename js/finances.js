@@ -220,7 +220,7 @@ function updateWelcomeArea() {
   const displayName = nickname || name || "Você";
 
   if (welcomeTitle) {
-    welcomeTitle.textContent = `Olá, ${displayName}`;
+    welcomeTitle.textContent = window.FluirI18n.fmt("Olá, {name}",{name:displayName});
   }
 
   if (avatarBtn) {
@@ -231,7 +231,7 @@ if (avatarBtnInitialEl) {
   }
 
   if (welcomeSubtitle) {
-    welcomeSubtitle.textContent = getSubtitleByTone(setupData.user?.communicationTone);
+    welcomeSubtitle.textContent = window.FluirI18n.t(getSubtitleByTone(setupData.user?.communicationTone));
   }
 }
 
@@ -571,7 +571,7 @@ function updateTransactionSubtitle(visibleCount) {
   }
 
   const texts = {
-    all: `${visibleCount} lançamento${visibleCount === 1 ? "" : "s"} no total.`,
+    all: window.FluirI18n.fmt(visibleCount===1?"{n} lançamento no total.":"{n} lançamentos no total.",{n:visibleCount}),
     income: `${visibleCount} entrada${visibleCount === 1 ? "" : "s"} registrada${visibleCount === 1 ? "" : "s"}.`,
     expense: `${visibleCount} saída${visibleCount === 1 ? "" : "s"} registrada${visibleCount === 1 ? "" : "s"}.`,
     fixed: `${visibleCount} lançamento${visibleCount === 1 ? "" : "s"} fixo${visibleCount === 1 ? "" : "s"}.`,
@@ -706,7 +706,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhum lançamento</strong>
+          <strong>${window.FluirI18n.t("Nenhum lançamento")}</strong>
           Registre sua primeira entrada ou saída.
         </p>
       </div>
