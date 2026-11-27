@@ -14,6 +14,19 @@
 
   const isProfile = Boolean(linkTarget);
   let busy = false;
+  let providerTimer = null;
+  function clearProviderTimer() {
+    if (providerTimer !== null) clearTimeout(providerTimer);
+    providerTimer = null;
+  }
+  function providerStarted() {
+    clearProviderTimer();
+    message("Conclua a escolha da conta na janela do Google.");
+    providerTimer = setTimeout(() => {
+      providerTimer = null;
+      if (!busy) message("O Google ainda não retornou a confirmação. Volte ao Fluir e tente novamente ou entre com e-mail e senha.", true);
+    }, 60000);
+  }
 
   function message(value, error = false) {
     if (isProfile) {
@@ -41,7 +54,12 @@
   }
 
   async function credentialReceived(result) {
-    if (busy || !result?.credential || typeof result.credential !== "string") return;
+    if (busy) return;
+    clearProviderTimer();
+    if (!result?.credential || typeof result.credential !== "string") {
+      message("O Google não retornou uma identidade válida.", true);
+      return;
+    }
     busy = true;
     try {
       if (isProfile) {
@@ -197,6 +215,8 @@
         client_id: data.clientId,
         ux_mode: "popup",
         auto_select: false,
+        use_fedcm_for_button: true,
+        button_auto_select: false,
         callback: credentialReceived
       });
       const mounts = [loginTarget, registerTarget, linkTarget].filter(Boolean);
@@ -215,6 +235,7 @@
             mount === registerTarget ? "signup_with" : "signin_with",
           locale: window.FluirI18n.language==="en-US"?"en":window.FluirI18n.language==="es"?"es":"pt_BR",
           logo_alignment: "left",
+          click_listener: providerStarted,
           width: String(width)
         });
       }

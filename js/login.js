@@ -249,14 +249,15 @@ function showVerificationRetry(usuario) {
   retryOnboardingButton.type = "button";
   retryOnboardingButton.className = "secondary";
   retryOnboardingButton.textContent = window.FluirI18n.t("Tentar carregar preferências novamente");
-  loginMessage.insertAdjacentElement("afterend", retryOnboardingButton);
+  const activeMessage = registerForm?.classList.contains("active") ? registerMessage : loginMessage;
+  activeMessage.insertAdjacentElement("afterend", retryOnboardingButton);
   retryOnboardingButton.addEventListener("click", async () => {
     retryOnboardingButton.disabled = true;
     try {
       const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
       if (!current || current.id !== usuario.id || current.token !== usuario.token) {
         clearVerificationRetry();
-        showMessage(loginMessage, "Entre novamente para continuar.", "error");
+        showMessage(activeMessage, "Entre novamente para continuar.", "error");
         return;
       }
       const completed = await hasCompletedOnboarding(usuario);
@@ -266,9 +267,9 @@ function showVerificationRetry(usuario) {
         sessionStorage.removeItem("fluir-user");
         sessionStorage.removeItem("fluir-onboarding");
         clearVerificationRetry();
-        showMessage(loginMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
+        showMessage(activeMessage, "Sessão rejeitada pelo servidor. Faça login novamente.", "error");
       } else {
-        showMessage(loginMessage,
+        showMessage(activeMessage,
           "Ainda não foi possível consultar as preferências. Sua sessão foi mantida; tente novamente.", "error");
       }
     } finally {

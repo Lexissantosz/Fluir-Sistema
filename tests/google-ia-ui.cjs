@@ -17,8 +17,8 @@ const server = http.createServer((req,res)=>{
 });
 const api = "https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api";
 const googleMock =
-  "window.google={accounts:{id:{initialize(opts){window.__googleCallback=opts.callback},"+
-  "renderButton(mount,opts){const b=document.createElement('button');b.textContent='Google QA';b.dataset.googleText=opts.text;b.style.width=opts.width+'px';mount.append(b);}}}};";
+  "window.google={accounts:{id:{initialize(opts){window.__googleCallback=opts.callback;window.__googleConfig=opts},"+
+  "renderButton(mount,opts){const b=document.createElement('button');b.type='button';b.textContent='Google QA';b.dataset.googleText=opts.text;b.addEventListener('click',()=>opts.click_listener?.());b.style.width=opts.width+'px';mount.append(b);}}}};";
 async function routeGoogle(page,enabled){
   await page.route(api+"/usuarios/google/config",route=>route.fulfill({
     status:200,contentType:"application/json",body:JSON.stringify({
@@ -50,6 +50,16 @@ async function routeGoogle(page,enabled){
     }));
     await page.goto(url+"/html/login.html",{waitUntil:"domcontentloaded"});
     await page.locator("#googleLoginMount button").waitFor();
+    assert.equal(await page.evaluate(()=>window.__googleConfig.use_fedcm_for_button),true);
+    await page.clock.install();
+    await page.locator("#googleLoginMount button").click();
+    await page.locator("#loginMessage").getByText("Conclua a escolha da conta na janela do Google.").waitFor();
+    await page.clock.fastForward(60001);
+    await page.locator("#loginMessage").getByText(/O Google ainda não retornou a confirmação/).waitFor();
+    assert.equal(await page.evaluate(()=>sessionStorage.getItem("fluir-user")),null);
+    await page.evaluate(()=>window.__googleCallback({}));
+    await page.locator("#loginMessage").getByText("O Google não retornou uma identidade válida.").waitFor();
+    console.log("PASS: Google browser flow, no callback warning, empty credential handling");
     assert.equal(await page.locator("#googleRegisterMount button").count(),1);
     assert.equal(await page.locator("#googleLoginMount button").getAttribute("data-google-text"),"signin_with");
     await page.locator("#showRegister").click();
@@ -77,10 +87,18 @@ async function routeGoogle(page,enabled){
       status:200,contentType:"application/json",body:JSON.stringify({id:778,nome:"Google QA",email:"new@example.invalid",token:"abc12345678901234567890123456789012345678"})
     }));
     await page.route(api+"/onboarding/usuario/778",route=>route.fulfill({
-      status:200,contentType:"application/json",body:JSON.stringify({usuarioId:778,onboardingConcluido:false})
+      status:503,contentType:"application/json",body:JSON.stringify({mensagem:"Temporary unavailable"})
     }));
     await page.evaluate(()=>window.__googleCallback({credential:"new-google-account"}));
+    const retry=page.locator("#registerForm").getByRole("button",{name:"Tentar carregar preferências novamente"});
+    await retry.waitFor();
+    assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem("fluir-user")).id),778);
+    await page.route(api+"/onboarding/usuario/778",route=>route.fulfill({
+      status:200,contentType:"application/json",body:JSON.stringify({usuarioId:778,onboardingConcluido:false})
+    }));
+    await retry.click();
     await page.waitForURL("**/setup.html");
+    console.log("PASS: retry visible in registration, saved session reused");
     assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem("fluir-user")).id),778);
     console.log("PASS: Existing email guidance and new Google signup onboarding (mocked)");
     console.log("PASS: Google disponível quando configurado e token inválido rejeitado");
