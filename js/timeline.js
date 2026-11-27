@@ -412,6 +412,10 @@ function applyTimelineVisibility() {
 
   updateDayCounters();
   updateLoadMoreButton(eligibleEvents, visibleEligibleEvents);
+  const empty = document.getElementById("timelineEmptyState");
+  if (empty) empty.hidden = eligibleEvents > 0;
+  const count = document.getElementById("timelineTodayCount");
+  if (count) count.textContent = String(allEvents.filter(event => event.dataset.date === getTodayKey()).length);
 }
 
 
