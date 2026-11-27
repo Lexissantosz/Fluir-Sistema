@@ -124,7 +124,6 @@ const BASE=process.env.FLUIR_WEB_BASE || "http://127.0.0.1:5500/html/";
     const now=new Date(), start=new Date(now), other=new Date(now), previous=new Date(now);
     start.setDate(now.getDate()-((now.getDay()+6)%7));
     other.setDate(now.getDate()+(now.getDay()===0?-1:1));
-    previous.setDate(start.getDate()-1); previous.setMonth(start.getMonth()); previous.setFullYear(start.getFullYear());
     previous.setTime(start.getTime()); previous.setDate(start.getDate()-7);
     const date=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
     const events=[{title:"QA hoje tarefa",category:"tasks",date:date(now),time:"09:00"},{title:"QA hoje agua",category:"health",date:date(now),time:"10:00"},{title:"QA semana",category:"habits",date:date(other),time:"11:00"},{title:"QA anterior",category:"tasks",date:date(previous),time:"12:00"}];
