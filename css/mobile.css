@@ -9,6 +9,73 @@
   display: none;
 }
 
+/* =====================================================
+   TEMAS ESPECIAIS DESBLOQUEÁVEIS
+   Este arquivo é compartilhado por desktop e mobile.
+   ===================================================== */
+
+body.theme-cafe-light {
+  --bg: #f3e6d2;
+  --page-bg: rgba(255, 248, 235, 0.9);
+  --sidebar-bg: rgba(246, 232, 211, 0.94);
+  --card-bg: rgba(255, 250, 240, 0.9);
+  --input-bg: rgba(242, 224, 199, 0.76);
+  --dropdown-bg: #fff8ec;
+
+  --text: #3b2418;
+  --muted: #7a5b48;
+  --soft-muted: #a98c78;
+
+  --border: rgba(92, 57, 37, 0.16);
+  --border-strong: rgba(92, 57, 37, 0.32);
+
+  --button-bg: #4a2b1d;
+  --button-text: #fff5e6;
+
+  --shadow: 0 24px 70px rgba(79, 45, 28, 0.14);
+  --shadow-soft: 0 12px 40px rgba(79, 45, 28, 0.09);
+
+  --grid-color: rgba(92, 57, 37, 0.045);
+}
+
+body.theme-cafe-dark {
+  --bg: #24150f;
+  --page-bg: rgba(48, 29, 21, 0.9);
+  --sidebar-bg: rgba(39, 22, 16, 0.94);
+  --card-bg: rgba(64, 38, 28, 0.88);
+  --input-bg: rgba(82, 49, 35, 0.76);
+  --dropdown-bg: #3b241b;
+
+  --text: #f7e8d5;
+  --muted: #d1b59f;
+  --soft-muted: #9c7863;
+
+  --border: rgba(247, 232, 213, 0.14);
+  --border-strong: rgba(247, 232, 213, 0.3);
+
+  --button-bg: #f4d8b8;
+  --button-text: #2e1b14;
+
+  --shadow: 0 24px 80px rgba(12, 6, 3, 0.5);
+  --shadow-soft: 0 12px 44px rgba(12, 6, 3, 0.38);
+
+  --grid-color: rgba(247, 232, 213, 0.035);
+}
+
+body.theme-cafe-light,
+body.theme-cafe-dark {
+  transition:
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+body.theme-cafe-light .mobile-topbar,
+body.theme-cafe-light .mobile-bottom-nav,
+body.theme-cafe-dark .mobile-topbar,
+body.theme-cafe-dark .mobile-bottom-nav {
+  box-shadow: var(--shadow-soft);
+}
+
 @media (max-width: 760px) {
   /* Dashboard mobile — tarefas de hoje mais compactas */
 body.mobile-ui-ready .dashboard-main .task-list {
