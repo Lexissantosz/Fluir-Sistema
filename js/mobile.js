@@ -47,6 +47,53 @@
     return file || "dashboard.html";
   }
 
+  function getUnlockedThemeIds() {
+    try {
+      const stored = JSON.parse(
+        localStorage.getItem("fluir-unlocked-themes") || "[]"
+      );
+
+      return Array.isArray(stored) ? stored : [];
+    } catch (error) {
+      console.warn("Não foi possível ler os temas desbloqueados.", error);
+      return [];
+    }
+  }
+
+  function applyGlobalTheme() {
+    const requestedTheme = localStorage.getItem("fluir-theme") || "light";
+    const unlockedThemes = getUnlockedThemeIds();
+    const publicThemes = ["light", "dark"];
+
+    const activeTheme =
+      publicThemes.includes(requestedTheme) ||
+      unlockedThemes.includes(requestedTheme)
+        ? requestedTheme
+        : "light";
+
+    document.body.classList.remove(
+      "dark",
+      "theme-cafe-light",
+      "theme-cafe-dark"
+    );
+
+    if (activeTheme === "dark" || activeTheme === "cafe-dark") {
+      document.body.classList.add("dark");
+    }
+
+    if (activeTheme === "cafe-light") {
+      document.body.classList.add("theme-cafe-light");
+    }
+
+    if (activeTheme === "cafe-dark") {
+      document.body.classList.add("theme-cafe-dark");
+    }
+
+    if (activeTheme !== requestedTheme) {
+      localStorage.setItem("fluir-theme", activeTheme);
+    }
+  }
+
   function isCurrent(href) {
     return currentFileName() === href;
   }
@@ -241,6 +288,7 @@ function getMobileUserData() {
   function initMobileUI() {
     if (!appPages.has(currentFileName())) return;
 
+    applyGlobalTheme();
     document.body.classList.add("mobile-ui-ready");
     buildTopbar();
     buildDrawer();

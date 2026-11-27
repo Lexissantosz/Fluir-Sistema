@@ -1641,3 +1641,111 @@ body.dark .setup-action-button {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===================================================== */
+/* TEMAS SECRETOS — CÓDIGO DE DESBLOQUEIO */
+/* ===================================================== */
+
+.theme-control {
+  flex-wrap: wrap;
+}
+
+.secret-theme-unlock {
+  margin: 2px 0 18px;
+  padding: 16px;
+
+  border: 1px dashed var(--border-strong);
+  border-radius: 16px;
+  background: var(--input-bg);
+
+  display: grid;
+  gap: 12px;
+}
+
+.secret-theme-copy {
+  display: grid;
+  gap: 4px;
+}
+
+.secret-theme-copy strong {
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 850;
+}
+
+.secret-theme-copy small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.secret-code-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.secret-code-form input {
+  min-width: 0;
+  height: 42px;
+  padding: 0 13px;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  outline: none;
+
+  background: var(--dropdown-bg);
+  color: var(--text);
+
+  font-size: 0.86rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.secret-code-form input:focus {
+  border-color: var(--border-strong);
+}
+
+.secret-code-form button {
+  min-height: 42px;
+  padding: 0 16px;
+
+  border: 1px solid var(--button-bg);
+  border-radius: 11px;
+
+  background: var(--button-bg);
+  color: var(--button-text);
+
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.secret-theme-message {
+  min-height: 18px;
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.secret-theme-message.success {
+  color: var(--success);
+}
+
+.secret-theme-message.error {
+  color: var(--danger);
+}
+
+@media (max-width: 620px) {
+  .secret-code-form {
+    grid-template-columns: 1fr;
+  }
+
+  .secret-code-form button {
+    width: 100%;
+  }
+}
