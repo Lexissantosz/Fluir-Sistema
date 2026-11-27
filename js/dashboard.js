@@ -640,7 +640,7 @@ async function loadDashboardTasks() {
     dashboardTasksState = data.map(t => ({id:t.id,title:t.titulo,category:t.categoria,time:t.horario,completed:!!t.concluida,date:t.dataTarefa}));
     updateTasksDashboardData();
   } catch {
-    list.textContent = "Não foi possível carregar suas tarefas. Atualize a página para tentar novamente.";
+    list.textContent = window.FluirI18n.t("Não foi possível carregar suas tarefas. Atualize a página para tentar novamente.");
   }
 }
 function getDashboardTasks() {
@@ -659,8 +659,8 @@ function updateTasksDashboardData() {
   if (!dashboardTasks.tasks.length) {
     tasksPanel.innerHTML = `
       <div class="empty-dashboard-mini">
-        <strong>Nenhuma tarefa ainda</strong>
-        <p>Crie uma tarefa para começar a organizar o dia.</p>
+        <strong>${window.FluirI18n.t("Nenhuma tarefa ainda")}</strong>
+        <p>${window.FluirI18n.t("Crie uma tarefa para começar a organizar o dia.")}</p>
       </div>
     `;
 
@@ -756,7 +756,7 @@ async function saveTaskChange(taskItem) {
     });
     if (!response.ok) throw new Error("Task update failed");
     task.completed = desired;
-  } catch { alert("Não foi possível atualizar a tarefa."); }
+  } catch { alert(window.FluirI18n.t("Não foi possível atualizar a tarefa.")); }
   finally {
     checkbox.checked = task.completed;
     checkbox.disabled = false;
@@ -1026,7 +1026,7 @@ function updateFinancesDashboardData() {
     const small = card.querySelector("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (small) small.textContent = "saldo atual";
+    if (small) small.textContent = window.FluirI18n.t("saldo atual");
   }
 
   if (panel) {
@@ -1035,7 +1035,7 @@ function updateFinancesDashboardData() {
     const smallItems = panel.querySelectorAll("small");
 
     if (strong) strong.textContent = formatCurrency(balance);
-    if (p) p.textContent = "Saldo atual";
+    if (p) p.textContent = window.FluirI18n.t("Saldo atual");
 
     if (smallItems[0]) smallItems[0].textContent = `Entrada ${formatCurrency(income)}`;
     if (smallItems[1]) smallItems[1].textContent = `Saída - ${formatCurrency(expense)}`;
@@ -1123,9 +1123,9 @@ function updateRecentEventsDashboardData() {
   if (!Array.isArray(events) || !events.length) {
     eventList.innerHTML = `
       <article>
-        <span>Hoje</span>
-        <strong>Nenhum evento recente</strong>
-        <p>Os registros dos módulos aparecerão aqui.</p>
+        <span>${window.FluirI18n.t("Hoje")}</span>
+        <strong>${window.FluirI18n.t("Nenhum evento recente")}</strong>
+        <p>${window.FluirI18n.t("Os registros dos módulos aparecerão aqui.")}</p>
       </article>
     `;
 

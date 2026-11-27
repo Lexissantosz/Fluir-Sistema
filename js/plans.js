@@ -322,10 +322,10 @@ function updateCurrentPlanUI() {
     const planName = button.dataset.plan;
 
     if (planName === currentPlan) {
-      button.textContent = "Plano atual";
+      button.textContent = window.FluirI18n.t("Plano atual");
       button.classList.add("current-plan");
     } else {
-      button.textContent = "Escolher plano";
+      button.textContent = window.FluirI18n.t("Escolher plano");
       button.classList.remove("current-plan");
     }
   });
@@ -474,7 +474,7 @@ function showTemporaryFeedback(message) {
   const feedback = document.createElement("div");
 
   feedback.className = "floating-feedback";
-  feedback.textContent = message;
+  feedback.textContent = window.FluirI18n.t(message);
 
   document.body.appendChild(feedback);
 
@@ -610,6 +610,7 @@ function saveHeaderProfile(profile) {
 }
 
 function renderHeaderProfileDropdown() {
+  const setupData = getSetupData();
   const nickname = setupData.user?.nickname?.trim();
   const name = setupData.user?.name?.trim();
   const displayName = nickname || name || "Você";

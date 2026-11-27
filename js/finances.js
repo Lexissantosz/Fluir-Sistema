@@ -631,7 +631,7 @@ function updateSummaryCards() {
 
   if (sidebarFinanceText) {
     if (transactions.length === 0) {
-      sidebarFinanceText.textContent = "Nenhum lançamento ainda.";
+      sidebarFinanceText.textContent = window.FluirI18n.t("Nenhum lançamento ainda.");
       return;
     }
 
@@ -666,7 +666,7 @@ function renderCategoryList() {
   if (entries.length === 0) {
     categoryList.innerHTML = `
       <div class="category-item">
-        <span>Nenhuma categoria</span>
+        <span>${window.FluirI18n.t("Nenhuma categoria")}</span>
         <strong>R$ 0</strong>
       </div>
     `;
@@ -747,7 +747,7 @@ function showFinanceFormMessage(message, type = "error") {
     return;
   }
 
-  financeFormMessage.textContent = message;
+  financeFormMessage.textContent = window.FluirI18n.t(message);
   financeFormMessage.className = `finance-form-message show ${type}`;
 }
 

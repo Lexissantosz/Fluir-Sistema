@@ -183,8 +183,8 @@ function getMobileUserData() {
       <aside class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menu do sistema">
         <div class="mobile-drawer-head">
           <div>
-            <strong>Menu</strong>
-            <span>Escolha uma área do Fluir</span>
+            <strong>${window.FluirI18n.t("Menu")}</strong>
+            <span>${window.FluirI18n.t("Escolha uma área do Fluir")}</span>
           </div>
           <button class="mobile-drawer-close" type="button" aria-label="Fechar menu"></button>
         </div>
@@ -231,7 +231,7 @@ function getMobileUserData() {
     const moreButton = document.createElement("button");
     moreButton.type = "button";
     moreButton.className = `mobile-more-btn${extraItems.includes(currentFileName()) ? " active" : ""}`;
-    moreButton.innerHTML = `<i></i><span>Mais</span>`;
+    moreButton.innerHTML = `<i></i><span>${window.FluirI18n.t("Mais")}</span>`;
     moreButton.addEventListener("click", openDrawer);
     bottomNav.appendChild(moreButton);
 
@@ -261,7 +261,7 @@ function getMobileUserData() {
         if (todayFilter) todayFilter.click();
         else {
           const today = new Date().toLocaleDateString("pt-BR");
-          button.textContent = "Hoje · " + today;
+          button.textContent = window.FluirI18n.t("Hoje · ") + today;
           button.setAttribute("aria-label", "Data de hoje: " + today);
         }
       });

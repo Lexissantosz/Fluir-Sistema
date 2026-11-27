@@ -44,10 +44,16 @@ function newToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   return btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
 }
-async function issueSession(user: {id:number; nome:string; email:string}, origin: string, provider = "senha") {
+function deviceLabel(request:Request){
+  const ua=request.headers.get("user-agent")||"";
+  const os=/Android/i.test(ua)?"Android":/iPhone|iPad|iPod/i.test(ua)?"iOS":/Windows/i.test(ua)?"Windows":/Macintosh|Mac OS/i.test(ua)?"macOS":/Linux/i.test(ua)?"Linux":"Dispositivo não identificado";
+  const browser=/Edg\//i.test(ua)?"Edge":/OPR\//i.test(ua)?"Opera":/Firefox|FxiOS/i.test(ua)?"Firefox":/Chrome|CriOS/i.test(ua)?"Chrome":/Safari/i.test(ua)?"Safari":"Navegador não identificado";
+  return os+" · "+browser;
+}
+async function issueSession(user: {id:number; nome:string; email:string}, origin: string, request:Request, provider = "senha") {
   const token = newToken();
   const { error } = await admin.from("sessoes_login").insert({
-    token_hash: await hash(token), usuario_id: user.id,
+    token_hash: await hash(token), usuario_id: user.id, dispositivo:deviceLabel(request), ultimo_acesso:new Date().toISOString(),
     criado_em: new Date().toISOString(), expira_em: new Date(Date.now() + 12*3600*1000).toISOString(),
   });
   if (error) return failure(origin, 503, "Não foi possível criar uma sessão segura.");
@@ -62,8 +68,12 @@ async function currentUser(request: Request) {
   if (!token || token.length > 8192) return null;
   if (/^[A-Za-z0-9_-]{40,100}$/.test(token)) {
     const { data: session, error } = await admin.from("sessoes_login")
-      .select("usuario_id,expira_em").eq("token_hash", await hash(token)).maybeSingle();
+      .select("usuario_id,expira_em,ultimo_acesso").eq("token_hash", await hash(token)).maybeSingle();
     if (error || !session || Date.parse(session.expira_em) <= Date.now()) return null;
+    if(!session.ultimo_acesso||Date.now()-Date.parse(session.ultimo_acesso)>60000){
+      await admin.from("sessoes_login").update({ultimo_acesso:new Date().toISOString(),dispositivo:deviceLabel(request)})
+        .eq("usuario_id",session.usuario_id).eq("token_hash",await hash(token));
+    }
     const { data: user } = await admin.from("usuarios").select("id,nome,email").eq("id",session.usuario_id).maybeSingle();
     return user || null;
   }
@@ -214,7 +224,7 @@ Deno.serve(async request=>{
       if(!await loginLimiter(email))return failure(origin,429,"Muitas tentativas. Aguarde 15 minutos.");
       const {data:u}=await admin.from("usuarios").select("id,nome,email,senha").eq("email",email).maybeSingle();
       if(!u || !await bcrypt.compare(b.senha,u.senha))return failure(origin,401,"E-mail ou senha inválidos.");
-      return await issueSession(u,origin);
+      return await issueSession(u,origin,request);
     }
     if(path==="/usuarios/cadastro"&&method==="POST"){
       const b=await parseBody(request);const email=cleanEmail(b.email);const name=String(b.nome||"").trim();
@@ -227,7 +237,7 @@ Deno.serve(async request=>{
         .insert({nome:name,email,senha:hashed}).select("id,nome,email").single();
       if(error)return failure(origin,error.code==="23505"?409:503,
         error.code==="23505"?"Este e-mail já está cadastrado.":"Não foi possível criar a conta.");
-      return await issueSession(u,origin);
+      return await issueSession(u,origin,request);
     }
     if(path==="/usuarios/google"&&method==="POST"){
       if(!Deno.env.get("FLUIR_GOOGLE_CLIENT_ID"))return failure(origin,503,"Login Google ainda não configurado.");
@@ -244,18 +254,60 @@ Deno.serve(async request=>{
         if(error||!newUser)return failure(origin,503,"Não foi possível criar o acesso Google.");
         u=newUser;
       }
-      return await issueSession(u,origin,"google");
+      return await issueSession(u,origin,request,"google");
     }
     const user=await currentUser(request);
     if(!user)return failure(origin,401,"Sessão inválida ou expirada.");
+    // The legacy web client uses random session tokens backed by database rows.
+    // Never expose a bearer token or its stored hash in session listings.
+    if(path==="/conta/seguranca"&&method==="GET"){
+      const {data:account,error}=await admin.from("usuarios").select("id,nome,email,google_sub").eq("id",user.id).single();
+      if(error||!account)return failure(origin,503,"Account unavailable.");
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      const ownHash=await hash(token);
+      const sessions=await admin.from("sessoes_login").select("token_hash,criado_em,expira_em,dispositivo,ultimo_acesso")
+        .eq("usuario_id",user.id).gt("expira_em",new Date().toISOString()).order("criado_em",{ascending:false});
+      if(sessions.error)return failure(origin,503,"Sessions unavailable.");
+      const list=await Promise.all((sessions.data||[]).map(async row=>({
+        id:await hash("public-session:"+row.token_hash), atual:row.token_hash===ownHash,
+        criadoEm:row.criado_em, expiraEm:row.expira_em, dispositivo:row.dispositivo||null, ultimoAcesso:row.ultimo_acesso||null
+      })));
+      return respond(origin,200,{google:{vinculado:!!account.google_sub,nome:account.nome,email:account.email},sessoes:list,doisFatores:false});
+    }
+    if(path==="/conta/logout"&&method==="POST"){
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      if(!/^[A-Za-z0-9_-]{40,100}$/.test(token))return failure(origin,400,"Unsupported session type.");
+      const {error}=await admin.from("sessoes_login").delete().eq("usuario_id",user.id).eq("token_hash",await hash(token));
+      if(error)return failure(origin,503,"Unable to revoke session.");
+      return respond(origin,200,{encerrada:true});
+    }
+    const revokeSession=/^\/conta\/sessoes\/([a-f0-9]{64})$/.exec(path);
+    if(revokeSession&&method==="DELETE"){
+      const rows=await admin.from("sessoes_login").select("token_hash").eq("usuario_id",user.id).gt("expira_em",new Date().toISOString());
+      if(rows.error)return failure(origin,503,"Sessions unavailable.");
+      for(const row of rows.data||[]){
+        if(await hash("public-session:"+row.token_hash)!==revokeSession[1])continue;
+        const {error}=await admin.from("sessoes_login").delete().eq("usuario_id",user.id).eq("token_hash",row.token_hash);
+        if(error)return failure(origin,503,"Unable to revoke session.");
+        return respond(origin,200,{encerrada:true});
+      }
+      return failure(origin,404,"Session not found.");
+    }
     if(path==="/usuarios/google/vincular"&&method==="POST"){
       const b=await parseBody(request),g=await googleIdentity(b.idToken);
       if(!g || g.email!==user.email.toLowerCase())return failure(origin,403,"Conta Google não corresponde ao seu e-mail.");
       const {data:existing}=await admin.from("usuarios").select("id").eq("google_sub",g.sub).maybeSingle();
       if(existing&&existing.id!==user.id)return failure(origin,409,"Conta Google já vinculada a outro usuário.");
-      const {error}=await admin.from("usuarios").update({google_sub:g.sub}).eq("id",user.id);
+      const {data:owner, error:ownerError}=await admin.from("usuarios").select("google_sub").eq("id",user.id).single();
+      if(ownerError||!owner)return failure(origin,503,"Account unavailable.");
+      if(owner.google_sub&&owner.google_sub!==g.sub)return failure(origin,409,"Já existe outra identidade Google vinculada a esta conta.");
+      const change=admin.from("usuarios").update({google_sub:g.sub}).eq("id",user.id);
+      const result=await (owner.google_sub===null?change.is("google_sub",null):change.eq("google_sub",owner.google_sub)).select("id").maybeSingle();
+      const error=result.error;
+      if(!error&&!result.data)return failure(origin,409,"Google link changed; retry.");
       if(error)return failure(origin,503,"Não foi possível vincular o Google.");
-      return await issueSession(user,origin,"google");
+      const token=/^Bearer\s+(.+)$/i.exec(request.headers.get("authorization")||"")?.[1]||"";
+      return respond(origin,200,{id:user.id,nome:user.nome,email:user.email,token,provedor:"google",emailVerificado:true});
     }
     const onboardingGet=/^\/onboarding\/usuario\/(\d+)$/.exec(path);
     if(onboardingGet && method==="GET"){
@@ -329,10 +381,18 @@ Deno.serve(async request=>{
         encodeURIComponent(model)+":generateContent",{
           method:"POST",headers:{"content-type":"application/json","x-goog-api-key":key},
           body:JSON.stringify({
-            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda em português do Brasil com gentileza, clareza e privacidade. Você não possui autorização nem ferramentas para editar tarefas, registros ou dados de contas. Não afirme ter executado ações, salvado registros ou alterado informações."}]},
+            systemInstruction:{parts:[{text:"Você é o assistente Fluir. Responda no idioma do usuário, com clareza e privacidade. Quando a mensagem pedir explicitamente CRIAR uma tarefa, hábito ou entrada no diário, proponha UMA ação estruturada, para confirmação do usuário; nunca diga que salvou algo. Para hábitos informe os dias da semana (0 domingo até 6 sábado, todos os sete se diário); se a frequência for incerta, pergunte. Para tarefas informe título, descrição opcional, data ISO YYYY-MM-DD e hora HH:mm se especificada. Para diário preserve o sentido do relato em texto e título curto. Se faltarem detalhes essenciais ou o usuário só quiser conversar, use tipo nenhum. Não invente datas, não proponha apagar, editar, consultar ou expor registros. Responda em JSON conforme o esquema."}]},
             contents:[...history.map((item:{role:"user"|"model";text:string})=>({role:item.role,parts:[{text:item.text.trim()}]})),
               {role:"user",parts:[{text:b.mensagem.trim()}]}],
-            generationConfig:{maxOutputTokens:400,temperature:0.4}
+            generationConfig:{maxOutputTokens:1200,temperature:0.3,responseMimeType:"application/json",responseJsonSchema:{
+              type:"object",properties:{
+                resposta:{type:"string"},acao:{type:"object",properties:{
+                  tipo:{type:"string",enum:["nenhum","tarefa","habito","diario"]},
+                  titulo:{type:"string"},texto:{type:"string"},data:{type:"string"},hora:{type:"string"},
+                  dias:{type:"array",items:{type:"integer",minimum:0,maximum:6}}
+                },required:["tipo"]}
+              },required:["resposta","acao"]
+            }}
           }),signal:AbortSignal.timeout(15000)
       });
       if(res.status===429)return failure(origin,429,"O limite do provedor de IA foi atingido. Tente novamente mais tarde.");
@@ -343,8 +403,23 @@ Deno.serve(async request=>{
       const generated=await res.json();
       const reply=(generated?.candidates?.[0]?.content?.parts||[])
         .map((part:{text?:string})=>part.text||"").join("").trim();
-      return reply?respond(origin,200,{resposta:reply.slice(0,2500)})
-        :failure(origin,503,"Não foi possível obter uma resposta.");
+      if(!reply)return failure(origin,503,"Não foi possível obter uma resposta.");
+      let output;
+      try{output=JSON.parse(reply)}catch{return failure(origin,503,"A IA retornou um formato inesperado.")}
+      if(typeof output?.resposta!=="string"||!output.resposta.trim())return failure(origin,503,"Resposta inválida.");
+      const candidate=output.acao;
+      const titulo=typeof candidate?.titulo==="string"?candidate.titulo.trim().slice(0,150):"";
+      const texto=typeof candidate?.texto==="string"?candidate.texto.trim().slice(0,1200):"";
+      const data=typeof candidate?.data==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(candidate.data)&&!isNaN(Date.parse(candidate.data))?candidate.data:"";
+      const hora=typeof candidate?.hora==="string"&&/^([01]\d|2[0-3]):[0-5]\d$/.test(candidate.hora)?candidate.hora:"";
+      const dias=Array.isArray(candidate?.dias)?[...new Set<number>(candidate.dias.filter((d:unknown)=>Number.isInteger(d)&&Number(d)>=0&&Number(d)<=6))].sort():[];
+      let acao=null;
+      if(titulo.length>=2){
+        if(candidate.tipo==="tarefa")acao={tipo:"tarefa",titulo,texto:texto.slice(0,500),data,hora};
+        if(candidate.tipo==="habito"&&dias.length)acao={tipo:"habito",titulo,texto:texto.slice(0,500),dias};
+        if(candidate.tipo==="diario"&&texto.length>=5)acao={tipo:"diario",titulo,texto};
+      }
+      return respond(origin,200,{resposta:output.resposta.slice(0,2500),acao});
     }
     return failure(origin,404,"Operação não encontrada.");
   } catch(e) {

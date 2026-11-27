@@ -500,7 +500,7 @@ function updateSummaryCards() {
 
   if (sidebarDiaryText) {
     if (total === 0) {
-      sidebarDiaryText.textContent = "Nenhuma entrada ainda.";
+      sidebarDiaryText.textContent = window.FluirI18n.t("Nenhuma entrada ainda.");
       return;
     }
 
@@ -531,7 +531,7 @@ function renderMoodRow() {
     `;
 
     if (moodText) {
-      moodText.textContent = "Seus registros de humor aparecerão aqui.";
+      moodText.textContent = window.FluirI18n.t("Seus registros de humor aparecerão aqui.");
     }
 
     return;
@@ -609,7 +609,7 @@ function showDiaryFormMessage(message, type = "error") {
     return;
   }
 
-  diaryFormMessage.textContent = message;
+  diaryFormMessage.textContent = window.FluirI18n.t(message);
   diaryFormMessage.className = `diary-form-message show ${type}`;
 }
 

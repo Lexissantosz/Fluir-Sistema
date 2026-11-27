@@ -2059,3 +2059,5 @@ body.dark .preview {
 .fluir-legal-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 20px;margin:8px auto 24px;padding:12px 20px;max-width:960px;text-align:center;font:500 12px Manrope,system-ui,sans-serif}
 .fluir-legal-links a{color:inherit;text-decoration:underline;text-underline-offset:3px;opacity:.75}
 .fluir-legal-links a:hover,.fluir-legal-links a:focus-visible{opacity:1}
+
+.fluir-language-picker{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:8px}.fluir-language-picker select{font:inherit;padding:6px;border:1px solid #aaa;border-radius:7px;background:transparent;color:inherit}.fluir-language-picker option{color:#171717;background:#fff}

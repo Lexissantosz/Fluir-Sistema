@@ -63,6 +63,7 @@
         sessionStorage.setItem("fluir-user", JSON.stringify({ ...saved, ...data }));
         message("Conta Google vinculada com segurança. Você já pode entrar com o Google.");
         linkTarget.hidden = true;
+        window.dispatchEvent(new Event("fluir:google-linked"));
         return;
       }
 
@@ -88,6 +89,7 @@
         return;
       }
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
       sessionStorage.removeItem("fluir-onboarding-completed");
       try {
         const completed = await hasCompletedOnboarding(data);
@@ -132,6 +134,8 @@
       if (isProfile) {
         const current = JSON.parse(sessionStorage.getItem("fluir-user") || "null");
         if (!current?.token) return;
+        const status = await fetch(base.replace(/\/usuarios$/, "/conta/seguranca"), {headers:{Authorization:"Bearer "+current.token},cache:"no-store"});
+        if (!status.ok || (await status.json()).google?.vinculado !== false) return;
       }
       await loadGoogleScript();
       window.google.accounts.id.initialize({

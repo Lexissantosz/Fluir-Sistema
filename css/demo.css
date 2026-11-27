@@ -14,3 +14,5 @@ border:1px solid #d6d6d3;text-decoration:none;cursor:pointer}
 .demo-gate-actions a{background:#171817;color:#fff}
 .demo-gate-actions button{background:#f5f5f2;color:#171817}
 @media(max-width:430px){.demo-gate{padding:22px}.demo-gate-actions :where(button,a){flex:1 1 100%}}
+
+.fluir-language-picker{display:inline-flex;gap:8px;align-items:center;font-size:12px;padding:8px}.fluir-language-picker select{font:inherit;padding:6px;border:1px solid #aaa;border-radius:7px;background:transparent;color:inherit}.fluir-language-picker option{color:#171717;background:#fff}

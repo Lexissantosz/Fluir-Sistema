@@ -250,9 +250,12 @@
 
           <div class="sessions-row">
             <span>▱</span>
-            <p>Sessões ativas: 2 dispositivos</p>
+            <p id="fluirSettingsSessionCount">Consultando sessões...</p><a href="profile.html">Gerenciar sessões</a>
           </div>
-        </article>
+                  <div class="setting-row">
+            <div><strong>Consentimento do assistente de IA</strong><p id="fluirAIConsentStatus">Consultando...</p></div>
+            <button id="fluirAIRevoke" type="button" class="secondary-btn">Revogar autorização</button>
+          </div></article>
 
         <!-- =====================================================
              CARD: INTEGRAÇÕES
@@ -309,7 +312,7 @@
           </button>
 
           <div class="sync-row">
-            <small>Última sincronização: agora há pouco</small>
+            <small>Dados armazenados neste navegador</small>
             <span>Sincronizado ✓</span>
           </div>
         </article>
@@ -349,6 +352,8 @@
   </div>
 
   <!-- Catálogo compartilhado das áreas do Fluir -->
+  <script src="../js/i18n-dictionary.js"></script>
+  <script src="../js/i18n.js"></script>
   <script src="../js/app-sections.js"></script>
   <script src="../js/sidebar.js"></script>
 
@@ -358,5 +363,6 @@
   <!-- UI mobile compartilhada -->
   <script src="../js/mobile.js"></script>
   <script src="../js/assistant.js"></script>
+  <script src="../js/account-security.js"></script>
 </body>
 </html>

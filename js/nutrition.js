@@ -507,7 +507,7 @@ function updateSummaryCards() {
 
   if (sidebarNutritionText) {
     if (todayList.length === 0) {
-      sidebarNutritionText.textContent = "Nenhuma refeição registrada ainda.";
+      sidebarNutritionText.textContent = window.FluirI18n.t("Nenhuma refeição registrada ainda.");
       return;
     }
 
@@ -614,7 +614,7 @@ function showNutritionFormMessage(message, type = "error") {
     return;
   }
 
-  nutritionFormMessage.textContent = message;
+  nutritionFormMessage.textContent = window.FluirI18n.t(message);
   nutritionFormMessage.className = `nutrition-form-message show ${type}`;
 }
 

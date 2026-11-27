@@ -379,7 +379,7 @@ function updateLoadMoreButton(totalEligibleEvents, visibleEligibleEvents) {
 
   loadMoreEventsBtn.dataset.mode = "refresh";
   loadMoreEventsBtn.disabled = false;
-  loadMoreEventsBtn.textContent = "Atualizar eventos ↻";
+  loadMoreEventsBtn.textContent = window.FluirI18n.t("Atualizar eventos ↻");
 }
 
 function applyTimelineVisibility() {
@@ -468,7 +468,7 @@ function showEventFormMessage(message, type = "error") {
     return;
   }
 
-  eventFormMessage.textContent = message;
+  eventFormMessage.textContent = window.FluirI18n.t(message);
   eventFormMessage.className = `event-form-message show ${type}`;
 }
 
@@ -590,7 +590,7 @@ function renderUpcomingReminders() {
   const reminders = getUpcomingReminders();
 
   if (reminders.length === 0) {
-    reminderList.innerHTML = `<p class="reminder-empty">Nenhum lembrete próximo.</p>`;
+    reminderList.innerHTML = `<p class="reminder-empty">${window.FluirI18n.t("Nenhum lembrete próximo.")}</p>`;
     return;
   }
 
@@ -639,7 +639,7 @@ function renderOverdueReminders() {
   const overdueTasks = getOverdueReminders();
 
   if (overdueTasks.length === 0) {
-    overdueList.innerHTML = `<p class="reminder-empty">Nenhuma tarefa atrasada.</p>`;
+    overdueList.innerHTML = `<p class="reminder-empty">${window.FluirI18n.t("Nenhuma tarefa atrasada.")}</p>`;
     return;
   }
 
@@ -1053,7 +1053,7 @@ function setupLoadMoreEventsButton() {
     applyTimelineVisibility();
 
     loadMoreEventsBtn.disabled = true;
-    loadMoreEventsBtn.textContent = "Eventos atualizados ✓";
+    loadMoreEventsBtn.textContent = window.FluirI18n.t("Eventos atualizados ✓");
 
     setTimeout(() => {
       loadMoreEventsBtn.disabled = false;
@@ -1234,7 +1234,7 @@ renderHeaderProfileDropdown();
   const originalLabel = button.textContent.trim();
   const empty = document.createElement("p");
   empty.className = "fluir-today-empty";
-  empty.textContent = "Nenhum evento registrado hoje.";
+  empty.textContent = window.FluirI18n.t("Nenhum evento registrado hoje.");
   empty.hidden = true;
   panel.appendChild(empty);
 

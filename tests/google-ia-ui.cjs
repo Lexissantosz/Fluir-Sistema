@@ -92,6 +92,9 @@ async function routeGoogle(page,enabled){
       localStorage.setItem("fluir:account:777:fluir-setup",JSON.stringify({usuarioId:777,user:{name:"Fluir QA",email:"qa@example.invalid"},modules:{tasks:true}}));
     });
     await routeGoogle(page,true);
+    await page.route(api+"/conta/seguranca",route=>route.fulfill({
+      status:200,contentType:"application/json",body:JSON.stringify({google:{vinculado:false},sessoes:[]})
+    }));
     await page.route(api+"/usuarios/google/vincular",route=>route.fulfill({
       status:409,contentType:"application/json",body:JSON.stringify({mensagem:"Conta Google já vinculada a outro usuário."})
     }));
@@ -141,7 +144,7 @@ async function routeGoogle(page,enabled){
     await page.locator("#fluirAssistantButton").click();
     async function ask(msg){
       await page.locator(".fluir-assistant-form textarea").fill(msg);
-      await page.locator(".fluir-assistant-consent input").check();
+      if(await page.locator(".fluir-assistant-consent input").isVisible())await page.locator(".fluir-assistant-consent input").check();
       await page.locator(".fluir-assistant-form button[type=submit]").click();
       await page.waitForFunction(()=>document.querySelector(".fluir-assistant-send").disabled===false);
     }

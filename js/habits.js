@@ -628,7 +628,7 @@ function updateSidebarProgress() {
 
   if (sidebarHabitText) {
     if (total === 0) {
-      sidebarHabitText.textContent = "Nenhum hábito registrado ainda.";
+      sidebarHabitText.textContent = window.FluirI18n.t("Nenhum hábito registrado ainda.");
       return;
     }
 
@@ -655,7 +655,7 @@ function renderFocusMiniList() {
 
   if (pendingHabits.length === 0) {
     if (focusRecommendation) {
-      focusRecommendation.textContent = "Você concluiu seus hábitos de hoje. Continue com calma.";
+      focusRecommendation.textContent = window.FluirI18n.t("Você concluiu seus hábitos de hoje. Continue com calma.");
     }
 
     focusMiniList.innerHTML = `
@@ -669,7 +669,7 @@ function renderFocusMiniList() {
   }
 
   if (focusRecommendation) {
-    focusRecommendation.textContent = "Comece pelos hábitos que ajudam a manter sua sequência.";
+    focusRecommendation.textContent = window.FluirI18n.t("Comece pelos hábitos que ajudam a manter sua sequência.");
   }
 
   pendingHabits.forEach((habit) => {
@@ -720,7 +720,7 @@ function renderWeekGrid() {
 
   if (weekText) {
     if (total === 0) {
-      weekText.textContent = "Crie seu primeiro hábito para começar a acompanhar sua semana.";
+      weekText.textContent = window.FluirI18n.t("Crie seu primeiro hábito para começar a acompanhar sua semana.");
       return;
     }
 
@@ -784,7 +784,7 @@ function showHabitFormMessage(message, type = "error") {
     return;
   }
 
-  habitFormMessage.textContent = message;
+  habitFormMessage.textContent = window.FluirI18n.t(message);
   habitFormMessage.className = `habit-form-message show ${type}`;
 }
 
@@ -925,7 +925,7 @@ function saveNewHabit() {
     }
 
     if (habitDaysFeedback) {
-      habitDaysFeedback.textContent = "Selecione ao menos um dia da semana.";
+      habitDaysFeedback.textContent = window.FluirI18n.t("Selecione ao menos um dia da semana.");
     }
 
     showHabitFormMessage("Selecione os dias em que o hábito vai se repetir.");

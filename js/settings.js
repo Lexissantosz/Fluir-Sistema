@@ -339,14 +339,14 @@ function setupResetButtons() {
       const storageKey = button.dataset.reset;
 
       const confirmed = confirm(
-        "Tem certeza que deseja apagar estes dados? Essa ação não pode ser desfeita."
+        window.FluirI18n.t("Tem certeza que deseja apagar estes dados? Essa ação não pode ser desfeita.")
       );
 
       if (!confirmed) return;
 
       FluirStorage.removeItem(storageKey);
 
-      alert("Dados apagados com sucesso.");
+      alert(window.FluirI18n.t("Dados apagados com sucesso."));
     });
   });
 }
@@ -494,7 +494,7 @@ function setupQuickSetupEditor() {
     FluirStorage.setItem("fluir-setup", JSON.stringify(currentSetup));
 
     if (message) {
-      message.textContent = "Configurações salvas com sucesso.";
+      message.textContent = window.FluirI18n.t("Configurações salvas com sucesso.");
       message.classList.add("success");
     }
 

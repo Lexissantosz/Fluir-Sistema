@@ -998,3 +998,5 @@ body.dark .icon-btn {
 .google-link-message{font-size:13px;line-height:1.5;color:var(--muted);margin:0 0 12px}
 .google-link-message[data-state="error"]{color:var(--danger)}
 .google-link-message[data-state="success"]{color:var(--success)}
+
+.fluir-account-card{border:1px solid var(--border,#ddd);border-radius:12px;padding:12px;margin:8px 0;overflow-wrap:anywhere}.fluir-account-card p{font-size:.82rem;margin:5px 0}.fluir-account-card button{padding:8px 12px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;cursor:pointer}

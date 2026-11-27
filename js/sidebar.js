@@ -33,7 +33,7 @@
 
         <div>
           <h1>Fluir</h1>
-          <p>Sistema de Organização da Vida</p>
+          <p>${window.FluirI18n.t("Sistema de Organização da Vida")}</p>
         </div>
       </div>
     `;

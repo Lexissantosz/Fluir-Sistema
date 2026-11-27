@@ -564,7 +564,7 @@ function updateSummaryCards() {
 
   if (sidebarCycleText) {
     if (!estimate.hasData) {
-      sidebarCycleText.textContent = "Nenhum ciclo registrado ainda.";
+      sidebarCycleText.textContent = window.FluirI18n.t("Nenhum ciclo registrado ainda.");
       return;
     }
 
@@ -605,7 +605,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhum registro</strong>
+          <strong>${window.FluirI18n.t("Nenhum registro")}</strong>
           Registre o primeiro sinal do ciclo.
         </p>
       </div>
@@ -640,7 +640,7 @@ function showCycleFormMessage(message, type = "error") {
     return;
   }
 
-  cycleFormMessage.textContent = message;
+  cycleFormMessage.textContent = window.FluirI18n.t(message);
   cycleFormMessage.className = `cycle-form-message show ${type}`;
 }
 

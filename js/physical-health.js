@@ -502,7 +502,7 @@ function updateSummaryCards() {
 
   if (sidebarHealthText) {
     if (todayList.length === 0) {
-      sidebarHealthText.textContent = "Nenhum registro físico ainda.";
+      sidebarHealthText.textContent = window.FluirI18n.t("Nenhum registro físico ainda.");
       return;
     }
 
@@ -564,7 +564,7 @@ function renderMiniTimeline() {
       <div class="mini-timeline-item">
         <time>--:--</time>
         <p>
-          <strong>Nenhum registro</strong>
+          <strong>${window.FluirI18n.t("Nenhum registro")}</strong>
           Registre algo sobre seu corpo.
         </p>
       </div>
@@ -599,7 +599,7 @@ function showHealthFormMessage(message, type = "error") {
     return;
   }
 
-  healthFormMessage.textContent = message;
+  healthFormMessage.textContent = window.FluirI18n.t(message);
   healthFormMessage.className = `health-form-message show ${type}`;
 }
 

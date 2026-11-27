@@ -548,7 +548,7 @@ function updateSummaryCards() {
     if (sleepGoalProgress) sleepGoalProgress.textContent = "0%";
     if (sidebarSleepPercent) sidebarSleepPercent.textContent = "0%";
     if (sidebarSleepBar) sidebarSleepBar.style.width = "0%";
-    if (sidebarSleepText) sidebarSleepText.textContent = "Nenhum registro de sono ainda.";
+    if (sidebarSleepText) sidebarSleepText.textContent = window.FluirI18n.t("Nenhum registro de sono ainda.");
     return;
   }
 
@@ -619,7 +619,7 @@ function renderWeekGrid() {
 
   if (weekText) {
     if (weekLogs.length === 0) {
-      weekText.textContent = "Registre suas noites para visualizar seu padrão semanal.";
+      weekText.textContent = window.FluirI18n.t("Registre suas noites para visualizar seu padrão semanal.");
       return;
     }
 
@@ -681,7 +681,7 @@ function showSleepFormMessage(message, type = "error") {
     return;
   }
 
-  sleepFormMessage.textContent = message;
+  sleepFormMessage.textContent = window.FluirI18n.t(message);
   sleepFormMessage.className = `sleep-form-message show ${type}`;
 }
 

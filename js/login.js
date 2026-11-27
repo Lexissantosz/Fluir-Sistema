@@ -37,7 +37,7 @@ function showMessage(element, message, type) {
     return;
   }
 
-  element.textContent = message;
+  element.textContent = window.FluirI18n.t(message);
   element.className = `form-message ${type}`;
 }
 
@@ -248,7 +248,7 @@ function showVerificationRetry(usuario) {
   retryOnboardingButton = document.createElement("button");
   retryOnboardingButton.type = "button";
   retryOnboardingButton.className = "secondary";
-  retryOnboardingButton.textContent = "Tentar carregar preferências novamente";
+  retryOnboardingButton.textContent = window.FluirI18n.t("Tentar carregar preferências novamente");
   loginMessage.insertAdjacentElement("afterend", retryOnboardingButton);
   retryOnboardingButton.addEventListener("click", async () => {
     retryOnboardingButton.disabled = true;
@@ -481,6 +481,7 @@ if (loginForm) {
 
       // A consulta de onboarding é autenticada; a sessão deve existir antes dela.
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
       sessionStorage.removeItem("fluir-onboarding-completed");
 
       let onboardingConcluido;
@@ -631,6 +632,7 @@ if (registerForm) {
       sessionStorage.removeItem("fluir-onboarding");
       sessionStorage.setItem("fluir-onboarding-completed", "false");
       sessionStorage.setItem("fluir-user", JSON.stringify(data));
+      if (!FluirStorage.getItem("fluir-language") && ["en-US","es"].includes(sessionStorage.getItem("fluir-guest-locale"))) FluirStorage.setItem("fluir-language",sessionStorage.getItem("fluir-guest-locale"));
 
       showMessage(
         registerMessage,

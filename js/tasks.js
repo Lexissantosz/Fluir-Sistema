@@ -701,7 +701,7 @@ function updateSidebarProgress() {
 
   if (sidebarTaskText) {
     if (total === 0) {
-      sidebarTaskText.textContent = "Nenhuma tarefa registrada ainda.";
+      sidebarTaskText.textContent = window.FluirI18n.t("Nenhuma tarefa registrada ainda.");
       return;
     }
 
@@ -736,7 +736,7 @@ function renderFocusMiniList() {
 
   if (importantTasks.length === 0) {
     if (focusRecommendation) {
-      focusRecommendation.textContent = "Você concluiu suas pendências principais. Respire um pouco.";
+      focusRecommendation.textContent = window.FluirI18n.t("Você concluiu suas pendências principais. Respire um pouco.");
     }
 
     focusMiniList.innerHTML = `
@@ -750,7 +750,7 @@ function renderFocusMiniList() {
   }
 
   if (focusRecommendation) {
-    focusRecommendation.textContent = "Comece pelas tarefas mais importantes ou mais sensíveis ao tempo.";
+    focusRecommendation.textContent = window.FluirI18n.t("Comece pelas tarefas mais importantes ou mais sensíveis ao tempo.");
   }
 
   importantTasks.forEach((task) => {
@@ -796,7 +796,7 @@ function renderCategoryList() {
   if (entries.length === 0) {
     categoryList.innerHTML = `
       <div class="category-item">
-        <span>Nenhuma categoria</span>
+        <span>${window.FluirI18n.t("Nenhuma categoria")}</span>
         <strong>0</strong>
       </div>
     `;
@@ -873,7 +873,7 @@ function showTaskFormMessage(message, type = "error") {
     return;
   }
 
-  taskFormMessage.textContent = message;
+  taskFormMessage.textContent = window.FluirI18n.t(message);
   taskFormMessage.className = `task-form-message show ${type}`;
 }
 
@@ -980,7 +980,7 @@ async function saveNewTask() {
   try {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = true;
-      saveTaskBtn.textContent = "Salvando...";
+      saveTaskBtn.textContent = window.FluirI18n.t("Salvando...");
     }
 
     const response = await fetch(TASKS_API_URL, {
@@ -1026,7 +1026,7 @@ async function saveNewTask() {
   } finally {
     if (saveTaskBtn) {
       saveTaskBtn.disabled = false;
-      saveTaskBtn.textContent = "Salvar tarefa";
+      saveTaskBtn.textContent = window.FluirI18n.t("Salvar tarefa");
     }
   }
 }
@@ -1070,7 +1070,7 @@ async function toggleTaskCompleted(taskId) {
   } catch (error) {
     console.error("Erro ao atualizar tarefa:", error);
 
-    alert("Não foi possível atualizar a tarefa.");
+    alert(window.FluirI18n.t("Não foi possível atualizar a tarefa."));
 
     renderTasks();
   }
@@ -1113,7 +1113,7 @@ async function deleteTask(taskId) {
   } catch (error) {
     console.error("Erro ao excluir tarefa:", error);
 
-    alert("Não foi possível excluir a tarefa.");
+    alert(window.FluirI18n.t("Não foi possível excluir a tarefa."));
   }
 }
 
@@ -1175,7 +1175,7 @@ async function clearCompletedTasks() {
     renderTasks();
 
     alert(
-      "Não foi possível limpar todas as tarefas concluídas."
+      window.FluirI18n.t("Não foi possível limpar todas as tarefas concluídas.")
     );
   }
 }

@@ -594,7 +594,7 @@ function renderMiniTimeline() {
     item.innerHTML = `
       <time>${date}</time>
       <p>
-        <strong>Água registrada</strong>
+        <strong>${window.FluirI18n.t("Água registrada")}</strong>
         ${Number(amountMl).toLocaleString("pt-BR")} ml no dia.
       </p>
     `;
@@ -728,7 +728,7 @@ function showWaterFormMessage(message, type = "error") {
     return;
   }
 
-  waterFormMessage.textContent = message;
+  waterFormMessage.textContent = window.FluirI18n.t(message);
   waterFormMessage.className = `water-form-message show ${type}`;
 }
 
@@ -946,7 +946,7 @@ const waterTodayBtn = document.getElementById("waterTodayBtn");
 waterTodayBtn?.addEventListener("click", () => {
   const summary = document.querySelector(".water-summary");
   if (!summary) return;
-  waterTodayBtn.textContent = "Hoje · " + new Date().toLocaleDateString("pt-BR");
+  waterTodayBtn.textContent = window.FluirI18n.t("Hoje · ") + new Date().toLocaleDateString("pt-BR");
   summary.scrollIntoView({ behavior: "smooth", block: "start" });
   summary.classList.remove("fluir-today-focus");
   void summary.offsetWidth;

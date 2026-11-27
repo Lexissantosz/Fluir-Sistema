@@ -48,3 +48,5 @@ body.dark .fluir-assistant-consent{color:#e1e1d9}
     visibility:hidden!important;pointer-events:none!important
   }
 }
+
+.fluir-assistant-consent[hidden]{display:none!important}.fluir-assistant-bubble>button{margin-top:8px;margin-right:6px}

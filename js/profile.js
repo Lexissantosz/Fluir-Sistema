@@ -98,7 +98,7 @@ function applySavedTheme() {
     }
 
     if (themePreference) {
-      themePreference.textContent = "Escuro";
+      themePreference.textContent = window.FluirI18n.t("Escuro");
     }
   } else {
     body.classList.remove("dark");
@@ -108,7 +108,7 @@ function applySavedTheme() {
     }
 
     if (themePreference) {
-      themePreference.textContent = "Claro";
+      themePreference.textContent = window.FluirI18n.t("Claro");
     }
   }
 }
@@ -207,7 +207,7 @@ function renderProfile() {
   }
 
   if (profilePhrase) {
-    profilePhrase.textContent = "Um dia de cada vez, com calma e clareza.";
+    profilePhrase.textContent = window.FluirI18n.t("Um dia de cada vez, com calma e clareza.");
   }
 
   if (profileInitial) {
@@ -415,7 +415,7 @@ function saveProfileChanges() {
 function showProfileMessage(message) {
   if (!profileFormMessage) return;
 
-  profileFormMessage.textContent = message;
+  profileFormMessage.textContent = window.FluirI18n.t(message);
 }
 
 function clearProfileMessage() {

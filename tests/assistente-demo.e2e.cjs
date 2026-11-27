@@ -2,7 +2,7 @@
 const assert=require("node:assert/strict");
 const {chromium}=require("playwright");
 const BASE="http://127.0.0.1:5500";
-const API="https://fluir-sistema.onrender.com/api/assistente/chat";
+const API="https://xqzxfhodhmlgneudubjm.supabase.co/functions/v1/fluir-api/assistente/chat";
 const token="QA_FAKE_TOKEN_FOR_UI_TEST_ONLY_0123456789";
 (async()=>{
  let passed=0;
@@ -70,17 +70,17 @@ const token="QA_FAKE_TOKEN_FOR_UI_TEST_ONLY_0123456789";
   await user.locator(".fluir-assistant-form textarea").fill("Organize minha rotina hoje");
   await user.locator(".fluir-assistant-send").click();
   await check("Não envia mensagem sem consentimento",async()=>{assert.equal(posts,0)});
-  await user.locator(".fluir-assistant-consent input").check();
+  if(await user.locator(".fluir-assistant-consent input").isVisible())await user.locator(".fluir-assistant-consent input").check();
   await user.locator(".fluir-assistant-send").click();
   await user.getByText("Resposta Gemini simulada APENAS PELO TESTE DE UI").waitFor();
   await check("Assistente autenticado chama rota correta com Bearer, sem expor token",async()=>{
     assert.equal(posts,1);
-    assert.equal(await user.locator(".fluir-assistant-consent input").isChecked(),false);
+    assert.equal(await user.locator(".fluir-assistant-consent").isVisible(),false);
     assert.equal(await user.locator(".fluir-assistant-messages").innerText().then(s=>s.includes(token)),false);
   });
   serverStatus=503;
   await user.locator(".fluir-assistant-form textarea").fill("Organize minha rotina hoje");
-  await user.locator(".fluir-assistant-consent input").check();
+  if(await user.locator(".fluir-assistant-consent input").isVisible())await user.locator(".fluir-assistant-consent input").check();
   await user.locator(".fluir-assistant-send").click();
   await user.getByText("Provedor indisponível em QA").waitFor();
   await check("Falha do provedor não destrói sessão e restaura envio",async()=>{
